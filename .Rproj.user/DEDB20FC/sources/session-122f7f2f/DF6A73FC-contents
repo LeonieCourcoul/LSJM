@@ -1,0 +1,144 @@
+head(Data_toy)
+
+id.list <- sample(unique(data.long.Bordeaux$ID), 200)
+
+data_essai <- data.long.Bordeaux[which(data.long.Bordeaux$ID %in% id.list),]
+data_essai <- na.omit(data_essai)
+data_essai$APOE4 <- as.factor(data_essai$APOE4)
+
+example <- lsmm(formFixed = PAS~age.visit+APOE4,
+                formRandom = ~ age.visit,
+                formGroup = ~ID,
+                timeVar = "age.visit",
+                data.long = data_essai,
+                formVar = "inter-intra",
+                var_inter = T,
+                var_intra = T,
+                correlated_re = FALSE,
+                formGroupVisit =~num.visit,
+                S1 = 100,
+                S2 = 1000,
+                nproc = 2,
+                maxiter = 100
+                )
+
+
+example_ls
+
+
+lsmm <- function(formFixed, formRandom, formGroup, timeVar,
+                 formVar = "classic", formFixedVar = NULL, formRandomVar = NULL,
+                 var_inter = F, var_intra = F, formGroupVisit = NULL, correlated_re = F,
+                 data.long,
+                 S1 = 500, S2= 5000,
+                 nproc = 1, clustertype = "SOCK", maxiter = 100, print.info = FALSE,
+                 file = "", epsa = 1e-04, epsb = 1e-04, epsd = 1e-04, binit = NULL)
+  
+  
+  deltas <- list(delta1 =~event==1,
+                 delta2 =~event==2)
+delta1 <- deltas[["delta1"]]
+data.long$delta1 <- data.long[all.vars(delta1)][,1]
+  
+  
+  binit_noCI <- c()
+names.param <- c()
+# 01
+if(hazard_baseline_01 == "Weibull"){
+  binit_noCI <- c(binit_noCI, shape_01)
+  names.param <- c(names.param, 'shape_01')
+}
+else{
+  if(hazard_baseline_01 == "Gompertz"){
+    binit_noCI <- c(binit_noCI, gompertz.1_01, gompertz.2_01)
+    names.param <- c(names.param, 'gompertz.1_01', 'gompertz.2_01')
+  }
+  else{
+    if(hazard_baseline_01 == "Splines"){
+      binit_noCI <- c(binit_noCI,opt_splines_01$par)
+      for(i in 1:length(opt_splines_01$par)){
+        names_param <- c(names_param, paste("splines01", i, sep = "_"))
+      }
+    }
+    
+  }
+}
+binit_noCI <- c(binit_noCI, alpha_01)
+if(!is.null(alpha_01)){
+  names_param <- c(names_param, paste(colnames(Z),"",sep = "_"))
+}
+
+
+
+O_T = as.matrix(0); W_T = as.matrix(0); O_GK_T = as.matrix(0); W_GK_T = as.matrix(0);
+O_GK_T0 = as.matrix(0); W_GK_T0 = as.matrix(0);
+
+
+list.var <- data.manag.sigma(formGroup,formFixedVar, formRandomVar,data.long.Case1bis)
+O_base <- list.var$X
+O_base <- as.matrix(O_base)
+W_base <- list.var$U
+W_base <- as.matrix(W_base)
+
+if(("variability" %in% sharedtype_01) || ("variability" %in% sharedtype_02) || ("variability" %in% sharedtype_12)){
+  list.data_T <- data.time(data.id.Case1bis, data.id.Case1bis$Time_T, formFixedVar, formRandomVar,timeVar)
+  list.data_L <- data.time(data.id.Case1bis, data.id.Case1bis$Time_L_initnoCI, formFixedVar, formRandomVar,timeVar)
+  list.data.GK_T <- data.time(list.GK_T$data.id2, c(t(st_T)),formFixedVar, formRandomVar,timeVar)
+  list.data.GK_L <- data.time(list.GK_L$data.id2, c(t(st_L)),formFixedVar, formRandomVar,timeVar)
+  O_T <- list.data_T$Xtime; W_T <- list.data_T$Utime
+  O_L <- list.data_L$Xtime; W_L <- list.data_L$Utime
+  O_GK_T <- list.data.GK_T$Xtime; W_GK_T <- list.data.GK_T$Utime
+  O_GK_L <- list.data.GK_L$Xtime; W_GK_L <- list.data.GK_L$Utime
+  
+  if(left_trunc){
+    list.data.GK_T0 <- data.time(list.GK_T0$data.id2, c(t(st_T0)),
+                                 formFixedVar, formRandomVar,timeVar)
+    O_GK_T0 <- list.data.GK_T0$Xtime
+    W_GK_T0 <- list.data.GK_T0$Utime
+  }
+}
+
+"O_base" = O_base, "W_base" = W_base, "O_T" = O_T, "W_T" = W_T, "O_GK_T" = O_GK_T,
+"W_GK_T" = W_GK_T, "O_GK_T0" = O_GK_T0, "W_GK_T0" = W_GK_T0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

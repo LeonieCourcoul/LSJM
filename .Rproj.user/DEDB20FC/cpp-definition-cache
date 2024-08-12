@@ -1,0 +1,420 @@
+[
+    {
+        "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_classicCR.cpp",
+        "file_last_write": 1722528885.0,
+        "definitions": [
+            {
+                "usr": "c:@F@log_llh_lsjm_classicCR#$@N@arma@S@Col>#d#$@N@Rcpp@S@Vector>#VI19#@N@Rcpp@ST>1#T@PreserveStorage#S0_#S0_#S0_#S0_#S1_#S1_#S0_#S0_#$@N@arma@S@Mat>#d#S2_#S0_#d#S0_#S0_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S0_#S0_#S2_#S2_#S2_#S2_#b#S2_#S2_#S0_#I#S0_#S2_#S2_#S2_#S2_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "log_llh_lsjm_classicCR(arma::vec, Rcpp::List, arma::vec, arma::vec, arma::vec, arma::vec, Rcpp::List, Rcpp::List, arma::vec, arma::vec, arma::mat, arma::mat, arma::vec, double, arma::vec, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::vec, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, bool, arma::mat, arma::mat, arma::vec, int, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat)",
+                "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_classicCR.cpp",
+                "line": 14,
+                "column": 11,
+                "hidden": false
+            }
+        ],
+        "hidden": false
+    },
+    {
+        "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_classicIDM_C1.cpp",
+        "file_last_write": 1722971738.0,
+        "definitions": [
+            {
+                "usr": "c:@F@log_llh_lsjm_classicIDM_C1#$@N@arma@S@Col>#d#$@N@Rcpp@S@Vector>#VI19#@N@Rcpp@ST>1#T@PreserveStorage#S0_#S0_#S0_#S0_#S1_#S1_#S0_#S0_#$@N@arma@S@Mat>#d#S2_#S0_#S0_#d#S0_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S0_#S0_#S0_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#b#S2_#S2_#S0_#I#S0_#S1_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "log_llh_lsjm_classicIDM_C1(arma::vec, Rcpp::List, arma::vec, arma::vec, arma::vec, arma::vec, Rcpp::List, Rcpp::List, arma::vec, arma::vec, arma::mat, arma::mat, arma::vec, arma::vec, double, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::vec, arma::vec, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, bool, arma::mat, arma::mat, arma::vec, int, arma::vec, Rcpp::List)",
+                "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_classicIDM_C1.cpp",
+                "line": 14,
+                "column": 11,
+                "hidden": false
+            }
+        ],
+        "hidden": false
+    },
+    {
+        "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_classicIDM_C1bis.cpp",
+        "file_last_write": 1722939043.0,
+        "definitions": [
+            {
+                "usr": "c:@F@log_llh_lsjm_classicIDM_C1bis#$@N@arma@S@Col>#d#$@N@Rcpp@S@Vector>#VI19#@N@Rcpp@ST>1#T@PreserveStorage#S0_#S0_#S0_#S0_#S1_#S1_#S0_#S0_#$@N@arma@S@Mat>#d#S2_#S0_#d#S0_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S0_#S0_#S0_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#b#S2_#S2_#S0_#I#S0_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "log_llh_lsjm_classicIDM_C1bis(arma::vec, Rcpp::List, arma::vec, arma::vec, arma::vec, arma::vec, Rcpp::List, Rcpp::List, arma::vec, arma::vec, arma::mat, arma::mat, arma::vec, double, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::vec, arma::vec, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, bool, arma::mat, arma::mat, arma::vec, int, arma::vec)",
+                "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_classicIDM_C1bis.cpp",
+                "line": 14,
+                "column": 11,
+                "hidden": false
+            }
+        ],
+        "hidden": false
+    },
+    {
+        "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_classicIDM_C2.cpp",
+        "file_last_write": 1722531927.0,
+        "definitions": [
+            {
+                "usr": "c:@F@log_llh_lsjm_classicIDM_C2#$@N@arma@S@Col>#d#$@N@Rcpp@S@Vector>#VI19#@N@Rcpp@ST>1#T@PreserveStorage#S0_#S0_#S0_#S0_#S1_#S1_#S0_#S0_#$@N@arma@S@Mat>#d#S2_#S0_#d#S0_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S0_#S0_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#b#S2_#S2_#S0_#I#S0_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "log_llh_lsjm_classicIDM_C2(arma::vec, Rcpp::List, arma::vec, arma::vec, arma::vec, arma::vec, Rcpp::List, Rcpp::List, arma::vec, arma::vec, arma::mat, arma::mat, arma::vec, double, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::vec, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, bool, arma::mat, arma::mat, arma::vec, int, arma::vec)",
+                "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_classicIDM_C2.cpp",
+                "line": 14,
+                "column": 11,
+                "hidden": false
+            }
+        ],
+        "hidden": false
+    },
+    {
+        "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_classicIDM_C3.cpp",
+        "file_last_write": 1722532101.0,
+        "definitions": [
+            {
+                "usr": "c:@F@log_llh_lsjm_classicIDM_C3#$@N@arma@S@Col>#d#$@N@Rcpp@S@Vector>#VI19#@N@Rcpp@ST>1#T@PreserveStorage#S0_#S0_#S0_#S0_#S1_#S1_#S0_#S0_#$@N@arma@S@Mat>#d#S2_#S0_#S0_#d#S0_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S1_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#b#S2_#S2_#S0_#S0_#S1_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "log_llh_lsjm_classicIDM_C3(arma::vec, Rcpp::List, arma::vec, arma::vec, arma::vec, arma::vec, Rcpp::List, Rcpp::List, arma::vec, arma::vec, arma::mat, arma::mat, arma::vec, arma::vec, double, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, Rcpp::List, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, bool, arma::mat, arma::mat, arma::vec, arma::vec, Rcpp::List)",
+                "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_classicIDM_C3.cpp",
+                "line": 14,
+                "column": 11,
+                "hidden": false
+            }
+        ],
+        "hidden": false
+    },
+    {
+        "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_classicSingle.cpp",
+        "file_last_write": 1722885700.0,
+        "definitions": [
+            {
+                "usr": "c:@F@log_llh_lsjm_classicSingle#$@N@arma@S@Col>#d#$@N@Rcpp@S@Vector>#VI19#@N@Rcpp@ST>1#T@PreserveStorage#S0_#S0_#S0_#S0_#S1_#S1_#S0_#S0_#$@N@arma@S@Mat>#d#S2_#S0_#d#S0_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S0_#S0_#S2_#S2_#S2_#b#S2_#S2_#S0_#I#S0_#S2_#S2_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "log_llh_lsjm_classicSingle(arma::vec, Rcpp::List, arma::vec, arma::vec, arma::vec, arma::vec, Rcpp::List, Rcpp::List, arma::vec, arma::vec, arma::mat, arma::mat, arma::vec, double, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::vec, arma::vec, arma::mat, arma::mat, arma::mat, bool, arma::mat, arma::mat, arma::vec, int, arma::vec, arma::mat, arma::mat)",
+                "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_classicSingle.cpp",
+                "line": 14,
+                "column": 11,
+                "hidden": false
+            }
+        ],
+        "hidden": false
+    },
+    {
+        "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_covDepCR.cpp",
+        "file_last_write": 1722589925.0,
+        "definitions": [
+            {
+                "usr": "c:@F@log_llh_lsjm_covDepCR#$@N@arma@S@Col>#d#$@N@Rcpp@S@Vector>#VI19#@N@Rcpp@ST>1#T@PreserveStorage#S0_#S0_#S0_#S0_#S0_#S1_#S1_#S0_#S0_#S0_#$@N@arma@S@Mat>#d#S2_#S2_#S0_#S0_#S0_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S0_#S0_#S2_#S2_#S2_#S2_#b#S2_#S2_#S0_#I#S0_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "log_llh_lsjm_covDepCR(arma::vec, Rcpp::List, arma::vec, arma::vec, arma::vec, arma::vec, arma::vec, Rcpp::List, Rcpp::List, arma::vec, arma::vec, arma::vec, arma::mat, arma::mat, arma::mat, arma::vec, arma::vec, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::vec, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, bool, arma::mat, arma::mat, arma::vec, int, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat)",
+                "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_covDepCR.cpp",
+                "line": 14,
+                "column": 11,
+                "hidden": false
+            }
+        ],
+        "hidden": false
+    },
+    {
+        "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_covDepIDM_C1.cpp",
+        "file_last_write": 1723140674.0,
+        "definitions": [
+            {
+                "usr": "c:@F@log_llh_lsjm_covDepIDM_C1#$@N@arma@S@Col>#d#$@N@Rcpp@S@Vector>#VI19#@N@Rcpp@ST>1#T@PreserveStorage#S0_#S0_#S0_#S1_#S1_#S1_#$@N@arma@S@Mat>#d#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S1_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S1_#S1_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "log_llh_lsjm_covDepIDM_C1(arma::vec, Rcpp::List, arma::vec, arma::vec, arma::vec, Rcpp::List, Rcpp::List, Rcpp::List, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, Rcpp::List, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, Rcpp::List, Rcpp::List, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat)",
+                "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_covDepIDM_C1.cpp",
+                "line": 14,
+                "column": 11,
+                "hidden": false
+            }
+        ],
+        "hidden": false
+    },
+    {
+        "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_covDepIDM_C1bis.cpp",
+        "file_last_write": 1723117525.0,
+        "definitions": [
+            {
+                "usr": "c:@F@log_llh_lsjm_covDepIDM_C1bis#$@N@arma@S@Col>#d#$@N@Rcpp@S@Vector>#VI19#@N@Rcpp@ST>1#T@PreserveStorage#S0_#S0_#S0_#S1_#S1_#S1_#$@N@arma@S@Mat>#d#S2_#S2_#S0_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S1_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S1_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "log_llh_lsjm_covDepIDM_C1bis(arma::vec, Rcpp::List, arma::vec, arma::vec, arma::vec, Rcpp::List, Rcpp::List, Rcpp::List, arma::mat, arma::mat, arma::mat, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, Rcpp::List, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, Rcpp::List, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat)",
+                "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_covDepIDM_C1bis.cpp",
+                "line": 14,
+                "column": 11,
+                "hidden": false
+            }
+        ],
+        "hidden": false
+    },
+    {
+        "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_covDepIDM_C2.cpp",
+        "file_last_write": 1723117580.0,
+        "definitions": [
+            {
+                "usr": "c:@F@log_llh_lsjm_covDepIDM_C2#$@N@arma@S@Col>#d#$@N@Rcpp@S@Vector>#VI19#@N@Rcpp@ST>1#T@PreserveStorage#S0_#S0_#S0_#S1_#S1_#S1_#$@N@arma@S@Mat>#d#S2_#S2_#S0_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S1_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S1_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "log_llh_lsjm_covDepIDM_C2(arma::vec, Rcpp::List, arma::vec, arma::vec, arma::vec, Rcpp::List, Rcpp::List, Rcpp::List, arma::mat, arma::mat, arma::mat, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, Rcpp::List, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, Rcpp::List, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat)",
+                "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_covDepIDM_C2.cpp",
+                "line": 14,
+                "column": 11,
+                "hidden": false
+            }
+        ],
+        "hidden": false
+    },
+    {
+        "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_covDepIDM_C3.cpp",
+        "file_last_write": 1723191283.0,
+        "definitions": [
+            {
+                "usr": "c:@F@log_llh_lsjm_covDepIDM_C3#$@N@arma@S@Col>#d#$@N@Rcpp@S@Vector>#VI19#@N@Rcpp@ST>1#T@PreserveStorage#S0_#S0_#S1_#S1_#S1_#$@N@arma@S@Mat>#d#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S1_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S1_#S1_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "log_llh_lsjm_covDepIDM_C3(arma::vec, Rcpp::List, arma::vec, arma::vec, Rcpp::List, Rcpp::List, Rcpp::List, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, Rcpp::List, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, Rcpp::List, Rcpp::List, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat)",
+                "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_covDepIDM_C3.cpp",
+                "line": 14,
+                "column": 11,
+                "hidden": false
+            }
+        ],
+        "hidden": false
+    },
+    {
+        "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_covDepSingle.cpp",
+        "file_last_write": 1722888266.0,
+        "definitions": [
+            {
+                "usr": "c:@F@log_llh_lsjm_covDepSingle#$@N@arma@S@Col>#d#$@N@Rcpp@S@Vector>#VI19#@N@Rcpp@ST>1#T@PreserveStorage#S0_#S0_#S0_#S0_#d#S1_#S1_#S0_#S0_#S0_#$@N@arma@S@Mat>#d#S2_#S2_#S0_#S0_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S0_#S0_#S2_#S2_#S2_#b#S2_#S2_#S0_#I#S0_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "log_llh_lsjm_covDepSingle(arma::vec, Rcpp::List, arma::vec, arma::vec, arma::vec, arma::vec, double, Rcpp::List, Rcpp::List, arma::vec, arma::vec, arma::vec, arma::mat, arma::mat, arma::mat, arma::vec, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::vec, arma::vec, arma::mat, arma::mat, arma::mat, bool, arma::mat, arma::mat, arma::vec, int, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat)",
+                "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_covDepSingle.cpp",
+                "line": 14,
+                "column": 11,
+                "hidden": false
+            }
+        ],
+        "hidden": false
+    },
+    {
+        "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_interintraCR.cpp",
+        "file_last_write": 1722524512.0,
+        "definitions": [
+            {
+                "usr": "c:@F@log_llh_lsjm_interintraCR#$@N@arma@S@Col>#d#$@N@Rcpp@S@Vector>#VI19#@N@Rcpp@ST>1#T@PreserveStorage#S0_#S0_#S0_#S0_#S0_#S1_#S1_#S0_#S0_#$@N@arma@S@Mat>#d#S2_#S0_#S1_#S0_#S0_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S0_#S0_#S2_#S2_#S2_#S2_#b#S0_#S2_#S2_#S0_#S0_#I#S0_#S0_#S2_#S2_#S2_#S2_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "log_llh_lsjm_interintraCR(arma::vec, Rcpp::List, arma::vec, arma::vec, arma::vec, arma::vec, arma::vec, Rcpp::List, Rcpp::List, arma::vec, arma::vec, arma::mat, arma::mat, arma::vec, Rcpp::List, arma::vec, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::vec, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, bool, arma::vec, arma::mat, arma::mat, arma::vec, arma::vec, int, arma::vec, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat)",
+                "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_interintraCR.cpp",
+                "line": 14,
+                "column": 11,
+                "hidden": false
+            }
+        ],
+        "hidden": false
+    },
+    {
+        "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_interintraIDM_C1.cpp",
+        "file_last_write": 1723045413.0,
+        "definitions": [
+            {
+                "usr": "c:@F@log_llh_lsjm_interintraIDM_C1#$@N@arma@S@Col>#d#$@N@Rcpp@S@Vector>#VI19#@N@Rcpp@ST>1#T@PreserveStorage#S0_#S0_#S0_#S0_#S0_#S1_#S1_#S0_#S0_#$@N@arma@S@Mat>#d#S2_#S0_#S0_#S1_#S0_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S0_#S0_#S0_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#b#S0_#S2_#S2_#S0_#S0_#I#S0_#S0_#S1_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "log_llh_lsjm_interintraIDM_C1(arma::vec, Rcpp::List, arma::vec, arma::vec, arma::vec, arma::vec, arma::vec, Rcpp::List, Rcpp::List, arma::vec, arma::vec, arma::mat, arma::mat, arma::vec, arma::vec, Rcpp::List, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::vec, arma::vec, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, bool, arma::vec, arma::mat, arma::mat, arma::vec, arma::vec, int, arma::vec, arma::vec, Rcpp::List)",
+                "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_interintraIDM_C1.cpp",
+                "line": 14,
+                "column": 11,
+                "hidden": false
+            }
+        ],
+        "hidden": false
+    },
+    {
+        "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_interintraIDM_C1bis.cpp",
+        "file_last_write": 1723047404.0,
+        "definitions": [
+            {
+                "usr": "c:@F@log_llh_lsjm_interintraIDM_C1bis#$@N@arma@S@Col>#d#$@N@Rcpp@S@Vector>#VI19#@N@Rcpp@ST>1#T@PreserveStorage#S0_#S0_#S0_#S0_#S0_#S1_#S1_#S0_#S0_#$@N@arma@S@Mat>#d#S2_#S0_#S1_#S0_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S0_#S0_#S0_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#b#S0_#S2_#S2_#S0_#S0_#I#S0_#S0_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "log_llh_lsjm_interintraIDM_C1bis(arma::vec, Rcpp::List, arma::vec, arma::vec, arma::vec, arma::vec, arma::vec, Rcpp::List, Rcpp::List, arma::vec, arma::vec, arma::mat, arma::mat, arma::vec, Rcpp::List, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::vec, arma::vec, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, bool, arma::vec, arma::mat, arma::mat, arma::vec, arma::vec, int, arma::vec, arma::vec)",
+                "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_interintraIDM_C1bis.cpp",
+                "line": 14,
+                "column": 11,
+                "hidden": false
+            }
+        ],
+        "hidden": false
+    },
+    {
+        "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_interintraIDM_C2.cpp",
+        "file_last_write": 1722515967.0,
+        "definitions": [
+            {
+                "usr": "c:@F@log_llh_lsjm_interintraIDM_C2#$@N@arma@S@Col>#d#$@N@Rcpp@S@Vector>#VI19#@N@Rcpp@ST>1#T@PreserveStorage#S0_#S0_#S0_#S0_#S0_#S1_#S1_#S0_#S0_#$@N@arma@S@Mat>#d#S2_#S0_#S1_#S0_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S0_#S0_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#b#S0_#S2_#S2_#S0_#S0_#I#S0_#S0_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "log_llh_lsjm_interintraIDM_C2(arma::vec, Rcpp::List, arma::vec, arma::vec, arma::vec, arma::vec, arma::vec, Rcpp::List, Rcpp::List, arma::vec, arma::vec, arma::mat, arma::mat, arma::vec, Rcpp::List, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::vec, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, bool, arma::vec, arma::mat, arma::mat, arma::vec, arma::vec, int, arma::vec, arma::vec)",
+                "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_interintraIDM_C2.cpp",
+                "line": 14,
+                "column": 11,
+                "hidden": false
+            },
+            {
+                "usr": "c:@F@timesTwo#$@N@Rcpp@S@Vector>#VI14#@N@Rcpp@ST>1#T@PreserveStorage#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "timesTwo(Rcpp::NumericVector)",
+                "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_interintraIDM_C2.cpp",
+                "line": 394,
+                "column": 15,
+                "hidden": false
+            }
+        ],
+        "hidden": false
+    },
+    {
+        "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_interintraIDM_C3.cpp",
+        "file_last_write": 1722516013.0,
+        "definitions": [
+            {
+                "usr": "c:@F@log_llh_lsjm_interintraIDM_C3#$@N@arma@S@Col>#d#$@N@Rcpp@S@Vector>#VI19#@N@Rcpp@ST>1#T@PreserveStorage#S0_#S0_#S0_#S0_#S0_#S1_#S1_#S0_#S0_#$@N@arma@S@Mat>#d#S2_#S0_#S0_#S1_#S0_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S1_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#b#S0_#S2_#S2_#S0_#S0_#S0_#S0_#S1_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "log_llh_lsjm_interintraIDM_C3(arma::vec, Rcpp::List, arma::vec, arma::vec, arma::vec, arma::vec, arma::vec, Rcpp::List, Rcpp::List, arma::vec, arma::vec, arma::mat, arma::mat, arma::vec, arma::vec, Rcpp::List, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, Rcpp::List, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, bool, arma::vec, arma::mat, arma::mat, arma::vec, arma::vec, arma::vec, arma::vec, Rcpp::List)",
+                "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_interintraIDM_C3.cpp",
+                "line": 14,
+                "column": 11,
+                "hidden": false
+            }
+        ],
+        "hidden": false
+    },
+    {
+        "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_interintraSingle.cpp",
+        "file_last_write": 1722932140.0,
+        "definitions": [
+            {
+                "usr": "c:@F@log_llh_lsjm_interintraSingle#$@N@arma@S@Col>#d#$@N@Rcpp@S@Vector>#VI19#@N@Rcpp@ST>1#T@PreserveStorage#S0_#S0_#S0_#S0_#S0_#S1_#S1_#S0_#S0_#$@N@arma@S@Mat>#d#S2_#S0_#S1_#S0_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S2_#S0_#S0_#S2_#S2_#S2_#b#S0_#S2_#S2_#S0_#S0_#I#S0_#S0_#S2_#S2_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "log_llh_lsjm_interintraSingle(arma::vec, Rcpp::List, arma::vec, arma::vec, arma::vec, arma::vec, arma::vec, Rcpp::List, Rcpp::List, arma::vec, arma::vec, arma::mat, arma::mat, arma::vec, Rcpp::List, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::vec, arma::vec, arma::mat, arma::mat, arma::mat, bool, arma::vec, arma::mat, arma::mat, arma::vec, arma::vec, int, arma::vec, arma::vec, arma::mat, arma::mat)",
+                "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsjm_interintraSingle.cpp",
+                "line": 14,
+                "column": 11,
+                "hidden": false
+            }
+        ],
+        "hidden": false
+    },
+    {
+        "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsmm_classic_cpp.cpp",
+        "file_last_write": 1722341837.0,
+        "definitions": [
+            {
+                "usr": "c:@F@log_llh_lsmm_classic_cpp#I#$@N@arma@S@Col>#d#$@N@arma@S@Mat>#d#S1_#S1_#S0_#I#S0_#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "log_llh_lsmm_classic_cpp(int, arma::vec, arma::mat, arma::mat, arma::mat, arma::vec, int, arma::vec, double)",
+                "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsmm_classic_cpp.cpp",
+                "line": 14,
+                "column": 11,
+                "hidden": false
+            }
+        ],
+        "hidden": false
+    },
+    {
+        "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsmm_covDep_cpp.cpp",
+        "file_last_write": 1722339123.0,
+        "definitions": [
+            {
+                "usr": "c:@F@log_llh_lsmm_covDep_cpp#I#$@N@arma@S@Col>#d#$@N@arma@S@Mat>#d#S0_#S1_#S1_#S1_#S1_#S1_#S0_#I#S0_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "log_llh_lsmm_covDep_cpp(int, arma::vec, arma::mat, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::vec, int, arma::vec)",
+                "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsmm_covDep_cpp.cpp",
+                "line": 14,
+                "column": 11,
+                "hidden": false
+            }
+        ],
+        "hidden": false
+    },
+    {
+        "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsmm_interintra_cpp.cpp",
+        "file_last_write": 1722414045.0,
+        "definitions": [
+            {
+                "usr": "c:@F@log_llh_lsmm_interintra_cpp#I#$@N@Rcpp@S@Vector>#VI19#@N@Rcpp@ST>1#T@PreserveStorage#$@N@arma@S@Mat>#d#S1_#$@N@arma@S@Col>#d#S2_#S2_#S1_#S2_#S2_#S2_#I#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "log_llh_lsmm_interintra_cpp(int, Rcpp::List, arma::mat, arma::mat, arma::vec, arma::vec, arma::vec, arma::mat, arma::vec, arma::vec, arma::vec, int)",
+                "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/log_llh_lsmm_interintra_cpp.cpp",
+                "line": 14,
+                "column": 11,
+                "hidden": false
+            }
+        ],
+        "hidden": false
+    },
+    {
+        "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/re_lcmm_classic_cpp.cpp",
+        "file_last_write": 1722420940.0,
+        "definitions": [
+            {
+                "usr": "c:@F@re_lcmm_classic_cpp#$@N@arma@S@Col>#d#$@N@arma@S@Mat>#d#S1_#S1_#S0_#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "re_lcmm_classic_cpp(arma::vec, arma::mat, arma::mat, arma::mat, arma::vec, double)",
+                "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/re_lcmm_classic_cpp.cpp",
+                "line": 14,
+                "column": 8,
+                "hidden": false
+            }
+        ],
+        "hidden": false
+    },
+    {
+        "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/re_lcmm_covDep_cpp.cpp",
+        "file_last_write": 1722419851.0,
+        "definitions": [
+            {
+                "usr": "c:@F@re_lcmm_covDep_cpp#$@N@arma@S@Col>#d#$@N@arma@S@Mat>#d#S0_#S1_#S1_#S1_#S1_#S1_#S0_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "re_lcmm_covDep_cpp(arma::vec, arma::mat, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::vec)",
+                "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/re_lcmm_covDep_cpp.cpp",
+                "line": 14,
+                "column": 8,
+                "hidden": false
+            }
+        ],
+        "hidden": false
+    },
+    {
+        "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/re_lcmm_interintra_cpp.cpp",
+        "file_last_write": 1722414357.0,
+        "definitions": [
+            {
+                "usr": "c:@F@re_lcmm_interintra_cpp#$@N@arma@S@Col>#d#$@N@arma@S@Mat>#d#$@N@Rcpp@S@Vector>#VI19#@N@Rcpp@ST>1#T@PreserveStorage#I#S1_#S1_#S0_#S0_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "re_lcmm_interintra_cpp(arma::vec, arma::mat, Rcpp::List, int, arma::mat, arma::mat, arma::vec, arma::vec)",
+                "file": "C:/Users/lc14/Documents/Thèse/Package/LSJM/src/re_lcmm_interintra_cpp.cpp",
+                "line": 14,
+                "column": 8,
+                "hidden": false
+            }
+        ],
+        "hidden": false
+    }
+]

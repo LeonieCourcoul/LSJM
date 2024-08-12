@@ -1,0 +1,171 @@
+load("~/These/Package/FlexVarJM/data/Data_toy.RData")
+Data_toy$event1 <- ifelse(Data_toy$event == 1, 1, 0)
+Data_toy$event2 <- ifelse(Data_toy$event == 2, 1, 0)
+
+library(marqLevAlg)
+
+
+# lsmm - cov-dependent
+example <- lsmm(formFixed = y~visit,
+                formRandom = ~ visit,
+                formGroup = ~ID,
+                timeVar = 'visit',
+                data.long = Data_toy,
+                formVar = "classic",
+                formFixedVar =~visit,
+                formRandomVar =~visit,
+                correlated_re = FALSE,
+                formGroupVisit =~visit,
+                S1 = 1000,
+                S2 = 1000,
+                nproc = 2,
+                maxiter = 100
+)
+#lsjm - cov-dependent
+## Single
+library(survival)
+library(survminer)
+lsjmCovDepSingle <- lsjm(example,
+                         survival_type = 'CR',
+                         formSurv_01=~1,
+                         formSurv_02=~1,
+                         sharedtype_01 = c("current value"),
+                         sharedtype_02 = c("current value", "slope"),
+                         hazardBase_01 = "Gompertz",
+                         hazardBase_02 = "Exponential",
+                         delta1=~event1,
+                         delta2=~event2,
+                         Time_T =~time,
+                         formSlopeFixed =~1,
+                         formSlopeRandom =~1,
+                         index_beta_slope = c(2),
+                         index_b_slope = c(2),
+                         nproc = 5,
+                         S1 = 1000,
+                         S2 = 1000, print.info = T, file = "",
+                         epsa = 0.9, epsb = 0.9, epsd = 1.2)
+
+Data_toy$category  <- NA
+for(i in unique(Data_toy$ID)){
+  print(i)
+  Data_toy$category[which(Data_toy$ID == i)] <- sample(c(1,2,3,4),1)
+}
+
+Data_toy$category <- as.factor(Data_toy$category)
+
+example <- lsmm(formFixed = y~visit+category,
+                formRandom = ~ visit,
+                formGroup = ~ID,
+                data.long = Data_toy,
+                formVar = "cov-dependent",
+                formFixedVar =~visit+category,
+                formRandomVar =~visit,
+                correlated_re = FALSE,
+                formGroupVisit =~visit,
+                S1 = 100,
+                S2 = 100,
+                nproc = 5,
+                maxiter = 100
+)
+summary(example)
+
+
+
+# lsmm - inter intra
+load("~/These/3C/Int Cens/3C.CI.Bordeaux.RData")
+data.long.Bordeaux$age.visit <- (data.long.Bordeaux$age.visit-65)/10
+data.long.Bordeaux$Time_T <- (data.long.Bordeaux$Time_T-65)/10
+data.long.Bordeaux$Time_T0 <- (data.long.Bordeaux$Time_T0-65)/10
+data.long.Bordeaux$Time_L <- (data.long.Bordeaux$Time_L-65)/10
+data.long.Bordeaux$Time_R <- (data.long.Bordeaux$Time_R-65)/10
+data.long.Bordeaux$PAS <- data.long.Bordeaux$PAS/10
+data.long.Bordeaux <- data.long.Bordeaux[,c(1,2,4,6,13:24)]
+data.long.Bordeaux <- na.omit(data.long.Bordeaux)
+data.long.Bordeaux$SEXE <- as.factor(data.long.Bordeaux$SEXE)
+data.long.Bordeaux$DIPNIV2 <- ifelse(data.long.Bordeaux$DIPNIV <= 3, 0, 1)
+data.long.Bordeaux$DIPNIV2 <- as.factor(data.long.Bordeaux$DIPNIV2)
+
+data.long.Bordeaux$APOE4 <- as.factor(data.long.Bordeaux$APOE4)
+
+example <- lsmm(formFixed = PAS~age.visit,
+                formRandom = ~ age.visit,
+                formGroup = ~ID,
+                timeVar = "age.visit",
+                data.long = data.long.Bordeaux,
+                formVar = "inter-intra",
+                var_inter = T,
+                var_intra = T,
+                correlated_re = FALSE,
+                formGroupVisit =~num.visit,
+                S1 = 1000,
+                S2 = 1000,
+                nproc = 5,
+                maxiter = 100
+)
+
+lsjm3CSingle <- lsjm(example,
+                     survival_type = 'CR',
+                     formSurv_01=~APOE4,
+                     formSurv_02=~1,
+                     sharedtype_01 = c("current value","inter visit variability"),
+                     sharedtype_02 = c("current value","inter visit variability", "intra visit variability"),
+                     hazardBase_01 = "Splines",
+                     hazardBase_02 = "Gompertz",
+                     delta1=~delta1,
+                     delta2=~delta2,
+                     Time_T =~Time_T,
+                     Time_T0 =~Time_T0,
+                     formSlopeFixed =~1,
+                     formSlopeRandom =~1,
+                     index_beta_slope = c(2),
+                     index_b_slope = c(2),
+                     nproc = 5,
+                     S1 = 100,
+                     S2 = 100, print.info = T, file = "",
+                     epsa = 0.9, epsb = 0.9, epsd = 1.2)
+
+summary(example)
+lsjm3CSingle <- lsjm(example,
+                     survival_type = 'CR',
+                     formSurv_01=~APOE4,
+                     formSurv_02=~1,
+                     formSurv_12=~1,
+                     sharedtype_01 = c("current value", "slope"),
+                     sharedtype_02 = c("current value"),
+                     sharedtype_12 = c("current value","slope"),
+                     hazardBase_01 = "Splines",
+                     hazardBase_02 = "Weibull",
+                     hazardBase_12 = "Splines",
+                     delta1=~delta1,
+                     delta2=~delta2,
+                     Time_T =~Time_T,
+                     Time_L =~Time_L,
+                     Time_R =~Time_R,
+                     Time_T0 =~Time_T0,
+                     formSlopeFixed =~1,
+                     formSlopeRandom =~1,
+                     index_beta_slope = c(2),
+                     index_b_slope = c(2),
+                     timeVar = "age.visit",
+                     nproc = 5,
+                     S1 = 100,
+                     S2 = 100, print.info = T, file = "",
+                     epsa = 0.9, epsb = 0.9, epsd = 1.2)
+
+data.long.Bordeaux <- as.data.frame(data.long.Bordeaux)
+data.long.court <- data.long.Bordeaux[!duplicated(data.long.Bordeaux[,c("ID","num.visit")]),]
+
+example <- lsmm(formFixed = PAS~age.visit,
+                formRandom = ~ age.visit,
+                formGroup = ~ID,
+                data.long = data.long.court,
+                formVar = "classic",
+                formFixedVar =~age.visit+APOE4,
+                formRandomVar =~age.visit,
+                correlated_re = FALSE,
+                S1 = 1000,
+                S2 = 1000,
+                nproc = 5,
+                maxiter = 100
+)
+

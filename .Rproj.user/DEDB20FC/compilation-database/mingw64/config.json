@@ -1,0 +1,25 @@
+{
+    "args": [
+        "-std=gnu++14",
+        "-IC:/Users/lc14/AppData/Local/Programs/R/R-4.2.3/include",
+        "-DNDEBUG",
+        "-IC:/Users/lc14/AppData/Local/R/win-library/4.2/Rcpp/include",
+        "-IC:/Users/lc14/AppData/Local/R/win-library/4.2/RcppArmadillo/include",
+        "-DEIGEN_DONT_VECTORIZE",
+        "-nostdinc",
+        "-Ic:/rbuildtools/4.2/x86_64-w64-mingw32.static.posix/bin/../lib/gcc/x86_64-w64-mingw32.static.posix/10.4.0/include/c++",
+        "-Ic:/rbuildtools/4.2/x86_64-w64-mingw32.static.posix/bin/../lib/gcc/x86_64-w64-mingw32.static.posix/10.4.0/include/c++/x86_64-w64-mingw32.static.posix",
+        "-Ic:/rbuildtools/4.2/x86_64-w64-mingw32.static.posix/bin/../lib/gcc/x86_64-w64-mingw32.static.posix/10.4.0/include/c++/backward",
+        "-Ic:/rbuildtools/4.2/x86_64-w64-mingw32.static.posix/bin/../lib/gcc/x86_64-w64-mingw32.static.posix/10.4.0/include",
+        "-Ic:/rbuildtools/4.2/x86_64-w64-mingw32.static.posix/bin/../lib/gcc/x86_64-w64-mingw32.static.posix/10.4.0/../../../../include",
+        "-Ic:/rbuildtools/4.2/x86_64-w64-mingw32.static.posix/bin/../lib/gcc/x86_64-w64-mingw32.static.posix/10.4.0/include-fixed",
+        "-include",
+        "C:/Users/lc14/Documents/Thèse/Package/LSJM/.Rproj.user/DEDB20FC/compilation-database/mingw64/cpp-definitions.h"
+    ],
+    "pch": "RcppArmadillo",
+    "is_cpp": true,
+    "hash": "172234228117108580681710858076",
+    "compiler": "17486434899767519736",
+    "rversion": "4.2.3",
+    "dbversion": 4
+}

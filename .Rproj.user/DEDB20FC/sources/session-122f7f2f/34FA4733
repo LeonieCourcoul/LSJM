@@ -1,0 +1,27 @@
+{
+    "id": "34FA4733",
+    "path": "~/Thèse/Package/LSJM/R/lsjm.R",
+    "project_path": "R/lsjm.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1723471308763.0,
+    "source_on_save": false,
+    "relative_order": 6,
+    "properties": {
+        "tempName": "Untitled2",
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "66,74",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1723474409,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1723474409223,
+    "read_only": false,
+    "read_only_alternatives": []
+}

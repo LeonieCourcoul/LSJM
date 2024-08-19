@@ -197,12 +197,12 @@ double re_lsjm_covDepIDMCase3_cpp(arma::vec sharedtype, List HB, arma::vec W_G,
   }
 
   if(dep_var_01 || dep_var_02 || dep_var_12){
-    Sigma_T = arma::dot(omega, O_T_i) + W_T_i*tau_re;
-    sigma_GK_T = O_GK_T_i*omega+W_GK_T_i*tau_re;
-    sigma_GK_L_T = O_GK_L_T_i*omega+W_GK_L_T_i*tau_re;
-    sigma_GK_0_LT = O_GK_0_LT_i*omega+W_GK_0_LT_i*tau_re;
+    Sigma_T = exp(arma::dot(omega, O_T_i) + W_T_i*tau_re);
+    sigma_GK_T = exp(O_GK_T_i*omega+W_GK_T_i*tau_re);
+    sigma_GK_L_T = exp(O_GK_L_T_i*omega+W_GK_L_T_i*tau_re);
+    sigma_GK_0_LT = exp(O_GK_0_LT_i*omega+W_GK_0_LT_i*tau_re);
     if(left_trunc){
-      current_GK_T0 =  O_GK_T0_i*omega+W_GK_T0_i*tau_re;
+      current_GK_T0 =  exp(O_GK_T0_i*omega+W_GK_T0_i*tau_re);
     }
     if(dep_var_01){
       survLong_01_T_i = survLong_01_T_i + alpha_var_01*sigma_GK_T.t();

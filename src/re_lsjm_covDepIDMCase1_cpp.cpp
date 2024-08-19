@@ -190,14 +190,14 @@ double re_lsjm_covDepIDMCase1_cpp(arma::vec sharedtype, List HB, arma::vec W_G,
 
   if(dep_var_01 || dep_var_02 || dep_var_12){
     //Rcout << "The value of v : \n" << 1 << "\n";
-    Sigma_T = arma::dot(omega, O_T_i) + W_T_i*tau_re;
+    Sigma_T = exp(arma::dot(omega, O_T_i) + W_T_i*tau_re);
 
-    sigma_GK_T = O_GK_T_i*omega+W_GK_T_i*tau_re;
+    sigma_GK_T = exp(O_GK_T_i*omega+W_GK_T_i*tau_re);
 
-    sigma_GK_L_R = O_GK_L_R_i*omega+W_GK_L_R_i*tau_re;
-    sigma_GK_0_LR = O_GK_0_LR_i*omega+W_GK_0_LR_i*tau_re;
+    sigma_GK_L_R = exp(O_GK_L_R_i*omega+W_GK_L_R_i*tau_re);
+    sigma_GK_0_LR = exp(O_GK_0_LR_i*omega+W_GK_0_LR_i*tau_re);
     if(left_trunc){
-      sigma_GK_T0 = O_GK_T0_i*omega+W_GK_T0_i*tau_re;
+      sigma_GK_T0 = exp(O_GK_T0_i*omega+W_GK_T0_i*tau_re);
 
     }
     if(dep_var_01){

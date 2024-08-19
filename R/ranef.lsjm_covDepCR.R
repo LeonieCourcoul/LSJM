@@ -29,8 +29,8 @@ ranef.lsjm_covDepCR <- function(object,...){
     curseur <- curseur + 2
   }
   if(x$control$hazard_baseline_01 == "Splines"){
-    gamma_01 <- param[(curseur):(curseur+x$control$nb.knots.splines[1]-2+1)]
-    curseur <- curseur + x$control$nb.knots.splines[1]-2 + 2
+    gamma_01 <- param[(curseur):(curseur+x$control$nb.knots.splines[1]+2+1)]
+    curseur <- curseur + x$control$nb.knots.splines[1]+2 + 2
   }
   ### Covariables :
   nb.alpha_01 <- x$control$nb.alpha[1]
@@ -63,8 +63,8 @@ ranef.lsjm_covDepCR <- function(object,...){
     curseur <- curseur + 2
   }
   if(x$control$hazard_baseline_02 == "Splines"){
-    gamma_02 <- param[(curseur):(curseur+x$control$nb.knots.splines[2]-2+1)]
-    curseur <- curseur + x$control$nb.knots.splines[2]-2+ 2
+    gamma_02 <- param[(curseur):(curseur+x$control$nb.knots.splines[2]+2+1)]
+    curseur <- curseur + x$control$nb.knots.splines[2]+2+ 2
   }
   ### Covariables :
   nb.alpha_02 <- x$control$nb.alpha[2]
@@ -94,8 +94,8 @@ ranef.lsjm_covDepCR <- function(object,...){
   }
   omega <- param[(curseur):(curseur+x$control$Objectlsmm$control$nb.omega-1)]
   curseur <- curseur+x$control$Objectlsmm$control$nb.omega
-  if(x$control$correlated_re){
-    C1 <- matrix(rep(0,(x$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma)**2),nrow=x$control$Objectlsmm$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma,ncol=x$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma)
+  if(x$control$Objectlsmm$control$correlated_re){
+    C1 <- matrix(rep(0,(x$control$Objectlsmm$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma)**2),nrow=x$control$Objectlsmm$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma,ncol=x$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma)
     C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
     Cholesky <- C1
     Cholesky <- as.matrix(Cholesky)
@@ -116,8 +116,8 @@ ranef.lsjm_covDepCR <- function(object,...){
 
   MatCov <- Cholesky%*%t(Cholesky)
 
-  sharedtype <- c("current value" %in% x$control$sharedtype_01, "slope" %in% x$control$sharedtype_01, "variability" %in% sharedtype_01,
-                  "current value" %in% x$control$sharedtype_02, "slope" %in% x$control$sharedtype_02, "variability" %in% sharedtype_02)
+  sharedtype <- c("current value" %in% x$control$sharedtype_01, "slope" %in% x$control$sharedtype_01, "variability" %in% x$control$sharedtype_01,
+                  "current value" %in% x$control$sharedtype_02, "slope" %in% x$control$sharedtype_02, "variability" %in% x$control$sharedtype_02)
   HB <- list(x$control$hazard_baseline_01, x$control$hazard_baseline_02)
   Weibull <- c(shape_01, shape_02)
   Gompertz <- c(Gompertz.1_01, Gompertz.2_01, Gompertz.1_02, Gompertz.2_02)
@@ -129,9 +129,27 @@ ranef.lsjm_covDepCR <- function(object,...){
   rep_wk = rep(gaussKronrod()$wk, length(gaussKronrod()$wk))
   sk_GK <- gaussKronrod()$sk
 
-  data.long <- x$control$data.long
+  data.long <- x$control$Objectlsmm$control$data.long
 
-  random.effects.Predictions <- matrix(NA, nrow = lenght(unique(data.long$id)), ncol = x$control$Objectlsmm$control$nb.e.a+1)
+  Time_T <- x$control$Time[["Time_T"]]
+  data.long$Time_T <- data.long[all.vars(Time_T)][,1]
+  if(!is.null(x$control$Time[["Time_T0"]])){
+    left_trunc <- TRUE
+    Time_T0 <- x$control$Time[["Time_T0"]]
+    data.long$Time_T0 <- data.long[all.vars(Time_T0)][,1]
+  }
+  else{
+    left_trunc <- FALSE
+  }
+
+  delta1 <- x$control$deltas[["delta1"]]
+  data.long$delta1 <- data.long[all.vars(delta1)][,1]
+  delta2 <- x$control$deltas[["delta2"]]
+  data.long$delta2 <- data.long[all.vars(delta2)][,1]
+  knots_01 <- NULL
+  knots_02 <- NULL
+
+  random.effects.Predictions <- matrix(NA, nrow = length(unique(data.long$id)), ncol = x$control$Objectlsmm$control$nb.e.a+1)
   binit <- matrix(0, nrow = 1, ncol = x$control$Objectlsmm$control$nb.e.a)
 
   st_T = as.matrix(0); X_GK_T = as.matrix(0); U_GK_T = as.matrix(0); Xslope_GK_T = as.matrix(0); Uslope_GK_T = as.matrix(0);
@@ -223,21 +241,23 @@ ranef.lsjm_covDepCR <- function(object,...){
   if(x$control$hazard_baseline_02 == "Gompertz"){Z_02 <- as.matrix(Z_02[,-1])}
   if(x$control$hazard_baseline_01 == "Splines"){
     Z_01 <- as.matrix(Z_01[,-1])
-    B_T_01 <- splineDesign(x$control$knots_01, data.id$Time_T, ord = 4L)
-    Bs_T_01 <- splineDesign(x$control$knots_01, c(t(st_T)), ord = 4L)
+    B_T_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, data.id$Time_T, ord = 4L)
+    Bs_T_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, c(t(st_T)), ord = 4L)
     if(x$control$left_trunc){
-      Bs_T0_01 <- splineDesign(x$control$knots_01, c(t(st_T0)), ord = 4L)
+      Bs_T0_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, c(t(st_T0)), ord = 4L)
     }
   }
   if(x$control$hazard_baseline_02 == "Splines"){
     Z_02 <- as.matrix(Z_02[,-1])
-    B_T_02 <- splineDesign(x$control$knots_02, data.id$Time_T, ord = 4L)
-    Bs_T_02 <- splineDesign(x$control$knots_02, c(t(st_T)), ord = 4L)
+    B_T_02 <- splineDesign(x$control$knots.hazard_baseline.splines_01, data.id$Time_T, ord = 4L)
+    Bs_T_02 <- splineDesign(x$control$knots.hazard_baseline.splines_01, c(t(st_T)), ord = 4L)
     if(x$control$left_trunc){
-      Bs_T0_02 <- splineDesign(x$control$knots_02, c(t(st_T0)), ord = 4L)
+      Bs_T0_02 <- splineDesign(x$control$knots.hazard_baseline.splines_01, c(t(st_T0)), ord = 4L)
     }
   }
   for(id_boucle in 1:length(unique(data.long$id))){
+
+    print(id_boucle)
 
     if("current value" %in% x$control$sharedtype_01 || "current value" %in% x$control$sharedtype_02){
       X_T_i <- X_T[id_boucle,];U_T_i <- U_T[id_boucle,]
@@ -304,6 +324,7 @@ ranef.lsjm_covDepCR <- function(object,...){
     O_base_i <- O_base[offset[id_boucle]:(offset[id_boucle+1]-1),]
     O_base_i <- matrix(O_base_i, nrow = offset[id_boucle+1]-offset[id_boucle])
     O_base_i <- unique(O_base_i)
+
 
 
 

@@ -40,7 +40,7 @@ ranef.lsmm_covDep <- function(object,...){
 
   MatCov <- Cholesky%*%t(Cholesky)
   data.long <- x$control$data.long
-  random.effects.Predictions <- matrix(NA, nrow = length(unique(data.long$id)), ncol = x$control$nb.e.a+x$control$nb.e.a.sigma+1+choose(n = x$control$nb.e.a+x$control$nb.e.a.sigma, k = 2) + x$control$nb.e.a+x$control$nb.e.a.sigma)
+  random.effects.Predictions <- matrix(NA, nrow = length(unique(data.long$id)), ncol = x$control$nb.e.a+x$control$nb.e.a.sigma+1)
   binit <- matrix(0, nrow = 1, ncol = x$control$nb.e.a+x$control$nb.e.a.sigma)
 
   data.id <- data.long[!duplicated(data.long$id),]
@@ -90,7 +90,7 @@ ranef.lsmm_covDep <- function(object,...){
     CV <- X_base_i%*%beta + U_base_i%*%random.effects_i$b[1:(x$control$nb.e.a)]
     Varia <- exp(O_base_i%*%omega + W_base_i%*%random.effects_i$b[(x$control$nb.e.a+1):(x$control$nb.e.a+x$control$nb.e.a.sigma)])
     time.measures_i <- time.measures[offset[id.boucle]:(offset[id.boucle+1]-1)]
-    random.effects.Predictions[id.boucle,] <- c(data.id$id[id.boucle] ,random.effects_i$b, random.effects_i$v)
+    random.effects.Predictions[id.boucle,] <- c(data.id$id[id.boucle] ,random.effects_i$b)
     cv.Pred <- rbind(cv.Pred, cbind(rep(data.id$id[id.boucle], length(CV)),
                                     time.measures_i, CV, Varia))
 
@@ -101,6 +101,15 @@ ranef.lsmm_covDep <- function(object,...){
   }
   cv.Pred <- as.data.frame(cv.Pred)
   colnames(cv.Pred) <- c("id", "time", "CV", "Residual_SD")
+  cname.re <- c("id")
+  for(j in 1:x$control$nb.e.a){
+    cname.re <- c(cname.re, paste("b_",j))
+  }
+  for(j in 1:x$control$nb.omega){
+    cname.re <- c(cname.re, paste("tau_",j))
+  }
+
+  colnames(random.effects.Predictions) <- cname.re
 
 
   list(random.effects.Predictions = random.effects.Predictions, cv.Pred = cv.Pred)

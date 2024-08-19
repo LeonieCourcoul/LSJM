@@ -150,14 +150,14 @@ arma::vec log_llh_lsjm_covDepCR(arma::vec sharedtype, List HB, arma::vec Gompert
     if(dep_var_01 || dep_var_02){
       arma::rowvec O_T_i = O_T.row(i_provCase1bis);
       arma::vec W_T_i = W_T.col(i_provCase1bis);
-      sigma_T = arma::dot(omega, O_T_i) + b_om*W_T_i;
+      sigma_T = exp(arma::dot(omega, O_T_i) + b_om*W_T_i);
       arma::mat O_GK_T_i = O_GK_T.rows((nb_pointsGK*i_provCase1bis),(nb_pointsGK*(i_provCase1bis+1)-1));
       arma::mat W_GK_T_i = W_GK_T.rows((nb_pointsGK*i_provCase1bis),(nb_pointsGK*(i_provCase1bis+1)-1));
-      sigma_GK_T = arma::repmat(omega.t()*O_GK_T_i.t(),S,1)+b_om*W_GK_T_i.t();
+      sigma_GK_T = exp(arma::repmat(omega.t()*O_GK_T_i.t(),S,1)+b_om*W_GK_T_i.t());
       if(left_trunc){
         arma::mat O_GK_T0_i = O_GK_T0.rows((nb_pointsGK*i_provCase1bis),(nb_pointsGK*(i_provCase1bis+1)-1));
         arma::mat W_GK_T0_i = W_GK_T0.rows((nb_pointsGK*i_provCase1bis),(nb_pointsGK*(i_provCase1bis+1)-1));
-        sigma_GK_T0 = arma::repmat(omega.t()*O_GK_T0_i.t(),S,1)+b_om*W_GK_T0_i.t();
+        sigma_GK_T0 = exp(arma::repmat(omega.t()*O_GK_T0_i.t(),S,1)+b_om*W_GK_T0_i.t());
 
       }
       if(dep_var_01){

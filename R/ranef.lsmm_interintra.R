@@ -101,16 +101,16 @@ ranef.lsmm_interintra <- function(object,...){
   MatCov <- Cholesky%*%t(Cholesky)
   data.long <- x$control$data.long
   if(x$control$var_inter && x$control$var_intra){
-    random.effects.Predictions <- matrix(NA, nrow = length(unique(data.long$id)), ncol = x$control$nb.e.a+2+1+choose(n = x$control$nb.e.a+2, k = 2) + x$control$nb.e.a+2)
+    random.effects.Predictions <- matrix(NA, nrow = length(unique(data.long$id)), ncol = x$control$nb.e.a+2+1)
     binit <- matrix(0, nrow = 1, ncol = x$control$nb.e.a+2)
   }
   else{
     if(x$control$var_inter || x$control$var_intra){
-      random.effects.Predictions <- matrix(NA, nrow = length(unique(data.long$id)), ncol = x$control$nb.e.a+1+1+choose(n = x$control$nb.e.a+1, k = 2) + x$control$nb.e.a+1)
+      random.effects.Predictions <- matrix(NA, nrow = length(unique(data.long$id)), ncol = x$control$nb.e.a+1+1)
       binit <- matrix(0, nrow = 1, ncol = x$control$nb.e.a+1)
     }
     else{
-      random.effects.Predictions <- matrix(NA, nrow = length(unique(data.long$id)), ncol = x$control$nb.e.a+1+choose(n = x$control$nb.e.a, k = 2) + x$control$nb.e.a)
+      random.effects.Predictions <- matrix(NA, nrow = length(unique(data.long$id)), ncol = x$control$nb.e.a+1)
       binit <- matrix(0, nrow = 1, ncol = x$control$nb.e.a)
     }
   }
@@ -200,7 +200,7 @@ ranef.lsmm_interintra <- function(object,...){
       }
     }
 
-    random.effects.Predictions[id.boucle,] <- c(data.id$id[id.boucle] ,random.effects_i$b, random.effects_i$v)
+    random.effects.Predictions[id.boucle,] <- c(data.id$id[id.boucle] ,random.effects_i$b)
     cv.Pred <- rbind(cv.Pred, cbind(rep(data.id$id[id.boucle], length(CV)),
                                     time.measures_i, CV, Varia.inter, Varia.intra))
 
@@ -208,6 +208,19 @@ ranef.lsmm_interintra <- function(object,...){
 
   cv.Pred <- as.data.frame(cv.Pred)
   colnames(cv.Pred) <- c("id", "time", "CV", "Residual_SD_inter", "Residual_SD_intra")
+  cname.re <- c("id")
+  for(j in 1:x$control$nb.e.a){
+    cname.re <- c(cname.re, paste("b_",j))
+  }
+  if(x$control$var_inter){
+    cname.re <- c(cname.re, paste("tau_sigma"))
+  }
+  if(x$control$var_inter){
+    cname.re <- c(cname.re, paste("tau_kappa"))
+  }
+  colnames(random.effects.Predictions) <- cname.re
+
+
   list(random.effects.Predictions = random.effects.Predictions, cv.Pred = cv.Pred)
 
 

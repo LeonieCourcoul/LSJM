@@ -11,7 +11,7 @@ plot.lsmm_classic <- function(Objectlsmm, which = 'long.fit', Objectranef = NULL
     timeVar <- Objectlsmm$control$timeVar
     data.long <- Objectlsmm$control$data.long
     value.var <- as.character(formFixed[[2]])
-    pred.CV <- re$cv.Pred[,3]
+    pred.CV <- Objectranef$cv.Pred[,3]
     if(is.null(break.times)){
       timeInterv <- range(data.long[,timeVar])
       break.times <- quantile(timeInterv,prob=seq(0,1,length.out=10))
@@ -45,7 +45,7 @@ plot.lsmm_classic <- function(Objectlsmm, which = 'long.fit', Objectranef = NULL
       stop("You have to design some individual ID to plot the the individual trajectories.")
     }
     ID.ind <- as.vector(ID.ind)
-    pred.CV <- as.data.frame(re$cv.Pred)
+    pred.CV <- as.data.frame(Objectranef$cv.Pred)
     data.long <- Objectlsmm$control$data.long
     formFixed <- Objectlsmm$control$formFixed
     value.var <- as.character(formFixed[[2]])

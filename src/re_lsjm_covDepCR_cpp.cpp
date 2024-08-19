@@ -125,21 +125,28 @@ double re_lsjm_covDepCR_cpp(arma::vec sharedtype, List HB, arma::vec Gompertz, a
   }
 
   if(dep_var_01 || dep_var_02){
-    Sigma_T = arma::dot(omega, O_T_i) + W_T_i*tau_re;
-    sigma_GK_T = O_GK_T_i*omega+W_GK_T_i*tau_re;
+    Sigma_T = exp(arma::dot(omega, O_T_i) + W_T_i*tau_re);
+    sigma_GK_T = exp(O_GK_T_i*omega+W_GK_T_i*tau_re);
     if(left_trunc){
-      sigma_GK_T0 = O_GK_T0_i*omega+W_GK_T0_i*tau_re;
+      sigma_GK_T0 = exp(O_GK_T0_i*omega+W_GK_T0_i*tau_re);
     }
     if(dep_var_01){
       h_01_T_i = h_01_T_i%exp(alpha_var_01*Sigma_T);
+      Rcout << "The value of h_01_T_i : \n" << h_01_T_i << "\n";
       survLong_01_T_i = survLong_01_T_i + alpha_var_01*sigma_GK_T.t();
+      Rcout << "The value of survLong_01_T_i : \n" << survLong_01_T_i << "\n";
+
       if(left_trunc){
         survLong_01_T0_i = survLong_01_T0_i + alpha_var_01*sigma_GK_T0.t();
       }
     }
     if(dep_var_02){
       h_02_T_i = h_02_T_i%exp(alpha_var_02*Sigma_T);
+      Rcout << "The value of h_02_T_i : \n" << h_02_T_i << "\n";
+
       survLong_02_T_i = survLong_02_T_i + alpha_var_02*sigma_GK_T.t();
+      Rcout << "The value of survLong_02_T_i : \n" << survLong_02_T_i << "\n";
+
       if(left_trunc){
         survLong_02_T0_i = survLong_02_T0_i + alpha_var_02*sigma_GK_T0.t();
       }
@@ -259,6 +266,8 @@ double re_lsjm_covDepCR_cpp(arma::vec sharedtype, List HB, arma::vec Gompertz, a
 
   arma::vec SurvTotCase2 =  -A_01_T_i - A_02_T_i + log(pow(h_02_T_i,delta2_i))+ log(pow(h_01_T_i,delta1_i));
 
+
+
   arma::vec f_Y_b_sigma(1,fill::zeros);
   arma::vec sigma_long;
   arma::vec CV;
@@ -283,7 +292,7 @@ double re_lsjm_covDepCR_cpp(arma::vec sharedtype, List HB, arma::vec Gompertz, a
   double den = 0;
   if(left_trunc){
     den = log(sum(exp(-A_01_T0_i - A_02_T0_i)));
-    log_dens = log_dens - den;
+  log_dens = log_dens - den;
   }
 
   return log_dens;

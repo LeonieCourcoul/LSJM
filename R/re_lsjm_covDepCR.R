@@ -23,6 +23,8 @@ re_lsjm_covDepCR <- function(param, nb.e.a,  nb.e.a.sigma, Sigma.re,
     b_y_slope <- as.matrix(b_re[index_b_slope], ncol = nb.e.a-1)
   }
 
+  browser()
+
 
   log_f_Y_f_T <- re_lsjm_covDepCR_cpp(  sharedtype,  HB,  Gompertz,  Weibull,
                                          nb_pointsGK ,

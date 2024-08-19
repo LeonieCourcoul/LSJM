@@ -1,26 +1,19 @@
 
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
 # LSJM
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of LSJM is to ...
+The goal of LSJM is to estimate some location scale joint models.
 
 ## Installation
 
-You can install the development version of LSJM from [GitHub](https://github.com/) with:
+You can install the development version of LSJM from
+[GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
 devtools::install_github("LeonieCourcoul/LSJM")
 ```
-
-## Example
-
-This is a basic example which shows you how to solve a common problem:
-
-``` r
-library(LSJM)
-## basic example code
-```
-

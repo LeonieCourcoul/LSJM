@@ -38,19 +38,22 @@ summary.lsmm_covDep <- function(object,...)
   }
   else{
     cat("\n")
-    cat(paste("     Number of iterations: ",x$info_conv_step2$niter), "\n")
-    cat(paste("     Convergence criteria: parameters =" ,signif(x$info_conv_step2$convcrit[1],3)), "\n")
-    cat(paste("                         : likelihood =" ,signif(x$info_conv_step2$convcrit[2],3)), "\n")
-    cat(paste("                         : second derivatives =" ,signif(x$info_conv_step2$convcrit[3],3)), "\n")
-    cat(paste("     Time of computation :" ,format(x$info_conv_step2$time)))
+    cat(paste("     Number of iterations: "), "\n")
+    cat(paste("          Step 1: ",x$result_step1$ni), "\n")
+    cat(paste("          Step 2: ",x$info_conv_step2$niter), "\n")
+    cat(paste("     Convergence criteria (Step1): parameters =" ,signif(x$info_conv_step1$convcrit[1],3)), "\n")
+    cat(paste("                                 : likelihood =" ,signif(x$info_conv_step1$convcrit[2],3)), "\n")
+    cat(paste("                                 : second derivatives =" ,signif(x$info_conv_step1$convcrit[3],3)), "\n")
+    cat(paste("     Time of computation :" , format(x$info_conv_step2$time)),  "\n")
+
   }
 
   cat("\n")
   cat("\n")
   cat("Goodness-of-fit statistics:")
   cat("\n")
-  cat(paste("    Likelihood: ", x$result_step1$fn.value),"\n")
-  cat(paste("    AIC: ", 2*nrow(x$result_step1$b) - 2* x$result_step1$fn.value),"\n")
+  cat(paste("    Likelihood: ", round(x$result_step1$fn.value,3)),"\n")
+  cat(paste("    AIC: ", round(2*length(x$result_step1$b) - 2* x$result_step1$fn.value,3)),"\n")
 
   cat("\n")
   cat("Maximum Likelihood Estimates:")
@@ -97,7 +100,7 @@ summary.lsmm_covDep <- function(object,...)
   cat("Longitudinal model:")
   cat("\n")
 
-  cat("      Fixed effects:")
+  cat("      Fixed effects of the linear predictor associated with the mean:")
 
   betas_tab <- matrix(nrow = length(beta), ncol = 4)
   betas_tab[,1] <- beta
@@ -106,7 +109,9 @@ summary.lsmm_covDep <- function(object,...)
   betas_tab[,4] <- 1 - pchisq(betas_tab[,3]**2,1)
   betas_tab <- as.data.frame(betas_tab)
   rownames(betas_tab) <- beta.name
-  colnames(betas_tab) <- c("Coeff", "SE", "Wald", "P-value")
+  colnames(betas_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
+  betas_tab <- round(betas_tab, 4)
+  betas_tab$Pvalue <- ifelse(betas_tab$Pvalue < 0.001, "<0.001", round(betas_tab$Pvalue,3))
   cat("\n")
   print(betas_tab)
 
@@ -119,7 +124,9 @@ summary.lsmm_covDep <- function(object,...)
   var_tab[,4] <- 1 - pchisq(var_tab[,3]**2,1)
   var_tab <- as.data.frame(var_tab)
   rownames(var_tab) <- omega.name
-  colnames(var_tab) <- c("Coeff", "SE", "Wald", "P-value")
+  colnames(var_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
+  var_tab <- round(var_tab, 4)
+  var_tab$Pvalue <- ifelse(var_tab$Pvalue < 0.001, "<0.001", round(var_tab$Pvalue,3))
   cat("\n")
   print(var_tab)
 
@@ -132,11 +139,11 @@ summary.lsmm_covDep <- function(object,...)
     cat("\n")
   }
   else{
-    cat("     Covariance matrix of the random effects of the mean:")
+    cat("     Covariance matrix of the random effects associated with the mean:")
     cat("\n")
     print(MatCovb%*%t(MatCovb),quote=FALSE,na.print="")
     cat("\n")
-    cat("     Covariance matrix of the random effects of the variance:")
+    cat("     Covariance matrix of the random effects associated with the variance:")
     cat("\n")
     print(MatCovSig%*%t(MatCovSig),quote=FALSE,na.print="")
     cat("\n")

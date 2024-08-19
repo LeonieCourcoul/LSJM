@@ -144,7 +144,7 @@ ranef.lsmm_interintra <- function(object,...){
     offset_ID_i <- as.vector(c(1, 1 + cumsum(tapply(ID.visit_i, ID.visit_i, length))))
     len_visit_i <- length(unique(ID.visit_i))
 
-    random.effects_i <- marqLevAlg(binit, fn = re_lcmm_interintra, minimize = FALSE, nb.e.a = x$control$nb.e.a, variability_inter_visit = x$control$var_inter,
+    random.effects_i <- marqLevAlg(binit, fn = re_lsmm_interintra, minimize = FALSE, nb.e.a = x$control$nb.e.a, variability_inter_visit = x$control$var_inter,
                                    variability_intra_visit = x$control$var_intra, Sigma.re = MatCov,
                                    beta = beta,
                                    mu.inter = mu.inter , sigma.epsilon.inter = sigma.epsilon.inter, mu.intra = mu.intra,sigma.epsilon.intra = sigma.epsilon.intra,
@@ -154,7 +154,7 @@ ranef.lsmm_interintra <- function(object,...){
 
     while(random.effects_i$istop !=1){
       binit <- mvtnorm::rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
-      random.effects_i <- marqLevAlg(binit, fn = re_lcmm_interintra, minimize = FALSE, nb.e.a = x$control$nb.e.a, variability_inter_visit = x$control$var_inter,
+      random.effects_i <- marqLevAlg(binit, fn = re_lsmm_interintra, minimize = FALSE, nb.e.a = x$control$nb.e.a, variability_inter_visit = x$control$var_inter,
                                      variability_intra_visit = x$control$var_intra, Sigma.re = MatCov,
                                      beta = beta,
                                      mu.inter = mu.inter , sigma.epsilon.inter = sigma.epsilon.inter, mu.intra = mu.intra,sigma.epsilon.intra = sigma.epsilon.intra,

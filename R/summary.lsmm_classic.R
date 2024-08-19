@@ -49,7 +49,7 @@ summary.lsmm_classic <- function(object,...)
   cat("Goodness-of-fit statistics:")
   cat("\n")
   cat(paste("    Likelihood: ", x$result_step2$fn.value),"\n")
-  cat(paste("    AIC: ", 2*nrow(x$result_step2$b) - 2* x$result_step2$fn.value),"\n")
+  cat(paste("    AIC: ", 2*length(x$result_step2$b) - 2* x$result_step2$fn.value),"\n")
 
   cat("\n")
   cat("Maximum Likelihood Estimates:")

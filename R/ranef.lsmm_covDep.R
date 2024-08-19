@@ -71,14 +71,14 @@ ranef.lsmm_covDep <- function(object,...){
     O_base_i <- matrix(O_base_i, nrow = offset[id.boucle+1]-offset[id.boucle])
     O_base_i <- unique(O_base_i)
 
-    random.effects_i <- marqLevAlg(binit, fn = re_lcmm_covDep, minimize = FALSE, nb.e.a = x$control$nb.e.a, nb.e.a.sigma = x$control$nb.e.a.sigma, Sigma.re= MatCov,beta=beta,
+    random.effects_i <- marqLevAlg(binit, fn = re_lsmm_covDep, minimize = FALSE, nb.e.a = x$control$nb.e.a, nb.e.a.sigma = x$control$nb.e.a.sigma, Sigma.re= MatCov,beta=beta,
                                    omega = omega, X_base_i = X_base_i, U_base_i = U_base_i, O_base_i = O_base_i, W_base_i = W_base_i, y_i =y_i,
                                    nproc = x$control$nproc, clustertype = x$control$clustertype, maxiter = x$control$maxiter, print.info = FALSE,
                                    file = "", blinding = FALSE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4)
 
     while(random.effects_i$istop !=1){
       binit <- mvtnorm::rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
-      random.effects_i <- marqLevAlg(binit, fn = re_lcmm_covDep, minimize = FALSE,
+      random.effects_i <- marqLevAlg(binit, fn = re_lsmm_covDep, minimize = FALSE,
                                      nb.e.a = x$control$nb.e.a, nb.e.a.sigma = x$control$nb.e.a.sigma, Sigma.re= MatCov,beta=beta,
                                      omega = omega, X_base_i = X_base_i, U_base_i = U_base_i, O_base_i = O_base_i, W_base_i = W_base_i, y_i =y_i,
                                      nproc = x$control$nproc, clustertype = x$control$clustertype, maxiter = x$control$maxiter, print.info = FALSE,

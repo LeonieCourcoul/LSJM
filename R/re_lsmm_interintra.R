@@ -1,4 +1,4 @@
-re_lcmm_interintra <- function(param, nb.e.a, variability_inter_visit, variability_intra_visit, Sigma.re,
+re_lsmm_interintra <- function(param, nb.e.a, variability_inter_visit, variability_intra_visit, Sigma.re,
                          beta,
                          mu.inter, sigma.epsilon.inter, mu.intra,sigma.epsilon.intra,
                          len_visit_i,  X_base_i,  U_base_i,   y_i,  offset_ID_i
@@ -45,7 +45,7 @@ re_lcmm_interintra <- function(param, nb.e.a, variability_inter_visit, variabili
 
   sigma_inter_intra <- list(sigma_inter, sigma_intra, var.inter+var.intra, var.inter, var.intra, var.intra*(2*var.inter+var.intra))
 
-  log_f_Y_f_T <- re_lcmm_interintra_cpp( beta,
+  log_f_Y_f_T <- re_lsmm_interintra_cpp( beta,
                                       b_y=t(matrix(b_re, nrow = 1)),   sigma_inter_intra,
                                       len_visit_i,  X_base_i,  U_base_i,   y_i,  offset_ID_i
   )

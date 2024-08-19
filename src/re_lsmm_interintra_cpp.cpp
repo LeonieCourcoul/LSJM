@@ -11,7 +11,7 @@ using namespace std;
 
 // [[Rcpp::export]]
 
-double re_lcmm_interintra_cpp(arma::vec beta,
+double re_lsmm_interintra_cpp(arma::vec beta,
                            arma::mat b_y, List sigma_inter_intra,
                            int len_visit_i, arma::mat X_base_i, arma::mat U_base_i,  arma::vec y_i, arma::vec offset_ID_i
 ){

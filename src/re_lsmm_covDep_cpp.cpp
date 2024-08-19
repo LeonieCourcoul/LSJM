@@ -11,7 +11,7 @@ using namespace std;
 
 // [[Rcpp::export]]
 
-double re_lcmm_covDep_cpp(arma::vec beta, arma::mat b_y,arma::vec omega, arma::mat b_om,
+double re_lsmm_covDep_cpp(arma::vec beta, arma::mat b_y,arma::vec omega, arma::mat b_om,
                           arma::mat X_base_i, arma::mat U_base_i, arma::mat O_base_i, arma::mat W_base_i,  arma::vec y_i
 ){
   arma::vec f_Y_b_sigma(1,fill::zeros);

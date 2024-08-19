@@ -1650,6 +1650,8 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
   result <- list("table.res" = table.res,
                  "result_step1" = estimation1,
                  "result_step2" = estimation2,
+                 "info_conv_step1" = list(conv = estimation1$istop, niter = estimation1$ni,
+                                          convcrit = c(estimation1$ca, estimation1$cb, estimation1$rdm)),
                  "info_conv_step2" = list(conv = estimation2$istop, niter = estimation2$ni,
                                           convcrit = c(estimation2$ca, estimation2$cb, estimation2$rdm), time = time.prog.fin),
                  "control" = list(Objectlsmm = Objectlsmm,

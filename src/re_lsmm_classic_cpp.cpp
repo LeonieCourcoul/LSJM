@@ -11,7 +11,7 @@ using namespace std;
 
 // [[Rcpp::export]]
 
-double re_lcmm_classic_cpp(arma::vec beta, arma::mat b_y,
+double re_lsmm_classic_cpp(arma::vec beta, arma::mat b_y,
                           arma::mat X_base_i, arma::mat U_base_i,   arma::vec y_i, double sigma_epsilon
 ){
   arma::vec f_Y_b_sigma(1,fill::zeros);

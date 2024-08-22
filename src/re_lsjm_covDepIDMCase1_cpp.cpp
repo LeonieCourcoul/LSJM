@@ -72,10 +72,9 @@ double re_lsjm_covDepIDMCase1_cpp(arma::vec sharedtype, List HB, arma::vec W_G,
   arma::vec gamma_02 = gamma[1];
   arma::vec gamma_12 = gamma[2];
 
-  arma::vec sk_GK = list_ck[0];
-  arma::vec wk = list_ck[1];
-  arma::vec rep_wk = list_ck[2];
-  arma::vec ck = list_ck[3];
+  arma::vec wk = list_ck[0];
+  arma::vec rep_wk = list_ck[1];
+  arma::vec ck = list_ck[2];
 
   double Time_T_i = list_Times[0];
   double Time_L_R_i = list_Times[1];
@@ -122,7 +121,7 @@ double re_lsjm_covDepIDMCase1_cpp(arma::vec sharedtype, List HB, arma::vec W_G,
   arma::mat sigma_GK_T0;
 
   if(dep_cv_01 || dep_cv_02 || dep_cv_12){
-    //Rcout << "The value of v : \n" << 1 << "\n";
+
     CV_T = arma::dot(beta, X_T_i) + U_T_i*b_y;
 
     current_GK_T = X_GK_T_i*beta+U_GK_T_i*b_y;

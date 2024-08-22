@@ -10,7 +10,7 @@ re_lsjm_covDepCR <- function(param, nb.e.a,  nb.e.a.sigma, Sigma.re,
                               B_T_i_01, B_T_i_02,
                               Bs_T_i_01,  Bs_T_i_02,
                               Bs_T0_i_01,  Bs_T0_i_02,  left_trunc,
-                              X_base_i,  U_base_i,   y_i, O_base_i,  W_base_i,  index_b_slope
+                              X_base_i,  U_base_i,   y_i, O_base_i,  W_base_i,  index_b_slope, id_boucle
 
 ){
 
@@ -23,7 +23,7 @@ re_lsjm_covDepCR <- function(param, nb.e.a,  nb.e.a.sigma, Sigma.re,
     b_y_slope <- as.matrix(b_re[index_b_slope], ncol = nb.e.a-1)
   }
 
-  browser()
+
 
 
   log_f_Y_f_T <- re_lsjm_covDepCR_cpp(  sharedtype,  HB,  Gompertz,  Weibull,
@@ -42,10 +42,14 @@ re_lsjm_covDepCR <- function(param, nb.e.a,  nb.e.a.sigma, Sigma.re,
                                          X_base_i,  U_base_i,   y_i, O_base_i,  W_base_i
   )
 
+
   log_f_Y_f_T <- log_f_Y_f_T + log(f_b_tau)
 
-  if(is.na(log_f_Y_f_T)){
-    print(param)
+
+
+  #print(log_f_Y_f_T)
+  if(is.na(log_f_Y_f_T)||is.infinite(log_f_Y_f_T)){
+    #print(param)
     log_f_Y_f_T <- -1E09
   }
   log_f_Y_f_T

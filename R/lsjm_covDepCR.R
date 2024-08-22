@@ -67,6 +67,8 @@ lsjm_covDepCR <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_b
     Surv_02 <- as.formula(paste("Surv(Time_T,delta2) ~ ", paste(all.vars(formSurv_02), collapse="+")))
   }
 
+
+
   if(hazard_baseline_01 == "Exponential" ){
     mod_surv <- survreg(Surv_01, data = data.id, dist = "exponential")
     alpha_01 <- mod_surv$coefficients

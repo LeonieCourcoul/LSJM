@@ -1049,17 +1049,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// timesTwo
-NumericVector timesTwo(NumericVector x);
-RcppExport SEXP _LSJM_timesTwo(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(timesTwo(x));
-    return rcpp_result_gen;
-END_RCPP
-}
 // log_llh_lsjm_interintraIDM_C3
 arma::vec log_llh_lsjm_interintraIDM_C3(arma::vec sharedtype, List HB, arma::vec Gompertz, arma::vec Weibull, arma::vec nb_points_integral, arma::vec alpha_inter_intra, arma::vec alpha_y_slope, List alpha_z, List gamma_B, arma::vec beta, arma::vec beta_slope, arma::mat b_y, arma::mat b_y_slope, arma::vec wk, arma::vec rep_wk, List sigma_inter_intra, arma::vec delta2, arma::mat Z_01, arma::mat Z_02, arma::mat Z_12, arma::mat X_T, arma::mat U_T, arma::mat Xslope_T, arma::mat Uslope_T, arma::mat X_GK_T, arma::mat U_GK_T, arma::mat Xslope_GK_T, arma::mat Uslope_GK_T, arma::mat X_GK_L_T, arma::mat U_GK_L_T, arma::mat Xslope_GK_L_T, arma::mat Uslope_GK_L_T, arma::mat X_GK_0_LT, arma::mat U_GK_0_LT, arma::mat Xslope_GK_0_LT, arma::mat Uslope_GK_0_LT, arma::mat X_GK_T0, arma::mat U_GK_T0, arma::mat Xslope_GK_T0, arma::mat Uslope_GK_T0, List list_Times, arma::mat st_T, arma::mat st_0_LT, arma::mat st_L_T, arma::mat st_T0, arma::mat B_T_02, arma::mat B_T_12, arma::mat Bs_T_01, arma::mat Bs_T_02, arma::mat Bs_T_12, arma::mat Bs_0_LT_01, arma::mat Bs_0_LT_02, arma::mat Bs_0_LT_12, arma::mat Bs_L_T_01, arma::mat Bs_T0_01, arma::mat Bs_T0_02, bool left_trunc, arma::vec len_visit, arma::mat X_base, arma::mat U_base, arma::vec y_new, arma::vec offset_ID, arma::vec offset, arma::vec offset_position, List ck);
 RcppExport SEXP _LSJM_log_llh_lsjm_interintraIDM_C3(SEXP sharedtypeSEXP, SEXP HBSEXP, SEXP GompertzSEXP, SEXP WeibullSEXP, SEXP nb_points_integralSEXP, SEXP alpha_inter_intraSEXP, SEXP alpha_y_slopeSEXP, SEXP alpha_zSEXP, SEXP gamma_BSEXP, SEXP betaSEXP, SEXP beta_slopeSEXP, SEXP b_ySEXP, SEXP b_y_slopeSEXP, SEXP wkSEXP, SEXP rep_wkSEXP, SEXP sigma_inter_intraSEXP, SEXP delta2SEXP, SEXP Z_01SEXP, SEXP Z_02SEXP, SEXP Z_12SEXP, SEXP X_TSEXP, SEXP U_TSEXP, SEXP Xslope_TSEXP, SEXP Uslope_TSEXP, SEXP X_GK_TSEXP, SEXP U_GK_TSEXP, SEXP Xslope_GK_TSEXP, SEXP Uslope_GK_TSEXP, SEXP X_GK_L_TSEXP, SEXP U_GK_L_TSEXP, SEXP Xslope_GK_L_TSEXP, SEXP Uslope_GK_L_TSEXP, SEXP X_GK_0_LTSEXP, SEXP U_GK_0_LTSEXP, SEXP Xslope_GK_0_LTSEXP, SEXP Uslope_GK_0_LTSEXP, SEXP X_GK_T0SEXP, SEXP U_GK_T0SEXP, SEXP Xslope_GK_T0SEXP, SEXP Uslope_GK_T0SEXP, SEXP list_TimesSEXP, SEXP st_TSEXP, SEXP st_0_LTSEXP, SEXP st_L_TSEXP, SEXP st_T0SEXP, SEXP B_T_02SEXP, SEXP B_T_12SEXP, SEXP Bs_T_01SEXP, SEXP Bs_T_02SEXP, SEXP Bs_T_12SEXP, SEXP Bs_0_LT_01SEXP, SEXP Bs_0_LT_02SEXP, SEXP Bs_0_LT_12SEXP, SEXP Bs_L_T_01SEXP, SEXP Bs_T0_01SEXP, SEXP Bs_T0_02SEXP, SEXP left_truncSEXP, SEXP len_visitSEXP, SEXP X_baseSEXP, SEXP U_baseSEXP, SEXP y_newSEXP, SEXP offset_IDSEXP, SEXP offsetSEXP, SEXP offset_positionSEXP, SEXP ckSEXP) {
@@ -2470,7 +2459,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_LSJM_log_llh_lsjm_interintraIDM_C1", (DL_FUNC) &_LSJM_log_llh_lsjm_interintraIDM_C1, 65},
     {"_LSJM_log_llh_lsjm_interintraIDM_C1bis", (DL_FUNC) &_LSJM_log_llh_lsjm_interintraIDM_C1bis, 62},
     {"_LSJM_log_llh_lsjm_interintraIDM_C2", (DL_FUNC) &_LSJM_log_llh_lsjm_interintraIDM_C2, 48},
-    {"_LSJM_timesTwo", (DL_FUNC) &_LSJM_timesTwo, 1},
     {"_LSJM_log_llh_lsjm_interintraIDM_C3", (DL_FUNC) &_LSJM_log_llh_lsjm_interintraIDM_C3, 65},
     {"_LSJM_log_llh_lsjm_interintraSingle", (DL_FUNC) &_LSJM_log_llh_lsjm_interintraSingle, 45},
     {"_LSJM_log_llh_lsmm_classic_cpp", (DL_FUNC) &_LSJM_log_llh_lsmm_classic_cpp, 9},

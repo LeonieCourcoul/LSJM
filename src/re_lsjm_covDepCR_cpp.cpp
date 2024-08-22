@@ -132,9 +132,7 @@ double re_lsjm_covDepCR_cpp(arma::vec sharedtype, List HB, arma::vec Gompertz, a
     }
     if(dep_var_01){
       h_01_T_i = h_01_T_i%exp(alpha_var_01*Sigma_T);
-      Rcout << "The value of h_01_T_i : \n" << h_01_T_i << "\n";
       survLong_01_T_i = survLong_01_T_i + alpha_var_01*sigma_GK_T.t();
-      Rcout << "The value of survLong_01_T_i : \n" << survLong_01_T_i << "\n";
 
       if(left_trunc){
         survLong_01_T0_i = survLong_01_T0_i + alpha_var_01*sigma_GK_T0.t();
@@ -142,10 +140,8 @@ double re_lsjm_covDepCR_cpp(arma::vec sharedtype, List HB, arma::vec Gompertz, a
     }
     if(dep_var_02){
       h_02_T_i = h_02_T_i%exp(alpha_var_02*Sigma_T);
-      Rcout << "The value of h_02_T_i : \n" << h_02_T_i << "\n";
 
       survLong_02_T_i = survLong_02_T_i + alpha_var_02*sigma_GK_T.t();
-      Rcout << "The value of survLong_02_T_i : \n" << survLong_02_T_i << "\n";
 
       if(left_trunc){
         survLong_02_T0_i = survLong_02_T0_i + alpha_var_02*sigma_GK_T0.t();
@@ -268,6 +264,7 @@ double re_lsjm_covDepCR_cpp(arma::vec sharedtype, List HB, arma::vec Gompertz, a
 
 
 
+
   arma::vec f_Y_b_sigma(1,fill::zeros);
   arma::vec sigma_long;
   arma::vec CV;
@@ -275,8 +272,10 @@ double re_lsjm_covDepCR_cpp(arma::vec sharedtype, List HB, arma::vec Gompertz, a
   for(int k=0; k<n_rows_X; k++){
     sigma_long = exp(dot(omega,O_base_i.row(k)) + W_base_i.row(k)*tau_re);
     CV = dot(beta,X_base_i.row(k)) + U_base_i.row(k)*b_y;
+
     f_Y_b_sigma = f_Y_b_sigma + log(1.0 / (sqrt(2.0*M_PI)*sigma_long)) - 0.5*pow((y_i(k)-CV)/sigma_long,2);
   }
+
 
 
 
@@ -290,10 +289,10 @@ double re_lsjm_covDepCR_cpp(arma::vec sharedtype, List HB, arma::vec Gompertz, a
   log_dens_int = log_dens_int - Clogexp;
   log_dens = Clogexp + log(sum(exp(log_dens_int)));
   double den = 0;
-  if(left_trunc){
-    den = log(sum(exp(-A_01_T0_i - A_02_T0_i)));
-  log_dens = log_dens - den;
-  }
+  //if(left_trunc){
+  //  den = log(sum(exp(-A_01_T0_i - A_02_T0_i)));
+  //log_dens = log_dens - den;
+  //}
 
   return log_dens;
 }

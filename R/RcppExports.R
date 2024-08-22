@@ -65,10 +65,6 @@ log_llh_lsjm_interintraIDM_C2 <- function(sharedtype, HB, Gompertz, Weibull, nb_
     .Call(`_LSJM_log_llh_lsjm_interintraIDM_C2`, sharedtype, HB, Gompertz, Weibull, nb_points_integral, alpha_inter_intra, alpha_y_slope, alpha_z, gamma, beta, beta_slope, b_y, b_y_slope, wk, sigma_inter_intra, delta2, Z_01, Z_02, X_T, U_T, Xslope_T, Uslope_T, X_GK_T, U_GK_T, Xslope_GK_T, Uslope_GK_T, X_GK_T0, U_GK_T0, Xslope_GK_T0, Uslope_GK_T0, Time_T, Time_T0, st_T, st_T0, B_T_02, Bs_T_01, Bs_T_02, Bs_T0_01, Bs_T0_02, left_trunc, len_visit, X_base, U_base, y_new, offset_ID, nbCase2, offset, offset_position)
 }
 
-timesTwo <- function(x) {
-    .Call(`_LSJM_timesTwo`, x)
-}
-
 log_llh_lsjm_interintraIDM_C3 <- function(sharedtype, HB, Gompertz, Weibull, nb_points_integral, alpha_inter_intra, alpha_y_slope, alpha_z, gamma_B, beta, beta_slope, b_y, b_y_slope, wk, rep_wk, sigma_inter_intra, delta2, Z_01, Z_02, Z_12, X_T, U_T, Xslope_T, Uslope_T, X_GK_T, U_GK_T, Xslope_GK_T, Uslope_GK_T, X_GK_L_T, U_GK_L_T, Xslope_GK_L_T, Uslope_GK_L_T, X_GK_0_LT, U_GK_0_LT, Xslope_GK_0_LT, Uslope_GK_0_LT, X_GK_T0, U_GK_T0, Xslope_GK_T0, Uslope_GK_T0, list_Times, st_T, st_0_LT, st_L_T, st_T0, B_T_02, B_T_12, Bs_T_01, Bs_T_02, Bs_T_12, Bs_0_LT_01, Bs_0_LT_02, Bs_0_LT_12, Bs_L_T_01, Bs_T0_01, Bs_T0_02, left_trunc, len_visit, X_base, U_base, y_new, offset_ID, offset, offset_position, ck) {
     .Call(`_LSJM_log_llh_lsjm_interintraIDM_C3`, sharedtype, HB, Gompertz, Weibull, nb_points_integral, alpha_inter_intra, alpha_y_slope, alpha_z, gamma_B, beta, beta_slope, b_y, b_y_slope, wk, rep_wk, sigma_inter_intra, delta2, Z_01, Z_02, Z_12, X_T, U_T, Xslope_T, Uslope_T, X_GK_T, U_GK_T, Xslope_GK_T, Uslope_GK_T, X_GK_L_T, U_GK_L_T, Xslope_GK_L_T, Uslope_GK_L_T, X_GK_0_LT, U_GK_0_LT, Xslope_GK_0_LT, Uslope_GK_0_LT, X_GK_T0, U_GK_T0, Xslope_GK_T0, Uslope_GK_T0, list_Times, st_T, st_0_LT, st_L_T, st_T0, B_T_02, B_T_12, Bs_T_01, Bs_T_02, Bs_T_12, Bs_0_LT_01, Bs_0_LT_02, Bs_0_LT_12, Bs_L_T_01, Bs_T0_01, Bs_T0_02, left_trunc, len_visit, X_base, U_base, y_new, offset_ID, offset, offset_position, ck)
 }

@@ -148,7 +148,6 @@ double re_lsjm_interintraIDMCase1_cpp(arma::vec sharedtype, List HB, arma::vec G
     }
   }
   if(dep_cv_01 || dep_cv_02 || dep_cv_12){
-    //Rcout << "The value of v : \n" << 1 << "\n";
     CV_T = arma::dot(beta, X_T_i) + U_T_i*b_y;
 
     current_GK_T = X_GK_T_i*beta+U_GK_T_i*b_y;
@@ -179,7 +178,6 @@ double re_lsjm_interintraIDMCase1_cpp(arma::vec sharedtype, List HB, arma::vec G
     }
   }
   if(dep_slope_01 || dep_slope_02 || dep_slope_12){
-    //Rcout << "The value of v : \n" << 2 << "\n";
     //Rcout << "The value of v : \n" << beta_slope << "\n";
     //Rcout << "The value of v : \n" << Xslope_T_i << "\n";
     //Rcout << "The value of v : \n" << Uslope_T_i << "\n";
@@ -239,8 +237,7 @@ double re_lsjm_interintraIDMCase1_cpp(arma::vec sharedtype, List HB, arma::vec G
     h_0_GK_12_0_LR_i = h_0_GK_12_0_LR_i2%rep_wk.t();
 
   }
-  if(hazard_baseline_12 == "Splines"){
-    //Rcout << "The value of v : \n" << 3 << "\n";
+ if(hazard_baseline_12 == "Splines"){
     h_0_12_T_i = exp(arma::dot(gamma_12,B_T_i_12));
     h_0_GK_12_T_i = wk%exp(Bs_T_i_12*gamma_12);
     h_0_GK_12_0_LR_i = (exp(Bs_0_LR_i_12*gamma_12)%rep_wk).t();
@@ -252,9 +249,7 @@ double re_lsjm_interintraIDMCase1_cpp(arma::vec sharedtype, List HB, arma::vec G
     predsurv_12 = 0;
   }
   else{
-    //Rcout << "The value of v : \n" << 4 << "\n";
     predsurv_12 = arma::dot(alpha_z_12, Z_12_i);
-    //Rcout << "The value of v : \n" << 5 << "\n";
   }
 
   h_12_T_i = h_0_12_T_i*exp(predsurv_12)*h_12_T_i;
@@ -315,7 +310,6 @@ double re_lsjm_interintraIDMCase1_cpp(arma::vec sharedtype, List HB, arma::vec G
   survLong_01_L_R_i = exp(survLong_01_L_R_i)%arma::repelem(h_0_GK_01_L_R_i.t(),S,1);
   arma::mat A_01_L_R_i;
   A_01_L_R_i = arma::repelem(etaBaseline_01_L_R_i,1,nb_pointsGK)%survLong_01_L_R_i*(Time_L_R_i/2);
-
 
   etaBaseline_01_0_LR_i = exp(etaBaseline_01_0_LR_i + predsurv_01);
   survLong_01_0_LR_i = exp(survLong_01_0_LR_i);

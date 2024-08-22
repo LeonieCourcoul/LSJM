@@ -27,12 +27,11 @@ re_lsjm_covDepIDMCase3 <- function(param, nb.e.a, nb.e.a.sigma, Sigma.re,
   }
 
   fixed_par <- list(beta, beta_slope, omega)
-  list_ck = list(sk_GK = sk_GK, wk = wk, rep_wk = rep_wk, nb_pointsGK = nb_pointsGK, ck= ck, left_trunc = left_trunc)
+  list_ck = list( wk = wk, rep_wk = rep_wk, nb_pointsGK = nb_pointsGK, ck= ck, left_trunc = left_trunc)
   list_Times = list(Time_T_i, Time_L_T_i, Time_T0_i, delta2_i)
-
   log_f_Y_f_T <- re_lsjm_covDepIDMCase3_cpp(sharedtype, HB, W_G,
                                              alpha_y_slope_var, alpha_z,  gamma_z0,  fixed_par, b_y = t(matrix(b_re, nrow = 1)),
-                                             b_y_slope= t(matrix(b_y_slope, nrow = 1)), tau_re=t(matrix(tau_re, nrow = 1)),  ck,
+                                             b_y_slope= t(matrix(b_y_slope, nrow = 1)), tau_re=t(matrix(tau_re, nrow = 1)),  list_ck,
                                              Z_01_i,  Z_02_i,  Z_12_i,  X_T_i,  U_T_i,
                                              Xslope_T_i,  Uslope_T_i, O_T_i,  W_T_i,
                                              X_GK_T_i,  U_GK_T_i,  Xslope_GK_T_i,

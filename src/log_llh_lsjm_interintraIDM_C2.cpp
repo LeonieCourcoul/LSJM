@@ -363,11 +363,11 @@ arma::vec log_llh_lsjm_interintraIDM_C2(arma::vec sharedtype, List HB, arma::vec
     Clogexp = max(log_dens_int) - 500;
     log_dens_int = log_dens_int - Clogexp;
     log_dens = Clogexp + log(sum(exp(log_dens_int))) - log(S);
-    double den = 0;
-    if(left_trunc){
-      den = log(sum(exp(-A_01_T0_i - A_02_T0_i)))-log(S);
-      log_dens = log_dens - den;
-    }
+   // double den = 0;
+ //   if(left_trunc){
+ //     den = log(sum(exp(-A_01_T0_i - A_02_T0_i)))-log(S);
+ //     log_dens = log_dens - den;
+ //   }
 
     ll_glob(i_provCase2) = log_dens;
 
@@ -377,30 +377,4 @@ arma::vec log_llh_lsjm_interintraIDM_C2(arma::vec sharedtype, List HB, arma::vec
   return ll_glob;
 }
 
-#include <Rcpp.h>
-using namespace Rcpp;
 
-// This is a simple example of exporting a C++ function to R. You can
-// source this function into an R session using the Rcpp::sourceCpp
-// function (or via the Source button on the editor toolbar). Learn
-// more about Rcpp at:
-//
-//   http://www.rcpp.org/
-//   http://adv-r.had.co.nz/Rcpp.html
-//   http://gallery.rcpp.org/
-//
-
-// [[Rcpp::export]]
-NumericVector timesTwo(NumericVector x) {
-  return x * 2;
-}
-
-
-// You can include R code blocks in C++ files processed with sourceCpp
-// (useful for testing and development). The R code will be automatically
-// run after the compilation.
-//
-
-/*** R
-timesTwo(42)
-*/

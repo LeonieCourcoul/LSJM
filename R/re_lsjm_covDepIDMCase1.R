@@ -27,8 +27,9 @@ re_lsjm_covDepIDMCase1 <- function(param, nb.e.a, nb.e.a.sigma, Sigma.re,
   }
 
   fixed_par <- list(beta, beta_slope, omega)
-  list_ck = list(sk_GK = sk_GK, wk = wk, rep_wk = rep_wk, ck = ck)
+  list_ck = list( wk = wk, rep_wk = rep_wk, ck = ck)
   list_Times = list(Time_T_i, Time_L_R_i, Time_T0_i, delta2_i)
+
 
   log_f_Y_f_T <- re_lsjm_covDepIDMCase1_cpp(sharedtype, HB, W_G,
                                              nb_pointsGK,

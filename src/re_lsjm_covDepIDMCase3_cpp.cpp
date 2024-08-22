@@ -73,12 +73,11 @@ double re_lsjm_covDepIDMCase3_cpp(arma::vec sharedtype, List HB, arma::vec W_G,
   arma::vec gamma_02 = gamma_B[1];
   arma::vec gamma_12 = gamma_B[2];
 
-  arma::vec sk_GK = list_ck[0];
-  arma::vec wk = list_ck[1];
-  arma::vec rep_wk = list_ck[2];
-  arma::vec ck = list_ck[4];
-  double nb_pointsGK = list_ck[3];
-  bool left_trunc = list_ck[5];
+  arma::vec wk = list_ck[0];
+  arma::vec rep_wk = list_ck[1];
+  arma::vec ck = list_ck[3];
+  double nb_pointsGK = list_ck[2];
+  bool left_trunc = list_ck[4];
 
   double Time_T_i = list_Times[0];
   double Time_L_T_i = list_Times[1];
@@ -202,7 +201,7 @@ double re_lsjm_covDepIDMCase3_cpp(arma::vec sharedtype, List HB, arma::vec W_G,
     sigma_GK_L_T = exp(O_GK_L_T_i*omega+W_GK_L_T_i*tau_re);
     sigma_GK_0_LT = exp(O_GK_0_LT_i*omega+W_GK_0_LT_i*tau_re);
     if(left_trunc){
-      current_GK_T0 =  exp(O_GK_T0_i*omega+W_GK_T0_i*tau_re);
+      sigma_GK_T0 =  exp(O_GK_T0_i*omega+W_GK_T0_i*tau_re);
     }
     if(dep_var_01){
       survLong_01_T_i = survLong_01_T_i + alpha_var_01*sigma_GK_T.t();
@@ -264,7 +263,6 @@ double re_lsjm_covDepIDMCase3_cpp(arma::vec sharedtype, List HB, arma::vec W_G,
   }
 
   h_12_T_i = h_0_12_T_i*exp(predsurv_12)*h_12_T_i;
-
   etaBaseline_12_T_i = etaBaseline_12_T_i + predsurv_12;
   survLong_12_T_i = exp(survLong_12_T_i)*h_0_GK_12_T_i;
   arma::vec A_12_T_i;
@@ -334,7 +332,6 @@ double re_lsjm_covDepIDMCase3_cpp(arma::vec sharedtype, List HB, arma::vec W_G,
   survLong_01_T_i = exp(survLong_01_T_i)*h_0_GK_01_T_i;
   arma::mat A_01_T_i;
   A_01_T_i = etaBaseline_01_T_i%survLong_01_T_i*(Time_T_i/2);
-
   etaBaseline_01_0_LT_i = exp(etaBaseline_01_0_LT_i + predsurv_01);
   survLong_01_0_LT_i = exp(survLong_01_0_LT_i);
   survLong_01_0_LT_i = survLong_01_0_LT_i%arma::repelem(h_0_GK_01_0_LT_i,S,1);
@@ -449,11 +446,11 @@ double re_lsjm_covDepIDMCase3_cpp(arma::vec sharedtype, List HB, arma::vec W_G,
   Clogexp = max(log_dens_int) - 500;
   log_dens_int = log_dens_int - Clogexp;
   log_dens = Clogexp + log(sum(exp(log_dens_int)));
-  double den = 0;
-  if(left_trunc){
-    den = log(sum(exp(-A_01_T0_i - A_02_T0_i)));
-    log_dens = log_dens - den;
-  }
+  //double den = 0;
+  //if(left_trunc){
+  //  den = log(sum(exp(-A_01_T0_i - A_02_T0_i)));
+  //  log_dens = log_dens - den;
+  //}
 
   return log_dens;
 

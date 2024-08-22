@@ -24,6 +24,10 @@ re_lsjm_interintraIDMCase3 <- function(param, nb.e.a, variability_inter_visit, v
   if(variability_inter_visit && variability_intra_visit){
     tau_re <- param[,(nb.e.a+1):(nb.e.a+2)]
     f_b_tau <- mvtnorm::dmvnorm(x = c(b_re, tau_re), mean = rep(0,length(b_re)+length(tau_re)), sigma = Sigma.re)
+    sigma_inter <- exp(mu.inter + tau_re[1])
+    var.inter <- sigma_inter**2
+    sigma_intra <- exp(mu.intra + tau_re[2])
+    var.intra <- sigma_intra**2
   }
   else{
     if(variability_inter_visit){
@@ -32,23 +36,23 @@ re_lsjm_interintraIDMCase3 <- function(param, nb.e.a, variability_inter_visit, v
       sigma_inter <- exp(mu.inter + tau_re[1])
       var.inter <- sigma_inter**2
       sigma_intra <- sigma.epsilon.intra
-      var.intra <- sigma.epsilon.intra**2
+      var.intra <- sigma_intra**2
     }
     else{
       if(variability_intra_visit){
         tau_re <- param[,(nb.e.a+1)]
         f_b_tau <- mvtnorm::dmvnorm(x = c(b_re, tau_re), mean = rep(0,length(b_re)+length(tau_re)), sigma = Sigma.re)
         sigma_inter <- sigma.epsilon.inter
-        var.inter <- sigma.epsilon.inter**2
-        sigma_intra <- sigma.epsilon.intra
-        var.intra <- sigma.epsilon.intra**2
+        var.inter <- sigma_inter**2
+        sigma_intra <- exp(mu.intra + tau_re[1])
+        var.intra <- sigma_intra**2
       }
       else{
         f_b_tau <- mvtnorm::dmvnorm(x = c(b_re), mean = rep(0,length(b_re)), sigma = Sigma.re)
         sigma_inter <- sigma.epsilon.inter
-        var.inter <- sigma.epsilon.inter**2
+        var.inter <- sigma_inter**2
         sigma_intra <- sigma.epsilon.intra
-        var.intra <- sigma.epsilon.intra**2
+        var.intra <- sigma_intra**2
       }
     }
   }

@@ -35,19 +35,22 @@ summary.lsjm_interintraIDM <- function(object,...)
   }
   else{
     cat("\n")
-    cat(paste("     Number of iterations: ",x$info_conv_step2$niter), "\n")
-    cat(paste("     Convergence criteria: parameters =" ,signif(x$info_conv_step2$convcrit[1],3)), "\n")
-    cat(paste("                         : likelihood =" ,signif(x$info_conv_step2$convcrit[2],3)), "\n")
-    cat(paste("                         : second derivatives =" ,signif(x$info_conv_step2$convcrit[3],3)), "\n")
-    cat(paste("     Time of computation :" ,format(x$info_conv_step2$time)))
+    cat(paste("     Number of iterations: "), "\n")
+    cat(paste("          Step 1: ",x$result_step1$ni), "\n")
+    cat(paste("          Step 2: ",x$info_conv_step2$niter), "\n")
+    cat(paste("     Convergence criteria (Step1): parameters =" ,signif(x$info_conv_step1$convcrit[1],3)), "\n")
+    cat(paste("                                 : likelihood =" ,signif(x$info_conv_step1$convcrit[2],3)), "\n")
+    cat(paste("                                 : second derivatives =" ,signif(x$info_conv_step1$convcrit[3],3)), "\n")
+    cat(paste("     Time of computation :" , format(x$info_conv_step2$time)),  "\n")
+
   }
 
   cat("\n")
   cat("\n")
   cat("Goodness-of-fit statistics:")
   cat("\n")
-  cat(paste("    Likelihood: ", x$result_step1$fn.value),"\n")
-  cat(paste("    AIC: ", 2*nrow(x$result_step1$b) - 2* x$result_step1$fn.value),"\n")
+  cat(paste("    Likelihood: ", round(x$result_step1$fn.value,3)),"\n")
+  cat(paste("    AIC: ", round(2*length(x$result_step1$b) - 2* x$result_step1$fn.value,3)),"\n")
 
   cat("\n")
   cat("Maximum Likelihood Estimates:")
@@ -228,12 +231,12 @@ summary.lsjm_interintraIDM <- function(object,...)
 
 
   ## Effets fixes trend :
-  beta <- param[curseur:(curseur+x$control$nb.beta-1)]
-  beta.se <- param.se[curseur:(curseur+x$control$nb.beta-1)]
-  beta.name <- param.names[curseur:(curseur+x$control$nb.beta-1)]
-  curseur <- curseur+x$control$nb.beta
+  beta <- param[curseur:(curseur+x$control$Objectlsmm$control$nb.beta-1)]
+  beta.se <- param.se[curseur:(curseur+x$control$Objectlsmm$control$nb.beta-1)]
+  beta.name <- param.names[curseur:(curseur+x$control$Objectlsmm$control$nb.beta-1)]
+  curseur <- curseur+x$control$Objectlsmm$control$nb.beta
   ## Var inter/intra
-  if(x$control$var_inter){
+  if(x$control$Objectlsmm$control$var_inter){
     mu.inter <- param[curseur]
     mu.inter.se <- param.se[curseur]
     mu.inter.name <- param.names[curseur]
@@ -245,7 +248,7 @@ summary.lsjm_interintraIDM <- function(object,...)
     sigma.epsilon.inter.name <- param.names[curseur]
     curseur <- curseur +1
   }
-  if(x$control$var_intra){
+  if(x$control$Objectlsmm$control$var_intra){
     mu.intra <- param[curseur]
     mu.intra.se <- param.se[curseur]
     mu.intra.name <- param.names[curseur]
@@ -341,7 +344,9 @@ summary.lsjm_interintraIDM <- function(object,...)
   betas_tab[,4] <- 1 - pchisq(betas_tab[,3]**2,1)
   betas_tab <- as.data.frame(betas_tab)
   rownames(betas_tab) <- beta.name
-  colnames(betas_tab) <- c("Coeff", "SE", "Wald", "P-value")
+  colnames(betas_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
+  betas_tab <- round(betas_tab, 4)
+  betas_tab$Pvalue <- ifelse(betas_tab$Pvalue < 0.001, "<0.001", round(betas_tab$Pvalue,3))
   cat("\n")
   print(betas_tab)
 
@@ -356,7 +361,9 @@ summary.lsjm_interintraIDM <- function(object,...)
     var_inter[,4] <- 1 - pchisq(var_inter[,3]**2,1)
     var_inter <- as.data.frame(var_inter)
     rownames(var_inter) <- sigma.epsilon.inter.name
-    colnames(var_inter) <- c("Coeff", "SE", "Wald", "P-value")
+    colnames(var_inter) <- c("Coeff", "SE", "Wald", "Pvalue")
+    var_inter <- round(var_inter, 4)
+    var_inter$Pvalue <- ifelse(var_inter$Pvalue < 0.001, "<0.001", round(var_inter$Pvalue,3))
     cat("\n")
     print(var_inter)
     cat("\n")
@@ -370,7 +377,9 @@ summary.lsjm_interintraIDM <- function(object,...)
     var_intra[,4] <- 1 - pchisq(var_intra[,3]**2,1)
     var_intra <- as.data.frame(var_intra)
     rownames(var_intra) <- sigma.epsilon.intra.name
-    colnames(var_intra) <- c("Coeff", "SE", "Wald", "P-value")
+    colnames(var_intra) <- c("Coeff", "SE", "Wald", "Pvalue")
+    var_intra <- round(var_intra, 4)
+    var_intra$Pvalue <- ifelse(var_intra$Pvalue < 0.001, "<0.001", round(var_intra$Pvalue,3))
     cat("\n")
     print(var_intra)
     cat("\n")
@@ -386,7 +395,9 @@ summary.lsjm_interintraIDM <- function(object,...)
     var_inter[,4] <- 1 - pchisq(var_inter[,3]**2,1)
     var_inter <- as.data.frame(var_inter)
     rownames(var_inter) <- mu.inter.name
-    colnames(var_inter) <- c("Coeff", "SE", "Wald", "P-value")
+    colnames(var_inter) <- c("Coeff", "SE", "Wald", "Pvalue")
+    var_inter <- round(var_inter, 4)
+    var_inter$Pvalue <- ifelse(var_inter$Pvalue < 0.001, "<0.001", round(var_inter$Pvalue,3))
     cat("\n")
     print(var_inter)
     cat("\n")
@@ -400,7 +411,9 @@ summary.lsjm_interintraIDM <- function(object,...)
     var_intra[,4] <- 1 - pchisq(var_intra[,3]**2,1)
     var_intra <- as.data.frame(var_intra)
     rownames(var_intra) <- mu.intra.name
-    colnames(var_intra) <- c("Coeff", "SE", "Wald", "P-value")
+    colnames(var_intra) <- c("Coeff", "SE", "Wald", "Pvalue")
+    var_intra <- round(var_intra, 4)
+    var_intra$Pvalue <- ifelse(var_intra$Pvalue < 0.001, "<0.001", round(var_intra$Pvalue,3))
     cat("\n")
     print(var_intra)
     cat("\n")
@@ -433,7 +446,8 @@ summary.lsjm_interintraIDM <- function(object,...)
   cat("\n")
   cat("    Transition 0-1:")
   #browser()
-  e1_var_tab <- NULL
+  e1_share_intravar_tab <- NULL
+  e1_share_intervar_tab <- NULL
   e1_share_current_tab <- NULL
   e1_share_slope_tab <- NULL
   e1_alpha_tab <- NULL
@@ -504,7 +518,7 @@ summary.lsjm_interintraIDM <- function(object,...)
     e1_bas_tab[1,4] <- 1 - pchisq(e1_bas_tab[,3]**2,1)
     #e1_names_tab <- c(e1_names_tab, alpha_01.name[-1])
     rownames(e1_bas_tab) <- c("intercept")
-    colnames(e1_bas_tab) <- c("Coeff", "SE", "Wald", "P-value")
+    colnames(e1_bas_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
   }
   if(x$control$hazard_baseline_01 == "Weibull"){
     e1_bas_tab <- matrix(nrow = 2, ncol = 4)
@@ -518,7 +532,18 @@ summary.lsjm_interintraIDM <- function(object,...)
     e1_bas_tab[,3] <- e1_bas_tab[,1]/e1_bas_tab[,2]
     e1_bas_tab[,4] <- 1 - pchisq(e1_bas_tab[,3]**2,1)
     rownames(e1_bas_tab) <- c("intercept",shape_01.name)
-    colnames(e1_bas_tab) <- c("Coeff", "SE", "Wald", "P-value")
+    colnames(e1_bas_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
+  }
+  if(x$control$hazard_baseline_01 == "Gompertz"){
+    e1_bas_tab <- matrix(nrow = 2, ncol = 4)
+    e1_bas_tab[1,1] <- Gompert.1_01
+    e1_bas_tab[1,2] <- Gompert.1_01.se
+    e1_bas_tab[2,1] <- Gompert.2_01
+    e1_bas_tab[2,2] <- Gompert.2_01.se
+    e1_bas_tab[,3] <- e1_bas_tab[,1]/e1_bas_tab[,2]
+    e1_bas_tab[,4] <- 1 - pchisq(e1_bas_tab[,3]**2,1)
+    rownames(e1_bas_tab) <- c(Gompert.1_01.name,Gompert.2_01.name)
+    colnames(e1_bas_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
   }
   if(x$control$hazard_baseline_01 == "Splines"){
     e1_bas_tab <- matrix(nrow = length(gamma_01), ncol = 4)
@@ -527,11 +552,14 @@ summary.lsjm_interintraIDM <- function(object,...)
     e1_bas_tab[,3] <- e1_bas_tab[,1]/e1_bas_tab[,2]
     e1_bas_tab[,4] <- 1 - pchisq(e1_bas_tab[,3]**2,1)
     rownames(e1_bas_tab) <- gamma_01.name
-    colnames(e1_bas_tab) <- c("Coeff", "SE", "Wald", "P-value")
+    colnames(e1_bas_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
   }
-  e1_surv_tab <- rbind(e1_var_tab, e1_share_current_tab, e1_share_slope_tab, e1_alpha_tab)
+  e1_surv_tab <- rbind(e1_share_current_tab, e1_share_slope_tab, e1_share_intervar_tab, e1_share_intravar_tab, e1_alpha_tab)
   rownames(e1_surv_tab) <- e1_names_tab
-  colnames(e1_surv_tab) <- c("Coeff", "SE", "Wald", "P-value")
+  colnames(e1_surv_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
+  e1_surv_tab <- as.data.frame(e1_surv_tab)
+  e1_surv_tab <- round(e1_surv_tab, 4)
+  e1_surv_tab$Pvalue <- ifelse(e1_surv_tab$Pvalue < 0.001, "<0.001", round(e1_surv_tab$Pvalue,3))
 
   if(nrow(e1_bas_tab)!=0){
     cat("\n")
@@ -542,13 +570,17 @@ summary.lsjm_interintraIDM <- function(object,...)
   cat("\n")
   cat(paste("     Baseline: ",x$control$hazard_baseline_01), "\n")
   cat("\n")
+  e1_bas_tab <- as.data.frame(e1_bas_tab)
+  e1_bas_tab <- round(e1_bas_tab, 4)
+  e1_bas_tab$Pvalue <- ifelse(e1_bas_tab$Pvalue < 0.001, "<0.001", round(e1_bas_tab$Pvalue,3))
   print(e1_bas_tab)
 
 
   cat("\n")
 
   cat("    Transition 0-2:")
-  e2_var_tab <- NULL
+  e2_share_intravar_tab <- NULL
+  e2_share_intervar_tab <- NULL
   e2_share_current_tab <- NULL
   e2_share_slope_tab <- NULL
   e2_alpha_tab <- NULL
@@ -622,7 +654,7 @@ summary.lsjm_interintraIDM <- function(object,...)
     # e2_alpha_tab <- e2_alpha_tab[-1,]
     # e2_names_tab <- c(e2_names_tab, alpha_02.name[-1])
     rownames(e2_bas_tab) <- c("intercept")
-    colnames(e2_bas_tab) <- c("Coeff", "SE", "Wald", "P-value")
+    colnames(e2_bas_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
   }
   if(x$control$hazard_baseline_02 == "Weibull"){
     e2_bas_tab <- matrix(nrow = 2, ncol = 4)
@@ -636,7 +668,18 @@ summary.lsjm_interintraIDM <- function(object,...)
     e2_bas_tab[,3] <- e2_bas_tab[,1]/e2_bas_tab[,2]
     e2_bas_tab[,4] <- 1 - pchisq(e2_bas_tab[,3]**2,1)
     rownames(e2_bas_tab) <- c("intercept",shape_02.name)
-    colnames(e2_bas_tab) <- c("Coeff", "SE", "Wald", "P-value")
+    colnames(e2_bas_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
+  }
+  if(x$control$hazard_baseline_02 == "Gompertz"){
+    e2_bas_tab <- matrix(nrow = 2, ncol = 4)
+    e2_bas_tab[1,1] <- Gompert.1_02
+    e2_bas_tab[1,2] <- Gompert.1_02.se
+    e2_bas_tab[2,1] <- Gompert.2_02
+    e2_bas_tab[2,2] <- Gompert.2_02.se
+    e2_bas_tab[,3] <- e2_bas_tab[,1]/e2_bas_tab[,2]
+    e2_bas_tab[,4] <- 1 - pchisq(e2_bas_tab[,3]**2,1)
+    rownames(e2_bas_tab) <- c(Gompert.1_02.name,Gompert.2_02.name)
+    colnames(e2_bas_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
   }
   if(x$control$hazard_baseline_02 == "Splines"){
     e2_bas_tab <- matrix(nrow = length(gamma_02), ncol = 4)
@@ -645,12 +688,15 @@ summary.lsjm_interintraIDM <- function(object,...)
     e2_bas_tab[,3] <- e2_bas_tab[,1]/e2_bas_tab[,2]
     e2_bas_tab[,4] <- 1 - pchisq(e2_bas_tab[,3]**2,1)
     rownames(e2_bas_tab) <- gamma_02.name
-    colnames(e2_bas_tab) <- c("Coeff", "SE", "Wald", "P-value")
+    colnames(e2_bas_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
   }
 
-  e2_surv_tab <- rbind(e2_var_tab, e2_share_current_tab, e2_share_slope_tab, e2_alpha_tab)
+  e2_surv_tab <- rbind(e2_share_current_tab, e2_share_slope_tab, e2_share_intervar_tab, e2_share_intravar_tab, e2_alpha_tab)
   rownames(e2_surv_tab) <- e2_names_tab
-  colnames(e2_surv_tab) <- c("Coeff", "SE", "Wald", "P-value")
+  colnames(e2_surv_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
+  e2_surv_tab <- as.data.frame(e2_surv_tab)
+  e2_surv_tab <- round(e2_surv_tab, 4)
+  e2_surv_tab$Pvalue <- ifelse(e2_surv_tab$Pvalue < 0.001, "<0.001", round(e2_surv_tab$Pvalue,3))
 
   if(nrow(e2_bas_tab)!=0){
     cat("\n")
@@ -661,6 +707,9 @@ summary.lsjm_interintraIDM <- function(object,...)
   cat("\n")
   cat(paste("     Baseline: ",x$control$hazard_baseline_02), "\n")
   cat("\n")
+  e2_bas_tab <- as.data.frame(e2_bas_tab)
+  e2_bas_tab <- round(e2_bas_tab, 4)
+  e2_bas_tab$Pvalue <- ifelse(e2_bas_tab$Pvalue < 0.001, "<0.001", round(e2_bas_tab$Pvalue,3))
   print(e2_bas_tab)
 
   cat("\n")
@@ -668,6 +717,8 @@ summary.lsjm_interintraIDM <- function(object,...)
   cat("\n")
 
   cat("    Transition 1-2:")
+  e12_share_intravar_tab <- NULL
+  e12_share_intervar_tab <- NULL
   e12_var_tab <- NULL
   e12_share_current_tab <- NULL
   e12_share_slope_tab <- NULL
@@ -742,7 +793,7 @@ summary.lsjm_interintraIDM <- function(object,...)
     # e2_alpha_tab <- e2_alpha_tab[-1,]
     # e2_names_tab <- c(e2_names_tab, alpha_02.name[-1])
     rownames(e12_bas_tab) <- c("intercept")
-    colnames(e12_bas_tab) <- c("Coeff", "SE", "Wald", "P-value")
+    colnames(e12_bas_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
   }
   if(x$control$hazard_baseline_12 == "Weibull"){
     e12_bas_tab <- matrix(nrow = 2, ncol = 4)
@@ -756,7 +807,18 @@ summary.lsjm_interintraIDM <- function(object,...)
     e12_bas_tab[,3] <- e12_bas_tab[,1]/e12_bas_tab[,2]
     e12_bas_tab[,4] <- 1 - pchisq(e12_bas_tab[,3]**2,1)
     rownames(e12_bas_tab) <- c("intercept",shape_12.name)
-    colnames(e12_bas_tab) <- c("Coeff", "SE", "Wald", "P-value")
+    colnames(e12_bas_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
+  }
+  if(x$control$hazard_baseline_12 == "Gompertz"){
+    e12_bas_tab <- matrix(nrow = 2, ncol = 4)
+    e12_bas_tab[1,1] <- Gompert.1_12
+    e12_bas_tab[1,2] <- Gompert.1_12.se
+    e12_bas_tab[2,1] <- Gompert.2_12
+    e12_bas_tab[2,2] <- Gompert.2_12.se
+    e12_bas_tab[,3] <- e12_bas_tab[,1]/e12_bas_tab[,2]
+    e12_bas_tab[,4] <- 1 - pchisq(e12_bas_tab[,3]**2,1)
+    rownames(e12_bas_tab) <- c(Gompert.1_12.name,Gompert.2_12.name)
+    colnames(e12_bas_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
   }
   if(x$control$hazard_baseline_12 == "Splines"){
     e12_bas_tab <- matrix(nrow = length(gamma_12), ncol = 4)
@@ -765,12 +827,15 @@ summary.lsjm_interintraIDM <- function(object,...)
     e12_bas_tab[,3] <- e12_bas_tab[,1]/e12_bas_tab[,2]
     e12_bas_tab[,4] <- 1 - pchisq(e12_bas_tab[,3]**2,1)
     rownames(e12_bas_tab) <- gamma_12.name
-    colnames(e12_bas_tab) <- c("Coeff", "SE", "Wald", "P-value")
+    colnames(e12_bas_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
   }
 
-  e12_surv_tab <- rbind(e12_var_tab, e12_share_current_tab, e12_share_slope_tab, e12_alpha_tab)
+  e12_surv_tab <- rbind(e12_share_current_tab, e12_share_slope_tab, e12_share_intervar_tab, e12_share_intravar_tab, e12_alpha_tab)
   rownames(e12_surv_tab) <- e12_names_tab
-  colnames(e12_surv_tab) <- c("Coeff", "SE", "Wald", "P-value")
+  colnames(e12_surv_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
+  e12_surv_tab <- as.data.frame(e12_surv_tab)
+  e12_surv_tab <- round(e12_surv_tab, 4)
+  e12_surv_tab$Pvalue <- ifelse(e12_surv_tab$Pvalue < 0.001, "<0.001", round(e12_surv_tab$Pvalue,3))
 
   if(nrow(e12_bas_tab)!=0){
     cat("\n")
@@ -781,6 +846,9 @@ summary.lsjm_interintraIDM <- function(object,...)
   cat("\n")
   cat(paste("     Baseline: ",x$control$hazard_baseline_12), "\n")
   cat("\n")
+  e12_bas_tab <- as.data.frame(e12_bas_tab)
+  e12_bas_tab <- round(e12_bas_tab, 4)
+  e12_bas_tab$Pvalue <- ifelse(e12_bas_tab$Pvalue < 0.001, "<0.001", round(e12_bas_tab$Pvalue,3))
   print(e12_bas_tab)
 
   cat("\n")

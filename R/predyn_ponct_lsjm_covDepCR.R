@@ -203,8 +203,8 @@ predyn_ponct_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, wi
         mfZ <- model.frame(Objectlsjm$control$formSurv_01, data = data.long.until.time.s.id)
         Z_01 <- model.matrix(Objectlsjm$control$formSurv_01, mfZ)
         Z_01 <- Z_01[,-1]
-        Bs_01 <- splines::splineDesign(Objectlsjm$control$knots_01, c(t(st.1)), ord = 4L)
-        Bs.den_01 <- splines::splineDesign(Objectlsjm$control$knots_01, c(t(st.den)), ord = 4L)
+        Bs_01 <- splines::splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_01, c(t(st.1)), ord = 4L)
+        Bs.den_01 <- splines::splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_01, c(t(st.den)), ord = 4L)
       }else{
         stop("This type of base survival function is not implemented.")
       }
@@ -223,8 +223,8 @@ predyn_ponct_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, wi
         mfZ <- model.frame(Objectlsjm$control$formSurv_02, data = data.long.until.time.s.id)
         Z_02 <- model.matrix(Objectlsjm$control$formSurv_02, mfZ)
         Z_02 <- Z_02[,-1]
-        Bs_02 <- splines::splineDesign(Objectlsjm$control$knots_02, c(t(st.1)), ord = 4L)
-        Bs.den_02 <- splines::splineDesign(Objectlsjm$control$knots_02, c(t(st.den)), ord = 4L)
+        Bs_02 <- splines::splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_02, c(t(st.1)), ord = 4L)
+        Bs.den_02 <- splines::splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_02, c(t(st.den)), ord = 4L)
       }else{
         stop("This type of base survival function is not implemented.")
       }
@@ -232,7 +232,7 @@ predyn_ponct_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, wi
   }
 
   ### Between 0 and u (double integral)
-  st_0_u <- c(); X_0_u <- c(); U_0_u <- c(); Xslope_0_u <- c(); Uslope_0_u <- c(); Bs_0_u <- c(); Bs_CR_0_u <- c(); O_0_u <- c(); W_0_u <- c()
+  st_0_u <- c(); X_0_u <- c(); U_0_u <- c(); Xslope_0_u <- c(); Uslope_0_u <- c(); Bs_0_u_01 <- c(); Bs_0_u_02 <- c(); O_0_u <- c(); W_0_u <- c()
   data.id.integrale <- data.long.until.time.s.id
   for(st.integrale in st.1){
     list.GK_0_st.2 <- data.GaussKronrod(data.id.integrale, a= 0, b = st.integrale, k = Objectlsjm$control$nb_pointsGK)
@@ -254,10 +254,10 @@ predyn_ponct_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, wi
       Xslope_0_u <- rbind(Xslope_0_u,Xslope_0_st_u); Uslope_0_u <- rbind(Uslope_0_u,Uslope_0_st_u)
     }
     if(Objectlsjm$control$hazard_baseline_01 == "Splines"){
-      Bs_0_u <- rbind(Bs_0_u,splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_01, c(t(st.2)), ord = 4L))
+      Bs_0_u_01 <- rbind(Bs_0_u_01,splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_01, c(t(st.2)), ord = 4L))
     }
     if(Objectlsjm$control$hazard_baseline_02 == "Splines"){
-      Bs_CR_0_u <- rbind(Bs_CR_0_u,splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_02, c(t(st.2)), ord = 4L))
+      Bs_0_u_02 <- rbind(Bs_0_u_02,splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_02, c(t(st.2)), ord = 4L))
     }
   }
 
@@ -353,7 +353,7 @@ predyn_ponct_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, wi
       else{
         if(Objectlsjm$control$hazard_baseline_01 == "Splines"){
           mat_h0s <- matrix(gamma_01,ncol=1)
-          h_0.GK_0_s_01 <- (wk*exp(Bs.den_01%*%mat_h0s))
+          h_0.GK_0_s_01 <- t((wk*exp(Bs.den_01%*%mat_h0s)))
           h_0.GK_0_u_01 <- exp(Bs_0_u_01%*%mat_h0s)*rep(wk, length(wk))
 
           if(event == 1){
@@ -390,7 +390,7 @@ predyn_ponct_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, wi
       else{
         if(Objectlsjm$control$hazard_baseline_02 == "Splines"){
           mat_h0s <- matrix(gamma_01,ncol=1)
-          h_0.GK_0_s_02 <- (wk*exp(Bs.den_02%*%mat_h0s))
+          h_0.GK_0_s_02 <- t((wk*exp(Bs.den_02%*%mat_h0s)))
           h_0.GK_0_u_02 <- exp(Bs_0_u_02%*%mat_h0s)*rep(wk, length(wk))
           if(event == 2){
             h_0.GK_s_t_0k <- (wk*exp(Bs_02%*%mat_h0s))

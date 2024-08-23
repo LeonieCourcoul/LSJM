@@ -239,6 +239,24 @@ ranef.lsjm_interintraIDM <- function(object,...){
   # => il faut appeler marqlevalg individu par individu !
   #1. On associe chaque individu à un cas
   data.long <- x$control$Objectlsmm$control$data.long
+  Time_T <- x$control$Time[["Time_T"]]
+  data.long$Time_T <- data.long[all.vars(Time_T)][,1]
+  Time_R <- x$control$Time[["Time_R"]]
+  data.long$Time_R <- data.long[all.vars(Time_R)][,1]
+  Time_L <- x$control$Time[["Time_L"]]
+  data.long$Time_L <- data.long[all.vars(Time_L)][,1]
+  if(!is.null(x$control$Time[["Time_T0"]])){
+    left_trunc <- TRUE
+    Time_T0 <- x$control$Time[["Time_T0"]]
+    data.long$Time_T0 <- data.long[all.vars(Time_T0)][,1]
+  }
+  else{
+    left_trunc <- FALSE
+  }
+  delta1 <- x$control$deltas[["delta1"]]
+  data.long$delta1 <- data.long[all.vars(delta1)][,1]
+  delta2 <- x$control$deltas[["delta2"]]
+  data.long$delta2 <- data.long[all.vars(delta2)][,1]
   data.long$Case <- ifelse(data.long$delta1 == 1 & data.long$Time_R == data.long$Time_L, "Case1bis",
                            ifelse(data.long$delta1 == 1, "Case1",
                                   ifelse(data.long$Time_L == data.long$Time_T, "Case2", "Case3")))
@@ -1496,27 +1514,27 @@ ranef.lsjm_interintraIDM <- function(object,...){
   if(x$control$hazard_baseline_12 == "Gompertz"){Z_12 <- as.matrix(Z_12[,-1])}
   if(x$control$hazard_baseline_01 == "Splines"){
     Z_01 <- as.matrix(Z_01[,-1])
-    B_T_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, data.id$Time_T, ord = 4L)
-    Bs_T_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, c(t(st_T)), ord = 4L)
-    if(x$control$left_trunc){
-      Bs_T0_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, c(t(st_T0)), ord = 4L)
-    }
+    #B_T_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, data.id$Time_T, ord = 4L)
+    #Bs_T_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, c(t(st_T)), ord = 4L)
+    #if(x$control$left_trunc){
+    #  Bs_T0_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, c(t(st_T0)), ord = 4L)
+    #}
   }
   if(x$control$hazard_baseline_02 == "Splines"){
     Z_02 <- as.matrix(Z_02[,-1])
-    B_T_02 <- splineDesign(x$control$knots.hazard_baseline.splines_02, data.id$Time_T, ord = 4L)
-    Bs_T_02 <- splineDesign(x$control$knots.hazard_baseline.splines_02, c(t(st_T)), ord = 4L)
-    if(x$control$left_trunc){
-      Bs_T0_02 <- splineDesign(x$control$knots.hazard_baseline.splines_02, c(t(st_T0)), ord = 4L)
-    }
+    #B_T_02 <- splineDesign(x$control$knots.hazard_baseline.splines_02, data.id$Time_T, ord = 4L)
+    #Bs_T_02 <- splineDesign(x$control$knots.hazard_baseline.splines_02, c(t(st_T)), ord = 4L)
+    #if(x$control$left_trunc){
+    #  Bs_T0_02 <- splineDesign(x$control$knots.hazard_baseline.splines_02, c(t(st_T0)), ord = 4L)
+    #}
   }
   if(x$control$hazard_baseline_12 == "Splines"){
     Z_12 <- as.matrix(Z_12[,-1])
-    B_T_12 <- splineDesign(x$control$knots.hazard_baseline.splines_12, data.id$Time_T, ord = 4L)
-    Bs_T_12 <- splineDesign(x$control$knots.hazard_baseline.splines_12, c(t(st_T)), ord = 4L)
-    if(x$control$left_trunc){
-      Bs_T0_12 <- splineDesign(x$control$knots.hazard_baseline.splines_12, c(t(st_T0)), ord = 4L)
-    }
+   # B_T_12 <- splineDesign(x$control$knots.hazard_baseline.splines_12, data.id$Time_T, ord = 4L)
+   # Bs_T_12 <- splineDesign(x$control$knots.hazard_baseline.splines_12, c(t(st_T)), ord = 4L)
+   # if(x$control$left_trunc){
+   #   Bs_T0_12 <- splineDesign(x$control$knots.hazard_baseline.splines_12, c(t(st_T0)), ord = 4L)
+   # }
   }
 
   cat("Cumulative risks")

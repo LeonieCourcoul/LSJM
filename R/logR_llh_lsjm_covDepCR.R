@@ -136,7 +136,8 @@ logR_llh_lsjm_covDepCR <- function(param,hazard_baseline_01, sharedtype_01,
 
   # Creations entrees rcpp
   sharedtype <- c("current value" %in% sharedtype_01, "slope" %in% sharedtype_01, "variability" %in% sharedtype_01,
-                  "current value" %in% sharedtype_02, "slope" %in% sharedtype_02, "variability" %in% sharedtype_02
+                  "current value" %in% sharedtype_02, "slope" %in% sharedtype_02, "variability" %in% sharedtype_02,
+                  "random effects" %in% sharedtype_01, "random effects" %in% sharedtype_02
   )
   HB <- list(hazard_baseline_01, hazard_baseline_02)
   Weibull <- c(shape_01, shape_02)

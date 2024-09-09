@@ -1493,8 +1493,8 @@ ranef.lsjm_interintraIDM <- function(object,...){
   pred_haz_02 <- 0
   pred_haz_12 <- 0
   data.id <- x$control$Objectlsmm$control$data.long[!duplicated(x$control$Objectlsmm$control$data.long$id),]
-  gread.time <- seq(min(data.id[,x$control$Objectlsmm$control$timeVar]), max(data.id[,x$control$Objectlsmm$control$timeVar]), by = (max(data.id[,x$control$Objectlsmm$control$timeVar])-min(data.id[,x$control$Objectlsmm$control$timeVar]))/100)
-  data.GaussKronrod.sort.unique <- data.GaussKronrod(data.id = data.id, a = 0,b = gread.time, k = x$control$nb_pointsGK)
+  grid.time <- seq(min(data.id[,x$control$Objectlsmm$control$timeVar]), max(data.id[,x$control$Objectlsmm$control$timeVar]), by = (max(data.id[,x$control$Objectlsmm$control$timeVar])-min(data.id[,x$control$Objectlsmm$control$timeVar]))/100)
+  data.GaussKronrod.sort.unique <- data.GaussKronrod(data.id = data.id, a = 0,b = grid.time, k = x$control$nb_pointsGK)
   st_calc.sort.unique <- data.GaussKronrod.sort.unique$st
   P.sort.unique <- data.GaussKronrod.sort.unique$P
 
@@ -1542,7 +1542,7 @@ ranef.lsjm_interintraIDM <- function(object,...){
     Cum_risk_01i <- c()
     Cum_risk_02i  <- c()
     Cum_risk_12i <- c()
-    for(j in 1:length((gread.time))){
+    for(j in 1:length((grid.time))){
       pred_haz_01 <- 0
       pred_haz_02 <- 0
       pred_haz_12 <- 0
@@ -1714,7 +1714,7 @@ ranef.lsjm_interintraIDM <- function(object,...){
 
   cv.Pred <- as.data.frame(cv.Pred)
   colnames(cv.Pred) <- c("id", "time", "CV", "Residual_SD_inter", "Residual_SD_intra")
-  list(random.effects.Predictions = random.effects.Predictions, cv.Pred = cv.Pred, Cum_01 = Cum_01, Cum_02 = Cum_02)
+  list(random.effects.Predictions = random.effects.Predictions, cv.Pred = cv.Pred, Cum_01 = Cum_01, Cum_02 = Cum_02, Cum_12 = Cum_12,  grid.time.Cum = grid.time)
 
 
 

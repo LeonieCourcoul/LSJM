@@ -515,7 +515,7 @@ ranef.lsjm_covDepIDM <- function(object,...){
                                      Bs_L_R_i_01 = Bs_L_R_i_01,
                                      Bs_T0_i_01 = Bs_T0_i_01,  Bs_T0_i_02 = Bs_T0_i_02, left_trunc= x$control$left_trunc,
                                      X_base_i = X_base_i, U_base_i = U_base_i, y_i = y_i, O_base_i = O_base_i, W_base_i = W_base_i,
-                                     index_b_slope = index_b_slope,
+                                     index_b_slope = x$control$index_b_slope,
                                      nproc = x$control$nproc, clustertype = x$control$clustertype, maxiter = x$control$maxiter, print.info = FALSE,
                                      file = "", blinding = TRUE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4, multipleTry = 100)
 
@@ -540,7 +540,7 @@ ranef.lsjm_covDepIDM <- function(object,...){
                                        Bs_L_R_i_01 = Bs_L_R_i_01,
                                        Bs_T0_i_01 = Bs_T0_i_01,  Bs_T0_i_02 = Bs_T0_i_02, left_trunc= x$control$left_trunc,
                                        X_base_i = X_base_i, U_base_i = U_base_i, y_i = y_i, O_base_i = O_base_i, W_base_i = W_base_i,
-                                       index_b_slope = index_b_slope,
+                                       index_b_slope = x$control$index_b_slope,
                                        nproc = x$control$nproc, clustertype = x$control$clustertype, maxiter = x$control$maxiter, print.info = FALSE,
                                        file = "", blinding = TRUE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4, multipleTry = 100)
         binit <- matrix(0, nrow = 1, ncol = x$control$Objectlsmm$control$nb.e.a + x$control$Objectlsmm$control$nb.e.a.sigma)
@@ -812,7 +812,7 @@ ranef.lsjm_covDepIDM <- function(object,...){
                                      B_L_i_01=B_L_i_01,
                                      Bs_L_i_01=Bs_L_i_01,  Bs_L_i_02=Bs_L_i_02,  Bs_L_i_12=Bs_L_i_12,
                                      Bs_T0_i_01=Bs_T0_i_01,  Bs_T0_i_02=Bs_T0_i_02,  left_trunc=x$control$left_trunc,
-                                     X_base_i=X_base_i,  U_base_i=U_base_i,   y_i=y_i, O_base_i=O_base_i,  W_base_i=W_base_i, index_b_slope = index_b_slope,
+                                     X_base_i=X_base_i,  U_base_i=U_base_i,   y_i=y_i, O_base_i=O_base_i,  W_base_i=W_base_i, index_b_slope = x$control$index_b_slope,
                                      nproc = x$control$nproc, clustertype = x$control$clustertype, maxiter = x$control$maxiter, print.info = FALSE,
                                      file = "", blinding = TRUE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4, multipleTry = 100)
 
@@ -835,7 +835,7 @@ ranef.lsjm_covDepIDM <- function(object,...){
                                         B_L_i_01=B_L_i_01,
                                         Bs_L_i_01=Bs_L_i_01,  Bs_L_i_02=Bs_L_i_02,  Bs_L_i_12=Bs_L_i_12,
                                         Bs_T0_i_01=Bs_T0_i_01,  Bs_T0_i_02=Bs_T0_i_02,  left_trunc=x$control$left_trunc,
-                                        X_base_i=X_base_i,  U_base_i=U_base_i,   y_i=y_i, O_base_i=O_base_i,  W_base_i=W_base_i, index_b_slope = index_b_slope,
+                                        X_base_i=X_base_i,  U_base_i=U_base_i,   y_i=y_i, O_base_i=O_base_i,  W_base_i=W_base_i, index_b_slope = x$control$index_b_slope,
                                         nproc = x$control$nproc, clustertype = x$control$clustertype, maxiter = x$control$maxiter, print.info = FALSE,
                                         file = "", blinding = TRUE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4, multipleTry = 100)
         binit <- matrix(0, nrow = 1, ncol = x$control$Objectlsmm$control$nb.e.a + x$control$Objectlsmm$control$nb.e.a.sigma)
@@ -1043,7 +1043,7 @@ ranef.lsjm_covDepIDM <- function(object,...){
                                      B_T_i_02=B_T_i_02,
                                      Bs_T_i_01=Bs_T_i_01, Bs_T_i_02= Bs_T_i_02,
                                      Bs_T0_i_01 = Bs_T0_i_01,  Bs_T0_i_02=Bs_T0_i_02,  left_trunc = x$control$left_trunc,
-                                     X_base_i=X_base_i,  U_base_i=U_base_i,   y_i=y_i, O_base_i=O_base_i,  W_base_i=W_base_i, index_b_slope = index_b_slope,
+                                     X_base_i=X_base_i,  U_base_i=U_base_i,   y_i=y_i, O_base_i=O_base_i,  W_base_i=W_base_i, index_b_slope = x$control$index_b_slope,
                                      nproc = x$control$nproc, clustertype = x$control$clustertype, maxiter = x$control$maxiter, print.info = FALSE,
                                      file = "", blinding = TRUE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4, multipleTry = 100)
 
@@ -1065,7 +1065,7 @@ ranef.lsjm_covDepIDM <- function(object,...){
                                        B_T_i_02=B_T_i_02,
                                        Bs_T_i_01=Bs_T_i_01, Bs_T_i_02= Bs_T_i_02,
                                        Bs_T0_i_01 = Bs_T0_i_01,  Bs_T0_i_02=Bs_T0_i_02,  left_trunc = x$control$left_trunc,
-                                       X_base_i=X_base_i,  U_base_i=U_base_i,   y_i=y_i, O_base_i=O_base_i,  W_base_i=W_base_i, index_b_slope = index_b_slope,
+                                       X_base_i=X_base_i,  U_base_i=U_base_i,   y_i=y_i, O_base_i=O_base_i,  W_base_i=W_base_i, index_b_slope = x$control$index_b_slope,
                                        nproc = x$control$nproc, clustertype = x$control$clustertype, maxiter = x$control$maxiter, print.info = FALSE,
                                        file = "", blinding = TRUE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4, multipleTry = 100)
         binit <-matrix(0, nrow = 1, ncol = x$control$Objectlsmm$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma)
@@ -1391,7 +1391,7 @@ ranef.lsjm_covDepIDM <- function(object,...){
                                      Bs_T0_i_01 = Bs_T0_i_01,  Bs_T0_i_02 = Bs_T0_i_02,
 
                                      left_trunc= x$control$left_trunc,
-                                     X_base_i = X_base_i, U_base_i = U_base_i, y_i = y_i, O_base_i = O_base_i, W_base_i = W_base_i,  index_b_slope = index_b_slope,
+                                     X_base_i = X_base_i, U_base_i = U_base_i, y_i = y_i, O_base_i = O_base_i, W_base_i = W_base_i,  index_b_slope =x$control$index_b_slope,
                                      nproc = x$control$nproc, clustertype = x$control$clustertype, maxiter = x$control$maxiter, print.info = FALSE,
                                      file = "", blinding = TRUE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4, multipleTry = 100)
       while(random.effects_i$istop !=1){
@@ -1416,7 +1416,7 @@ ranef.lsjm_covDepIDM <- function(object,...){
                                        Bs_T0_i_01 = Bs_T0_i_01,  Bs_T0_i_02 = Bs_T0_i_02,
 
                                        left_trunc= x$control$left_trunc,
-                                       X_base_i = X_base_i, U_base_i = U_base_i, y_i = y_i, O_base_i = O_base_i, W_base_i = W_base_i,  index_b_slope = index_b_slope,
+                                       X_base_i = X_base_i, U_base_i = U_base_i, y_i = y_i, O_base_i = O_base_i, W_base_i = W_base_i,  index_b_slope = x$control$index_b_slope,
                                        nproc = x$control$nproc, clustertype = x$control$clustertype, maxiter = x$control$maxiter, print.info = FALSE,
                                        file = "", blinding = TRUE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4, multipleTry = 100)
         binit <-matrix(0, nrow = 1, ncol = x$control$Objectlsmm$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma)
@@ -1442,8 +1442,8 @@ ranef.lsjm_covDepIDM <- function(object,...){
   pred_haz_02 <- 0
   pred_haz_12 <- 0
   data.id <- x$control$Objectlsmm$control$data.long[!duplicated(x$control$Objectlsmm$control$data.long$id),]
-  gread.time <- seq(min(data.id[,x$control$Objectlsmm$control$timeVar]), max(data.id[,x$control$Objectlsmm$control$timeVar]), by = (max(data.id[,x$control$Objectlsmm$control$timeVar])-min(data.id[,x$control$Objectlsmm$control$timeVar]))/100)
-  data.GaussKronrod.sort.unique <- data.GaussKronrod(data.id = data.id, a = 0,b = gread.time, k = x$control$nb_pointsGK)
+  grid.time <- seq(min(data.id[,x$control$Objectlsmm$control$timeVar]), max(data.id[,x$control$Objectlsmm$control$timeVar]), by = (max(data.id[,x$control$Objectlsmm$control$timeVar])-min(data.id[,x$control$Objectlsmm$control$timeVar]))/100)
+  data.GaussKronrod.sort.unique <- data.GaussKronrod(data.id = data.id, a = 0,b = grid.time, k = x$control$nb_pointsGK)
   st_calc.sort.unique <- data.GaussKronrod.sort.unique$st
   P.sort.unique <- data.GaussKronrod.sort.unique$P
 
@@ -1491,7 +1491,7 @@ ranef.lsjm_covDepIDM <- function(object,...){
     Cum_risk_01i <- c()
     Cum_risk_02i  <- c()
     Cum_risk_12i <- c()
-    for(j in 1:length((gread.time))){
+    for(j in 1:length((grid.time))){
       pred_haz_01 <- 0
       pred_haz_02 <- 0
       pred_haz_12 <- 0
@@ -1657,6 +1657,6 @@ ranef.lsjm_covDepIDM <- function(object,...){
 
   cv.Pred <- as.data.frame(cv.Pred)
   colnames(cv.Pred) <- c("id", "time", "CV", "Residual_SD")
-  list(random.effects.Predictions = random.effects.Predictions, cv.Pred = cv.Pred, Cum_01 = Cum_01, Cum_02 = Cum_02, Cum_12 = Cum_12)
+  list(random.effects.Predictions = random.effects.Predictions, cv.Pred = cv.Pred, Cum_01 = Cum_01, Cum_02 = Cum_02, Cum_12 = Cum_12, grid.time.Cum = grid.time)
 
 }

@@ -1,4 +1,4 @@
-plot.lsjm_covDepIDM <- function(Objectlsjm, which = 'long.fit', Objectranef = NULL, break.times = NULL, ID.ind = NULL, Objectsmooth = NULL, xlim = NULL, ylim = NULL){
+plot.lsjm_interintraIDM <- function(Objectlsjm, which = 'long.fit', Objectranef = NULL, break.times = NULL, ID.ind = NULL, Objectsmooth = NULL, xlim = NULL, ylim = NULL){
 
 
   Objectlsmm <- Objectlsjm$control$Objectlsmm
@@ -24,7 +24,8 @@ plot.lsjm_covDepIDM <- function(Objectlsjm, which = 'long.fit', Objectranef = NU
     length.obs <- by(data.long[,value.var], data.long$window, length)
     IC.inf <- mean.obs - 1.96*sd.obs/sqrt(length.obs)
     IC.sup <- mean.obs + 1.96*sd.obs/sqrt(length.obs)
-    prediction <- cbind(pred.CV, data.long$window)
+    window.pred <- cut(Objectranef$cv.Pred[,2], break.times, include.lowest = T)
+    prediction <- cbind(pred.CV, window.pred)
     mean.pred <- by(prediction[,1], prediction[,ncol(prediction)], mean)
     obstime.mean <- by(data.long[,timeVar], data.long$window, mean)
     df <- cbind(obstime.mean, mean.obs, IC.sup, IC.inf, mean.pred)
@@ -39,7 +40,7 @@ plot.lsjm_covDepIDM <- function(Objectlsjm, which = 'long.fit', Objectranef = NU
       ggplot2::theme(panel.grid.major = ggplot2::element_blank(), panel.grid.minor = ggplot2::element_blank(),
                      panel.background = ggplot2::element_blank(), axis.line = ggplot2::element_line(colour = "black"))+
       ggplot2::ggtitle("Longitudinal goodness-of-fit")
-    graph <- list(graph.fit.long = graph.fit.long)
+    graph <- graph.fit.long
   }
 
   if(which == 'traj.ind'){
@@ -54,11 +55,13 @@ plot.lsjm_covDepIDM <- function(Objectlsjm, which = 'long.fit', Objectranef = NU
     graph.traj.ind <- c()
     for(ind in ID.ind){
       pred.CV.id <- pred.CV[which(pred.CV$id == ind),]
-      pred.CV.id$y <- data.long[which(data.long$id == ind), value.var]
-      pred.CV.id$CI.sup <- pred.CV.id$CV + 1.96*pred.CV.id$Residual_SD
-      pred.CV.id$CI.inf <- pred.CV.id$CV - 1.96*pred.CV.id$Residual_SD
+      data.idselect <- cbind(data.long$id[which(data.long$id == ind)],data.long[which(data.long$id == ind), Objectlsmm$control$timeVar],data.long[which(data.long$id == ind), value.var])
+      data.idselect <- as.data.frame(data.idselect)
+      colnames(data.idselect) <- c("id","time", "y")
+      #pred.CV.id$y <- data.long[which(data.long$id == ind), value.var]
+      pred.CV.id$CI.sup <- pred.CV.id$CV + 1.96*sqrt(pred.CV.id$Residual_SD_inter**2 + pred.CV.id$Residual_SD_intra**2)
+      pred.CV.id$CI.inf <- pred.CV.id$CV - 1.96*sqrt(pred.CV.id$Residual_SD_inter**2 + pred.CV.id$Residual_SD_intra**2)
 
-      #browser()
       traj_ind <- ggplot() +
 
         geom_line(pred.CV.id, mapping = aes(x=time, y=CV, group = id, color = 'Predicted'))+
@@ -68,7 +71,7 @@ plot.lsjm_covDepIDM <- function(Objectlsjm, which = 'long.fit', Objectranef = NU
         geom_ribbon( pred.CV.id,mapping=
                        aes(x=time,ymin=CI.inf,ymax=CI.sup), fill="#998ec3", alpha=0.3)+
 
-        geom_point(pred.CV.id, mapping = aes(x=time, y=y, group = id,color = "Observed"),shape =17)+
+        geom_point(data.idselect, mapping = aes(x=time, y=y, group = id,color = "Observed"),shape =17)+
         xlab("Time") + ylab("Y") +
 
         facet_wrap(~id, ncol = 3)+
@@ -98,7 +101,6 @@ plot.lsjm_covDepIDM <- function(Objectlsjm, which = 'long.fit', Objectranef = NU
     graph <- graph.traj.ind
 
   }
-
   if(which == 'survival.fit'){
     #Objectranef$grid.time.Cum
     Cum_01Smooth_est <- intensity(times = Objectranef$grid.time.Cum, knots = Objectsmooth$knots01,

@@ -146,9 +146,9 @@ lsjm <- function(Objectlsmm,  survival_type = c('Single', 'CR', 'IDM'),
   }
   else{
     if(formVar == 'cov-dependent'){
-      if(!all(sharedtype_01 %in% c("current value", "slope", "variability"))) stop("The argument of sharedtype_01 must be in c('current value', 'slope', 'variability')")
-      if(survival_type %in% c('CR', 'IDM') && !all(sharedtype_02 %in% c("current value", "slope", "variability"))) stop("The argument of sharedtype_02 must be in c('current value', 'slope', 'variability')")
-      if(survival_type %in% c('IDM') && !all(sharedtype_12 %in% c("current value", "slope", "variability"))) stop("The argument of sharedtype_12 must be in c('current value', 'slope', 'variability')")
+      if(!all(sharedtype_01 %in% c("current value", "slope", "variability", "random effects"))) stop("The argument of sharedtype_01 must be in c('current value', 'slope', 'variability', 'random effects')")
+      if(survival_type %in% c('CR', 'IDM') && !all(sharedtype_02 %in% c("current value", "slope", "variability", "random effects"))) stop("The argument of sharedtype_02 must be in c('current value', 'slope', 'variability', 'random effects')")
+      if(survival_type %in% c('IDM') && !all(sharedtype_12 %in% c("current value", "slope", "variability", "random effects"))) stop("The argument of sharedtype_12 must be in c('current value', 'slope', 'variability', 'random effects')")
       if(survival_type == 'Single'){
         result <- lsjm_covDepSingle(Objectlsmm, Time, deltas, hazardBase_01,  nb.knots.splines,
                                     formSurv_01,  nb_pointsGK, sharedtype_01,

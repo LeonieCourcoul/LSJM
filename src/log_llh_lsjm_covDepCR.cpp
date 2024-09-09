@@ -34,6 +34,8 @@ arma::vec log_llh_lsjm_covDepCR(arma::vec sharedtype, List HB, arma::vec Gompert
   bool dep_cv_02 = sharedtype[3];
   bool dep_slope_02 = sharedtype[4];
   bool dep_var_02 = sharedtype[5];
+  bool dep_re_01 = sharedtype[6];
+  bool dep_re_02 = sharedtype[7];
   const std::string& hazard_baseline_01 = HB[0];
   const std::string& hazard_baseline_02 = HB[1];
   double Gompertz_1_01 = Gompertz[0];
@@ -88,6 +90,25 @@ arma::vec log_llh_lsjm_covDepCR(arma::vec sharedtype, List HB, arma::vec Gompert
     arma::mat sigma_GK_T;
     arma::mat sigma_GK_T0;
 
+    //Rcout << "The value of 1 : \n" << b_y << "\n";
+    //Rcout << "The value of 2 : \n" << sum(b_y,1) << "\n";
+    //Rcout << "The value of 3 : \n" << arma::repmat(sum(b_y,1),1,nb_pointsGK) << "\n";
+
+    if(dep_re_01){
+      h_01_T_i = h_01_T_i%exp(sum(b_y,1));
+      survLong_01_T_i = survLong_01_T_i + arma::repmat(sum(b_y,1),1,nb_pointsGK);
+      if(left_trunc){
+        survLong_01_T0_i = survLong_01_T0_i + arma::repmat(sum(b_y,1),1,nb_pointsGK);
+      }
+    }
+
+    if(dep_re_02){
+      h_02_T_i = h_02_T_i%exp(sum(b_y,1));
+      survLong_02_T_i = survLong_02_T_i + arma::repmat(sum(b_y,1),1,nb_pointsGK);
+      if(left_trunc){
+        survLong_02_T0_i = survLong_02_T0_i + arma::repmat(sum(b_y,1),1,nb_pointsGK);
+      }
+    }
 
     if(dep_cv_01 || dep_cv_02){
       arma::rowvec X_T_i = X_T.row(i_provCase1bis);

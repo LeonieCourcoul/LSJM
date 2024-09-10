@@ -444,7 +444,7 @@ ranef.lsjm_covDepCR <- function(object,...){
         Us.slope.j <- list.data.GK.current.sigma.sort.unique$Utime
         bslope <- random.effects_i$b[1:(x$control$Objectlsmm$control$nb.e.a)]
         bslope <- bslope[x$control$index_b_slope]
-        bslope <- as.matrix(bslope, nrow = 1)
+        bslope <- matrix(bslope, nrow = 1)
         slope.GK <- beta_slope%*%t(Xs.slope.j) + bslope%*%t(Us.slope.j)
         if("slope" %in% x$control$sharedtype_01){
           pred_haz_01 <- pred_haz_01 + alpha.slope_01*slope.GK

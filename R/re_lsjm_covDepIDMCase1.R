@@ -21,7 +21,7 @@ re_lsjm_covDepIDMCase1 <- function(param, nb.e.a, nb.e.a.sigma, Sigma.re,
   f_b_tau <- mvtnorm::dmvnorm(x = all_re, mean = rep(0,length(all_re)), sigma = Sigma.re)
   b_y_slope <- as.matrix(0)
   b_re <- all_re[1:nb.e.a]
-  tau_re <- all_re[(nb.e.a+1):(nb.e.a.sigma)]
+  tau_re <- all_re[(nb.e.a+1):(nb.e.a+nb.e.a.sigma)]
   if(sharedtype[2] || sharedtype[5] || sharedtype[8] ){
     b_y_slope <- as.matrix(b_re[index_b_slope], ncol = nb.e.a-1)
   }

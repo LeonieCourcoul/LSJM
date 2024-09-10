@@ -80,7 +80,6 @@ double re_lsjm_covDepCR_cpp(arma::vec sharedtype, List HB, arma::vec Gompertz, a
   arma::mat Sigma_T;
   arma::mat sigma_GK_T;
   arma::mat sigma_GK_T0;
-
   if(dep_cv_01 || dep_cv_02){
     CV_T = arma::dot(beta, X_T_i) + U_T_i*b_y;
     current_GK_T = X_GK_T_i*beta+U_GK_T_i*b_y;

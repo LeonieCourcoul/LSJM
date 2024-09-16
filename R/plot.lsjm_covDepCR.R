@@ -1,3 +1,7 @@
+#' @rdname plot
+#' @export
+#'
+
 plot.lsjm_covDepCR <- function(Objectlsjm, which = 'long.fit', Objectranef = NULL, break.times = NULL, ID.ind = NULL, xlim = NULL, ylim = NULL){
 
 
@@ -117,13 +121,31 @@ plot.lsjm_covDepCR <- function(Objectlsjm, which = 'long.fit', Objectranef = NUL
     C1.sort$Time_Tsort <- C1.sort[all.vars(Time_Tsort)][,1]
     C1.sort$delta1sort <- C1.sort[all.vars(delta1sort)][,1]
     Surv.fit1 <- survminer::surv_fit(Surv(Time_Tsort, delta1sort) ~ 1, data = C1.sort)
-    graph.surv.1 <- survminer::ggsurvplot(Surv.fit1, data = C1.sort, fun = "cumhaz",
-                                          conf.int.style = "step", legend = "none", xlab = "Time", xlim = xlim, ylim = ylim)$plot +
-      ggplot2::geom_line(ggplot2::aes(timeFormSurv,pred),
-                         data = Cum.pred1.sort,
-                         color = "black",
-                         linetype = "3313",
-                         size = 1)
+    surv_plot <- survminer::ggsurvplot(Surv.fit1, data = C1.sort, fun = "cumhaz",
+                            conf.int = TRUE, legend.title = "",
+                            legend.labs = c("Survival Curve"),
+                            xlab = "Time", palette = "#B2BABB", ylim = ylim)
+    surv_plot <- surv_plot$plot
+    color_mapping <- c("#B2BABB","#E74C3C")
+    graph.surv.1<-surv_plot +
+      geom_step(aes(timeFormSurv, pred, color = "Nelson-Aalen"),
+                data = Cum.pred1.sort,
+                linetype = "3313",
+                size = 1) +
+      geom_step(aes(timeFormSurv, pred, color = "Prediction"),
+                data = Cum.pred1.sort,
+                linetype = "3313",
+                size = 1)+
+      scale_color_manual(name = "",
+                         values = setNames(color_mapping, c("Nelson-Aalen", "Prediction"))) +
+      guides(color = guide_legend(title = "", override.aes = list(linetype = "solid", size = 2)))+
+      theme(
+        legend.key.size = unit(3, "lines"),  # Ajuster la taille de la clé dans la légende
+        legend.text = element_text(size = 10)  # Ajuster la taille du texte dans la légende
+      ) +
+      theme(legend.position = c(0.1, 0.8))+
+      ggtitle("1st event")
+    graph <- list(graph.surv.1 = graph.surv.1)
 
     data.id$e2.new <- data.id[,all.vars(Objectlsjm$control$deltas[["delta2"]])]
     C2.sort <-  data.id[order(data.id[,all.vars(Objectlsjm$control$Time[["Time_T"]])]),]
@@ -139,19 +161,36 @@ plot.lsjm_covDepCR <- function(Objectlsjm, which = 'long.fit', Objectranef = NUL
     C2.sort$Time_Tsort <- C2.sort[all.vars(Time_Tsort)][,1]
     C2.sort$delta2sort <- C2.sort[all.vars(delta2sort)][,1]
     Surv.fit2 <- survminer::surv_fit(Surv(Time_Tsort, delta2sort) ~ 1, data = C2.sort)
-    graph.surv.2 <- survminer::ggsurvplot(Surv.fit2, data = C2.sort, fun = "cumhaz",
-                                          conf.int.style = "step", legend = "none", xlab = "Time", xlim = xlim, ylim = ylim)$plot +
-      ggplot2::geom_line(ggplot2::aes(timeFormSurv,pred),
-                         data = Cum.pred2.sort,
-                         color = "black",
-                         linetype = "3313",
-                         size = 1)
+    surv_plot <- survminer::ggsurvplot(Surv.fit2, data = C2.sort, fun = "cumhaz",
+                                       conf.int = TRUE, legend.title = "",
+                                       legend.labs = c("Survival Curve"),
+                                       xlab = "Time", palette = "#B2BABB", ylim = ylim)
+    surv_plot <- surv_plot$plot
+    color_mapping <- c("#B2BABB","#E74C3C")
+    graph.surv.2<-surv_plot +
+      geom_step(aes(timeFormSurv, pred, color = "Nelson-Aalen"),
+                data = Cum.pred2.sort,
+                linetype = "3313",
+                size = 1) +
+      geom_step(aes(timeFormSurv, pred, color = "Prediction"),
+                data = Cum.pred2.sort,
+                linetype = "3313",
+                size = 1)+
+      scale_color_manual(name = "",
+                         values = setNames(color_mapping, c("Nelson-Aalen", "Prediction"))) +
+      guides(color = guide_legend(title = "", override.aes = list(linetype = "solid", size = 2)))+
+      theme(
+        legend.key.size = unit(3, "lines"),  # Ajuster la taille de la clé dans la légende
+        legend.text = element_text(size = 10)  # Ajuster la taille du texte dans la légende
+      ) +
+      theme(legend.position = c(0.1, 0.8))+
+      ggtitle("2nd event")
+    graph[["graph.sur.2"]] <- graph.surv.2
 
+    #print(graph.surv.1)
+    #print(graph.surv.2)
 
-    print(graph.surv.1)
-    print(graph.surv.2)
-
-    graph <- list(graph.surv.1 = graph.surv.1, graph.surv.2 = graph.surv.2)
+    #graph <- list(graph.surv.1 = graph.surv.1, graph.surv.2 = graph.surv.2)
 
   }
 

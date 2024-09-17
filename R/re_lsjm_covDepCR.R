@@ -26,6 +26,8 @@ re_lsjm_covDepCR <- function(param, nb.e.a,  nb.e.a.sigma, Sigma.re,
 
 
 
+
+
   log_f_Y_f_T <- re_lsjm_covDepCR_cpp(  sharedtype,  HB,  Gompertz,  Weibull,
                                          nb_pointsGK ,
                                          alpha_y_slope, alpha_var,  alpha_z,  gamma_z0,  beta,  beta_slope, omega,

@@ -60,8 +60,8 @@ lsjm <- function(Objectlsmm,  survival_type = c('Single', 'CR', 'IDM'),
                  delta1, delta2 = NULL, Time_T, Time_L = NULL, Time_R = NULL, Time_T0 = NULL,
                  formSlopeFixed = NULL, formSlopeRandom = NULL, index_beta_slope = NULL, index_b_slope = NULL, nb.knots.splines = c(1,1,1),
                  nb_pointsGK = 15, S1 = 1000, S2 = 5000, binit = NULL,
-                 nproc = 1, clustertype = "SOCK", maxiter = 100,
-                 print.info = FALSE, file = NULL, epsa = 1e-03, epsb = 1e-03, epsd = 1e-03
+                 nproc = 1, clustertype = "SOCK", maxiter = 500,
+                 print.info = FALSE, file = NULL, epsa = 1e-04, epsb = 1e-04, epsd = 1e-04
 ){
   if(missing(Objectlsmm)) stop("The argument Objectlsmm must be specified")
   if(!inherits(Objectlsmm, "lsmm_classic") && !inherits(Objectlsmm, "lsmm_covDep") && !inherits(Objectlsmm, "lsmm_interintra")) stop("use only \"lsmm\" objects")

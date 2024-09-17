@@ -12,7 +12,7 @@ plot.lsjm_covDepCR <- function(Objectlsjm, which = 'long.fit', Objectranef = NUL
 
   graph <- NULL
 
-  if(which == 'long.fit'){
+    if(which == 'long.fit'){
     formFixed <- Objectlsmm$control$formFixed
     timeVar <- Objectlsmm$control$timeVar
     data.long <- Objectlsmm$control$data.long

@@ -386,7 +386,7 @@ lsjm_covDepCR <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_b
                             nb.omega = nb.omega, nb.e.a.sigma = nb.e.a.sigma,
                             correlated_re = correlated_re,
                             nproc = nproc, clustertype = clustertype, maxiter = maxiter, print.info = print.info,
-                            file = file, blinding = FALSE, epsa = 2.1, epsb = 2.1, epsd = 0.99999)
+                            file = file, blinding = FALSE, epsa = 10000000, epsb = 10000000, epsd = 0.99999)
 
   var_trans <- matrix(rep(0,length(binit)**2),nrow=length(binit),ncol=length(binit))
   var_trans[upper.tri(var_trans, diag=T)] <- estimation2$v

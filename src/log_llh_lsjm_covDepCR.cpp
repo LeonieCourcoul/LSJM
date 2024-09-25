@@ -13,7 +13,7 @@ using namespace std;
 
 arma::vec log_llh_lsjm_covDepCR(arma::vec sharedtype, List HB, arma::vec Gompertz, arma::vec Weibull,
                                  arma::vec nb_points_integral,
-                                 arma::vec alpha_y_slope, arma::vec alpha_var, List alpha_z, List gamma, arma::vec beta, arma::vec beta_slope, arma::vec omega,
+                                 arma::vec alpha_y_slope, arma::vec alpha_var, arma::vec alpha_b_01, arma::vec alpha_b_02, List alpha_z, List gamma, arma::vec beta, arma::vec beta_slope, arma::vec omega,
                                  arma::mat b_y, arma::mat b_y_slope, arma::mat b_om, arma::vec wk,
                                  arma::vec delta1, arma::vec delta2, arma::mat Z_01, arma::mat Z_02, arma::mat X_T, arma::mat U_T,
                                  arma::mat Xslope_T, arma::mat Uslope_T, arma::mat X_GK_T, arma::mat U_GK_T, arma::mat Xslope_GK_T,
@@ -92,21 +92,23 @@ arma::vec log_llh_lsjm_covDepCR(arma::vec sharedtype, List HB, arma::vec Gompert
 
     //Rcout << "The value of 1 : \n" << b_y << "\n";
     //Rcout << "The value of 2 : \n" << sum(b_y,1) << "\n";
-    //Rcout << "The value of 3 : \n" << arma::repmat(sum(b_y,1),1,nb_pointsGK) << "\n";
+    //Rcout << "The value of 3 : \n" << alpha_b_01 << "\n";
+    //Rcout << "The value of 3 : \n" << b_y << "\n";
+    //Rcout << "The value of 3 : \n" << arma::repmat(b_y*alpha_b_01,1,nb_pointsGK) << "\n";
 
     if(dep_re_01){
-      h_01_T_i = h_01_T_i%exp(sum(b_y,1));
-      survLong_01_T_i = survLong_01_T_i + arma::repmat(sum(b_y,1),1,nb_pointsGK);
+      h_01_T_i = h_01_T_i%exp(b_y*alpha_b_01);
+      survLong_01_T_i = survLong_01_T_i + arma::repmat(b_y*alpha_b_01,1,nb_pointsGK);
       if(left_trunc){
-        survLong_01_T0_i = survLong_01_T0_i + arma::repmat(sum(b_y,1),1,nb_pointsGK);
+        survLong_01_T0_i = survLong_01_T0_i + arma::repmat(b_y*alpha_b_01,1,nb_pointsGK);
       }
     }
 
     if(dep_re_02){
-      h_02_T_i = h_02_T_i%exp(sum(b_y,1));
-      survLong_02_T_i = survLong_02_T_i + arma::repmat(sum(b_y,1),1,nb_pointsGK);
+      h_02_T_i = h_02_T_i%exp(b_y*alpha_b_02);
+      survLong_02_T_i = survLong_02_T_i + arma::repmat(b_y*alpha_b_02,1,nb_pointsGK);
       if(left_trunc){
-        survLong_02_T0_i = survLong_02_T0_i + arma::repmat(sum(b_y,1),1,nb_pointsGK);
+        survLong_02_T0_i = survLong_02_T0_i + arma::repmat(b_y*alpha_b_02,1,nb_pointsGK);
       }
     }
 

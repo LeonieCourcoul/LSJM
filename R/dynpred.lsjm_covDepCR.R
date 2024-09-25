@@ -62,11 +62,11 @@ dynpred.lsjm_covDepCR <- function(newdata, Objectlsjm, s, horizon, event, IC = 9
       #print(y.axe3)
       y.axe4 <- c(NA,rep(NA,length(data.long.until.time.s[,Objectlsjm$control$Objectlsmm$control$timeVar])),table.pred.id$ICsup)
       y.axe5 <- c(NA,rep(NA,length(data.long.until.time.s[,Objectlsjm$control$Objectlsmm$control$timeVar])),table.pred.id$Prediction)
-      plot(x = x.axe, y = y.axe,xlim = c(0,max(s+window)),
+      graphics::plot(x = x.axe, y = y.axe,xlim = c(0,max(s+window)),
            xlab = "Time", ylab = "Marker", cex.lab = 1, col = "black",
            main = "Prediction of event", pch = 20, cex = 1, font = 1, font.lab = 1, cex.lab = 1, cex.main = 1)
       graphics::par(new = TRUE, font = 1, cex.lab = 1)
-      plot(x.axe, y.axe3, axes = FALSE,col = "black", type = "l", ylim = c(0.000001, max(table.pred.id$ICsup, na.rm = T)),ylab = "", xlab = "", lwd =2, font.lab = 1, cex.lab = 1 )
+      graphics::plot(x.axe, y.axe3, axes = FALSE,col = "black", type = "l", ylim = c(0.000001, max(table.pred.id$ICsup, na.rm = T)),ylab = "", xlab = "", lwd =2, font.lab = 1, cex.lab = 1 )
       graphics::lines(x.axe, y.axe5, col = "red", lty=1, lwd = 2)
       graphics::lines(x.axe, y.axe2, col = "black", lty=2, lwd = 2)
       graphics::lines(x.axe, y.axe4, col = "black", lty=2, lwd = 2)

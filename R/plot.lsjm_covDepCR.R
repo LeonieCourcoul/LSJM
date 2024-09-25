@@ -1,4 +1,6 @@
 #' @rdname plot
+#' @import ggplot2
+#' @import survminer
 #' @export
 #'
 
@@ -9,7 +11,6 @@ plot.lsjm_covDepCR <- function(Objectlsjm, which = 'long.fit', Objectranef = NUL
   if(is.null(Objectranef)){
     Objectranef <- ranef(Objectlsmm)
   }
-
   graph <- NULL
 
     if(which == 'long.fit'){
@@ -63,26 +64,26 @@ plot.lsjm_covDepCR <- function(Objectlsjm, which = 'long.fit', Objectranef = NUL
       pred.CV.id$CI.inf <- pred.CV.id$CV - 1.96*pred.CV.id$Residual_SD
 
       #browser()
-      traj_ind <- ggplot() +
+      traj_ind <- ggplot2::ggplot() +
 
-        geom_line(pred.CV.id, mapping = aes(x=time, y=CV, group = id, color = 'Predicted'))+
-        geom_line(pred.CV.id, mapping = aes(x=time, y=CI.sup, group = id,  color = 'Predicted'))+
-        geom_line(pred.CV.id, mapping = aes(x=time, y=CI.inf, group = id,  color = 'Predicted'))+
+        ggplot2::geom_line(pred.CV.id, mapping = aes(x=time, y=CV, group = id, color = 'Predicted'))+
+        ggplot2::geom_line(pred.CV.id, mapping = aes(x=time, y=CI.sup, group = id,  color = 'Predicted'))+
+        ggplot2::geom_line(pred.CV.id, mapping = aes(x=time, y=CI.inf, group = id,  color = 'Predicted'))+
 
-        geom_ribbon( pred.CV.id,mapping=
+        ggplot2::geom_ribbon( pred.CV.id,mapping=
                        aes(x=time,ymin=CI.inf,ymax=CI.sup), fill="#998ec3", alpha=0.3)+
 
-        geom_point(pred.CV.id, mapping = aes(x=time, y=y, group = id,color = "Observed"),shape =17)+
+        ggplot2::geom_point(pred.CV.id, mapping = aes(x=time, y=y, group = id,color = "Observed"),shape =17)+
         xlab("Time") + ylab("Y") +
 
-        facet_wrap(~id, ncol = 3)+
-        scale_color_manual(name='',
+        ggplot2::facet_wrap(~id, ncol = 3)+
+        ggplot2::scale_color_manual(name='',
                            breaks=c('Predicted', 'Observed'),
                            values=c('Predicted'='#998ec3', 'Observed'='#000000'),
                            guide = guide_legend(override.aes = list(
                              linetype = c(rep("solid", 1), "blank"),
                              shape = c(NA,  17))))+
-        theme(
+        ggplot2::theme(
           panel.background = element_blank(),
           legend.position = "bottom",
           legend.box = "vertical",
@@ -128,23 +129,23 @@ plot.lsjm_covDepCR <- function(Objectlsjm, which = 'long.fit', Objectranef = NUL
     surv_plot <- surv_plot$plot
     color_mapping <- c("#B2BABB","#E74C3C")
     graph.surv.1<-surv_plot +
-      geom_step(aes(timeFormSurv, pred, color = "Nelson-Aalen"),
+      ggplot2::geom_step(aes(timeFormSurv, pred, color = "Nelson-Aalen"),
                 data = Cum.pred1.sort,
                 linetype = "3313",
                 size = 1) +
-      geom_step(aes(timeFormSurv, pred, color = "Prediction"),
+      ggplot2::geom_step(aes(timeFormSurv, pred, color = "Prediction"),
                 data = Cum.pred1.sort,
                 linetype = "3313",
                 size = 1)+
-      scale_color_manual(name = "",
+      ggplot2::scale_color_manual(name = "",
                          values = setNames(color_mapping, c("Nelson-Aalen", "Prediction"))) +
-      guides(color = guide_legend(title = "", override.aes = list(linetype = "solid", size = 2)))+
-      theme(
+      ggplot2::guides(color = guide_legend(title = "", override.aes = list(linetype = "solid", size = 2)))+
+      ggplot2::theme(
         legend.key.size = unit(3, "lines"),  # Ajuster la taille de la clé dans la légende
         legend.text = element_text(size = 10)  # Ajuster la taille du texte dans la légende
       ) +
-      theme(legend.position = c(0.1, 0.8))+
-      ggtitle("1st event")
+      ggplot2::theme(legend.position = c(0.1, 0.8))+
+      ggplot2::ggtitle("1st event")
     graph <- list(graph.surv.1 = graph.surv.1)
 
     data.id$e2.new <- data.id[,all.vars(Objectlsjm$control$deltas[["delta2"]])]
@@ -168,23 +169,23 @@ plot.lsjm_covDepCR <- function(Objectlsjm, which = 'long.fit', Objectranef = NUL
     surv_plot <- surv_plot$plot
     color_mapping <- c("#B2BABB","#E74C3C")
     graph.surv.2<-surv_plot +
-      geom_step(aes(timeFormSurv, pred, color = "Nelson-Aalen"),
+      ggplot2::geom_step(aes(timeFormSurv, pred, color = "Nelson-Aalen"),
                 data = Cum.pred2.sort,
                 linetype = "3313",
                 size = 1) +
-      geom_step(aes(timeFormSurv, pred, color = "Prediction"),
+      ggplot2::geom_step(aes(timeFormSurv, pred, color = "Prediction"),
                 data = Cum.pred2.sort,
                 linetype = "3313",
                 size = 1)+
-      scale_color_manual(name = "",
+      ggplot2::scale_color_manual(name = "",
                          values = setNames(color_mapping, c("Nelson-Aalen", "Prediction"))) +
-      guides(color = guide_legend(title = "", override.aes = list(linetype = "solid", size = 2)))+
+      ggplot2::guides(color = guide_legend(title = "", override.aes = list(linetype = "solid", size = 2)))+
       theme(
         legend.key.size = unit(3, "lines"),  # Ajuster la taille de la clé dans la légende
         legend.text = element_text(size = 10)  # Ajuster la taille du texte dans la légende
       ) +
-      theme(legend.position = c(0.1, 0.8))+
-      ggtitle("2nd event")
+      ggplot2::theme(legend.position = c(0.1, 0.8))+
+      ggplot2::ggtitle("2nd event")
     graph[["graph.sur.2"]] <- graph.surv.2
 
     #print(graph.surv.1)

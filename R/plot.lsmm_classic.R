@@ -1,3 +1,8 @@
+#' @rdname plot
+#' @import ggplot2
+#' @export
+#'
+
 plot.lsmm_classic <- function(Objectlsmm, which = 'long.fit', Objectranef = NULL, break.times = NULL, ID.ind = NULL){
 
   if(is.null(Objectranef)){
@@ -56,26 +61,26 @@ plot.lsmm_classic <- function(Objectlsmm, which = 'long.fit', Objectranef = NULL
       pred.CV.id$CI.sup <- pred.CV.id$CV + 1.96*pred.CV.id$Residual_SD
       pred.CV.id$CI.inf <- pred.CV.id$CV - 1.96*pred.CV.id$Residual_SD
 
-      traj_ind <- ggplot() +
+      traj_ind <- ggplot2::ggplot() +
 
-        geom_line(pred.CV.id, mapping = aes(x=time, y=CV, group = id, color = 'Predicted'))+
-        geom_line(pred.CV.id, mapping = aes(x=time, y=CI.sup, group = id,  color = 'Predicted'))+
-        geom_line(pred.CV.id, mapping = aes(x=time, y=CI.inf, group = id,  color = 'Predicted'))+
+        ggplot2::geom_line(pred.CV.id, mapping = aes(x=time, y=CV, group = id, color = 'Predicted'))+
+        ggplot2::geom_line(pred.CV.id, mapping = aes(x=time, y=CI.sup, group = id,  color = 'Predicted'))+
+        ggplot2::geom_line(pred.CV.id, mapping = aes(x=time, y=CI.inf, group = id,  color = 'Predicted'))+
 
-        geom_ribbon( pred.CV.id,mapping=
+        ggplot2::geom_ribbon( pred.CV.id,mapping=
                        aes(x=time,ymin=CI.inf,ymax=CI.sup), fill="#998ec3", alpha=0.3)+
 
-        geom_point(pred.CV.id, mapping = aes(x=time, y=y, group = id,color = "Observed"),shape =17)+
+        ggplot2::geom_point(pred.CV.id, mapping = aes(x=time, y=y, group = id,color = "Observed"),shape =17)+
         xlab("Time") + ylab("Y") +
 
-        facet_wrap(~id, ncol = 3)+
-        scale_color_manual(name='',
+        ggplot2::facet_wrap(~id, ncol = 3)+
+        ggplot2::scale_color_manual(name='',
                            breaks=c('Predicted', 'Observed'),
                            values=c('Predicted'='#998ec3', 'Observed'='#000000'),
                            guide = guide_legend(override.aes = list(
                              linetype = c(rep("solid", 1), "blank"),
                              shape = c(NA,  17))))+
-        theme(
+        ggplot2::theme(
           panel.background = element_blank(),
           legend.position = "bottom",
           legend.box = "vertical",

@@ -1273,7 +1273,7 @@ lsjm_classicIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard
 
   Zq1 <- spacefillr::generate_sobol_owen_set(S1,  nb.e.a)
   Zq <- apply(Zq1, 2, qnorm)
-
+  message(paste("First estimation with ", S1, " QMC draws"))
   estimation1 <- marqLevAlg(binit, fn = logR_llh_lsjm_classicIDM, minimize = FALSE,
                             hazard_baseline_01 = hazard_baseline_01, sharedtype_01 = sharedtype_01,
                             hazard_baseline_02 = hazard_baseline_02, sharedtype_02 = sharedtype_02,
@@ -1290,71 +1290,125 @@ lsjm_classicIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard
                             nproc = nproc, clustertype = clustertype, maxiter = maxiter, print.info = print.info,
                             file = file, blinding = FALSE, epsa = epsa, epsb = epsb, epsd = epsd)
 
-  message("Second estimation")
-  Zq1 <- spacefillr::generate_sobol_owen_set(S2,  nb.e.a)
-  Zq <- apply(Zq1, 2, qnorm)
-  estimation2 <- marqLevAlg(estimation1$b, fn = logR_llh_lsjm_classicIDM, minimize = FALSE,
+  estimation2 <- NULL
+  info_conv_step2 <- NULL
 
-                            hazard_baseline_01 = hazard_baseline_01, sharedtype_01 = sharedtype_01,
-                            hazard_baseline_02 = hazard_baseline_02, sharedtype_02 = sharedtype_02,
-                            hazard_baseline_12 = hazard_baseline_12, sharedtype_12 = sharedtype_12,
-                            ord.splines = nb.knots.splines + 2, nb.beta = nb.beta, Zq = Zq,
-                            nb.e.a = nb.e.a, S = S2, wk = gaussKronrod()$wk, rep_wk = rep(gaussKronrod()$wk, length(gaussKronrod()$wk)), sk_GK = gaussKronrod()$sk,nb_pointsGK = nb_pointsGK,
-                            nb.alpha = nb.alpha,
-                            Case1 = Case1, Case1bis = Case1bis, Case2 = Case2, Case3 = Case3,
-                            nbCase1 = nbCase1, nbCase1bis = nbCase1bis, nbCase2 = nbCase2, nbCase3 = nbCase3, left_trunc = left_trunc,
-                            knots.hazard_baseline.splines_01 = knots_01,
-                            knots.hazard_baseline.splines_02 = knots_02,
-                            knots.hazard_baseline.splines_12 = knots_12,
-                            index_beta_slope = index_beta_slope,index_b_slope = index_b_slope,
+  if(!is.null(S2)){
+    message(paste("Second estimation with ", S2, " QMC draws"))
+    Zq1 <- spacefillr::generate_sobol_owen_set(S2,  nb.e.a)
+    Zq <- apply(Zq1, 2, qnorm)
+    estimation2 <- marqLevAlg(estimation1$b, fn = logR_llh_lsjm_classicIDM, minimize = FALSE,
+
+                              hazard_baseline_01 = hazard_baseline_01, sharedtype_01 = sharedtype_01,
+                              hazard_baseline_02 = hazard_baseline_02, sharedtype_02 = sharedtype_02,
+                              hazard_baseline_12 = hazard_baseline_12, sharedtype_12 = sharedtype_12,
+                              ord.splines = nb.knots.splines + 2, nb.beta = nb.beta, Zq = Zq,
+                              nb.e.a = nb.e.a, S = S2, wk = gaussKronrod()$wk, rep_wk = rep(gaussKronrod()$wk, length(gaussKronrod()$wk)), sk_GK = gaussKronrod()$sk,nb_pointsGK = nb_pointsGK,
+                              nb.alpha = nb.alpha,
+                              Case1 = Case1, Case1bis = Case1bis, Case2 = Case2, Case3 = Case3,
+                              nbCase1 = nbCase1, nbCase1bis = nbCase1bis, nbCase2 = nbCase2, nbCase3 = nbCase3, left_trunc = left_trunc,
+                              knots.hazard_baseline.splines_01 = knots_01,
+                              knots.hazard_baseline.splines_02 = knots_02,
+                              knots.hazard_baseline.splines_12 = knots_12,
+                              index_beta_slope = index_beta_slope,index_b_slope = index_b_slope,
 
 
-                            nproc = nproc, clustertype = clustertype, maxiter = maxiter, print.info = print.info,
-                            file = file, blinding = FALSE, epsa = 2.1, epsb = 2.1, epsd = 0.99999)
+                              nproc = nproc, clustertype = clustertype, maxiter = maxiter, print.info = print.info,
+                              file = file, blinding = FALSE, epsa = 10000000, epsb = 10000000, epsd = 0.99999)
 
-  var_trans <- matrix(rep(0,length(binit)**2),nrow=length(binit),ncol=length(binit))
-  var_trans[upper.tri(var_trans, diag=T)] <- estimation2$v
-  sd.param <- sqrt(diag(var_trans))
-  param_est <-  estimation2$b
+    var_trans <- matrix(rep(0,length(binit)**2),nrow=length(binit),ncol=length(binit))
+    var_trans[upper.tri(var_trans, diag=T)] <- estimation2$v
+    sd.param <- sqrt(diag(var_trans))
+    param_est <-  estimation2$b
 
-  #Delta-method
-  nb.chol <- Objectlsmm$control$nb.chol
-  #Delta-method
-  curseur <- length(estimation2$b) - nb.chol + 1
-  C1 <- matrix(rep(0,(nb.e.a)**2),nrow=nb.e.a,ncol=nb.e.a)
-  C1[lower.tri(C1, diag=T)] <- estimation2$b[curseur:length(estimation2$b)]
-  C1 <- as.matrix(C1)
+    #Delta-method
+    nb.chol <- Objectlsmm$control$nb.chol
+    #Delta-method
+    curseur <- length(estimation2$b) - nb.chol + 1
+    C1 <- matrix(rep(0,(nb.e.a)**2),nrow=nb.e.a,ncol=nb.e.a)
+    C1[lower.tri(C1, diag=T)] <- estimation2$b[curseur:length(estimation2$b)]
+    C1 <- as.matrix(C1)
 
-  Index.C1 <- matrix(rep(0,(nb.e.a)**2),nrow=nb.e.a,ncol=nb.e.a)
-  Index.C1[lower.tri(Index.C1, diag=T)] <- 1:(choose(nb.e.a,2)+nb.e.a)
-  Index.C1 <- as.matrix(Index.C1)
+    Index.C1 <- matrix(rep(0,(nb.e.a)**2),nrow=nb.e.a,ncol=nb.e.a)
+    Index.C1[lower.tri(Index.C1, diag=T)] <- 1:(choose(nb.e.a,2)+nb.e.a)
+    Index.C1 <- as.matrix(Index.C1)
 
-  MatCov <- C1%*%t(C1)
-  param_est <- c(param_est,unique(c(t(MatCov))))
+    MatCov <- C1%*%t(C1)
+    param_est <- c(param_est,unique(c(t(MatCov))))
 
-  var_trans <- matrix(rep(0,length(estimation2$b)**2),nrow=length(estimation2$b),ncol=length(estimation2$b))
-  var_trans[upper.tri(var_trans, diag=T)] <- estimation2$v
-  trig.cov <- var_trans[curseur:length(estimation2$b),curseur:length(estimation2$b)]
-  trig.cov <- trig.cov+t(trig.cov)
-  diag(trig.cov) <- diag(trig.cov)/2
-  cov.cholesky <- trig.cov
-  Cov.delta <- matrix(NA, ncol = ncol(cov.cholesky), nrow = ncol(cov.cholesky))
-  element.chol <- estimation2$b[curseur:length(estimation2$b)]
-  for(i in 1:ncol(C1)){
-    for(j in i:ncol(C1)){
-      resultat <- 0
-      k <- i
-      m <- j
-      for(t in 1:min(i,j,ncol(Cov.delta))){
-        for(s in 1:min(k,m,ncol(Cov.delta))){
-          resultat <- resultat +
-            C1[j,t]*C1[m,s]*cov.cholesky[Index.C1[i,t],Index.C1[k,s]] +
-            C1[j,t]*C1[k,s]*cov.cholesky[Index.C1[i,t],Index.C1[m,s]] +
-            C1[i,t]*C1[m,s]*cov.cholesky[Index.C1[j,t],Index.C1[k,s]] +
-            C1[i,t]*C1[k,s]*cov.cholesky[Index.C1[j,t],Index.C1[m,s]]
+    var_trans <- matrix(rep(0,length(estimation2$b)**2),nrow=length(estimation2$b),ncol=length(estimation2$b))
+    var_trans[upper.tri(var_trans, diag=T)] <- estimation2$v
+    trig.cov <- var_trans[curseur:length(estimation2$b),curseur:length(estimation2$b)]
+    trig.cov <- trig.cov+t(trig.cov)
+    diag(trig.cov) <- diag(trig.cov)/2
+    cov.cholesky <- trig.cov
+    Cov.delta <- matrix(NA, ncol = ncol(cov.cholesky), nrow = ncol(cov.cholesky))
+    element.chol <- estimation2$b[curseur:length(estimation2$b)]
+    for(i in 1:ncol(C1)){
+      for(j in i:ncol(C1)){
+        resultat <- 0
+        k <- i
+        m <- j
+        for(t in 1:min(i,j,ncol(Cov.delta))){
+          for(s in 1:min(k,m,ncol(Cov.delta))){
+            resultat <- resultat +
+              C1[j,t]*C1[m,s]*cov.cholesky[Index.C1[i,t],Index.C1[k,s]] +
+              C1[j,t]*C1[k,s]*cov.cholesky[Index.C1[i,t],Index.C1[m,s]] +
+              C1[i,t]*C1[m,s]*cov.cholesky[Index.C1[j,t],Index.C1[k,s]] +
+              C1[i,t]*C1[k,s]*cov.cholesky[Index.C1[j,t],Index.C1[m,s]]
+          }
         }
+        sd.param <- c(sd.param,sqrt(resultat))
       }
-      sd.param <- c(sd.param,sqrt(resultat))
+    }
+    info_conv_step2 <- list(conv = estimation2$istop, niter = estimation2$ni,
+                            convcrit = c(estimation2$ca, estimation2$cb, estimation2$rdm))
+  }
+  else{
+    var_trans <- matrix(rep(0,length(binit)**2),nrow=length(binit),ncol=length(binit))
+    var_trans[upper.tri(var_trans, diag=T)] <- estimation1$v
+    sd.param <- sqrt(diag(var_trans))
+    param_est <-  estimation1$b
+
+    #Delta-method
+    nb.chol <- Objectlsmm$control$nb.chol
+    #Delta-method
+    curseur <- length(estimation1$b) - nb.chol + 1
+    C1 <- matrix(rep(0,(nb.e.a)**2),nrow=nb.e.a,ncol=nb.e.a)
+    C1[lower.tri(C1, diag=T)] <- estimation1$b[curseur:length(estimation1$b)]
+    C1 <- as.matrix(C1)
+
+    Index.C1 <- matrix(rep(0,(nb.e.a)**2),nrow=nb.e.a,ncol=nb.e.a)
+    Index.C1[lower.tri(Index.C1, diag=T)] <- 1:(choose(nb.e.a,2)+nb.e.a)
+    Index.C1 <- as.matrix(Index.C1)
+
+    MatCov <- C1%*%t(C1)
+    param_est <- c(param_est,unique(c(t(MatCov))))
+
+    var_trans <- matrix(rep(0,length(estimation1$b)**2),nrow=length(estimation1$b),ncol=length(estimation1$b))
+    var_trans[upper.tri(var_trans, diag=T)] <- estimation1$v
+    trig.cov <- var_trans[curseur:length(estimation1$b),curseur:length(estimation1$b)]
+    trig.cov <- trig.cov+t(trig.cov)
+    diag(trig.cov) <- diag(trig.cov)/2
+    cov.cholesky <- trig.cov
+    Cov.delta <- matrix(NA, ncol = ncol(cov.cholesky), nrow = ncol(cov.cholesky))
+    element.chol <- estimation1$b[curseur:length(estimation1$b)]
+    for(i in 1:ncol(C1)){
+      for(j in i:ncol(C1)){
+        resultat <- 0
+        k <- i
+        m <- j
+        for(t in 1:min(i,j,ncol(Cov.delta))){
+          for(s in 1:min(k,m,ncol(Cov.delta))){
+            resultat <- resultat +
+              C1[j,t]*C1[m,s]*cov.cholesky[Index.C1[i,t],Index.C1[k,s]] +
+              C1[j,t]*C1[k,s]*cov.cholesky[Index.C1[i,t],Index.C1[m,s]] +
+              C1[i,t]*C1[m,s]*cov.cholesky[Index.C1[j,t],Index.C1[k,s]] +
+              C1[i,t]*C1[k,s]*cov.cholesky[Index.C1[j,t],Index.C1[m,s]]
+          }
+        }
+        sd.param <- c(sd.param,sqrt(resultat))
+      }
     }
   }
 
@@ -1371,8 +1425,8 @@ lsjm_classicIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard
                  "result_step2" = estimation2,
                  "info_conv_step1" = list(conv = estimation1$istop, niter = estimation1$ni,
                                           convcrit = c(estimation1$ca, estimation1$cb, estimation1$rdm)),
-                 "info_conv_step2" = list(conv = estimation2$istop, niter = estimation2$ni,
-                                          convcrit = c(estimation2$ca, estimation2$cb, estimation2$rdm), time = time.prog.fin),
+                 "info_conv_step2" = info_conv_step2,
+                 "time.computation" = time.prog.fin,
                  "control" = list(Objectlsmm = Objectlsmm,
                                   Time = Time,
                                   deltas = deltas,

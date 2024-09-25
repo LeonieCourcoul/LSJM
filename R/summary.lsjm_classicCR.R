@@ -47,7 +47,7 @@ summary.lsjm_classicCR <- function(object,...)
   cat("Goodness-of-fit statistics:")
   cat("\n")
   cat(paste("    Likelihood: ", x$result_step1$fn.value),"\n")
-  cat(paste("    AIC: ", 2*nrow(x$result_step1$b) - 2* x$result_step1$fn.value),"\n")
+  cat(paste("    AIC: ", round(2*length(x$result_step1$b) - 2* x$result_step1$fn.value,3)),"\n")
 
   cat("\n")
   cat("Maximum Likelihood Estimates:")

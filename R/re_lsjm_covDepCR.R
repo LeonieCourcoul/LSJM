@@ -14,6 +14,7 @@ re_lsjm_covDepCR <- function(param, nb.e.a,  nb.e.a.sigma, Sigma.re,
 
 ){
 
+
   all_re <- matrix(param[1:(nb.e.a+nb.e.a.sigma)], nrow = 1)
   f_b_tau <- mvtnorm::dmvnorm(x = all_re, mean = rep(0,length(all_re)), sigma = Sigma.re)
   b_y_slope <- as.matrix(0)

@@ -1,3 +1,8 @@
+#' @rdname plot
+#' @import ggplot2
+#' @export
+#'
+
 plot.lsjm_interintraIDM <- function(Objectlsjm, which = 'long.fit', Objectranef = NULL, break.times = NULL, ID.ind = NULL, Objectsmooth = NULL, xlim = NULL, ylim = NULL){
 
 
@@ -62,26 +67,26 @@ plot.lsjm_interintraIDM <- function(Objectlsjm, which = 'long.fit', Objectranef 
       pred.CV.id$CI.sup <- pred.CV.id$CV + 1.96*sqrt(pred.CV.id$Residual_SD_inter**2 + pred.CV.id$Residual_SD_intra**2)
       pred.CV.id$CI.inf <- pred.CV.id$CV - 1.96*sqrt(pred.CV.id$Residual_SD_inter**2 + pred.CV.id$Residual_SD_intra**2)
 
-      traj_ind <- ggplot() +
+      traj_ind <- ggplot2::ggplot() +
 
-        geom_line(pred.CV.id, mapping = aes(x=time, y=CV, group = id, color = 'Predicted'))+
-        geom_line(pred.CV.id, mapping = aes(x=time, y=CI.sup, group = id,  color = 'Predicted'))+
-        geom_line(pred.CV.id, mapping = aes(x=time, y=CI.inf, group = id,  color = 'Predicted'))+
+        ggplot2::geom_line(pred.CV.id, mapping = aes(x=time, y=CV, group = id, color = 'Predicted'))+
+        ggplot2::geom_line(pred.CV.id, mapping = aes(x=time, y=CI.sup, group = id,  color = 'Predicted'))+
+        ggplot2::geom_line(pred.CV.id, mapping = aes(x=time, y=CI.inf, group = id,  color = 'Predicted'))+
 
-        geom_ribbon( pred.CV.id,mapping=
+        ggplot2::geom_ribbon( pred.CV.id,mapping=
                        aes(x=time,ymin=CI.inf,ymax=CI.sup), fill="#998ec3", alpha=0.3)+
 
-        geom_point(data.idselect, mapping = aes(x=time, y=y, group = id,color = "Observed"),shape =17)+
+        ggplot2::geom_point(data.idselect, mapping = aes(x=time, y=y, group = id,color = "Observed"),shape =17)+
         xlab("Time") + ylab("Y") +
 
-        facet_wrap(~id, ncol = 3)+
-        scale_color_manual(name='',
+        ggplot2::facet_wrap(~id, ncol = 3)+
+        ggplot2::scale_color_manual(name='',
                            breaks=c('Predicted', 'Observed'),
                            values=c('Predicted'='#998ec3', 'Observed'='#000000'),
                            guide = guide_legend(override.aes = list(
                              linetype = c(rep("solid", 1), "blank"),
                              shape = c(NA,  17))))+
-        theme(
+        ggplot2::theme(
           panel.background = element_blank(),
           legend.position = "bottom",
           legend.box = "vertical",
@@ -159,30 +164,30 @@ plot.lsjm_interintraIDM <- function(Objectlsjm, which = 'long.fit', Objectranef 
 
 
     survB <- ggplot() +
-      geom_line(data = data_tot, mapping = aes(x = time, y = Cum_01_pred, color = "Cum_01_pred", linetype = "Joint Model"), linewidth = 1.5) +
-      geom_line(data = data_tot, mapping = aes(x = time, y = Cum_02_pred, color = "Cum_02_pred", linetype = "Joint Model"), linewidth = 1.5) +
-      geom_line(data = data_tot, mapping = aes(x = time, y = Cum_12_pred, color = "Cum_12_pred", linetype = "Joint Model"), linewidth = 1.5) +
-      geom_ribbon(data = data_tot, mapping = aes(x = time, ymin = Cum_01_2.5, ymax = Cum_01_97.5, fill = "Cum_01_pred"), alpha = 0.2) +
-      geom_ribbon(data = data_tot, mapping = aes(x = time, ymin = Cum_02_2.5, ymax = Cum_02_97.5, fill = "Cum_02_pred"), alpha = 0.2) +
-      geom_ribbon(data = data_tot, mapping = aes(x = time, ymin = Cum_12_2.5, ymax = Cum_12_97.5, fill = "Cum_12_pred"), alpha = 0.2) +
-      geom_line(data = data_tot, mapping = aes(x = time, y = Cum_01_est, color = "Cum_01_pred", linetype = "Smooth Hazard"), linewidth = 1.2) +
-      geom_line(data = data_tot, mapping = aes(x = time, y = Cum_02_est, color = "Cum_02_pred", linetype = "Smooth Hazard"), linewidth = 1.2) +
-      geom_line(data = data_tot, mapping = aes(x = time, y = Cum_12_est, color = "Cum_12_pred", linetype = "Smooth Hazard"), linewidth = 1.2) +
+      ggplot2::geom_line(data = data_tot, mapping = aes(x = time, y = Cum_01_pred, color = "Cum_01_pred", linetype = "Joint Model"), linewidth = 1.5) +
+      ggplot2::geom_line(data = data_tot, mapping = aes(x = time, y = Cum_02_pred, color = "Cum_02_pred", linetype = "Joint Model"), linewidth = 1.5) +
+      ggplot2::geom_line(data = data_tot, mapping = aes(x = time, y = Cum_12_pred, color = "Cum_12_pred", linetype = "Joint Model"), linewidth = 1.5) +
+      ggplot2::geom_ribbon(data = data_tot, mapping = aes(x = time, ymin = Cum_01_2.5, ymax = Cum_01_97.5, fill = "Cum_01_pred"), alpha = 0.2) +
+      ggplot2::geom_ribbon(data = data_tot, mapping = aes(x = time, ymin = Cum_02_2.5, ymax = Cum_02_97.5, fill = "Cum_02_pred"), alpha = 0.2) +
+      ggplot2::geom_ribbon(data = data_tot, mapping = aes(x = time, ymin = Cum_12_2.5, ymax = Cum_12_97.5, fill = "Cum_12_pred"), alpha = 0.2) +
+      ggplot2::geom_line(data = data_tot, mapping = aes(x = time, y = Cum_01_est, color = "Cum_01_pred", linetype = "Smooth Hazard"), linewidth = 1.2) +
+      ggplot2::geom_line(data = data_tot, mapping = aes(x = time, y = Cum_02_est, color = "Cum_02_pred", linetype = "Smooth Hazard"), linewidth = 1.2) +
+      ggplot2::geom_line(data = data_tot, mapping = aes(x = time, y = Cum_12_est, color = "Cum_12_pred", linetype = "Smooth Hazard"), linewidth = 1.2) +
       xlab("Age (years)") +
       ylab("Cumulative intensity functions") +
-      ggtitle("B")+
-      scale_color_manual(values = c("Cum_01_pred" = "#f1a340", "Cum_02_pred" = "#998ec3", "Cum_12_pred" = "palegreen3"
+      ggplot2::ggtitle("B")+
+      ggplot2::scale_color_manual(values = c("Cum_01_pred" = "#f1a340", "Cum_02_pred" = "#998ec3", "Cum_12_pred" = "palegreen3"
       ),
       labels = c("Cum_01_pred" = "Transition 0 -> 1",
                  "Cum_02_pred" = "Transition 0 -> 2",
                  "Cum_12_pred" = "Transition 1 -> 2")) +
-      scale_fill_manual(values = c("Cum_01_pred" = "#f1a340", "Cum_02_pred" = "#998ec3", "Cum_12_pred" = "palegreen3"),
+      ggplot2::scale_fill_manual(values = c("Cum_01_pred" = "#f1a340", "Cum_02_pred" = "#998ec3", "Cum_12_pred" = "palegreen3"),
                         labels = c("Cum_01_pred" = "Transition 0 -> 1",
                                    "Cum_02_pred" = "Transition 0 -> 2",
                                    "Cum_12_pred" = "Transition 1 -> 2")) +
-      scale_linetype_manual(values = c("Joint Model" = 3, "Smooth Hazard" = 1)) +
+      ggplot2::scale_linetype_manual(values = c("Joint Model" = 3, "Smooth Hazard" = 1)) +
 
-      theme(
+      ggplot2::theme(
         panel.background = element_blank(),
         legend.position = "bottom",
         legend.box = "vertical",
@@ -193,7 +198,7 @@ plot.lsjm_interintraIDM <- function(Objectlsjm, which = 'long.fit', Objectranef 
         axis.line = element_line(color = "black", linetype = "solid"),
         axis.text = element_text(size = 14, color = "black")
       ) +
-      guides(color = guide_legend(title = "", nrow = 1, byrow = TRUE,keywidth = 4),
+      ggplot2::guides(color = guide_legend(title = "", nrow = 1, byrow = TRUE,keywidth = 4),
              fill = guide_legend(title = "",keywidth = 4),
              linetype = guide_legend(title = "", keywidth = 4, keyheight = 1))
 

@@ -383,8 +383,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // log_llh_lsjm_covDepCR
-arma::vec log_llh_lsjm_covDepCR(arma::vec sharedtype, List HB, arma::vec Gompertz, arma::vec Weibull, arma::vec nb_points_integral, arma::vec alpha_y_slope, arma::vec alpha_var, List alpha_z, List gamma, arma::vec beta, arma::vec beta_slope, arma::vec omega, arma::mat b_y, arma::mat b_y_slope, arma::mat b_om, arma::vec wk, arma::vec delta1, arma::vec delta2, arma::mat Z_01, arma::mat Z_02, arma::mat X_T, arma::mat U_T, arma::mat Xslope_T, arma::mat Uslope_T, arma::mat X_GK_T, arma::mat U_GK_T, arma::mat Xslope_GK_T, arma::mat Uslope_GK_T, arma::mat X_GK_T0, arma::mat U_GK_T0, arma::mat Xslope_GK_T0, arma::mat Uslope_GK_T0, arma::vec Time_T, arma::vec Time_T0, arma::mat st_T, arma::mat st_T0, arma::mat Bs_T0_01, arma::mat Bs_T0_02, bool left_trunc, arma::mat X_base, arma::mat U_base, arma::vec y_new, int Ind, arma::vec offset, arma::mat B_T_01, arma::mat Bs_T_01, arma::mat B_T_02, arma::mat Bs_T_02, arma::mat O_base, arma::mat W_base, arma::mat O_T, arma::mat W_T, arma::mat O_GK_T, arma::mat W_GK_T, arma::mat O_GK_T0, arma::mat W_GK_T0);
-RcppExport SEXP _LSJM_log_llh_lsjm_covDepCR(SEXP sharedtypeSEXP, SEXP HBSEXP, SEXP GompertzSEXP, SEXP WeibullSEXP, SEXP nb_points_integralSEXP, SEXP alpha_y_slopeSEXP, SEXP alpha_varSEXP, SEXP alpha_zSEXP, SEXP gammaSEXP, SEXP betaSEXP, SEXP beta_slopeSEXP, SEXP omegaSEXP, SEXP b_ySEXP, SEXP b_y_slopeSEXP, SEXP b_omSEXP, SEXP wkSEXP, SEXP delta1SEXP, SEXP delta2SEXP, SEXP Z_01SEXP, SEXP Z_02SEXP, SEXP X_TSEXP, SEXP U_TSEXP, SEXP Xslope_TSEXP, SEXP Uslope_TSEXP, SEXP X_GK_TSEXP, SEXP U_GK_TSEXP, SEXP Xslope_GK_TSEXP, SEXP Uslope_GK_TSEXP, SEXP X_GK_T0SEXP, SEXP U_GK_T0SEXP, SEXP Xslope_GK_T0SEXP, SEXP Uslope_GK_T0SEXP, SEXP Time_TSEXP, SEXP Time_T0SEXP, SEXP st_TSEXP, SEXP st_T0SEXP, SEXP Bs_T0_01SEXP, SEXP Bs_T0_02SEXP, SEXP left_truncSEXP, SEXP X_baseSEXP, SEXP U_baseSEXP, SEXP y_newSEXP, SEXP IndSEXP, SEXP offsetSEXP, SEXP B_T_01SEXP, SEXP Bs_T_01SEXP, SEXP B_T_02SEXP, SEXP Bs_T_02SEXP, SEXP O_baseSEXP, SEXP W_baseSEXP, SEXP O_TSEXP, SEXP W_TSEXP, SEXP O_GK_TSEXP, SEXP W_GK_TSEXP, SEXP O_GK_T0SEXP, SEXP W_GK_T0SEXP) {
+arma::vec log_llh_lsjm_covDepCR(arma::vec sharedtype, List HB, arma::vec Gompertz, arma::vec Weibull, arma::vec nb_points_integral, arma::vec alpha_y_slope, arma::vec alpha_var, arma::vec alpha_b_01, arma::vec alpha_b_02, List alpha_z, List gamma, arma::vec beta, arma::vec beta_slope, arma::vec omega, arma::mat b_y, arma::mat b_y_slope, arma::mat b_om, arma::vec wk, arma::vec delta1, arma::vec delta2, arma::mat Z_01, arma::mat Z_02, arma::mat X_T, arma::mat U_T, arma::mat Xslope_T, arma::mat Uslope_T, arma::mat X_GK_T, arma::mat U_GK_T, arma::mat Xslope_GK_T, arma::mat Uslope_GK_T, arma::mat X_GK_T0, arma::mat U_GK_T0, arma::mat Xslope_GK_T0, arma::mat Uslope_GK_T0, arma::vec Time_T, arma::vec Time_T0, arma::mat st_T, arma::mat st_T0, arma::mat Bs_T0_01, arma::mat Bs_T0_02, bool left_trunc, arma::mat X_base, arma::mat U_base, arma::vec y_new, int Ind, arma::vec offset, arma::mat B_T_01, arma::mat Bs_T_01, arma::mat B_T_02, arma::mat Bs_T_02, arma::mat O_base, arma::mat W_base, arma::mat O_T, arma::mat W_T, arma::mat O_GK_T, arma::mat W_GK_T, arma::mat O_GK_T0, arma::mat W_GK_T0);
+RcppExport SEXP _LSJM_log_llh_lsjm_covDepCR(SEXP sharedtypeSEXP, SEXP HBSEXP, SEXP GompertzSEXP, SEXP WeibullSEXP, SEXP nb_points_integralSEXP, SEXP alpha_y_slopeSEXP, SEXP alpha_varSEXP, SEXP alpha_b_01SEXP, SEXP alpha_b_02SEXP, SEXP alpha_zSEXP, SEXP gammaSEXP, SEXP betaSEXP, SEXP beta_slopeSEXP, SEXP omegaSEXP, SEXP b_ySEXP, SEXP b_y_slopeSEXP, SEXP b_omSEXP, SEXP wkSEXP, SEXP delta1SEXP, SEXP delta2SEXP, SEXP Z_01SEXP, SEXP Z_02SEXP, SEXP X_TSEXP, SEXP U_TSEXP, SEXP Xslope_TSEXP, SEXP Uslope_TSEXP, SEXP X_GK_TSEXP, SEXP U_GK_TSEXP, SEXP Xslope_GK_TSEXP, SEXP Uslope_GK_TSEXP, SEXP X_GK_T0SEXP, SEXP U_GK_T0SEXP, SEXP Xslope_GK_T0SEXP, SEXP Uslope_GK_T0SEXP, SEXP Time_TSEXP, SEXP Time_T0SEXP, SEXP st_TSEXP, SEXP st_T0SEXP, SEXP Bs_T0_01SEXP, SEXP Bs_T0_02SEXP, SEXP left_truncSEXP, SEXP X_baseSEXP, SEXP U_baseSEXP, SEXP y_newSEXP, SEXP IndSEXP, SEXP offsetSEXP, SEXP B_T_01SEXP, SEXP Bs_T_01SEXP, SEXP B_T_02SEXP, SEXP Bs_T_02SEXP, SEXP O_baseSEXP, SEXP W_baseSEXP, SEXP O_TSEXP, SEXP W_TSEXP, SEXP O_GK_TSEXP, SEXP W_GK_TSEXP, SEXP O_GK_T0SEXP, SEXP W_GK_T0SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -395,6 +395,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::vec >::type nb_points_integral(nb_points_integralSEXP);
     Rcpp::traits::input_parameter< arma::vec >::type alpha_y_slope(alpha_y_slopeSEXP);
     Rcpp::traits::input_parameter< arma::vec >::type alpha_var(alpha_varSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type alpha_b_01(alpha_b_01SEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type alpha_b_02(alpha_b_02SEXP);
     Rcpp::traits::input_parameter< List >::type alpha_z(alpha_zSEXP);
     Rcpp::traits::input_parameter< List >::type gamma(gammaSEXP);
     Rcpp::traits::input_parameter< arma::vec >::type beta(betaSEXP);
@@ -444,7 +446,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::mat >::type W_GK_T(W_GK_TSEXP);
     Rcpp::traits::input_parameter< arma::mat >::type O_GK_T0(O_GK_T0SEXP);
     Rcpp::traits::input_parameter< arma::mat >::type W_GK_T0(W_GK_T0SEXP);
-    rcpp_result_gen = Rcpp::wrap(log_llh_lsjm_covDepCR(sharedtype, HB, Gompertz, Weibull, nb_points_integral, alpha_y_slope, alpha_var, alpha_z, gamma, beta, beta_slope, omega, b_y, b_y_slope, b_om, wk, delta1, delta2, Z_01, Z_02, X_T, U_T, Xslope_T, Uslope_T, X_GK_T, U_GK_T, Xslope_GK_T, Uslope_GK_T, X_GK_T0, U_GK_T0, Xslope_GK_T0, Uslope_GK_T0, Time_T, Time_T0, st_T, st_T0, Bs_T0_01, Bs_T0_02, left_trunc, X_base, U_base, y_new, Ind, offset, B_T_01, Bs_T_01, B_T_02, Bs_T_02, O_base, W_base, O_T, W_T, O_GK_T, W_GK_T, O_GK_T0, W_GK_T0));
+    rcpp_result_gen = Rcpp::wrap(log_llh_lsjm_covDepCR(sharedtype, HB, Gompertz, Weibull, nb_points_integral, alpha_y_slope, alpha_var, alpha_b_01, alpha_b_02, alpha_z, gamma, beta, beta_slope, omega, b_y, b_y_slope, b_om, wk, delta1, delta2, Z_01, Z_02, X_T, U_T, Xslope_T, Uslope_T, X_GK_T, U_GK_T, Xslope_GK_T, Uslope_GK_T, X_GK_T0, U_GK_T0, Xslope_GK_T0, Uslope_GK_T0, Time_T, Time_T0, st_T, st_T0, Bs_T0_01, Bs_T0_02, left_trunc, X_base, U_base, y_new, Ind, offset, B_T_01, Bs_T_01, B_T_02, Bs_T_02, O_base, W_base, O_T, W_T, O_GK_T, W_GK_T, O_GK_T0, W_GK_T0));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2449,7 +2451,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_LSJM_log_llh_lsjm_classicIDM_C2", (DL_FUNC) &_LSJM_log_llh_lsjm_classicIDM_C2, 44},
     {"_LSJM_log_llh_lsjm_classicIDM_C3", (DL_FUNC) &_LSJM_log_llh_lsjm_classicIDM_C3, 61},
     {"_LSJM_log_llh_lsjm_classicSingle", (DL_FUNC) &_LSJM_log_llh_lsjm_classicSingle, 41},
-    {"_LSJM_log_llh_lsjm_covDepCR", (DL_FUNC) &_LSJM_log_llh_lsjm_covDepCR, 56},
+    {"_LSJM_log_llh_lsjm_covDepCR", (DL_FUNC) &_LSJM_log_llh_lsjm_covDepCR, 58},
     {"_LSJM_log_llh_lsjm_covDepIDM_C1", (DL_FUNC) &_LSJM_log_llh_lsjm_covDepIDM_C1, 63},
     {"_LSJM_log_llh_lsjm_covDepIDM_C1bis", (DL_FUNC) &_LSJM_log_llh_lsjm_covDepIDM_C1bis, 62},
     {"_LSJM_log_llh_lsjm_covDepIDM_C2", (DL_FUNC) &_LSJM_log_llh_lsjm_covDepIDM_C2, 45},

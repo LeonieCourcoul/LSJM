@@ -52,6 +52,11 @@ logR_llh_lsjm_covDepCR <- function(param,hazard_baseline_01, sharedtype_01,
     curseur <- curseur+nb.alpha_01
   }
   ### Association
+
+  if("random effects" %in% sharedtype_01){
+    alpha_b_01 <- param[curseur:(curseur+nb.e.a-1)]
+    curseur <- curseur + nb.e.a
+  }
   if("current value" %in% sharedtype_01){
     alpha.current_01 <-  param[curseur]
     curseur <- curseur + 1
@@ -85,6 +90,10 @@ logR_llh_lsjm_covDepCR <- function(param,hazard_baseline_01, sharedtype_01,
     curseur <- curseur+nb.alpha_02
   }
   ### Association
+  if("random effects" %in% sharedtype_02){
+    alpha_b_02 <- param[curseur:(curseur+nb.e.a-1)]
+    curseur <- curseur + nb.e.a
+  }
   if("current value" %in% sharedtype_02){
     alpha.current_02 <- param[curseur]
     curseur <- curseur + 1
@@ -168,11 +177,9 @@ logR_llh_lsjm_covDepCR <- function(param,hazard_baseline_01, sharedtype_01,
     Xslope_GK_T0 <- Matrices[["Xslope_GK_T0"]];Uslope_GK_T0 <- Matrices[["Uslope_GK_T0"]]
     O_GK_T0 <- Matrices[["O_GK_T0"]];  W_GK_T0 <- Matrices[["W_GK_T0"]];
 
-
-
   ll_glob <- log_llh_lsjm_covDepCR(sharedtype,  HB,  Gompertz,  Weibull,
                                     nb_points_integral,
-                                    alpha_y_slope, alpha_var, alpha_z,  gamma_z0,  beta,  beta_slope, omega,
+                                    alpha_y_slope, alpha_var, t(alpha_b_01), t(alpha_b_02), alpha_z,  gamma_z0,  beta,  beta_slope, omega,
                                     b_al,  b_y_slope, b_om, wk,
                                     delta1, delta2,  Z_01,  Z_02,  X_T,  U_T,
                                     Xslope_T,  Uslope_T,  X_GK_T,  U_GK_T,  Xslope_GK_T,

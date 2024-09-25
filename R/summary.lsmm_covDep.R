@@ -55,6 +55,7 @@ summary.lsmm_covDep <- function(object,...)
   cat(paste("    Likelihood: ", round(x$result_step1$fn.value,3)),"\n")
   cat(paste("    AIC: ", round(2*length(x$result_step1$b) - 2* x$result_step1$fn.value,3)),"\n")
 
+
   cat("\n")
   cat("Maximum Likelihood Estimates:")
   #Manage parameters
@@ -82,6 +83,9 @@ summary.lsmm_covDep <- function(object,...)
     C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
     MatCov <- C1
     MatCov <- as.matrix(MatCov)
+    borne2 <- borne1 + choose(n = x$control$nb.e.a+x$control$nb.e.a.sigma, k = 2) + x$control$nb.e.a +x$control$nb.e.a.sigma
+    Matcov.name <- unique( unique(gsub("\\*.*", "", gsub("__", "_", param.names[(borne1+1):borne2]))))
+
   }
   else{
     borne1 <- curseur + choose(n = x$control$nb.e.a, k = 2) + x$control$nb.e.a - 1
@@ -92,6 +96,18 @@ summary.lsmm_covDep <- function(object,...)
     C3[lower.tri(C3, diag=T)] <- param[(borne1+1):borne3]
     MatCovb <- as.matrix(C1)
     MatCovSig <- as.matrix(C3)
+    borne4 <- borne3 + choose(n = x$control$nb.e.a, k = 2) + x$control$nb.e.a
+    borne5 <- borne4 + choose(n = x$control$nb.e.a.sigma, k = 2) + x$control$nb.e.a.sigma
+    Matcovb.name.mat <- matrix(rep(0,(x$control$nb.e.a)**2),nrow=x$control$nb.e.a,ncol=x$control$nb.e.a)
+    Matcovb.name.mat[lower.tri(Matcovb.name.mat, diag=T)] <- param.names[(borne3+1):borne4]
+    Matcovb.name <- unique(gsub("_Loc.*", "", unlist(regmatches(Matcovb.name.mat, gregexpr("\\(?[A-Za-z0-9\\.\\^]+\\)?_Loc", Matcovb.name.mat)))))
+    MatcovSig.name.mat <- matrix(rep(0,(x$control$nb.e.a.sigma)**2),nrow=x$control$nb.e.a.sigma,ncol=x$control$nb.e.a.sigma)
+    MatcovSig.name.mat[lower.tri(MatcovSig.name.mat, diag=T)] <- param.names[(borne4+1):borne5]
+    MatcovSig.name <- unique(gsub("_Sca.*", "", unlist(regmatches(MatcovSig.name.mat, gregexpr("\\(?[A-Za-z0-9\\.\\^]+\\)?_Sca", MatcovSig.name.mat)))))
+
+
+    #Matcovb.name <- param.names[curseur:borne1]
+    #MatcovSig.name <- param.names[(borne1+1):borne3]
   }
 
 
@@ -101,14 +117,13 @@ summary.lsmm_covDep <- function(object,...)
   cat("\n")
 
   cat("      Fixed effects of the linear predictor associated with the mean:")
-
   betas_tab <- matrix(nrow = length(beta), ncol = 4)
   betas_tab[,1] <- beta
   betas_tab[,2] <- beta.se
   betas_tab[,3] <- betas_tab[,1]/betas_tab[,2]
   betas_tab[,4] <- 1 - pchisq(betas_tab[,3]**2,1)
   betas_tab <- as.data.frame(betas_tab)
-  rownames(betas_tab) <- beta.name
+  rownames(betas_tab) <- gsub("_Y", "",beta.name)
   colnames(betas_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
   betas_tab <- round(betas_tab, 4)
   betas_tab$Pvalue <- ifelse(betas_tab$Pvalue < 0.001, "<0.001", round(betas_tab$Pvalue,3))
@@ -123,7 +138,7 @@ summary.lsmm_covDep <- function(object,...)
   var_tab[,3] <- var_tab[,1]/var_tab[,2]
   var_tab[,4] <- 1 - pchisq(var_tab[,3]**2,1)
   var_tab <- as.data.frame(var_tab)
-  rownames(var_tab) <- omega.name
+  rownames(var_tab) <- gsub("_Var", "",omega.name)
   colnames(var_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
   var_tab <- round(var_tab, 4)
   var_tab$Pvalue <- ifelse(var_tab$Pvalue < 0.001, "<0.001", round(var_tab$Pvalue,3))
@@ -135,17 +150,29 @@ summary.lsmm_covDep <- function(object,...)
   if(x$control$correlated_re){
     cat("     Covariance matrix of the random effects:")
     cat("\n")
-    print(MatCov%*%t(MatCov),quote=FALSE,na.print="")
+    Cov <- MatCov%*%t(MatCov)
+    colnames(Cov) <- Matcov.name
+    rownames(Cov) <- Matcov.name
+    print(Cov)
+    #print(MatCov%*%t(MatCov),quote=FALSE,na.print="")
     cat("\n")
   }
   else{
     cat("     Covariance matrix of the random effects associated with the mean:")
     cat("\n")
-    print(MatCovb%*%t(MatCovb),quote=FALSE,na.print="")
+    Covb <- MatCovb%*%t(MatCovb)
+    colnames(Covb) <- Matcovb.name
+    rownames(Covb) <- Matcovb.name
+    print(Covb)
+    #print(MatCovb%*%t(MatCovb),quote=FALSE,na.print="")
     cat("\n")
     cat("     Covariance matrix of the random effects associated with the variance:")
     cat("\n")
-    print(MatCovSig%*%t(MatCovSig),quote=FALSE,na.print="")
+    CovSig <- MatCovSig%*%t(MatCovSig)
+    colnames(CovSig) <- MatcovSig.name
+    rownames(CovSig) <- MatcovSig.name
+    print(CovSig)
+    #print(MatCovSig%*%t(MatCovSig),quote=FALSE,na.print="")
     cat("\n")
   }
 

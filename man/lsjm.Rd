@@ -33,12 +33,12 @@ lsjm(
   binit = NULL,
   nproc = 1,
   clustertype = "SOCK",
-  maxiter = 100,
+  maxiter = 500,
   print.info = FALSE,
   file = NULL,
-  epsa = 0.001,
-  epsb = 0.001,
-  epsd = 0.001
+  epsa = 1e-04,
+  epsb = 1e-04,
+  epsd = 1e-04
 )
 }
 \arguments{

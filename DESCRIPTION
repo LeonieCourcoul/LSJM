@@ -15,3 +15,8 @@ LinkingTo:
     RcppArmadillo
 Imports: 
     Rcpp, marqLevAlg, survival
+Depends: 
+    R (>= 3.5.0),
+    splines,
+    survival,
+    spacefillr

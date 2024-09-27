@@ -27,7 +27,7 @@ logR_llh_lsjm_covDepCR <- function(param,hazard_baseline_01, sharedtype_01,
   Bs_T0_i_01 <- as.matrix(1); Bs_T0_i_02 <- as.matrix(1); Time_T0_i <- 0;
   st_T_i <- c(0); st_T0_i <- c(0);
   O_T <- as.matrix(0); W_T <- as.matrix(0);
-  O_GK_T <- as.matrix(0); W_GK_T <- as.matrix(0)
+  O_GK_T <- as.matrix(0); W_GK_T <- as.matrix(0); alpha_b_01 <- c(0); alpha_b_02 <- c(0)
   #Manage parameter
   curseur <- 1
   ## Risque 01

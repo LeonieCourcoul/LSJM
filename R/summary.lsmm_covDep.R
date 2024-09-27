@@ -7,21 +7,20 @@ summary.lsmm_covDep <- function(object,...)
 
   if(x$result_step1$istop != 1){
     cat("--------------------------------------------------------------------------------------------------------- \n")
-    cat("WARNING", "\n")
     cat("The first step estimation didn't reach convergence because :")
+    if(x$result_step1$istop==1) cat("    Convergence criteria satisfied")
     if(x$result_step1$istop==2) cat("Maximum number of iteration reached without convergence.")
     if(x$result_step1$istop==4) {cat("The program stopped abnormally. No results can be displayed. \n")}
     cat("\n")
     cat("We recommend to not interpret the following results and to try to reach convergence for the first step. \n")
 
     cat("--------------------------------------------------------------------------------------------------------- \n")
-    cat("\n")
+    stop("\n")
   }
 
 
 
-  cat("Linear mixed-effect model for quantitative outcome", "\n")
-  cat("with heterogenous variability and fitted by maximum likelihood method", "\n")
+  cat("Location-scale linear mixed model fitted by maximum likelihood method", "\n")
 
   #ajouter le code d'appelle à la fonction
   cat("\n")
@@ -31,24 +30,20 @@ summary.lsmm_covDep <- function(object,...)
 
   cat("\n")
   cat("Iteration process:", "\n")
-
-  if(x$info_conv_step2$conv==1) cat("    Convergence criteria satisfied")
-  if(x$info_conv_step2$conv==2) cat("    Maximum number of iteration reached without convergence")
-  if(x$info_conv_step2$conv==4) {cat("    The program stopped abnormally. No results can be displayed. \n")
+  if(!is.null(x$info_conv_step2)){
+    if(x$info_conv_step2$conv==1) cat("    Convergence criteria satisfied")
+    if(x$info_conv_step2$conv==2) cat("    Maximum number of iteration reached without convergence")
+    if(x$info_conv_step2$conv==4) cat("    The program stopped abnormally. No results can be displayed. \n")
   }
-  else{
-    cat("\n")
-    cat(paste("     Number of iterations: "), "\n")
-    cat(paste("          Step 1: ",x$result_step1$ni), "\n")
-    cat(paste("          Step 2: ",x$info_conv_step2$niter), "\n")
-    cat(paste("     Convergence criteria (Step1): parameters =" ,signif(x$info_conv_step1$convcrit[1],3)), "\n")
-    cat(paste("                                 : likelihood =" ,signif(x$info_conv_step1$convcrit[2],3)), "\n")
-    cat(paste("                                 : second derivatives =" ,signif(x$info_conv_step1$convcrit[3],3)), "\n")
-    cat(paste("     Time of computation :" , format(x$info_conv_step2$time)),  "\n")
-
-  }
-
   cat("\n")
+  cat(paste("     Number of iterations: "), "\n")
+  cat(paste("          Step 1: ",x$result_step1$ni), "\n")
+  cat(paste("          Step 2: ",x$info_conv_step2$niter), "\n")
+  cat(paste("     Convergence criteria (Step1): parameters =" ,signif(x$info_conv_step1$convcrit[1],3)), "\n")
+  cat(paste("                                 : likelihood =" ,signif(x$info_conv_step1$convcrit[2],3)), "\n")
+  cat(paste("                                 : second derivatives =" ,signif(x$info_conv_step1$convcrit[3],3)), "\n")
+  cat(paste("     Time of computation :" , format(x$time.computation)),  "\n")
+
   cat("\n")
   cat("Goodness-of-fit statistics:")
   cat("\n")
@@ -116,7 +111,7 @@ summary.lsmm_covDep <- function(object,...)
   cat("Longitudinal model:")
   cat("\n")
 
-  cat("      Fixed effects of the linear predictor associated with the mean:")
+  cat("      Fixed effects of the location part:")
   betas_tab <- matrix(nrow = length(beta), ncol = 4)
   betas_tab[,1] <- beta
   betas_tab[,2] <- beta.se
@@ -131,7 +126,7 @@ summary.lsmm_covDep <- function(object,...)
   print(betas_tab)
 
   cat("\n")
-  cat("     Fixed effects of the linear predictor associated with variability:")
+  cat("     Fixed effects of the scale part:")
   var_tab <- matrix(nrow = length(omega), ncol = 4)
   var_tab[,1] <- omega
   var_tab[,2] <- omega.se
@@ -158,7 +153,7 @@ summary.lsmm_covDep <- function(object,...)
     cat("\n")
   }
   else{
-    cat("     Covariance matrix of the random effects associated with the mean:")
+    cat("     Covariance matrix of the location random effects:")
     cat("\n")
     Covb <- MatCovb%*%t(MatCovb)
     colnames(Covb) <- Matcovb.name
@@ -166,7 +161,7 @@ summary.lsmm_covDep <- function(object,...)
     print(Covb)
     #print(MatCovb%*%t(MatCovb),quote=FALSE,na.print="")
     cat("\n")
-    cat("     Covariance matrix of the random effects associated with the variance:")
+    cat("     Covariance matrix of the scale random effects:")
     cat("\n")
     CovSig <- MatCovSig%*%t(MatCovSig)
     colnames(CovSig) <- MatcovSig.name

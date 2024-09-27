@@ -17,16 +17,18 @@
 #'
 
 initial.long <- function(formFixed, formRandom, idVar, data.long1, ncX, nproc = nproc){
-
-  long_model <- hlme(fixed = formFixed,
-                     random= formRandom,
-                     subject = idVar,
-                     data=data.long1,
-                     nproc = nproc,
-                     verbose = FALSE)
-  priorMean.beta <- long_model$best[1:ncX]
+  long_model <- lm(formula = formFixed, data = data.long1)
+  priorMean.beta <- long_model$coefficients
+  sigma <- sd(long_model$residuals)
+  #long_model <- hlme(fixed = formFixed,
+  #                   random= formRandom,
+  #                   subject = idVar,
+  #                   data=data.long1,
+  #                   nproc = nproc,
+  #                   verbose = FALSE)
+  #priorMean.beta <- long_model$best[1:ncX]
   #priorTau.beta <- diag(rep(precision,length(priorMean.beta)))
-  sigma <- long_model$best["stderr"]
+  #sigma <- long_model$best["stderr"]
 
   list.init.long <- list("long_model" = long_model, "priorMean.beta" = priorMean.beta,
                          "sigma" = sigma)

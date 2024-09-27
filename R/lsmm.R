@@ -99,7 +99,7 @@ lsmm <- function(formFixed, formRandom, formGroup, timeVar,
   if(formVar %in% c("cov-dependent", "inter-intra") && !inherits((correlated_re),"logical")) stop("The argument correlated_re must be a logical")
 
   if(!inherits((S1),"numeric")) stop("The argument S1 must be a numeric")
-  if(!inherits((S2),"numeric")) stop("The argument S2 must be a numeric")
+  if(!is.null(S2) && !inherits((S2),"numeric")) stop("The argument S2 must be a numeric")
 
   #if(!(all.vars(formFixed) %in% colnames(data.long))) stop("All variables used in the argument formFixed must be in data.long")
   #if(!(all.vars(formRandom) %in% colnames(data.long))) stop("All variables used in the argument formRandom must be in data.long")

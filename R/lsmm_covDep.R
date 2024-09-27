@@ -24,7 +24,9 @@ lsmm_covDep <- function(formFixed, formRandom, formGroup,
                                  ncol(X_base), nproc = nproc)
   sigma_epsilon <- list.init.long$sigma
   mu.log.sigma <- log(sigma_epsilon)
-  cholesky_b <- list.init.long$long_model$cholesky
+  cov_mat <- diag(nb.e.a)
+  cholesky_b <- cov_mat[lower.tri(cov_mat, diag = T)]
+  #cholesky_b <- list.init.long$long_model$cholesky
   priorMean.beta <- list.init.long$priorMean.beta
   names_param <- c()
   binit <- priorMean.beta
@@ -73,7 +75,6 @@ lsmm_covDep <- function(formFixed, formRandom, formGroup,
   }
 
   message(paste("First estimation with ", S1, " QMC draws"))
-
   estimation1 <- marqLevAlg(binit, fn = log_llh_lsmm_covDep, minimize = FALSE,
                            nb.e.a = nb.e.a, nb.beta = nb.beta, S = S1,Zq = Zq, X_base = X_base, offset = offset,
                            U_base = U_base, y.new.prog = list.long$y.new, Ind = Ind,
@@ -259,11 +260,10 @@ lsmm_covDep <- function(formFixed, formRandom, formGroup,
 
       MatCov <- C1%*%t(C1)
       param_est <- c(param_est,unique(c(t(MatCov))))
-      names_param <- c(names_param, paste(colnames(U_base),"Location_cov",sep = "_"))
-      names_param <- c(names_param, paste(colnames(W_base),"Scale_cov",sep = "_"))
-     # for(i in 1:length(unique(c(t(MatCov))))){
-     #   names_param <- c(names_param, paste("cov", i, sep = "_"))
-     # }
+      vec_name1 <-  c(paste(colnames(U_base),"_Loc",sep = "_"),paste(colnames(W_base),"_Sca",sep = "_"))
+      mat_name1 <- outer(vec_name1,vec_name1, paste, sep = "*cov*")
+      names_param <- c(names_param, c(mat_name1[lower.tri(mat_name1, diag= T)]))
+
       var_trans <- matrix(rep(0,length(estimation1$b)**2),nrow=length(estimation1$b),ncol=length(estimation1$b))
       var_trans[upper.tri(var_trans, diag=T)] <- estimation1$v
       trig.cov <- var_trans[curseur:length(estimation1$b),curseur:length(estimation1$b)]
@@ -311,14 +311,14 @@ lsmm_covDep <- function(formFixed, formRandom, formGroup,
       MatCovb <- C1%*%t(C1)
       MatCovSig <- C3%*%t(C3)
       param_est <- c(param_est,unique(c(t(MatCovb))),unique(c(t(MatCovSig))))
-      names_param <- c(names_param, paste(colnames(U_base),"Location_cov",sep = "_"))
-      names_param <- c(names_param, paste(colnames(W_base),"Scale_cov",sep = "_"))
-     # for(i in 1:length(unique(c(t(MatCovb))))){
-     #   names_param <- c(names_param, paste("covB", i, sep = "_"))
-     # }
-     # for(i in 1:length(unique(c(t(MatCovSig))))){
-     #   names_param <- c(names_param, paste("covSig", i, sep = "_"))
-     # }
+      vec_name1 <-  paste(colnames(U_base),"Loc",sep = "_")
+      mat_name1 <- outer(vec_name1,vec_name1, paste, sep = "*cov*")
+      vec_name2 <-  paste(colnames(W_base),"Sca",sep = "_")
+      mat_name2 <- outer(vec_name2,vec_name2, paste, sep = "*cov*")
+      names_param <- c(names_param, c(mat_name1[upper.tri(mat_name1, diag= T)]))
+      names_param <- c(names_param, c(mat_name2[upper.tri(mat_name2, diag= T)]))
+
+
       var_trans <- matrix(rep(0,length(estimation1$b)**2),nrow=length(estimation1$b),ncol=length(estimation1$b))
       var_trans[upper.tri(var_trans, diag=T)] <- estimation1$v
       trig.cov <- var_trans[curseur:borne1,curseur:borne1]

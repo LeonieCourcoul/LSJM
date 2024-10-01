@@ -6,11 +6,16 @@ ranef.lsmm_interintra <- function(object,...){
 
   x <- object
   if(!inherits(x, "lsmm_interintra")) stop("use only \"lsmm_interintra\" objects")
-  if(x$result_step1$istop != 1|| x$result_step2$istop !=1){
+  if(x$result_step1$istop != 1|| (!is.null(x$result_step2) && x$result_step2$istop !=1)){
     stop("The model didn't reach convergence.")
   }
-  param <- x$result_step2$b
-  x$control$nproc <- 1
+  if(is.null(x$result_step2)){
+    param <- x$result_step1$b
+  }
+  else{
+    param <- x$result_step2$b
+  }
+  #x$control$nproc <- 1
   mu.inter <- 0; sigma.epsilon.inter <-0; mu.intra <- 0;sigma.epsilon.intra <- 0
   curseur <- 1
   ### Fixed effects
@@ -37,6 +42,7 @@ ranef.lsmm_interintra <- function(object,...){
   ### Cholesky matrix for random effects => A revoir
   if(x$control$var_inter && x$control$var_intra){
     if(x$control$correlated_re){
+
 
       C1 <- matrix(rep(0,(x$control$nb.e.a+2)**2),nrow=x$control$nb.e.a+2,ncol=x$control$nb.e.a+2)
       C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
@@ -131,99 +137,68 @@ ranef.lsmm_interintra <- function(object,...){
     offset_ID <- rbind(offset_ID, frame_offset_ID_i)
   }
   offset_position <- as.vector(c(1, 1 + cumsum(tapply(offset_ID[,2], offset_ID[,2], length))))
-  cv.Pred <- c()
-  for(id.boucle in 1:length(unique(data.long$id))){
-    X_base_i <- X_base[offset[id.boucle]:(offset[id.boucle+1]-1),]
-    X_base_i <- matrix(X_base_i, nrow = offset[id.boucle+1]-offset[id.boucle])
-    X_base_i <- unique(X_base_i)
-    U_i <- U_base[offset[id.boucle]:(offset[id.boucle+1]-1),]
-    U_i <- matrix(U_i, nrow = offset[id.boucle+1]-offset[id.boucle])
-    U_base_i <- unique(U_i)
-    y_i <- y.new[offset[id.boucle]:(offset[id.boucle+1]-1)]
-    ID.visit_i <- ID.visit[offset[id.boucle]:(offset[id.boucle+1]-1)]
-    offset_ID_i <- as.vector(c(1, 1 + cumsum(tapply(ID.visit_i, ID.visit_i, length))))
-    len_visit_i <- length(unique(ID.visit_i))
+  n_cores <- min(x$control$nproc,detectCores() - 1)   # Utiliser tous les cœurs sauf 1
+  cl <- makeCluster(n_cores)
+  registerDoParallel(cl)
 
-    random.effects_i <- marqLevAlg(binit, fn = re_lsmm_interintra, minimize = FALSE, nb.e.a = x$control$nb.e.a, variability_inter_visit = x$control$var_inter,
-                                   variability_intra_visit = x$control$var_intra, Sigma.re = MatCov,
-                                   beta = beta,
-                                   mu.inter = mu.inter , sigma.epsilon.inter = sigma.epsilon.inter, mu.intra = mu.intra,sigma.epsilon.intra = sigma.epsilon.intra,
-                                   len_visit_i = len_visit_i, X_base_i = X_base_i, U_base_i = U_base_i, y_i = y_i, offset_ID_i = offset_ID_i,
-                                   nproc = x$control$nproc, clustertype = x$control$clustertype, maxiter = x$control$maxiter, print.info = FALSE,
-                                   file = "", blinding = FALSE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4)
+  random.effects.Predictions <- foreach(id.boucle = 1:length(unique(data.long$id)),
+                     .combine = 'rbind', .packages = c("mvtnorm", "marqLevAlg")) %dopar% {
 
-    while(random.effects_i$istop !=1){
-      binit <- mvtnorm::rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
-      random.effects_i <- marqLevAlg(binit, fn = re_lsmm_interintra, minimize = FALSE, nb.e.a = x$control$nb.e.a, variability_inter_visit = x$control$var_inter,
-                                     variability_intra_visit = x$control$var_intra, Sigma.re = MatCov,
-                                     beta = beta,
-                                     mu.inter = mu.inter , sigma.epsilon.inter = sigma.epsilon.inter, mu.intra = mu.intra,sigma.epsilon.intra = sigma.epsilon.intra,
-                                     len_visit_i = len_visit_i, X_base_i = X_base_i, U_base_i = U_base_i, y_i = y_i, offset_ID_i = offset_ID_i,
-                                     nproc = x$control$nproc, clustertype = x$control$clustertype, maxiter = x$control$maxiter, print.info = FALSE,
-                                     file = "", blinding = TRUE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4, multipleTry = 100)
-      if(x$control$var_inter && x$control$var_intra){
-        binit <-matrix(0, nrow = 1, ncol = x$control$nb.e.a+2)
-      }
-      else{
-        if(x$control$var_inter || x$control$var_intra){
-          binit <-matrix(0, nrow = 1, ncol = x$control$nb.e.a+1)
-        }
-        else{
-          binit <-matrix(0, nrow = 1, ncol = x$control$nb.e.a)
-        }
-      }
+                       # Extraire les données spécifiques à l'individu
+                       X_base_i <- X_base[offset[id.boucle]:(offset[id.boucle+1]-1),]
+                       X_base_i <- matrix(X_base_i, nrow = offset[id.boucle+1]-offset[id.boucle])
+                       X_base_i <- unique(X_base_i)
+                       U_i <- U_base[offset[id.boucle]:(offset[id.boucle+1]-1),]
+                       U_i <- matrix(U_i, nrow = offset[id.boucle+1]-offset[id.boucle])
+                       U_base_i <- unique(U_i)
+                       y_i <- y.new[offset[id.boucle]:(offset[id.boucle+1]-1)]
+                       ID.visit_i <- ID.visit[offset[id.boucle]:(offset[id.boucle+1]-1)]
+                       offset_ID_i <- as.vector(c(1, 1 + cumsum(tapply(ID.visit_i, ID.visit_i, length))))
+                       len_visit_i <- length(unique(ID.visit_i))
 
-    }
+                       # Estimation des effets aléatoires
+                       random.effects_i <- marqLevAlg(binit, fn = re_lsmm_interintra, minimize = FALSE, nb.e.a = x$control$nb.e.a, variability_inter_visit = x$control$var_inter,
+                                                      variability_intra_visit = x$control$var_intra, Sigma.re = MatCov,
+                                                      beta = beta,
+                                                      mu.inter = mu.inter , sigma.epsilon.inter = sigma.epsilon.inter, mu.intra = mu.intra,sigma.epsilon.intra = sigma.epsilon.intra,
+                                                      len_visit_i = len_visit_i, X_base_i = X_base_i, U_base_i = U_base_i, y_i = y_i, offset_ID_i = offset_ID_i,
+                                                      nproc = x$control$nproc, clustertype = x$control$clustertype, maxiter = x$control$maxiter, print.info = FALSE,
+                                                      file = "", blinding = FALSE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4)
 
-    #browser()
-    CV <- X_base_i%*%beta + U_base_i%*%random.effects_i$b[1:(x$control$nb.e.a)]
-    time.measures_i <- time.measures[offset[id.boucle]:(offset[id.boucle+1]-1)]
-    time.measures_i <- unique(time.measures_i)
-    if(x$control$var_inter && x$control$var_intra){
-      Varia.inter <- exp(mu.inter + random.effects_i$b[x$control$nb.e.a+1])
-      Varia.intra <- exp(mu.intra + random.effects_i$b[x$control$nb.e.a+2])
-    }
-    else{
-      if(x$control$var_inter){
-        Varia.inter <- exp(mu.inter + random.effects_i$b[x$control$nb.e.a+1])
-        Varia.intra <- sigma.epsilon.intra
-      }
-      else{
-        if(x$control$var_intra){
-          Varia.intra <- exp(mu.intra + random.effects_i$b[x$control$nb.e.a+1])
-          Varia.inter <- sigma.epsilon.inter
-        }
-        else{
-          Varia.intra <- sigma.epsilon.intra
-          Varia.inter <- sigma.epsilon.inter
-        }
-      }
-    }
-
-    random.effects.Predictions[id.boucle,] <- c(data.id$id[id.boucle] ,random.effects_i$b)
-    cv.Pred <- rbind(cv.Pred, cbind(rep(data.id$id[id.boucle], length(CV)),
-                                    time.measures_i, CV, Varia.inter, Varia.intra))
-
-  }
-
-  cv.Pred <- as.data.frame(cv.Pred)
-  colnames(cv.Pred) <- c("id", "time", "CV", "Residual_SD_inter", "Residual_SD_intra")
-  cname.re <- c("id")
-  for(j in 1:x$control$nb.e.a){
-    cname.re <- c(cname.re, paste("b_",j))
-  }
-  if(x$control$var_inter){
-    cname.re <- c(cname.re, paste("tau_sigma"))
-  }
-  if(x$control$var_inter){
-    cname.re <- c(cname.re, paste("tau_kappa"))
-  }
-  colnames(random.effects.Predictions) <- cname.re
+                       while(random.effects_i$istop !=1){
+                         binit <- mvtnorm::rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
+                         random.effects_i <- marqLevAlg(binit, fn = re_lsmm_interintra, minimize = FALSE, nb.e.a = x$control$nb.e.a, variability_inter_visit = x$control$var_inter,
+                                                        variability_intra_visit = x$control$var_intra, Sigma.re = MatCov,
+                                                        beta = beta,
+                                                        mu.inter = mu.inter , sigma.epsilon.inter = sigma.epsilon.inter, mu.intra = mu.intra,sigma.epsilon.intra = sigma.epsilon.intra,
+                                                        len_visit_i = len_visit_i, X_base_i = X_base_i, U_base_i = U_base_i, y_i = y_i, offset_ID_i = offset_ID_i,
+                                                        nproc = x$control$nproc, clustertype = x$control$clustertype, maxiter = x$control$maxiter, print.info = FALSE,
+                                                        file = "", blinding = TRUE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4, multipleTry = 100)
+                         if(x$control$var_inter && x$control$var_intra){
+                           binit <-matrix(0, nrow = 1, ncol = x$control$nb.e.a+2)
+                         }
+                         else{
+                           if(x$control$var_inter || x$control$var_intra){
+                             binit <-matrix(0, nrow = 1, ncol = x$control$nb.e.a+1)
+                           }
+                           else{
+                             binit <-matrix(0, nrow = 1, ncol = x$control$nb.e.a)
+                           }
+                         }
+                       }
 
 
-  list(random.effects.Predictions = random.effects.Predictions, cv.Pred = cv.Pred)
+                       return(c(data.id$id[id.boucle], random.effects_i$b))
+
+                     }
+
+  stopCluster(cl)
+  random.effects.Predictions <- as.data.frame(random.effects.Predictions)
+  name_b <- grep("*cov*", rownames(x$table.res), value = TRUE)
+  colnames(random.effects.Predictions) <- c("id",unique(unique(gsub("\\*.*", "", gsub("__", "_", name_b)))))
 
 
+  random.effects.Predictions
 
 
 

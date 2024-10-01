@@ -120,7 +120,7 @@ lsmm_covDep <- function(formFixed, formRandom, formGroup,
 
       MatCov <- C1%*%t(C1)
       param_est <- c(param_est,unique(c(t(MatCov))))
-      vec_name1 <-  c(paste(colnames(U_base),"_Loc",sep = "_"),paste(colnames(W_base),"_Sca",sep = "_"))
+      vec_name1 <-  c(paste(colnames(U_base),"_Location",sep = "_"),paste(colnames(W_base),"_Scale",sep = "_"))
       mat_name1 <- outer(vec_name1,vec_name1, paste, sep = "*cov*")
       names_param <- c(names_param, c(mat_name1[lower.tri(mat_name1, diag= T)]))
 
@@ -174,9 +174,9 @@ lsmm_covDep <- function(formFixed, formRandom, formGroup,
       MatCovb <- C1%*%t(C1)
       MatCovSig <- C3%*%t(C3)
       param_est <- c(param_est,unique(c(t(MatCovb))),unique(c(t(MatCovSig))))
-      vec_name1 <-  paste(colnames(U_base),"Loc",sep = "_")
+      vec_name1 <-  paste(colnames(U_base),"Location",sep = "_")
       mat_name1 <- outer(vec_name1,vec_name1, paste, sep = "*cov*")
-      vec_name2 <-  paste(colnames(W_base),"Sca",sep = "_")
+      vec_name2 <-  paste(colnames(W_base),"Scale",sep = "_")
       mat_name2 <- outer(vec_name2,vec_name2, paste, sep = "*cov*")
       names_param <- c(names_param, c(mat_name1[upper.tri(mat_name1, diag= T)]))
       names_param <- c(names_param, c(mat_name2[upper.tri(mat_name2, diag= T)]))
@@ -260,7 +260,7 @@ lsmm_covDep <- function(formFixed, formRandom, formGroup,
 
       MatCov <- C1%*%t(C1)
       param_est <- c(param_est,unique(c(t(MatCov))))
-      vec_name1 <-  c(paste(colnames(U_base),"_Loc",sep = "_"),paste(colnames(W_base),"_Sca",sep = "_"))
+      vec_name1 <-  c(paste(colnames(U_base),"_Location",sep = "_"),paste(colnames(W_base),"_Scale",sep = "_"))
       mat_name1 <- outer(vec_name1,vec_name1, paste, sep = "*cov*")
       names_param <- c(names_param, c(mat_name1[lower.tri(mat_name1, diag= T)]))
 
@@ -311,9 +311,9 @@ lsmm_covDep <- function(formFixed, formRandom, formGroup,
       MatCovb <- C1%*%t(C1)
       MatCovSig <- C3%*%t(C3)
       param_est <- c(param_est,unique(c(t(MatCovb))),unique(c(t(MatCovSig))))
-      vec_name1 <-  paste(colnames(U_base),"Loc",sep = "_")
+      vec_name1 <-  paste(colnames(U_base),"Location",sep = "_")
       mat_name1 <- outer(vec_name1,vec_name1, paste, sep = "*cov*")
-      vec_name2 <-  paste(colnames(W_base),"Sca",sep = "_")
+      vec_name2 <-  paste(colnames(W_base),"Scale",sep = "_")
       mat_name2 <- outer(vec_name2,vec_name2, paste, sep = "*cov*")
       names_param <- c(names_param, c(mat_name1[upper.tri(mat_name1, diag= T)]))
       names_param <- c(names_param, c(mat_name2[upper.tri(mat_name2, diag= T)]))

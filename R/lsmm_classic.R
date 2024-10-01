@@ -15,7 +15,8 @@ lsmm_classic <- function(formFixed, formRandom, formGroup,
   list.init.long <- initial.long(formFixed, formRandom, idVar, data.long,
                                  ncol(X_base), nproc = nproc)
   sigma_epsilon <- list.init.long$sigma
-  cholesky_b <- list.init.long$long_model$cholesky
+  cov_mat <- diag(nb.e.a)
+  cholesky_b <- cov_mat[lower.tri(cov_mat, diag = T)]
   priorMean.beta <- list.init.long$priorMean.beta
   names_param <- c()
   binit <- priorMean.beta
@@ -83,9 +84,9 @@ lsmm_classic <- function(formFixed, formRandom, formGroup,
 
     MatCov <- C1%*%t(C1)
     param_est <- c(param_est,unique(c(t(MatCov))))
-    for(i in 1:length(unique(c(t(MatCov))))){
-      names_param <- c(names_param, paste("covB", i, sep = "_"))
-    }
+    vec_name1 <-  paste(colnames(U_base),"Location",sep = "_")
+    mat_name1 <- outer(vec_name1,vec_name1, paste, sep = "*cov*")
+    names_param <- c(names_param, c(mat_name1[upper.tri(mat_name1, diag= T)]))
     var_trans <- matrix(rep(0,length(estimation2$b)**2),nrow=length(estimation2$b),ncol=length(estimation2$b))
     var_trans[upper.tri(var_trans, diag=T)] <- estimation2$v
     trig.cov <- var_trans[curseur:length(estimation2$b),curseur:length(estimation2$b)]
@@ -133,9 +134,10 @@ lsmm_classic <- function(formFixed, formRandom, formGroup,
 
     MatCov <- C1%*%t(C1)
     param_est <- c(param_est,unique(c(t(MatCov))))
-    for(i in 1:length(unique(c(t(MatCov))))){
-      names_param <- c(names_param, paste("covB", i, sep = "_"))
-    }
+    vec_name1 <-  paste(colnames(U_base),"Location",sep = "_")
+    mat_name1 <- outer(vec_name1,vec_name1, paste, sep = "*cov*")
+    names_param <- c(names_param, c(mat_name1[upper.tri(mat_name1, diag= T)]))
+
     var_trans <- matrix(rep(0,length(estimation1$b)**2),nrow=length(estimation1$b),ncol=length(estimation1$b))
     var_trans[upper.tri(var_trans, diag=T)] <- estimation1$v
     trig.cov <- var_trans[curseur:length(estimation1$b),curseur:length(estimation1$b)]

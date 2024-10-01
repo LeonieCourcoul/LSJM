@@ -62,7 +62,7 @@ logR_llh_lsjm_covDepIDM <- function(param,hazard_baseline_01, sharedtype_01,
     curseur <- curseur+nb.alpha_01
   }
   ### Association
-  if("current value" %in% sharedtype_01){
+  if("value" %in% sharedtype_01){
     alpha.current_01 <-  param[curseur]
     curseur <- curseur + 1
   }
@@ -95,7 +95,7 @@ logR_llh_lsjm_covDepIDM <- function(param,hazard_baseline_01, sharedtype_01,
     curseur <- curseur+nb.alpha_02
   }
   ### Association
-  if("current value" %in% sharedtype_02){
+  if("value" %in% sharedtype_02){
     alpha.current_02 <- param[curseur]
     curseur <- curseur + 1
   }
@@ -128,7 +128,7 @@ logR_llh_lsjm_covDepIDM <- function(param,hazard_baseline_01, sharedtype_01,
     curseur <- curseur+nb.alpha_12
   }
   ### Association
-  if("current value" %in% sharedtype_12){
+  if("value" %in% sharedtype_12){
     alpha.current_12 <- param[curseur]
     curseur <- curseur + 1
   }
@@ -179,9 +179,9 @@ logR_llh_lsjm_covDepIDM <- function(param,hazard_baseline_01, sharedtype_01,
   ll_glob <- rep(NA, nbCase1 + nbCase1bis + nbCase2 + nbCase3)
 
   # Creations entrees rcpp
-  sharedtype <- c("current value" %in% sharedtype_01, "slope" %in% sharedtype_01,"variability" %in% sharedtype_01,
-                  "current value" %in% sharedtype_02, "slope" %in% sharedtype_02,"variability" %in% sharedtype_02,
-                  "current value" %in% sharedtype_12, "slope" %in% sharedtype_12,"variability" %in% sharedtype_12)
+  sharedtype <- c("value" %in% sharedtype_01, "slope" %in% sharedtype_01,"variability" %in% sharedtype_01,
+                  "value" %in% sharedtype_02, "slope" %in% sharedtype_02,"variability" %in% sharedtype_02,
+                  "value" %in% sharedtype_12, "slope" %in% sharedtype_12,"variability" %in% sharedtype_12)
   HB <- list(hazard_baseline_01, hazard_baseline_02, hazard_baseline_12, left_trunc)
   W_G <- c(shape_01, shape_02, shape_12, Gompertz.1_01, Gompertz.2_01, Gompertz.1_02, Gompertz.2_02, Gompertz.1_12, Gompertz.2_12)
   alpha_y_slope_var <- c(alpha.current_01,alpha.current_02,alpha.current_12,

@@ -11,11 +11,16 @@ ranef.lsmm_classic <- function(object,...){
 
   x <- object
   if(!inherits(x, "lsmm_classic")) stop("use only \"lsmm_classic\" objects")
-  if(x$result_step1$istop != 1|| x$result_step2$istop !=1){
+  if(x$result_step1$istop != 1|| (!is.null(x$result_step2) && x$result_step2$istop !=1)){
     stop("The model didn't reach convergence.")
   }
-  param <- x$result_step2$b
-  x$control$nproc <- 1
+  if(is.null(x$result_step2)){
+    param <- x$result_step1$b
+  }
+  else{
+    param <- x$result_step2$b
+  }
+  #x$control$nproc <- 1
   #Manage parameter
   curseur <- 1
   ## Marker
@@ -39,51 +44,63 @@ ranef.lsmm_classic <- function(object,...){
   time.measures <- data.long[,x$control$timeVar]
   X_base <- list.long$X; U_base <- list.long$U; y.new <- list.long$y.new
   offset <- list.long$offset
-  cv.Pred <- c()
-  for(id.boucle in 1:length(unique(data.long$id))){
-    X_base_i <- X_base[offset[id.boucle]:(offset[id.boucle+1]-1),]
-    X_base_i <- matrix(X_base_i, nrow = offset[id.boucle+1]-offset[id.boucle])
-    X_base_i <- unique(X_base_i)
-    U_i <- U_base[offset[id.boucle]:(offset[id.boucle+1]-1),]
-    U_i <- matrix(U_i, nrow = offset[id.boucle+1]-offset[id.boucle])
-    U_base_i <- unique(U_i)
-    y_i <- y.new[offset[id.boucle]:(offset[id.boucle+1]-1)]
-
-    random.effects_i <- marqLevAlg(binit, fn = re_lcmm_classic, minimize = FALSE, nb.e.a = x$control$nb.e.a, Sigma.re= MatCov,beta=beta,
-                                   X_base_i = X_base_i, U_base_i = U_base_i, y_i =y_i,sigma_epsilon=sigma_epsilon,
-                                   nproc = x$control$nproc, clustertype = x$control$clustertype, maxiter = x$control$maxiter, print.info = FALSE,
-                                   file = "", blinding = FALSE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4)
-
-    while(random.effects_i$istop !=1){
-      binit <- mvtnorm::rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
-      random.effects_i <- marqLevAlg(binit, fn = re_lcmm_classic, minimize = FALSE,
-                                     nb.e.a = x$control$nb.e.a, Sigma.re= MatCov,beta=beta,
-                                     X_base_i = X_base_i, U_base_i = U_base_i, y_i =y_i,sigma_epsilon=sigma_epsilon,
-                                     nproc = x$control$nproc, clustertype = x$control$clustertype, maxiter = x$control$maxiter, print.info = FALSE,
-                                     file = "", blinding = TRUE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4, multipleTry = 100)
-      binit <- matrix(0, nrow = 1, ncol = x$control$nb.e.a)
-    }
-
-    #browser()
-    CV <- X_base_i%*%beta + U_base_i%*%random.effects_i$b[1:(x$control$nb.e.a)]
-    time.measures_i <- time.measures[offset[id.boucle]:(offset[id.boucle+1]-1)]
-    random.effects.Predictions[id.boucle,] <- c(data.id$id[id.boucle] ,random.effects_i$b)
-    cv.Pred <- rbind(cv.Pred, cbind(rep(data.id$id[id.boucle], length(CV)),
-                                    time.measures_i, CV, sigma_epsilon))
+  n_cores <- min(x$control$nproc,detectCores() - 1)  # Utiliser tous les cœurs sauf 1 pour éviter de surcharger
+  cl <- makeCluster(n_cores)
+  registerDoParallel(cl)
 
 
 
+  # Parallélisation avec foreach
+  random.effects.Predictions <- foreach(id.boucle = 1:length(unique(data.long$id)),
+                                        .combine = 'rbind', .packages = c("mvtnorm", "marqLevAlg")) %dopar% {
 
 
-  }
-  cv.Pred <- as.data.frame(cv.Pred)
-  colnames(cv.Pred) <- c("id", "time", "CV", "Residual_SD")
-  cname.re <- c()
-  for(j in 1:x$control$nb.e.a){
-    cname.re <- c(cname.re, paste("b_",j))
-  }
-  colnames(random.effects.Predictions) <- cname.re
-  list(random.effects.Predictions = random.effects.Predictions, cv.Pred = cv.Pred)
+                       # Extraire les données spécifiques à l'individu
+                       X_base_i <- X_base[offset[id.boucle]:(offset[id.boucle+1]-1),]
+                       X_base_i <- matrix(X_base_i, nrow = offset[id.boucle+1]-offset[id.boucle])
+                       X_base_i <- unique(X_base_i)
+
+                       U_i <- U_base[offset[id.boucle]:(offset[id.boucle+1]-1),]
+                       U_i <- matrix(U_i, nrow = offset[id.boucle+1]-offset[id.boucle])
+                       U_base_i <- unique(U_i)
+
+                       y_i <- y.new[offset[id.boucle]:(offset[id.boucle+1]-1)]
+
+                       # Estimation des effets aléatoires
+                       random.effects_i <- marqLevAlg(binit, fn = re_lsmm_classic, minimize = FALSE,
+                                                      nb.e.a = x$control$nb.e.a, Sigma.re = MatCov, beta = beta,
+                                                      X_base_i = X_base_i, U_base_i = U_base_i, y_i = y_i,
+                                                      sigma_epsilon = sigma_epsilon, nproc = x$control$nproc,
+                                                      clustertype = x$control$clustertype, maxiter = x$control$maxiter,
+                                                      print.info = FALSE, file = "", blinding = FALSE,
+                                                      epsa = 1e-4, epsb = 1e-4, epsd = 1e-4)
+
+                       # Si l'optimisation n'a pas convergé, essayer à nouveau avec de nouveaux binit
+                       while(random.effects_i$istop != 1) {
+                         binit <- mvtnorm::rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
+                         random.effects_i <- marqLevAlg(binit, fn = re_lsmm_classic, minimize = FALSE,
+                                                        nb.e.a = x$control$nb.e.a, Sigma.re = MatCov, beta = beta,
+                                                        X_base_i = X_base_i, U_base_i = U_base_i, y_i = y_i,
+                                                        sigma_epsilon = sigma_epsilon, nproc = x$control$nproc,
+                                                        clustertype = x$control$clustertype, maxiter = x$control$maxiter,
+                                                        print.info = FALSE, file = "", blinding = TRUE,
+                                                        epsa = 1e-4, epsb = 1e-4, epsd = 1e-4, multipleTry = 100)
+                         binit <- matrix(0, nrow = 1, ncol = x$control$nb.e.a)
+                       }
+
+                       # Retourner les résultats si nécessaire (par exemple random.effects_i)
+                       return(c(data.id$id[id.boucle], random.effects_i$b))  # Si vous voulez collecter des résultats
+                     }
+  stopCluster(cl)
+
+
+
+
+  random.effects.Predictions <- as.data.frame(random.effects.Predictions)
+  name_b <- grep("*cov*", rownames(x$table.res), value = TRUE)
+  colnames(random.effects.Predictions) <- c("id",unique(unique(gsub("\\*.*", "", gsub("__", "_", name_b)))))
+
+  random.effects.Predictions
 
 
 

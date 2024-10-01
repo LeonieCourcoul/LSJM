@@ -238,7 +238,7 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
     }
   }
   binit_CI <- c(binit_CI, alpha_01)
-  if("current value" %in% sharedtype_01){
+  if("value" %in% sharedtype_01){
     binit_CI <- c(binit_CI, 0)
   }
   if("slope" %in% sharedtype_01){
@@ -263,7 +263,7 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
     }
   }
   binit_CI <- c(binit_CI, alpha_02)
-  if("current value" %in% sharedtype_02){
+  if("value" %in% sharedtype_02){
     binit_CI <- c(binit_CI, 0)
   }
   if("slope" %in% sharedtype_02){
@@ -288,7 +288,7 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
     }
   }
   binit_CI <- c(binit_CI, alpha_12)
-  if("current value" %in% sharedtype_12){
+  if("value" %in% sharedtype_12){
     binit_CI <- c(binit_CI, 0)
   }
   if("slope" %in% sharedtype_12){
@@ -366,7 +366,7 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
         Time_T0 <- data.id.Case1bis$Time_T0
       }
 
-      if(("current value" %in% sharedtype_01) || ("current value" %in% sharedtype_02) || ("current value" %in% sharedtype_12)){
+      if(("value" %in% sharedtype_01) || ("value" %in% sharedtype_02) || ("value" %in% sharedtype_12)){
         list.data_T <- data.time(data.id.Case1bis, data.id.Case1bis$Time_T, formFixed, formRandom,timeVar)
         list.data_L <- data.time(data.id.Case1bis, data.id.Case1bis$Time_L_initnoCI, formFixed, formRandom,timeVar)
         list.data.GK_T <- data.time(list.GK_T$data.id2, c(t(st_T)),formFixed, formRandom,timeVar)
@@ -507,7 +507,7 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
         st_T0 <- list.GK_T0$st
         Time_T0 <- data.id.Case2$Time_T0
       }
-      if(("current value" %in% sharedtype_01) || ("current value" %in% sharedtype_02) ){
+      if(("value" %in% sharedtype_01) || ("value" %in% sharedtype_02) ){
         list.data_T <- data.time(data.id.Case2, data.id.Case2$Time_T, formFixed, formRandom,timeVar)
         list.data.GK_T <- data.time(list.GK_T$data.id2, c(t(st_T)),formFixed, formRandom,timeVar)
         X_T <- list.data_T$Xtime; U_T <- list.data_T$Utime
@@ -615,9 +615,9 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
     if(!is.null(alpha_01)){
       names.param <- c(names.param, paste(name_ZO1,"",sep = "_"))
     }
-    if("current value" %in% sharedtype_01){
+    if("value" %in% sharedtype_01){
       binit_noCI <- c(binit_noCI, 0)
-      names.param <- c(names.param, 'current value 01')
+      names.param <- c(names.param, 'value 01')
     }
     if("slope" %in% sharedtype_01){
       binit_noCI <- c(binit_noCI, 0)
@@ -652,9 +652,9 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
     if(!is.null(alpha_02)){
       names.param <- c(names.param, paste(name_ZO2,"",sep = "_"))
     }
-    if("current value" %in% sharedtype_02){
+    if("value" %in% sharedtype_02){
       binit_noCI <- c(binit_noCI, 0)
-      names.param <- c(names.param, 'current value 02')
+      names.param <- c(names.param, 'value 02')
     }
     if("slope" %in% sharedtype_02){
       binit_noCI <- c(binit_noCI, 0)
@@ -688,9 +688,9 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
     if(!is.null(alpha_12)){
       names.param <- c(names.param, paste(name_Z12,"",sep = "_"))
     }
-    if("current value" %in% sharedtype_12){
+    if("value" %in% sharedtype_12){
       binit_noCI <- c(binit_noCI, 0)
-      names.param <- c(names.param, 'current value 12')
+      names.param <- c(names.param, 'value 12')
     }
     if("slope" %in% sharedtype_12){
       binit_noCI <- c(binit_noCI, 0)
@@ -763,7 +763,7 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
       st_T0 <- list.GK_T0$st
       Time_T0 <- data.id.Case1$Time_T0
     }
-    if(("current value" %in% sharedtype_01) || ("current value" %in% sharedtype_02) || ("current value" %in% sharedtype_12)){
+    if(("value" %in% sharedtype_01) || ("value" %in% sharedtype_02) || ("value" %in% sharedtype_12)){
       list.data_T <- data.time(data.id.Case1, data.id.Case1$Time_T, formFixed, formRandom,timeVar)
       list.data.GK_T <- data.time(list.GK_T$data.id2, c(t(st_T)),formFixed, formRandom,timeVar)
       list.data.GK_L_R <- data.time(list.GK_L_R$data.id2, c(t(st_L_R)),formFixed, formRandom,timeVar)
@@ -848,7 +848,7 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
     st_0_LR <- c()
     X_0_LR <- c()
     U_0_LR <- c()
-    if(("current value" %in% sharedtype_01) || ("current value" %in% sharedtype_02) || ("current value" %in% sharedtype_12)){
+    if(("value" %in% sharedtype_01) || ("value" %in% sharedtype_02) || ("value" %in% sharedtype_12)){
       X_0_LR <- c()
       U_0_LR <- c()
     }
@@ -877,7 +877,7 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
         list.GK_0_stLR <- data.GaussKronrod(data.id.integrale, a = 0, b = st.integrale, k = nb_pointsGK)
         st_0_stLR_i <- list.GK_0_stLR$st
         st_0_LR <- rbind(st_0_LR, st_0_stLR_i)
-        if(("current value" %in% sharedtype_01) || ("current value" %in% sharedtype_02) || ("current value" %in% sharedtype_12)){
+        if(("value" %in% sharedtype_01) || ("value" %in% sharedtype_02) || ("value" %in% sharedtype_12)){
           list.data.GK_0_stLR <- data.time(list.GK_0_stLR$data.id2, c(t(st_0_stLR_i)),formFixed, formRandom,timeVar)
           X_0_stLR_i <- list.data.GK_0_stLR$Xtime; U_0_stLR_i <- list.data.GK_0_stLR$Utime
           X_0_LR <- rbind(X_0_LR,X_0_stLR_i); U_0_LR <- rbind(U_0_LR,U_0_stLR_i)
@@ -957,7 +957,7 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
       st_T0 <- list.GK_T0$st
       Time_T0 <- data.id.Case1bis$Time_T0
     }
-    if(("current value" %in% sharedtype_01) || ("current value" %in% sharedtype_02) || ("current value" %in% sharedtype_12)){
+    if(("value" %in% sharedtype_01) || ("value" %in% sharedtype_02) || ("value" %in% sharedtype_12)){
       list.data_T <- data.time(data.id.Case1bis, data.id.Case1bis$Time_T, formFixed, formRandom,timeVar)
       list.data_L <- data.time(data.id.Case1bis, data.id.Case1bis$Time_L, formFixed, formRandom,timeVar)
       list.data.GK_T <- data.time(list.GK_T$data.id2, c(t(st_T)),formFixed, formRandom,timeVar)
@@ -1092,7 +1092,7 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
       st_T0 <- list.GK_T0$st
       Time_T0 <- data.id.Case2$Time_T0
     }
-    if(("current value" %in% sharedtype_01) || ("current value" %in% sharedtype_02) ){
+    if(("value" %in% sharedtype_01) || ("value" %in% sharedtype_02) ){
       list.data_T <- data.time(data.id.Case2, data.id.Case2$Time_T, formFixed, formRandom,timeVar)
       list.data.GK_T <- data.time(list.GK_T$data.id2, c(t(st_T)),formFixed, formRandom,timeVar)
       X_T <- list.data_T$Xtime; U_T <- list.data_T$Utime
@@ -1205,7 +1205,7 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
       st_T0 <- list.GK_T0$st
       Time_T0 <- data.id.Case3$Time_T0
     }
-    if(("current value" %in% sharedtype_01) || ("current value" %in% sharedtype_02) || ("current value" %in% sharedtype_12)){
+    if(("value" %in% sharedtype_01) || ("value" %in% sharedtype_02) || ("value" %in% sharedtype_12)){
       list.data_T <- data.time(data.id.Case3, data.id.Case3$Time_T, formFixed, formRandom,timeVar)
       list.data.GK_T <- data.time(list.GK_T$data.id2, c(t(st_T)),formFixed, formRandom,timeVar)
       list.data.GK_L_T <- data.time(list.GK_L_T$data.id2, c(t(st_L_T)),formFixed, formRandom,timeVar)
@@ -1237,7 +1237,7 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
       }
     }
 
-    if(("current value" %in% sharedtype_01) || ("current value" %in% sharedtype_02) || ("current value" %in% sharedtype_12)){
+    if(("value" %in% sharedtype_01) || ("value" %in% sharedtype_02) || ("value" %in% sharedtype_12)){
       list.data_T <- data.time(data.id.Case3, data.id.Case3$Time_T, formFixedVar, formRandomVar,timeVar)
       list.data.GK_T <- data.time(list.GK_T$data.id2, c(t(st_T)),formFixedVar, formRandomVar,timeVar)
       list.data.GK_L_T <- data.time(list.GK_L_T$data.id2, c(t(st_L_T)),formFixedVar, formRandomVar,timeVar)
@@ -1290,7 +1290,7 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
     ## Pour l'intégrale (à optmiser plus tard)
     print("go integrale Case3")
     st_0_LT <- c()
-    if(("current value" %in% sharedtype_01) || ("current value" %in% sharedtype_02) || ("current value" %in% sharedtype_12)){
+    if(("value" %in% sharedtype_01) || ("value" %in% sharedtype_02) || ("value" %in% sharedtype_12)){
       X_0_LT <- c()
       U_0_LT <- c()
     }
@@ -1321,7 +1321,7 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
         list.GK_0_stLT <- data.GaussKronrod(data.id.integrale, a = 0, b = st.integrale, k = nb_pointsGK)
         st_0_stLT_i <- list.GK_0_stLT$st
         st_0_LT <- rbind(st_0_LT, st_0_stLT_i)
-        if(("current value" %in% sharedtype_01) || ("current value" %in% sharedtype_02) || ("current value" %in% sharedtype_12)){
+        if(("value" %in% sharedtype_01) || ("value" %in% sharedtype_02) || ("value" %in% sharedtype_12)){
           list.data.GK_0_stLT <- data.time(list.GK_0_stLT$data.id2, c(t(st_0_stLT_i)),formFixed, formRandom,timeVar)
           X_0_stLT_i <- list.data.GK_0_stLT$Xtime; U_0_stLT_i <- list.data.GK_0_stLT$Utime
           X_0_LT <- rbind(X_0_LT,X_0_stLT_i); U_0_LT <- rbind(U_0_LT,U_0_stLT_i)
@@ -1389,8 +1389,8 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
   if(!is.null(alpha_01)){
     names.param <- c(names.param, paste(name_ZO1,"01",sep = "_"))
   }
-  if("current value" %in% sharedtype_01){
-    names.param <- c(names.param, 'current value 01')
+  if("value" %in% sharedtype_01){
+    names.param <- c(names.param, 'value 01')
   }
   if("slope" %in% sharedtype_01){
     names.param <- c(names.param, 'slope 01')
@@ -1419,8 +1419,8 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
   if(!is.null(alpha_02)){
     names.param <- c(names.param, paste(name_ZO2,"02",sep = "_"))
   }
-  if("current value" %in% sharedtype_02){
-    names.param <- c(names.param, 'current value 02')
+  if("value" %in% sharedtype_02){
+    names.param <- c(names.param, 'value 02')
   }
   if("slope" %in% sharedtype_02){
     names.param <- c(names.param, 'slope 02')
@@ -1448,8 +1448,8 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
   if(!is.null(alpha_12)){
     names.param <- c(names.param, paste(name_Z12,"12",sep = "_"))
   }
-  if("current value" %in% sharedtype_12){
-    names.param <- c(names.param, 'current value 12')
+  if("value" %in% sharedtype_12){
+    names.param <- c(names.param, 'value 12')
   }
   if("slope" %in% sharedtype_12){
     names.param <- c(names.param, 'slope 12')

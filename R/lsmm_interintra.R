@@ -9,14 +9,19 @@ lsmm_interintra <- function(formFixed, formRandom, formGroup,
                 S1 , S2,
                 nproc , clustertype, maxiter, print.info ,
                 file, epsa, epsb, epsd, binit){
-
+  X_base <- list.long$X
+  X_base <- as.matrix(X_base)
+  U_base <- list.long$U
+  U_base <- as.matrix(U_base)
+  nb.e.a <- ncol(U_base)
   data.long.court <- data.long[!duplicated(data.long[,c("id",all.vars(formGroupVisit))]),]
   binit_initial <- binit
   list.init.long <- initial.long(formFixed, formRandom, idVar, data.long.court,
                                  ncol(list.long$X), nproc = 1)
   sigma_epsilon <- list.init.long$sigma
   mu.log.sigma <- log(sigma_epsilon)
-  cholesky_b <- list.init.long$long_model$cholesky
+  cov_mat <- diag(nb.e.a)
+  cholesky_b <- cov_mat[lower.tri(cov_mat, diag = T)]
   priorMean.beta <- list.init.long$priorMean.beta
   X_base <- list.long$X; U_base <- list.long$U
   y.new <- list.long$y.new
@@ -175,6 +180,7 @@ lsmm_interintra <- function(formFixed, formRandom, formGroup,
                            file = file, blinding = FALSE, epsa = epsa, epsb = epsb, epsd = epsd)
 
 
+
   estimation2 <- NULL
   info_conv_step2 <- NULL
   if(!is.null(S2)){
@@ -224,9 +230,11 @@ lsmm_interintra <- function(formFixed, formRandom, formGroup,
 
         MatCov <- C1%*%t(C1)
         param_est <- c(param_est,unique(c(t(MatCov))))
-        for(i in 1:length(unique(c(t(MatCov))))){
-          names_param <- c(names_param, paste("cov", i, sep = "_"))
-        }
+
+        vec_name1 <-  c(paste(colnames(U_base),"Location",sep = "_"), "inter_Scale", "intra_Scale")
+        mat_name1 <- outer(vec_name1,vec_name1, paste, sep = "*cov*")
+        names_param <- c(names_param, c(mat_name1[lower.tri(mat_name1, diag= T)]))
+
         var_trans <- matrix(rep(0,length(estimation2$b)**2),nrow=length(estimation2$b),ncol=length(estimation2$b))
         var_trans[upper.tri(var_trans, diag=T)] <- estimation2$v
         trig.cov <- var_trans[curseur:length(estimation2$b),curseur:length(estimation2$b)]
@@ -265,9 +273,16 @@ lsmm_interintra <- function(formFixed, formRandom, formGroup,
 
           MatCov <- C1%*%t(C1)
           param_est <- c(param_est,unique(c(t(MatCov))))
-          for(i in 1:length(unique(c(t(MatCov))))){
-            names_param <- c(names_param, paste("cov", i, sep = "_"))
+          vec_name1 <-  c(paste(colnames(U_base),"Location",sep = "_"))
+          if(var_inter){
+            vec_name1 <-  c(vec_name1, "inter_Scale")
           }
+          if(var_intra){
+            vec_name1 <-  c(vec_name1, "intra_Scale")
+          }
+          mat_name1 <- outer(vec_name1,vec_name1, paste, sep = "*cov*")
+          names_param <- c(names_param, c(mat_name1[lower.tri(mat_name1, diag= T)]))
+
           var_trans <- matrix(rep(0,length(estimation2$b)**2),nrow=length(estimation2$b),ncol=length(estimation2$b))
           var_trans[upper.tri(var_trans, diag=T)] <- estimation2$v
           trig.cov <- var_trans[curseur:length(estimation2$b),curseur:length(estimation2$b)]
@@ -305,9 +320,8 @@ lsmm_interintra <- function(formFixed, formRandom, formGroup,
 
           MatCov <- C1%*%t(C1)
           param_est <- c(param_est,unique(c(t(MatCov))))
-          for(i in 1:length(unique(c(t(MatCov))))){
-            names_param <- c(names_param, paste("covB", i, sep = "_"))
-          }
+          mat_name1 <- outer(vec_name1,vec_name1, paste, sep = "*cov*")
+          names_param <- c(names_param, c(mat_name1[lower.tri(mat_name1, diag= T)]))
           var_trans <- matrix(rep(0,length(estimation2$b)**2),nrow=length(estimation2$b),ncol=length(estimation2$b))
           var_trans[upper.tri(var_trans, diag=T)] <- estimation2$v
           trig.cov <- var_trans[curseur:length(estimation2$b),curseur:length(estimation2$b)]
@@ -348,9 +362,21 @@ lsmm_interintra <- function(formFixed, formRandom, formGroup,
       Index.C1 <- as.matrix(Index.C1)
       MatCovb <- C1%*%t(C1)
       param_est <- c(param_est,unique(c(t(MatCovb))))
-      for(i in 1:length(unique(c(t(MatCovb))))){
-        names_param <- c(names_param, paste("covB", i, sep = "_"))
+
+      vec_name1 <-  c(paste(colnames(U_base),"Location",sep = "_"))
+      mat_name1 <- outer(vec_name1,vec_name1, paste, sep = "*cov*")
+      names_param <- c(names_param, c(mat_name1[lower.tri(mat_name1, diag= T)]))
+      vec_name2 <- c()
+      if(var_inter){
+        vec_name2 <- c(vec_name2, "inter_Scale")
       }
+      if(var_intra){
+        vec_name2 <- c(vec_name2, "intra_Scale")
+      }
+      mat_name2 <- outer(vec_name2,vec_name2, paste, sep = "*cov*")
+      names_param <- c(names_param, c(mat_name2[lower.tri(mat_name2, diag= T)]))
+
+
 
       var_trans <- matrix(rep(0,length(estimation2$b)**2),nrow=length(estimation2$b),ncol=length(estimation2$b))
       var_trans[upper.tri(var_trans, diag=T)] <- estimation2$v
@@ -391,9 +417,7 @@ lsmm_interintra <- function(formFixed, formRandom, formGroup,
 
         MatCovSig <- C3%*%t(C3)
         param_est <- c(param_est,unique(c(t(MatCovSig))))
-        for(i in 1:length(unique(c(t(MatCovSig))))){
-          names_param <- c(names_param, paste("covSig", i, sep = "_"))
-        }
+
 
         trig.cov <- var_trans[(borne1+1):borne3,(borne1+1):borne3]
         trig.cov <- trig.cov+t(trig.cov)
@@ -418,6 +442,12 @@ lsmm_interintra <- function(formFixed, formRandom, formGroup,
             }
             sd.param <- c(sd.param,sqrt(resultat))
           }
+        }
+      }
+      else{
+        if(var_inter || var_intra){
+          param_est <- c(param_est, estimation1$b[(borne1+1)]*estimation1$b[(borne1+1)])
+          sd.param <- sqrt(var_trans[(borne1+1),(borne1+1)]*(2*estimation1$b[(borne1+1)]*estimation1$b[(borne1+1)])**2)
         }
       }
 
@@ -446,9 +476,15 @@ lsmm_interintra <- function(formFixed, formRandom, formGroup,
 
         MatCov <- C1%*%t(C1)
         param_est <- c(param_est,unique(c(t(MatCov))))
-        for(i in 1:length(unique(c(t(MatCov))))){
-          names_param <- c(names_param, paste("cov", i, sep = "_"))
+        vec_name1 <-  c(paste(colnames(U_base),"Location",sep = "_"))
+        if(var_inter){
+          vec_name1 <- c(vec_name1, "inter_Scale")
         }
+        if(var_intra){
+          vec_name1 <- c(vec_name1, "intra_Scale")
+        }
+        mat_name1 <- outer(vec_name1,vec_name1, paste, sep = "*cov*")
+        names_param <- c(names_param, c(mat_name1[lower.tri(mat_name1, diag= T)]))
         var_trans <- matrix(rep(0,length(estimation1$b)**2),nrow=length(estimation1$b),ncol=length(estimation1$b))
         var_trans[upper.tri(var_trans, diag=T)] <- estimation1$v
         trig.cov <- var_trans[curseur:length(estimation1$b),curseur:length(estimation1$b)]
@@ -487,9 +523,15 @@ lsmm_interintra <- function(formFixed, formRandom, formGroup,
 
           MatCov <- C1%*%t(C1)
           param_est <- c(param_est,unique(c(t(MatCov))))
-          for(i in 1:length(unique(c(t(MatCov))))){
-            names_param <- c(names_param, paste("cov", i, sep = "_"))
+          vec_name1 <-  c(paste(colnames(U_base),"Location",sep = "_"))
+          if(var_inter){
+            vec_name1 <- c(vec_name1, "inter_Scale")
           }
+          if(var_intra){
+            vec_name1 <- c(vec_name1, "intra_Scale")
+          }
+          mat_name1 <- outer(vec_name1,vec_name1, paste, sep = "*cov*")
+          names_param <- c(names_param, c(mat_name1[lower.tri(mat_name1, diag= T)]))
           var_trans <- matrix(rep(0,length(estimation1$b)**2),nrow=length(estimation1$b),ncol=length(estimation1$b))
           var_trans[upper.tri(var_trans, diag=T)] <- estimation1$v
           trig.cov <- var_trans[curseur:length(estimation1$b),curseur:length(estimation1$b)]
@@ -527,9 +569,15 @@ lsmm_interintra <- function(formFixed, formRandom, formGroup,
 
           MatCov <- C1%*%t(C1)
           param_est <- c(param_est,unique(c(t(MatCov))))
-          for(i in 1:length(unique(c(t(MatCov))))){
-            names_param <- c(names_param, paste("covB", i, sep = "_"))
+          vec_name1 <-  c(paste(colnames(U_base),"Location",sep = "_"))
+          if(var_inter){
+            vec_name1 <- c(vec_name1, "inter_Scale")
           }
+          if(var_intra){
+            vec_name1 <- c(vec_name1, "intra_Scale")
+          }
+          mat_name1 <- outer(vec_name1,vec_name1, paste, sep = "*cov*")
+          names_param <- c(names_param, c(mat_name1[lower.tri(mat_name1, diag= T)]))
           var_trans <- matrix(rep(0,length(estimation1$b)**2),nrow=length(estimation1$b),ncol=length(estimation1$b))
           var_trans[upper.tri(var_trans, diag=T)] <- estimation1$v
           trig.cov <- var_trans[curseur:length(estimation1$b),curseur:length(estimation1$b)]
@@ -570,9 +618,19 @@ lsmm_interintra <- function(formFixed, formRandom, formGroup,
       Index.C1 <- as.matrix(Index.C1)
       MatCovb <- C1%*%t(C1)
       param_est <- c(param_est,unique(c(t(MatCovb))))
-      for(i in 1:length(unique(c(t(MatCovb))))){
-        names_param <- c(names_param, paste("covB", i, sep = "_"))
+      vec_name1 <-  c(paste(colnames(U_base),"Location",sep = "_"))
+      mat_name1 <- outer(vec_name1,vec_name1, paste, sep = "*cov*")
+      names_param <- c(names_param, c(mat_name1[lower.tri(mat_name1, diag= T)]))
+      vec_name2 <- c()
+      if(var_inter){
+        vec_name2 <- c(vec_name2, "inter_Scale")
       }
+      if(var_intra){
+        vec_name2 <- c(vec_name2, "intra_Scale")
+      }
+      mat_name2 <- outer(vec_name2,vec_name2, paste, sep = "*cov*")
+      names_param <- c(names_param, c(mat_name2[lower.tri(mat_name2, diag= T)]))
+
 
       var_trans <- matrix(rep(0,length(estimation1$b)**2),nrow=length(estimation1$b),ncol=length(estimation1$b))
       var_trans[upper.tri(var_trans, diag=T)] <- estimation1$v
@@ -613,9 +671,7 @@ lsmm_interintra <- function(formFixed, formRandom, formGroup,
 
         MatCovSig <- C3%*%t(C3)
         param_est <- c(param_est,unique(c(t(MatCovSig))))
-        for(i in 1:length(unique(c(t(MatCovSig))))){
-          names_param <- c(names_param, paste("covSig", i, sep = "_"))
-        }
+
 
         trig.cov <- var_trans[(borne1+1):borne3,(borne1+1):borne3]
         trig.cov <- trig.cov+t(trig.cov)
@@ -640,6 +696,12 @@ lsmm_interintra <- function(formFixed, formRandom, formGroup,
             }
             sd.param <- c(sd.param,sqrt(resultat))
           }
+        }
+      }
+      else{
+        if(var_inter || var_intra){
+          param_est <- c(param_est, estimation1$b[(borne1+1)]*estimation1$b[(borne1+1)])
+          sd.param <- sqrt(var_trans[(borne1+1),(borne1+1)]*(2*estimation1$b[(borne1+1)]*estimation1$b[(borne1+1)])**2)
         }
       }
 

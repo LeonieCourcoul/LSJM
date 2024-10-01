@@ -3,20 +3,24 @@
 #' @export
 #'
 
-plot.lsmm_covDep <- function(Objectlsmm, which = 'long.fit', Objectranef = NULL, break.times = NULL, ID.ind = NULL){
+plot.lsmm_covDep <- function(Objectlsmm, which = 'long.fit', ObjectpredictY = NULL, break.times = NULL, ID.ind = NULL, ylim = NULL, xlim = NULL){
 
-  if(is.null(Objectranef)){
-    Objectranef <- ranef(Objectlsmm)
+  if(is.null(ObjectpredictY)){
+    stop("ObjectpredictY is missing.")
   }
 
   graph <- NULL
+
+  oldpar <- graphics::par(no.readonly = TRUE) # code line i
+  on.exit(graphics::par(oldpar)) # code line i + 1
+
 
   if(which == 'long.fit'){
     formFixed <- Objectlsmm$control$formFixed
     timeVar <- Objectlsmm$control$timeVar
     data.long <- Objectlsmm$control$data.long
     value.var <- as.character(formFixed[[2]])
-    pred.CV <- Objectranef$cv.Pred[,3]
+    pred.CV <- ObjectpredictY$predY
     if(is.null(break.times)){
       timeInterv <- range(data.long[,timeVar])
       break.times <- quantile(timeInterv,prob=seq(0,1,length.out=10))
@@ -32,8 +36,6 @@ plot.lsmm_covDep <- function(Objectlsmm, which = 'long.fit', Objectranef = NULL,
     obstime.mean <- by(data.long[,timeVar], data.long$window, mean)
     df <- cbind(obstime.mean, mean.obs, IC.sup, IC.inf, mean.pred)
     df <- as.data.frame(df)
-    oldpar <- graphics::par(no.readonly = TRUE) # code line i
-    on.exit(graphics::par(oldpar)) # code line i + 1
     k <- ggplot2::ggplot(df,  ggplot2::aes(obstime.mean, mean.obs, ymin = IC.sup, ymax = IC.inf))
     graph.fit.long <- k +  ggplot2::geom_pointrange( ggplot2::aes(ymin = IC.sup, ymax = IC.inf), shape =1) +
       ggplot2::geom_point(ggplot2::aes(obstime.mean, mean.pred), size = 3, shape = 17) +
@@ -42,7 +44,7 @@ plot.lsmm_covDep <- function(Objectlsmm, which = 'long.fit', Objectranef = NULL,
       ggplot2::theme(panel.grid.major = ggplot2::element_blank(), panel.grid.minor = ggplot2::element_blank(),
                      panel.background = ggplot2::element_blank(), axis.line = ggplot2::element_line(colour = "black"))+
       ggplot2::ggtitle("Longitudinal goodness-of-fit")
-    graph <- graph.fit.long
+    graph <- list(long.fit = graph.fit.long)
   }
 
   if(which == 'traj.ind'){
@@ -50,7 +52,7 @@ plot.lsmm_covDep <- function(Objectlsmm, which = 'long.fit', Objectranef = NULL,
       stop("You have to design some individual ID to plot the the individual trajectories.")
     }
     ID.ind <- as.vector(ID.ind)
-    pred.CV <- as.data.frame(Objectranef$cv.Pred)
+    pred.CV <- as.data.frame(ObjectpredictY)
     data.long <- Objectlsmm$control$data.long
     formFixed <- Objectlsmm$control$formFixed
     value.var <- as.character(formFixed[[2]])
@@ -58,18 +60,18 @@ plot.lsmm_covDep <- function(Objectlsmm, which = 'long.fit', Objectranef = NULL,
     for(ind in ID.ind){
       pred.CV.id <- pred.CV[which(pred.CV$id == ind),]
       pred.CV.id$y <- data.long[which(data.long$id == ind), value.var]
-      pred.CV.id$CI.sup <- pred.CV.id$CV + 1.96*pred.CV.id$Residual_SD
-      pred.CV.id$CI.inf <- pred.CV.id$CV - 1.96*pred.CV.id$Residual_SD
+      pred.CV.id$CI.sup <- pred.CV.id$predY + 1.96*pred.CV.id$predSD
+      pred.CV.id$CI.inf <- pred.CV.id$predY - 1.96*pred.CV.id$predSD
 
       #browser()
       traj_ind <- ggplot2::ggplot() +
 
-        ggplot2::geom_line(pred.CV.id, mapping = aes(x=time, y=CV, group = id, color = 'Predicted'))+
-        ggplot2::geom_line(pred.CV.id, mapping = aes(x=time, y=CI.sup, group = id,  color = 'Predicted'))+
-        ggplot2::geom_line(pred.CV.id, mapping = aes(x=time, y=CI.inf, group = id,  color = 'Predicted'))+
+        ggplot2::geom_line(pred.CV.id, mapping = aes(x=time, y=predY, group = id, color = 'Predicted'))+
+        ggplot2::geom_line(pred.CV.id, mapping = aes(x=time, y=CI.sup, group = id,  color = 'Predicted'),linetype = 2)+
+        ggplot2::geom_line(pred.CV.id, mapping = aes(x=time, y=CI.inf, group = id,  color = 'Predicted'),linetype = 2)+
 
         ggplot2::geom_ribbon( pred.CV.id,mapping=
-                       aes(x=time,ymin=CI.inf,ymax=CI.sup), fill="#998ec3", alpha=0.3)+
+                       aes(x=time,ymin=CI.inf,ymax=CI.sup), fill="#998ec3", alpha=0.3,linetype = 3)+
 
         ggplot2::geom_point(pred.CV.id, mapping = aes(x=time, y=y, group = id,color = "Observed"),shape =17)+
         xlab("Time") + ylab("Y") +
@@ -93,12 +95,10 @@ plot.lsmm_covDep <- function(Objectlsmm, which = 'long.fit', Objectranef = NULL,
           axis.line = element_line(color = "black",
                                    linetype = "solid"),
           axis.text = element_text(size = 10, color = "black")
-        )
+        )+coord_cartesian(xlim = xlim,ylim = ylim, expand = TRUE)
 
-      graph.traj.ind <- c(graph.traj.ind, traj_ind)
-      print(traj_ind)
+      graph[[paste("traj.ind",ind, sep = "_")]] <- traj_ind
     }
-    graph <- graph.traj.ind
 
   }
 

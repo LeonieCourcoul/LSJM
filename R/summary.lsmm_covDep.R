@@ -95,10 +95,10 @@ summary.lsmm_covDep <- function(object,...)
     borne5 <- borne4 + choose(n = x$control$nb.e.a.sigma, k = 2) + x$control$nb.e.a.sigma
     Matcovb.name.mat <- matrix(rep(0,(x$control$nb.e.a)**2),nrow=x$control$nb.e.a,ncol=x$control$nb.e.a)
     Matcovb.name.mat[lower.tri(Matcovb.name.mat, diag=T)] <- param.names[(borne3+1):borne4]
-    Matcovb.name <- unique(gsub("_Loc.*", "", unlist(regmatches(Matcovb.name.mat, gregexpr("\\(?[A-Za-z0-9\\.\\^]+\\)?_Loc", Matcovb.name.mat)))))
+    Matcovb.name <- unique(gsub("_Location.*", "", unlist(regmatches(Matcovb.name.mat, gregexpr("\\(?[A-Za-z0-9\\.\\^]+\\)?_Location", Matcovb.name.mat)))))
     MatcovSig.name.mat <- matrix(rep(0,(x$control$nb.e.a.sigma)**2),nrow=x$control$nb.e.a.sigma,ncol=x$control$nb.e.a.sigma)
     MatcovSig.name.mat[lower.tri(MatcovSig.name.mat, diag=T)] <- param.names[(borne4+1):borne5]
-    MatcovSig.name <- unique(gsub("_Sca.*", "", unlist(regmatches(MatcovSig.name.mat, gregexpr("\\(?[A-Za-z0-9\\.\\^]+\\)?_Sca", MatcovSig.name.mat)))))
+    MatcovSig.name <- unique(gsub("_Scale.*", "", unlist(regmatches(MatcovSig.name.mat, gregexpr("\\(?[A-Za-z0-9\\.\\^]+\\)?_Scale", MatcovSig.name.mat)))))
 
 
     #Matcovb.name <- param.names[curseur:borne1]

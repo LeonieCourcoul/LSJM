@@ -12,8 +12,8 @@ lsmm(
   formVar = "classic",
   formFixedVar = NULL,
   formRandomVar = NULL,
-  var_inter = F,
-  var_intra = F,
+  random_inter = F,
+  random_intra = F,
   formGroupVisit = NULL,
   correlated_re = F,
   data.long,
@@ -45,9 +45,9 @@ lsmm(
 
 \item{formRandomVar}{A formula for the random effects of the variance predictor if formVar == 'cov-dependent'}
 
-\item{var_inter}{A logical indicating if the inter-visits variability is subject-specific when formVar = 'inter-intra'}
+\item{random_inter}{A logical indicating if the inter-visits variability is subject-specific when formVar = 'inter-intra'}
 
-\item{var_intra}{A logical indicating if the intra-visit variability is subject-specific when formVar = 'inter-intra'}
+\item{random_intra}{A logical indicating if the intra-visit variability is subject-specific when formVar = 'inter-intra'}
 
 \item{formGroupVisit}{A formula which indicates the visit indicator variable  when formVar = 'inter-intra'}
 

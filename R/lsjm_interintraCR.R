@@ -178,7 +178,7 @@ lsjm_interintraCR <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haza
     st_T0 <- list.GK_T0$st
     Time_T0 <- data.id$Time_T0
   }
-  if(("current value" %in% sharedtype_01) || ("current value" %in% sharedtype_02)){
+  if(("value" %in% sharedtype_01) || ("value" %in% sharedtype_02)){
     list.data_T <- data.time(data.id, data.id$Time_T, formFixed, formRandom,timeVar)
     list.data.GK_T <- data.time(list.GK_T$data.id2, c(t(st_T)),formFixed, formRandom,timeVar)
     X_T <- list.data_T$Xtime; U_T <- list.data_T$Utime
@@ -268,9 +268,9 @@ lsjm_interintraCR <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haza
   if(!is.null(alpha_01)){
     names.param <- c(names.param, paste(name_ZO1,"01",sep = "_"))
   }
-  if("current value" %in% sharedtype_01){
+  if("value" %in% sharedtype_01){
     binit_CR <- c(binit_CR, 0)
-    names.param <- c(names.param, 'current value 01')
+    names.param <- c(names.param, 'value 01')
   }
   if("slope" %in% sharedtype_01){
     binit_CR <- c(binit_CR, 0)
@@ -308,9 +308,9 @@ lsjm_interintraCR <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haza
   if(!is.null(alpha_02)){
     names.param <- c(names.param, paste(name_ZO2,"02",sep = "_"))
   }
-  if("current value" %in% sharedtype_02){
+  if("value" %in% sharedtype_02){
     binit_CR <- c(binit_CR, 0)
-    names.param <- c(names.param, 'current value 02')
+    names.param <- c(names.param, 'value 02')
   }
   if("slope" %in% sharedtype_02){
     binit_CR <- c(binit_CR, 0)

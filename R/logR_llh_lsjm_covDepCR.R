@@ -57,7 +57,7 @@ logR_llh_lsjm_covDepCR <- function(param,hazard_baseline_01, sharedtype_01,
     alpha_b_01 <- param[curseur:(curseur+nb.e.a-1)]
     curseur <- curseur + nb.e.a
   }
-  if("current value" %in% sharedtype_01){
+  if("value" %in% sharedtype_01){
     alpha.current_01 <-  param[curseur]
     curseur <- curseur + 1
   }
@@ -94,7 +94,7 @@ logR_llh_lsjm_covDepCR <- function(param,hazard_baseline_01, sharedtype_01,
     alpha_b_02 <- param[curseur:(curseur+nb.e.a-1)]
     curseur <- curseur + nb.e.a
   }
-  if("current value" %in% sharedtype_02){
+  if("value" %in% sharedtype_02){
     alpha.current_02 <- param[curseur]
     curseur <- curseur + 1
   }
@@ -144,8 +144,8 @@ logR_llh_lsjm_covDepCR <- function(param,hazard_baseline_01, sharedtype_01,
   ll_glob <- rep(NA, Ind)
 
   # Creations entrees rcpp
-  sharedtype <- c("current value" %in% sharedtype_01, "slope" %in% sharedtype_01, "variability" %in% sharedtype_01,
-                  "current value" %in% sharedtype_02, "slope" %in% sharedtype_02, "variability" %in% sharedtype_02,
+  sharedtype <- c("value" %in% sharedtype_01, "slope" %in% sharedtype_01, "variability" %in% sharedtype_01,
+                  "value" %in% sharedtype_02, "slope" %in% sharedtype_02, "variability" %in% sharedtype_02,
                   "random effects" %in% sharedtype_01, "random effects" %in% sharedtype_02
   )
   HB <- list(hazard_baseline_01, hazard_baseline_02)

@@ -15,39 +15,41 @@ summary.lsjm_classicIDM <- function(object,...)
     cat("We recommend to not interpret the following results and to try to reach convergence for the first step. \n")
 
     cat("--------------------------------------------------------------------------------------------------------- \n")
-    cat("\n")
+    stop("\n")
   }
 
-  cat("Joint mixed-effect model for quantitative outcome and an illness-death model", "\n")
+
+
+  cat("Joint model with an illness-death model fitted by maximum likelihood method", "\n")
 
   #ajouter le code d'appelle à la fonction
   cat("\n")
   cat("Statistical Model:", "\n")
-  cat(paste("    Number of subjects:", x$control$Objectlsmm$control$Ind),"\n")
-  cat(paste("    Number of observations:", nrow(x$control$Objectlsmm$control$data.long)),"\n")
+  cat(paste("    Number of subjects:", x$control$Ind),"\n")
+  cat(paste("    Number of observations:", nrow(x$control$data.long)),"\n")
 
   cat("\n")
   cat("Iteration process:", "\n")
 
-  if(x$info_conv_step2$conv==1) cat("    Convergence criteria satisfied")
-  if(x$info_conv_step2$conv==2) cat("    Maximum number of iteration reached without convergence")
-  if(x$info_conv_step2$conv==4) {cat("    The program stopped abnormally. No results can be displayed. \n")
+  if(!is.null(x$info_conv_step2)){
+    if(x$info_conv_step2$conv==1) cat("    Convergence criteria satisfied")
+    if(x$info_conv_step2$conv==2) cat("    Maximum number of iteration reached without convergence")
+    if(x$info_conv_step2$conv==4) cat("    The program stopped abnormally. No results can be displayed. \n")
   }
-  else{
-    cat("\n")
-    cat(paste("     Number of iterations: ",x$info_conv_step2$niter), "\n")
-    cat(paste("     Convergence criteria: parameters =" ,signif(x$info_conv_step2$convcrit[1],3)), "\n")
-    cat(paste("                         : likelihood =" ,signif(x$info_conv_step2$convcrit[2],3)), "\n")
-    cat(paste("                         : second derivatives =" ,signif(x$info_conv_step2$convcrit[3],3)), "\n")
-    cat(paste("     Time of computation :" ,format(x$info_conv_step2$time)))
-  }
-
   cat("\n")
+  cat(paste("     Number of iterations: "), "\n")
+  cat(paste("          Step 1: ",x$result_step1$ni), "\n")
+  cat(paste("          Step 2: ",x$info_conv_step2$niter), "\n")
+  cat(paste("     Convergence criteria (Step1): parameters =" ,signif(x$info_conv_step1$convcrit[1],3)), "\n")
+  cat(paste("                                 : likelihood =" ,signif(x$info_conv_step1$convcrit[2],3)), "\n")
+  cat(paste("                                 : second derivatives =" ,signif(x$info_conv_step1$convcrit[3],3)), "\n")
+  cat(paste("     Time of computation :" , format(x$time.computation)),  "\n")
+
   cat("\n")
   cat("Goodness-of-fit statistics:")
   cat("\n")
-  cat(paste("    Likelihood: ", x$result_step1$fn.value),"\n")
-  cat(paste("    AIC: ", 2*nrow(x$result_step1$b) - 2* x$result_step1$fn.value),"\n")
+  cat(paste("    Likelihood: ", round(x$result_step1$fn.value,3)),"\n")
+  cat(paste("    AIC: ", round(2*length(x$result_step1$b) - 2* x$result_step1$fn.value,3)),"\n")
 
   cat("\n")
   cat("Maximum Likelihood Estimates:")
@@ -91,7 +93,13 @@ summary.lsjm_classicIDM <- function(object,...)
     curseur <- curseur+nb.alpha_01
   }
   ### Association
-  if("current value" %in% x$control$sharedtype_01){
+  if("random effects" %in% x$control$sharedtype_01){
+    alpha.re_01 <- param[curseur:(curseur+x$control$Objectlsmm$control$nb.e.a-1)]
+    alpha.re_01.se <- param.se[curseur:(curseur+x$control$Objectlsmm$control$nb.e.a-1)]
+    alpha.re_01.name <- param.names[curseur:(curseur+x$control$Objectlsmm$control$nb.e.a-1)]
+    curseur <- curseur + x$control$Objectlsmm$control$nb.e.a
+  }
+  if("value" %in% x$control$sharedtype_01){
     alpha.current_01 <-  param[curseur]
     alpha.current_01.se <-  param.se[curseur]
     alpha.current_01.name <-  param.names[curseur]
@@ -134,7 +142,13 @@ summary.lsjm_classicIDM <- function(object,...)
     curseur <- curseur+nb.alpha_02
   }
   ### Association
-  if("current value" %in% x$control$sharedtype_02){
+  if("random effects" %in% x$control$sharedtype_02){
+    alpha.re_02 <- param[curseur:(curseur+x$control$Objectlsmm$control$nb.e.a-1)]
+    alpha.re_02.se <- param.se[curseur:(curseur+x$control$Objectlsmm$control$nb.e.a-1)]
+    alpha.re_02.name <- param.names[curseur:(curseur+x$control$Objectlsmm$control$nb.e.a-1)]
+    curseur <- curseur + x$control$Objectlsmm$control$nb.e.a
+  }
+  if("value" %in% x$control$sharedtype_02){
     alpha.current_02 <- param[curseur]
     alpha.current_02.se <- param.se[curseur]
     alpha.current_02.name <- param.names[curseur]
@@ -177,7 +191,13 @@ summary.lsjm_classicIDM <- function(object,...)
     curseur <- curseur+nb.alpha_12
   }
   ### Association
-  if("current value" %in% x$control$sharedtype_12){
+  if("random effects" %in% x$control$sharedtype_12){
+    alpha.re_12 <- param[curseur:(curseur+x$control$Objectlsmm$control$nb.e.a-1)]
+    alpha.re_12.se <- param.se[curseur:(curseur+x$control$Objectlsmm$control$nb.e.a-1)]
+    alpha.re_12.name <- param.names[curseur:(curseur+x$control$Objectlsmm$control$nb.e.a-1)]
+    curseur <- curseur + x$control$Objectlsmm$control$nb.e.a
+  }
+  if("value" %in% x$control$sharedtype_12){
     alpha.current_12 <- param[curseur]
     alpha.current_12.se <- param.se[curseur]
     alpha.current_12.name <- param.names[curseur]
@@ -206,6 +226,9 @@ summary.lsjm_classicIDM <- function(object,...)
   C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
   MatCov <- C1
   MatCov <- as.matrix(MatCov)
+  borne2 <- borne1 + choose(n = x$control$Objectlsmm$control$nb.e.a, k = 2) + x$control$Objectlsmm$control$nb.e.a
+  Matcov.name <- unique( unique(gsub("\\*.*", "", gsub("__", "_", param.names[(borne1+1):borne2]))))
+
 
 
   cat("\n")
@@ -220,8 +243,10 @@ summary.lsjm_classicIDM <- function(object,...)
   betas_tab[,3] <- betas_tab[,1]/betas_tab[,2]
   betas_tab[,4] <- 1 - pchisq(betas_tab[,3]**2,1)
   betas_tab <- as.data.frame(betas_tab)
-  rownames(betas_tab) <- beta.name
-  colnames(betas_tab) <- c("Coeff", "SE", "Wald", "P-value")
+  rownames(betas_tab) <- gsub("_Y", "",beta.name)
+  colnames(betas_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
+  betas_tab <- round(betas_tab, 4)
+  betas_tab$Pvalue <- ifelse(betas_tab$Pvalue < 0.001, "<0.001", round(betas_tab$Pvalue,3))
   cat("\n")
   print(betas_tab)
 
@@ -233,8 +258,9 @@ summary.lsjm_classicIDM <- function(object,...)
   sigma_eps_tab[,3] <- sigma_eps_tab[,1]/sigma_eps_tab[,2]
   sigma_eps_tab[,4] <- 1 - pchisq(sigma_eps_tab[,3]**2,1)
   sigma_eps_tab <- as.data.frame(sigma_eps_tab)
-  rownames(sigma_eps_tab) <- sigma_epsilon.name
-  colnames(sigma_eps_tab) <- c("Coeff", "SE", "Wald", "P-value")
+  colnames(sigma_eps_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
+  sigma_eps_tab <- round(sigma_eps_tab, 4)
+  sigma_eps_tab$Pvalue <- ifelse(sigma_eps_tab$Pvalue < 0.001, "<0.001", round(sigma_eps_tab$Pvalue,3))
   cat("\n")
   print(sigma_eps_tab)
 
@@ -243,7 +269,10 @@ summary.lsjm_classicIDM <- function(object,...)
 
   cat("     Covariance matrix of the random effects:")
   cat("\n")
-  print(MatCov%*%t(MatCov),quote=FALSE,na.print="")
+  Cov <- MatCov%*%t(MatCov)
+  colnames(Cov) <- Matcov.name
+  rownames(Cov) <- Matcov.name
+  print(Cov)
   cat("\n")
 
   cat("Survival models:")
@@ -251,12 +280,21 @@ summary.lsjm_classicIDM <- function(object,...)
   cat("    Transition 0-1:")
   #browser()
   e1_var_tab <- NULL
+  e1_share_random_tab <- NULL
   e1_share_current_tab <- NULL
   e1_share_slope_tab <- NULL
   e1_alpha_tab <- NULL
   e1_names_tab <- c()
 
-  if(c("current value") %in% x$control$sharedtype_01){
+  if(c("random effects") %in% x$control$sharedtype_01){
+    e1_share_random_tab <- matrix(nrow = 1, ncol = 4)
+    e1_share_random_tab[,1] <- alpha.re_01
+    e1_share_random_tab[,2] <- alpha.re_01.se
+    e1_share_random_tab[,3] <- e1_share_random_tab[,1]/e1_share_random_tab[,2]
+    e1_share_random_tab[,4] <- 1 - pchisq(e1_share_random_tab[,3]**2,1)
+    e1_names_tab <- c(e1_names_tab, alpha.re_01.name)
+  }
+  if(c("value") %in% x$control$sharedtype_01){
     e1_share_current_tab <- matrix(nrow = 1, ncol = 4)
     e1_share_current_tab[,1] <- alpha.current_01
     e1_share_current_tab[,2] <- alpha.current_01.se
@@ -305,7 +343,7 @@ summary.lsjm_classicIDM <- function(object,...)
     e1_bas_tab[1,4] <- 1 - pchisq(e1_bas_tab[,3]**2,1)
     #e1_names_tab <- c(e1_names_tab, alpha_01.name[-1])
     rownames(e1_bas_tab) <- c("intercept")
-    colnames(e1_bas_tab) <- c("Coeff", "SE", "Wald", "P-value")
+    colnames(e1_bas_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
   }
   if(x$control$hazard_baseline_01 == "Weibull"){
     e1_bas_tab <- matrix(nrow = 2, ncol = 4)
@@ -319,7 +357,7 @@ summary.lsjm_classicIDM <- function(object,...)
     e1_bas_tab[,3] <- e1_bas_tab[,1]/e1_bas_tab[,2]
     e1_bas_tab[,4] <- 1 - pchisq(e1_bas_tab[,3]**2,1)
     rownames(e1_bas_tab) <- c("intercept",shape_01.name)
-    colnames(e1_bas_tab) <- c("Coeff", "SE", "Wald", "P-value")
+    colnames(e1_bas_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
   }
   if(x$control$hazard_baseline_01 == "Splines"){
     e1_bas_tab <- matrix(nrow = length(gamma_01), ncol = 4)
@@ -328,11 +366,17 @@ summary.lsjm_classicIDM <- function(object,...)
     e1_bas_tab[,3] <- e1_bas_tab[,1]/e1_bas_tab[,2]
     e1_bas_tab[,4] <- 1 - pchisq(e1_bas_tab[,3]**2,1)
     rownames(e1_bas_tab) <- gamma_01.name
-    colnames(e1_bas_tab) <- c("Coeff", "SE", "Wald", "P-value")
+    colnames(e1_bas_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
   }
-  e1_surv_tab <- rbind(e1_var_tab, e1_share_current_tab, e1_share_slope_tab, e1_alpha_tab)
+  e1_surv_tab <- rbind(e1_var_tab, e1_share_random_tab, e1_share_current_tab, e1_share_slope_tab, e1_alpha_tab)
   rownames(e1_surv_tab) <- e1_names_tab
-  colnames(e1_surv_tab) <- c("Coeff", "SE", "Wald", "P-value")
+  colnames(e1_surv_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
+
+  e1_surv_tab <- round(e1_surv_tab, 4)
+  e1_surv_tab$Pvalue <- ifelse(e1_surv_tab$Pvalue < 0.001, "<0.001", round(e1_surv_tab$Pvalue,3))
+  e1_bas_tab <- round(e1_bas_tab, 4)
+  e1_bas_tab$Pvalue <- ifelse(e1_bas_tab$Pvalue < 0.001, "<0.001", round(e1_bas_tab$Pvalue,3))
+
 
   if(nrow(e1_bas_tab)!=0){
     cat("\n")
@@ -350,13 +394,22 @@ summary.lsjm_classicIDM <- function(object,...)
 
   cat("    Transition 0-2:")
   e2_var_tab <- NULL
+  e2_share_random_tab <- NULL
   e2_share_current_tab <- NULL
   e2_share_slope_tab <- NULL
   e2_alpha_tab <- NULL
   e2_names_tab <- c()
 
+  if(c("random effects") %in% x$control$sharedtype_02){
+    e2_share_random_tab <- matrix(nrow = 1, ncol = 4)
+    e2_share_random_tab[,1] <- alpha.re_02
+    e2_share_random_tab[,2] <- alpha.re_02.se
+    e2_share_random_tab[,3] <- e2_share_random_tab[,1]/e2_share_random_tab[,2]
+    e2_share_random_tab[,4] <- 1 - pchisq(e2_share_random_tab[,3]**2,1)
+    e2_names_tab <- c(e2_names_tab, alpha.re_02.name)
+  }
 
-  if(c("current value") %in% x$control$sharedtype_02){
+  if(c("value") %in% x$control$sharedtype_02){
     e2_share_current_tab <- matrix(nrow = 1, ncol = 4)
     e2_share_current_tab[,1] <- alpha.current_02
     e2_share_current_tab[,2] <- alpha.current_02.se
@@ -407,7 +460,7 @@ summary.lsjm_classicIDM <- function(object,...)
     # e2_alpha_tab <- e2_alpha_tab[-1,]
    # e2_names_tab <- c(e2_names_tab, alpha_02.name[-1])
     rownames(e2_bas_tab) <- c("intercept")
-    colnames(e2_bas_tab) <- c("Coeff", "SE", "Wald", "P-value")
+    colnames(e2_bas_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
   }
   if(x$control$hazard_baseline_02 == "Weibull"){
     e2_bas_tab <- matrix(nrow = 2, ncol = 4)
@@ -421,7 +474,7 @@ summary.lsjm_classicIDM <- function(object,...)
     e2_bas_tab[,3] <- e2_bas_tab[,1]/e2_bas_tab[,2]
     e2_bas_tab[,4] <- 1 - pchisq(e2_bas_tab[,3]**2,1)
     rownames(e2_bas_tab) <- c("intercept",shape_02.name)
-    colnames(e2_bas_tab) <- c("Coeff", "SE", "Wald", "P-value")
+    colnames(e2_bas_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
   }
   if(x$control$hazard_baseline_02 == "Splines"){
     e2_bas_tab <- matrix(nrow = length(gamma_02), ncol = 4)
@@ -430,12 +483,18 @@ summary.lsjm_classicIDM <- function(object,...)
     e2_bas_tab[,3] <- e2_bas_tab[,1]/e2_bas_tab[,2]
     e2_bas_tab[,4] <- 1 - pchisq(e2_bas_tab[,3]**2,1)
     rownames(e2_bas_tab) <- gamma_02.name
-    colnames(e2_bas_tab) <- c("Coeff", "SE", "Wald", "P-value")
+    colnames(e2_bas_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
   }
 
-  e2_surv_tab <- rbind(e2_var_tab, e2_share_current_tab, e2_share_slope_tab, e2_alpha_tab)
+  e2_surv_tab <- rbind(e2_var_tab, e2_share_random_tab, e2_share_current_tab, e2_share_slope_tab, e2_alpha_tab)
   rownames(e2_surv_tab) <- e2_names_tab
-  colnames(e2_surv_tab) <- c("Coeff", "SE", "Wald", "P-value")
+  colnames(e2_surv_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
+
+  e2_surv_tab <- round(e2_surv_tab, 4)
+  e2_surv_tab$Pvalue <- ifelse(e2_surv_tab$Pvalue < 0.001, "<0.001", round(e2_surv_tab$Pvalue,3))
+  e2_bas_tab <- round(e2_bas_tab, 4)
+  e2_bas_tab$Pvalue <- ifelse(e2_bas_tab$Pvalue < 0.001, "<0.001", round(e2_bas_tab$Pvalue,3))
+
 
   if(nrow(e2_bas_tab)!=0){
     cat("\n")
@@ -454,13 +513,21 @@ summary.lsjm_classicIDM <- function(object,...)
 
   cat("    Transition 1-2:")
   e12_var_tab <- NULL
+  e12_share_random_tab <- NULL
   e12_share_current_tab <- NULL
   e12_share_slope_tab <- NULL
   e12_alpha_tab <- NULL
   e12_names_tab <- c()
 
-
-  if(c("current value") %in% x$control$sharedtype_12){
+  if(c("random effects") %in% x$control$sharedtype_12){
+    e12_share_random_tab <- matrix(nrow = 1, ncol = 4)
+    e12_share_random_tab[,1] <- alpha.re_12
+    e12_share_random_tab[,2] <- alpha.re_12.se
+    e12_share_random_tab[,3] <- e12_share_random_tab[,1]/e12_share_random_tab[,2]
+    e12_share_random_tab[,4] <- 1 - pchisq(e12_share_random_tab[,3]**2,1)
+    e12_names_tab <- c(e12_names_tab, alpha.re_12.name)
+  }
+  if(c("value") %in% x$control$sharedtype_12){
     e12_share_current_tab <- matrix(nrow = 1, ncol = 4)
     e12_share_current_tab[,1] <- alpha.current_12
     e12_share_current_tab[,2] <- alpha.current_12.se
@@ -511,7 +578,7 @@ summary.lsjm_classicIDM <- function(object,...)
     # e2_alpha_tab <- e2_alpha_tab[-1,]
    # e2_names_tab <- c(e2_names_tab, alpha_02.name[-1])
     rownames(e12_bas_tab) <- c("intercept")
-    colnames(e12_bas_tab) <- c("Coeff", "SE", "Wald", "P-value")
+    colnames(e12_bas_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
   }
   if(x$control$hazard_baseline_12 == "Weibull"){
     e12_bas_tab <- matrix(nrow = 2, ncol = 4)
@@ -525,7 +592,7 @@ summary.lsjm_classicIDM <- function(object,...)
     e12_bas_tab[,3] <- e12_bas_tab[,1]/e12_bas_tab[,2]
     e12_bas_tab[,4] <- 1 - pchisq(e12_bas_tab[,3]**2,1)
     rownames(e12_bas_tab) <- c("intercept",shape_12.name)
-    colnames(e12_bas_tab) <- c("Coeff", "SE", "Wald", "P-value")
+    colnames(e12_bas_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
   }
   if(x$control$hazard_baseline_12 == "Splines"){
     e12_bas_tab <- matrix(nrow = length(gamma_12), ncol = 4)
@@ -534,12 +601,17 @@ summary.lsjm_classicIDM <- function(object,...)
     e12_bas_tab[,3] <- e12_bas_tab[,1]/e12_bas_tab[,2]
     e12_bas_tab[,4] <- 1 - pchisq(e12_bas_tab[,3]**2,1)
     rownames(e12_bas_tab) <- gamma_12.name
-    colnames(e12_bas_tab) <- c("Coeff", "SE", "Wald", "P-value")
+    colnames(e12_bas_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
   }
 
-  e12_surv_tab <- rbind(e12_var_tab, e12_share_current_tab, e12_share_slope_tab, e12_alpha_tab)
+  e12_surv_tab <- rbind(e12_var_tab, e12_share_random_tab, e12_share_current_tab, e12_share_slope_tab, e12_alpha_tab)
   rownames(e12_surv_tab) <- e12_names_tab
-  colnames(e12_surv_tab) <- c("Coeff", "SE", "Wald", "P-value")
+  colnames(e12_surv_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
+
+  e12_surv_tab <- round(e12_surv_tab, 4)
+  e12_surv_tab$Pvalue <- ifelse(e12_surv_tab$Pvalue < 0.001, "<0.001", round(e12_surv_tab$Pvalue,3))
+  e12_bas_tab <- round(e12_bas_tab, 4)
+  e12_bas_tab$Pvalue <- ifelse(e12_bas_tab$Pvalue < 0.001, "<0.001", round(e12_bas_tab$Pvalue,3))
 
   if(nrow(e12_bas_tab)!=0){
     cat("\n")

@@ -51,7 +51,7 @@ logR_llh_lsjm_interintraCR <- function(param,hazard_baseline_01, sharedtype_01,
     curseur <- curseur+nb.alpha_01
   }
   ### Association
-  if("current value" %in% sharedtype_01){
+  if("value" %in% sharedtype_01){
     alpha.current_01 <-  param[curseur]
     curseur <- curseur + 1
   }
@@ -88,7 +88,7 @@ logR_llh_lsjm_interintraCR <- function(param,hazard_baseline_01, sharedtype_01,
     curseur <- curseur+nb.alpha_02
   }
   ### Association
-  if("current value" %in% sharedtype_02){
+  if("value" %in% sharedtype_02){
     alpha.current_02 <- param[curseur]
     curseur <- curseur + 1
   }
@@ -220,8 +220,8 @@ logR_llh_lsjm_interintraCR <- function(param,hazard_baseline_01, sharedtype_01,
   ll_glob <- rep(NA, Ind)
 
   # Creations entrees rcpp
-  sharedtype <- c("current value" %in% sharedtype_01, "slope" %in% sharedtype_01, "inter visit variability" %in% sharedtype_01, "intra visit variability" %in% sharedtype_01,
-                  "current value" %in% sharedtype_02, "slope" %in% sharedtype_02, "inter visit variability" %in% sharedtype_02, "intra visit variability" %in% sharedtype_02
+  sharedtype <- c("value" %in% sharedtype_01, "slope" %in% sharedtype_01, "inter visit variability" %in% sharedtype_01, "intra visit variability" %in% sharedtype_01,
+                  "value" %in% sharedtype_02, "slope" %in% sharedtype_02, "inter visit variability" %in% sharedtype_02, "intra visit variability" %in% sharedtype_02
                  )
   HB <- list(hazard_baseline_01, hazard_baseline_02)
   Weibull <- c(shape_01, shape_02)

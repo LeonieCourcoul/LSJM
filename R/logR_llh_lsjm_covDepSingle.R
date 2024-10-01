@@ -50,7 +50,7 @@ logR_llh_lsjm_covDepSingle <- function(param,hazard_baseline_01, sharedtype_01,
     curseur <- curseur+nb.alpha_01
   }
   ### Association
-  if("current value" %in% sharedtype_01){
+  if("value" %in% sharedtype_01){
     alpha.current_01 <-  param[curseur]
     curseur <- curseur + 1
   }
@@ -100,7 +100,7 @@ logR_llh_lsjm_covDepSingle <- function(param,hazard_baseline_01, sharedtype_01,
   ll_glob <- rep(NA, Ind)
 
   # Creations entrees rcpp
-  sharedtype <- c("current value" %in% sharedtype_01, "slope" %in% sharedtype_01, "variability" %in% sharedtype_01
+  sharedtype <- c("value" %in% sharedtype_01, "slope" %in% sharedtype_01, "variability" %in% sharedtype_01
   )
   HB <- list(hazard_baseline_01)
   Weibull <- c(shape_01)

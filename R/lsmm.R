@@ -13,8 +13,8 @@
 #' @param formVar A character : type of variability either 'classic' for a classical linear mixed model or 'cov-dependent' for a subject-specific and covariate-dependent covariable variability or 'inter-intra' for distinguishing inter-visit from intra-visit variability
 #' @param formFixedVar A formula for the fixed effects of the variance predictor if formVar == 'cov-dependent'
 #' @param formRandomVar A formula for the random effects of the variance predictor if formVar == 'cov-dependent'
-#' @param var_inter A logical indicating if the inter-visits variability is subject-specific when formVar = 'inter-intra'
-#' @param var_intra A logical indicating if the intra-visit variability is subject-specific when formVar = 'inter-intra'
+#' @param random_inter A logical indicating if the inter-visits variability is subject-specific when formVar = 'inter-intra'
+#' @param random_intra A logical indicating if the intra-visit variability is subject-specific when formVar = 'inter-intra'
 #' @param formGroupVisit A formula which indicates the visit indicator variable  when formVar = 'inter-intra'
 #' @param correlated_re A logical indicating if the random effects of the trend are correlated to the random effects of the variability when formVar is in c('cov-dependent', 'inter-intra')
 #' @param data.long A dataframe with the longitudinal data
@@ -61,7 +61,7 @@
 #'
 lsmm <- function(formFixed, formRandom, formGroup, timeVar,
                  formVar = "classic", formFixedVar = NULL, formRandomVar = NULL,
-                 var_inter = F, var_intra = F, formGroupVisit = NULL, correlated_re = F,
+                 random_inter = F, random_intra = F, formGroupVisit = NULL, correlated_re = F,
                  data.long,
                  S1 = 500, S2= 5000,
                  nproc = 1, clustertype = "SOCK", maxiter = 100, print.info = FALSE,
@@ -90,10 +90,10 @@ lsmm <- function(formFixed, formRandom, formGroup, timeVar,
   if(formVar == "cov-dependent" && missing(formRandomVar)) stop("The argument formRandomVar must be specified")
   if(formVar == "cov-dependent" && !inherits((formFixedVar),"formula")) stop("The argument formFixedVar must be a formula")
   if(formVar == "cov-dependent" && !inherits((formRandomVar),"formula")) stop("The argument formRandomVar must be a formula")
-  if(formVar == "inter-intra" && missing(var_inter)) stop("The argument var_inter must be specified")
-  if(formVar == "inter-intra" && missing(var_intra)) stop("The argument var_intra must be specified")
-  if(formVar == "inter-intra" && !inherits((var_inter),"logical")) stop("The argument var_inter must be a logical")
-  if(formVar == "inter-intra" && !inherits((var_intra),"logical")) stop("The argument var_intra must be a logical")
+  if(formVar == "inter-intra" && missing(random_inter)) stop("The argument random_inter must be specified")
+  if(formVar == "inter-intra" && missing(random_intra)) stop("The argument random_intra must be specified")
+  if(formVar == "inter-intra" && !inherits((random_inter),"logical")) stop("The argument random_inter must be a logical")
+  if(formVar == "inter-intra" && !inherits((random_intra),"logical")) stop("The argument random_intra must be a logical")
   if(formVar == "inter-intra" && missing(formGroupVisit)) stop("The argument formGroupVisit must be specified")
   if(formVar == "inter-intra" && !inherits((formGroupVisit),"formula")) stop("The argument formGroupVisit must be a formula")
   if(formVar %in% c("cov-dependent", "inter-intra") && !inherits((correlated_re),"logical")) stop("The argument correlated_re must be a logical")
@@ -132,7 +132,7 @@ lsmm <- function(formFixed, formRandom, formGroup, timeVar,
       lsmm.result <- lsmm_covDep(formFixed, formRandom, formGroup, formFixedVar, formRandomVar,correlated_re,data.long, idVar,list.long,time.prog1,S1 , S2,nproc , clustertype, maxiter, print.info ,file, epsa, epsb, epsd, binit)
     }
     else{
-      lsmm.result <- lsmm_interintra(formFixed, formRandom, formGroup, var_inter, var_intra, formGroupVisit,correlated_re , data.long, idVar, list.long, time.prog1,S1 , S2,nproc , clustertype, maxiter, print.info ,file, epsa, epsb, epsd, binit)
+      lsmm.result <- lsmm_interintra(formFixed, formRandom, formGroup, random_inter, random_intra, formGroupVisit,correlated_re , data.long, idVar, list.long, time.prog1,S1 , S2,nproc , clustertype, maxiter, print.info ,file, epsa, epsb, epsd, binit)
     }
   }
   lsmm.result$control$timeVar <- timeVar

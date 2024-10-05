@@ -13,7 +13,7 @@ using namespace std;
 
 arma::vec log_llh_lsjm_covDepIDM_C1bis(arma::vec sharedtype, List HB, arma::vec W_G,
                                         arma::vec nb_points_integral,
-                                        arma::vec alpha_y_slope_var, List alpha_z, List gamma, List fixed_par,
+                                        arma::vec alpha_y_slope_var, List alpha_b, List alpha_z, List gamma, List fixed_par,
                                         arma::mat b_y, arma::mat b_y_slope, arma::mat b_om, arma::vec wk,
                                         arma::mat Z_01, arma::mat Z_02, arma::mat Z_12, arma::mat X_T, arma::mat U_T,
                                         arma::mat Xslope_T, arma::mat Uslope_T, arma::mat X_GK_T, arma::mat U_GK_T, arma::mat Xslope_GK_T,
@@ -41,6 +41,9 @@ arma::vec log_llh_lsjm_covDepIDM_C1bis(arma::vec sharedtype, List HB, arma::vec 
   bool dep_cv_12 = sharedtype[6];
   bool dep_slope_12 = sharedtype[7];
   bool dep_var_12 = sharedtype[8];
+  bool dep_re_01 = sharedtype[9];
+  bool dep_re_02 = sharedtype[10];
+  bool dep_re_12 = sharedtype[11];
   const std::string& hazard_baseline_01 = HB[0];
   const std::string& hazard_baseline_02 = HB[1];
   const std::string& hazard_baseline_12 = HB[2];
@@ -75,6 +78,10 @@ arma::vec log_llh_lsjm_covDepIDM_C1bis(arma::vec sharedtype, List HB, arma::vec 
   arma::vec gamma_01 = gamma[0];
   arma::vec gamma_02 = gamma[1];
   arma::vec gamma_12 = gamma[2];
+
+  arma::vec alpha_b_01 = alpha_b[0];
+  arma::vec alpha_b_02 = alpha_b[1];
+  arma::vec alpha_b_12 = alpha_b[2];
 
   arma::vec beta = fixed_par[0];
   arma::vec beta_slope = fixed_par[1];
@@ -136,6 +143,28 @@ arma::vec log_llh_lsjm_covDepIDM_C1bis(arma::vec sharedtype, List HB, arma::vec 
     arma::mat sigma_GK_L;
     arma::mat sigma_GK_T0;
 
+
+    if(dep_re_01){
+      survLong_01_L_i = survLong_01_L_i + arma::repmat(b_y*alpha_b_01,1,nb_pointsGK);
+      h_01_L_i = h_01_L_i%exp(b_y*alpha_b_01);
+      if(left_trunc){
+        survLong_01_T0_i = survLong_01_T0_i + arma::repmat(b_y*alpha_b_01,1,nb_pointsGK);
+      }
+    }
+
+    if(dep_re_02){
+      survLong_02_L_i = survLong_02_L_i + arma::repmat(b_y*alpha_b_02,1,nb_pointsGK);
+      if(left_trunc){
+        survLong_02_T0_i = survLong_02_T0_i + arma::repmat(b_y*alpha_b_02,1,nb_pointsGK);
+      }
+    }
+
+
+    if(dep_re_12){
+      h_12_T_i = h_12_T_i%exp(b_y*alpha_b_12);
+      survLong_12_L_i = survLong_12_L_i + arma::repmat(b_y*alpha_b_12,1,nb_pointsGK);
+      survLong_12_T_i = survLong_12_T_i + arma::repmat(b_y*alpha_b_12,1,nb_pointsGK);
+    }
 
 
     if(dep_cv_01 || dep_cv_02 || dep_cv_12){

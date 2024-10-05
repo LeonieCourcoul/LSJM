@@ -257,6 +257,10 @@ lsjm_classicCR <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
   if(!is.null(alpha_01)){
     names.param <- c(names.param, paste(name_ZO1,"01",sep = "_"))
   }
+  if("random effects" %in% sharedtype_01){
+    binit_CR <- c(binit_CR, rep(0,nb.e.a))
+    names.param <- c(names.param, paste("re",colnames(U_base),"01",sep = "_"))
+  }
   if("value" %in% sharedtype_01){
     binit_CR <- c(binit_CR, 0)
     names.param <- c(names.param, 'value 01')
@@ -289,6 +293,10 @@ lsjm_classicCR <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
   if(!is.null(alpha_02)){
     names.param <- c(names.param, paste(name_ZO2,"02",sep = "_"))
   }
+  if("random effects" %in% sharedtype_02){
+    binit_CR <- c(binit_CR, rep(0,nb.e.a))
+    names.param <- c(names.param, paste("re",colnames(U_base),"02",sep = "_"))
+  }
   if("value" %in% sharedtype_02){
     binit_CR <- c(binit_CR, 0)
     names.param <- c(names.param, 'value 02')
@@ -298,7 +306,13 @@ lsjm_classicCR <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
     names.param <- c(names.param, 'slope 02')
   }
 
-  binit_CR <- c(binit_CR, Objectlsmm$result_step2$b)
+  if(is.null(Objectlsmm$result_step2)){
+    binit_CR <- c(binit_CR, Objectlsmm$result_step1$b)
+  }
+  else{
+    binit_CR <- c(binit_CR, Objectlsmm$result_step2$b)
+  }
+
 
   Zq1 <- spacefillr::generate_sobol_owen_set(S1,  nb.e.a)
   Zq <- apply(Zq1, 2, qnorm)

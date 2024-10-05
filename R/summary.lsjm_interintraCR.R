@@ -188,12 +188,12 @@ summary.lsjm_interintraCR <- function(object,...)
 
 
   ## Effets fixes trend :
-  beta <- param[curseur:(curseur+x$control$nb.beta-1)]
-  beta.se <- param.se[curseur:(curseur+x$control$nb.beta-1)]
-  beta.name <- param.names[curseur:(curseur+x$control$nb.beta-1)]
-  curseur <- curseur+x$control$nb.beta
+  beta <- param[curseur:(curseur+x$control$Objectlsmm$control$nb.beta-1)]
+  beta.se <- param.se[curseur:(curseur+x$control$Objectlsmm$control$nb.beta-1)]
+  beta.name <- param.names[curseur:(curseur+x$control$Objectlsmm$control$nb.beta-1)]
+  curseur <- curseur+x$control$Objectlsmm$control$nb.beta
   ## Var inter/intra
-  if(x$control$var_inter){
+  if(x$control$Objectlsmm$control$var_inter){
     mu.inter <- param[curseur]
     mu.inter.se <- param.se[curseur]
     mu.inter.name <- param.names[curseur]
@@ -205,7 +205,7 @@ summary.lsjm_interintraCR <- function(object,...)
     sigma.epsilon.inter.name <- param.names[curseur]
     curseur <- curseur +1
   }
-  if(x$control$var_intra){
+  if(x$control$Objectlsmm$control$var_intra){
     mu.intra <- param[curseur]
     mu.intra.se <- param.se[curseur]
     mu.intra.name <- param.names[curseur]
@@ -228,7 +228,7 @@ summary.lsjm_interintraCR <- function(object,...)
       C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
       MatCov <- C1
       MatCov <- as.matrix(MatCov)
-      borne2 <- borne1 + choose(n = x$control$nb.e.a+2, k = 2) + x$control$nb.e.a +2
+      borne2 <- borne1 + choose(n = x$control$Objectlsmm$control$nb.e.a+2, k = 2) + x$control$Objectlsmm$control$nb.e.a +2
       Matcov.name <- unique( unique(gsub("\\*.*", "", gsub("__", "_", param.names[(borne1+1):borne2]))))
     }
     else{
@@ -240,10 +240,10 @@ summary.lsjm_interintraCR <- function(object,...)
       MatCovSig <- as.matrix(C2)
       borne3 <- borne1 + choose(n = 2, k = 2) + 2
 
-      borne4 <- borne3 + choose(n = x$control$nb.e.a, k = 2) + x$control$nb.e.a
+      borne4 <- borne3 + choose(n = x$control$Objectlsmm$control$nb.e.a, k = 2) + x$control$Objectlsmm$control$nb.e.a
       borne5 <- borne4 + choose(n = 2, k = 2) + 2
 
-      Matcovb.name.mat <- matrix(rep(0,(x$control$nb.e.a)**2),nrow=x$control$nb.e.a,ncol=x$control$nb.e.a)
+      Matcovb.name.mat <- matrix(rep(0,(x$control$Objectlsmm$control$nb.e.a)**2),nrow=x$control$Objectlsmm$control$nb.e.a,ncol=x$control$Objectlsmm$control$nb.e.a)
       Matcovb.name.mat[lower.tri(Matcovb.name.mat, diag=T)] <- param.names[(borne3+1):borne4]
       Matcovb.name <- unique(gsub("_Location.*", "", unlist(regmatches(Matcovb.name.mat, gregexpr("\\(?[A-Za-z0-9\\.\\^]+\\)?_Location", Matcovb.name.mat)))))
 
@@ -261,7 +261,7 @@ summary.lsjm_interintraCR <- function(object,...)
         C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
         MatCov <- C1
         MatCov <- as.matrix(MatCov)
-        borne2 <- borne1 + choose(n = x$control$nb.e.a+1, k = 2) + x$control$nb.e.a +1
+        borne2 <- borne1 + choose(n = x$control$Objectlsmm$control$nb.e.a+1, k = 2) + x$control$Objectlsmm$control$nb.e.a +1
         Matcov.name <- unique( unique(gsub("\\*.*", "", gsub("__", "_", param.names[(borne1+1):borne2]))))
       }
       else{
@@ -274,10 +274,10 @@ summary.lsjm_interintraCR <- function(object,...)
 
         borne3 <- borne1 + choose(n = 1, k = 2) + 1
 
-        borne4 <- borne3 + choose(n = x$control$nb.e.a, k = 2) + x$control$nb.e.a
+        borne4 <- borne3 + choose(n = x$control$Objectlsmm$control$nb.e.a, k = 2) + x$control$Objectlsmm$control$nb.e.a
         borne5 <- borne4 + choose(n = 1, k = 2) + 1
 
-        Matcovb.name.mat <- matrix(rep(0,(x$control$nb.e.a)**2),nrow=x$control$nb.e.a,ncol=x$control$nb.e.a)
+        Matcovb.name.mat <- matrix(rep(0,(x$control$Objectlsmm$control$nb.e.a)**2),nrow=x$control$Objectlsmm$control$nb.e.a,ncol=x$control$Objectlsmm$control$nb.e.a)
         Matcovb.name.mat[lower.tri(Matcovb.name.mat, diag=T)] <- param.names[(borne3+1):borne4]
         Matcovb.name <- unique(gsub("_Location.*", "", unlist(regmatches(Matcovb.name.mat, gregexpr("\\(?[A-Za-z0-9\\.\\^]+\\)?_Location", Matcovb.name.mat)))))
 
@@ -295,7 +295,7 @@ summary.lsjm_interintraCR <- function(object,...)
           C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
           MatCov <- C1
           MatCov <- as.matrix(MatCov)
-          borne2 <- borne1 + choose(n = x$control$nb.e.a+1, k = 2) + x$control$nb.e.a +1
+          borne2 <- borne1 + choose(n = x$control$Objectlsmm$control$nb.e.a+1, k = 2) + x$control$Objectlsmm$control$nb.e.a +1
           Matcov.name <- unique( unique(gsub("\\*.*", "", gsub("__", "_", param.names[(borne1+1):borne2]))))
         }
         else{
@@ -308,10 +308,10 @@ summary.lsjm_interintraCR <- function(object,...)
 
           borne3 <- borne1 + choose(n = 1, k = 2) + 1
 
-          borne4 <- borne3 + choose(n = x$control$nb.e.a, k = 2) + x$control$nb.e.a
+          borne4 <- borne3 + choose(n = x$control$Objectlsmm$control$nb.e.a, k = 2) + x$control$Objectlsmm$control$nb.e.a
           borne5 <- borne4 + choose(n = 1, k = 2) + 1
 
-          Matcovb.name.mat <- matrix(rep(0,(x$control$nb.e.a)**2),nrow=x$control$nb.e.a,ncol=x$control$nb.e.a)
+          Matcovb.name.mat <- matrix(rep(0,(x$control$Objectlsmm$control$nb.e.a)**2),nrow=x$control$Objectlsmm$control$nb.e.a,ncol=x$control$Objectlsmm$control$nb.e.a)
           Matcovb.name.mat[lower.tri(Matcovb.name.mat, diag=T)] <- param.names[(borne3+1):borne4]
           Matcovb.name <- unique(gsub("_Location.*", "", unlist(regmatches(Matcovb.name.mat, gregexpr("\\(?[A-Za-z0-9\\.\\^]+\\)?_Location", Matcovb.name.mat)))))
 
@@ -330,7 +330,7 @@ summary.lsjm_interintraCR <- function(object,...)
       MatCovb <- as.matrix(MatCovb)
       MatCov <- C1
       MatCov <- as.matrix(MatCov)
-      borne2 <- borne1 + choose(n = x$control$nb.e.a+0, k = 2) + x$control$nb.e.a +0
+      borne2 <- borne1 + choose(n = x$control$Objectlsmm$control$nb.e.a+0, k = 2) + x$control$Objectlsmm$control$nb.e.a +0
       Matcovb.name <- unique( unique(gsub("\\*.*", "", gsub("__", "_", param.names[(borne1+1):borne2]))))
     }
 
@@ -375,7 +375,7 @@ summary.lsjm_interintraCR <- function(object,...)
       cat("\n")
   }
 
-    if(!x$control$var_intra){
+    if(!x$control$Objectlsmm$control$var_intra){
       cat("     Residual standard error for constant intra-visit variability:")
       var_intra <- matrix(nrow = length(1), ncol = 4)
       var_intra[,1] <- sigma.epsilon.intra
@@ -393,7 +393,7 @@ summary.lsjm_interintraCR <- function(object,...)
     }
 
 
-    if(x$control$var_inter && x$control$var_intra){
+    if(x$control$Objectlsmm$control$var_inter && x$control$Objectlsmm$control$var_intra){
       cat("     Fixed intercept of the scale part(inter/intra variabilities):")
       var_inter <- matrix(nrow = length(1), ncol = 4)
       var_inter[,1] <- mu.inter
@@ -418,7 +418,7 @@ summary.lsjm_interintraCR <- function(object,...)
       cat("\n")
     }
     else{
-      if(x$control$var_inter){
+      if(x$control$Objectlsmm$control$var_inter){
         cat("     Fixed intercept of the scale part (inter variability):")
         var_inter <- matrix(nrow = length(1), ncol = 4)
         var_inter[,1] <- mu.inter
@@ -434,7 +434,7 @@ summary.lsjm_interintraCR <- function(object,...)
         print(var_inter)
         cat("\n")
       }
-      if(x$control$var_intra){
+      if(x$control$Objectlsmm$control$var_intra){
         cat("     Fixed intercept of the scale part (inter variability):")
         var_intra <- matrix(nrow = length(1), ncol = 4)
         var_intra[,1] <- mu.intra
@@ -458,7 +458,7 @@ summary.lsjm_interintraCR <- function(object,...)
 
     cat("\n")
 
-    if(x$control$correlated_re){
+    if(x$control$Objectlsmm$control$correlated_re){
       cat("     Covariance matrix of the random effects:")
       cat("\n")
       Cov <- MatCov%*%t(MatCov)
@@ -476,7 +476,7 @@ summary.lsjm_interintraCR <- function(object,...)
       print(Covb)
       cat("\n")
 
-      if(x$control$var_inter || x$control$var_intra){
+      if(x$control$Objectlsmm$control$var_inter || x$control$Objectlsmm$control$var_intra){
         cat("     Covariance matrix of the random effects of the variance:")
         cat("\n")
         CovSig <- MatCovSig%*%t(MatCovSig)
@@ -495,6 +495,8 @@ summary.lsjm_interintraCR <- function(object,...)
   e1_var_tab <- NULL
   e1_share_random_tab <- NULL
   e1_share_current_tab <- NULL
+  e1_share_intravar_tab <- NULL
+  e1_share_intervar_tab <- NULL
   e1_share_slope_tab <- NULL
   e1_alpha_tab <- NULL
   e1_names_tab <- c()
@@ -603,6 +605,7 @@ summary.lsjm_interintraCR <- function(object,...)
   e1_surv_tab <- as.data.frame(e1_surv_tab)
   e1_surv_tab <- round(e1_surv_tab, 4)
   e1_surv_tab$Pvalue <- ifelse(e1_surv_tab$Pvalue < 0.001, "<0.001", round(e1_surv_tab$Pvalue,3))
+  e1_bas_tab <- as.data.frame(e1_bas_tab)
   e1_bas_tab <- round(e1_bas_tab, 4)
   e1_bas_tab$Pvalue <- ifelse(e1_bas_tab$Pvalue < 0.001, "<0.001", round(e1_bas_tab$Pvalue,3))
 
@@ -622,6 +625,8 @@ summary.lsjm_interintraCR <- function(object,...)
 
   cat("    Transition 0-2:")
   e2_var_tab <- NULL
+  e2_share_intravar_tab <- NULL
+  e2_share_intervar_tab <- NULL
   e2_share_random_tab <- NULL
   e2_share_current_tab <- NULL
   e2_share_slope_tab <- NULL
@@ -737,6 +742,7 @@ summary.lsjm_interintraCR <- function(object,...)
   e2_surv_tab <- as.data.frame(e2_surv_tab)
   e2_surv_tab <- round(e2_surv_tab, 4)
   e2_surv_tab$Pvalue <- ifelse(e2_surv_tab$Pvalue < 0.001, "<0.001", round(e2_surv_tab$Pvalue,3))
+  e2_bas_tab <- as.data.frame(e2_bas_tab)
   e2_bas_tab <- round(e2_bas_tab, 4)
   e2_bas_tab$Pvalue <- ifelse(e2_bas_tab$Pvalue < 0.001, "<0.001", round(e2_bas_tab$Pvalue,3))
 

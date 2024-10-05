@@ -10,9 +10,9 @@
 #' @param formSurv_01 one-sided formula providing on the right-side the regression variable of the risk function for transition 0-1
 #' @param formSurv_02 one-sided formula providing on the right-side the regression variable of the risk function for transition 0-2
 #' @param formSurv_12 one-sided formula providing on the right-side the regression variable of the risk function for transition 1-2
-#' @param sharedtype_01 a vector indicating the form(s) of the dependence structure. If the longitudinal model estimated is a standard mixed model, it should be included in c("value", "slope"). If it is a location-scale mixed model with a covariate and time-dependent variability one can add "current variability" and if it a model distinguishing within from between visits variabilities one can add c("inter visit variability", "intra visit variability") if there are subject-specifics.
-#' @param sharedtype_02 a vector indicating the form(s) of the dependence structure. If the longitudinal model estimated is a standard mixed model, it should be included in c("value", "slope"). If it is a location-scale mixed model with a covariate and time-dependent variability one can add "current variability" and if it a model distinguishing within from between visits variabilities one can add c("inter visit variability", "intra visit variability") if there are subject-specifics.
-#' @param sharedtype_12 a vector indicating the form(s) of the dependence structure. If the longitudinal model estimated is a standard mixed model, it should be included in c("value", "slope"). If it is a location-scale mixed model with a covariate and time-dependent variability one can add "current variability" and if it a model distinguishing within from between visits variabilities one can add c("inter visit variability", "intra visit variability") if there are subject-specifics.
+#' @param sharedtype_01 a vector indicating the form(s) of the dependence structure. If the longitudinal model estimated is a standard mixed model, it should be included in c("value", "slope"). If it is a location-scale mixed model with a covariate and time-dependent variability one can add "current variability" and if it a model distinguishing within from between visits variabilities one can add c("variability inter", "variability intra") if there are subject-specifics.
+#' @param sharedtype_02 a vector indicating the form(s) of the dependence structure. If the longitudinal model estimated is a standard mixed model, it should be included in c("value", "slope"). If it is a location-scale mixed model with a covariate and time-dependent variability one can add "current variability" and if it a model distinguishing within from between visits variabilities one can add c("variability inter", "variability intra") if there are subject-specifics.
+#' @param sharedtype_12 a vector indicating the form(s) of the dependence structure. If the longitudinal model estimated is a standard mixed model, it should be included in c("value", "slope"). If it is a location-scale mixed model with a covariate and time-dependent variability one can add "current variability" and if it a model distinguishing within from between visits variabilities one can add c("variability inter", "variability intra") if there are subject-specifics.
 #' @param hazardBase_01 a character providing the baseline hazard function, which is in c("Exponential", "Weibull", "Gompertz", "Splines")} of the risk function for transition 0-1
 #' @param hazardBase_02 a character providing the baseline hazard function, which is in c("Exponential", "Weibull", "Gompertz", "Splines")} of the risk function for transition 0-2
 #' @param hazardBase_12 a character providing the baseline hazard function, which is in c("Exponential", "Weibull", "Gompertz", "Splines")} of the risk function for transition 1-2
@@ -115,9 +115,9 @@ lsjm <- function(Objectlsmm,  survival_type = c('Single', 'CR', 'IDM'),
 
 
   if(formVar == 'classic'){
-    if(!all(sharedtype_01 %in% c("value", "slope"))) stop("The argument of sharedtype_01 must be in c('value', 'slope')")
-    if(survival_type %in% c('CR', 'IDM') && !all(sharedtype_02 %in% c("value", "slope"))) stop("The argument of sharedtype_02 must be in c('value', 'slope')")
-    if(survival_type %in% c('IDM') && !all(sharedtype_12 %in% c("value", "slope"))) stop("The argument of sharedtype_12 must be in c('value', 'slope')")
+    if(!all(sharedtype_01 %in% c("value", "slope", "random effects"))) stop("The argument of sharedtype_01 must be in c('value', 'slope', 'random effects')")
+    if(survival_type %in% c('CR', 'IDM') && !all(sharedtype_02 %in% c("value", "slope", "random effects"))) stop("The argument of sharedtype_02 must be in c('value', 'slope', 'random effects')")
+    if(survival_type %in% c('IDM') && !all(sharedtype_12 %in% c("value", "slope", "random effects"))) stop("The argument of sharedtype_12 must be in c('value', 'slope', 'random effects')")
     if(survival_type == 'Single'){
       result <- lsjm_classicSingle(Objectlsmm, Time, deltas, hazardBase_01,  nb.knots.splines,
                                    formSurv_01,   nb_pointsGK, sharedtype_01, formSlopeFixed, formSlopeRandom,
@@ -178,27 +178,27 @@ lsjm <- function(Objectlsmm,  survival_type = c('Single', 'CR', 'IDM'),
     }
     else{
       if(Objectlsmm$control$var_inter && Objectlsmm$control$var_intra){
-        if(!all(sharedtype_01 %in% c("value", "slope", "inter visit variability", "intra visit variability"))) stop("The argument of sharedtype_01 must be in c('value', 'slope', 'inter visit variability', 'intra visit variability')")
-        if(survival_type %in% c('CR', 'IDM') && !all(sharedtype_02 %in% c("value", "slope", "inter visit variability", "intra visit variability"))) stop("The argument of sharedtype_02 must be in c('value', 'slope', 'inter visit variability', 'intra visit variability')")
-        if(survival_type %in% c('IDM') && !all(sharedtype_12 %in% c("value", "slope", "inter visit variability", "intra visit variability"))) stop("The argument of sharedtype_12 must be in c('value', 'slope', 'inter visit variability', 'intra visit variability')")
+        if(!all(sharedtype_01 %in% c("value", "slope", "variability inter", "variability intra", "random effects"))) stop("The argument of sharedtype_01 must be in c('value', 'slope', 'variability inter', 'variability intra', 'random effects')")
+        if(survival_type %in% c('CR', 'IDM') && !all(sharedtype_02 %in% c("value", "slope", "variability inter", "variability intra", "random effects"))) stop("The argument of sharedtype_02 must be in c('value', 'slope', 'variability inter', 'variability intra', 'random effects')")
+        if(survival_type %in% c('IDM') && !all(sharedtype_12 %in% c("value", "slope", "variability inter", "variability intra", "random effects"))) stop("The argument of sharedtype_12 must be in c('value', 'slope', 'variability inter', 'variability intra', 'random effects')")
       }
       else{
         if(Objectlsmm$control$var_inter){
-          if(!all(sharedtype_01 %in% c("value", "slope", "inter visit variability"))) stop("The argument of sharedtype_01 must be in c('value', 'slope', 'inter visit variability')")
-          if(survival_type %in% c('CR', 'IDM') && !all(sharedtype_02 %in% c("value", "slope", "inter visit variability"))) stop("The argument of sharedtype_02 must be in c('value', 'slope', 'inter visit variability')")
-          if(survival_type %in% c('IDM') && !all(sharedtype_12 %in% c("value", "slope", "inter visit variability"))) stop("The argument of sharedtype_12 must be in c('value', 'slope', 'inter visit variability')")
+          if(!all(sharedtype_01 %in% c("value", "slope", "variability inter", "random effects"))) stop("The argument of sharedtype_01 must be in c('value', 'slope', 'variability inter', 'random effects')")
+          if(survival_type %in% c('CR', 'IDM') && !all(sharedtype_02 %in% c("value", "slope", "variability inter", "random effects"))) stop("The argument of sharedtype_02 must be in c('value', 'slope', 'variability inter', 'random effects')")
+          if(survival_type %in% c('IDM') && !all(sharedtype_12 %in% c("value", "slope", "variability inter", "random effects"))) stop("The argument of sharedtype_12 must be in c('value', 'slope', 'variability inter', 'random effects')")
         }
         else{
           if(Objectlsmm$control$var_intra){
-            if(!all(sharedtype_01 %in% c("value", "slope", "intra visit variability"))) stop("The argument of sharedtype_01 must be in c('value', 'slope', 'intra visit variability')")
-            if(survival_type %in% c('CR', 'IDM') && !all(sharedtype_02 %in% c("value", "slope", "intra visit variability"))) stop("The argument of sharedtype_02 must be in c('value', 'slope', 'intra visit variability')")
-            if(survival_type %in% c('IDM') && !all(sharedtype_12 %in% c("value", "slope", "intra visit variability"))) stop("The argument of sharedtype_12 must be in c('value', 'slope', 'intra visit variability')")
+            if(!all(sharedtype_01 %in% c("value", "slope", "variability intra", "random effects"))) stop("The argument of sharedtype_01 must be in c('value', 'slope', 'variability intra', 'random effects')")
+            if(survival_type %in% c('CR', 'IDM') && !all(sharedtype_02 %in% c("value", "slope", "variability intra", "random effects"))) stop("The argument of sharedtype_02 must be in c('value', 'slope', 'variability intra', 'random effects')")
+            if(survival_type %in% c('IDM') && !all(sharedtype_12 %in% c("value", "slope", "variability intra", "random effects"))) stop("The argument of sharedtype_12 must be in c('value', 'slope', 'variability intra', 'random effects')")
           }
           else{
             if(Objectlsmm$control$var_intra){
-              if(!all(sharedtype_01 %in% c("value", "slope"))) stop("The argument of sharedtype_01 must be in c('value', 'slope')")
-              if(survival_type %in% c('CR', 'IDM') && !all(sharedtype_02 %in% c("value", "slope"))) stop("The argument of sharedtype_02 must be in c('value', 'slope')")
-              if(survival_type %in% c('IDM') && !all(sharedtype_12 %in% c("value", "slope"))) stop("The argument of sharedtype_12 must be in c('value', 'slope')")
+              if(!all(sharedtype_01 %in% c("value", "slope", "random effects"))) stop("The argument of sharedtype_01 must be in c('value', 'slope', 'random effects')")
+              if(survival_type %in% c('CR', 'IDM') && !all(sharedtype_02 %in% c("value", "slope", "random effects"))) stop("The argument of sharedtype_02 must be in c('value', 'slope', 'random effects')")
+              if(survival_type %in% c('IDM') && !all(sharedtype_12 %in% c("value", "slope", "random effects"))) stop("The argument of sharedtype_12 must be in c('value', 'slope', 'random effects')")
             }
           }
         }

@@ -13,7 +13,7 @@ using namespace std;
 
 double re_lsjm_classicCR_cpp(arma::vec sharedtype, List HB, arma::vec Gompertz, arma::vec Weibull,
                                    double nb_pointsGK ,
-                                   arma::vec alpha_y_slope, List alpha_z, List gamma, arma::vec beta, arma::vec beta_slope,
+                                   arma::vec alpha_y_slope, arma::vec alpha_b_01, arma::vec alpha_b_02, List alpha_z, List gamma, arma::vec beta, arma::vec beta_slope,
                                    arma::mat b_y, arma::mat b_y_slope, arma::vec wk, double sigma_epsilon,
                                    int delta1_i, int delta2_i, arma::rowvec Z_01_i, arma::rowvec Z_02_i, arma::rowvec X_T_i, arma::rowvec U_T_i,
                                    arma::rowvec Xslope_T_i, arma::rowvec Uslope_T_i, arma::mat X_GK_T_i, arma::mat U_GK_T_i, arma::mat Xslope_GK_T_i,
@@ -31,6 +31,9 @@ double re_lsjm_classicCR_cpp(arma::vec sharedtype, List HB, arma::vec Gompertz, 
 
   bool dep_cv_02 = sharedtype[2];
   bool dep_slope_02 = sharedtype[3];
+
+  bool dep_re_01 = sharedtype[4];
+  bool dep_re_02 = sharedtype[5];
 
   const std::string& hazard_baseline_01 = HB[0];
   const std::string& hazard_baseline_02 = HB[1];
@@ -72,6 +75,21 @@ double re_lsjm_classicCR_cpp(arma::vec sharedtype, List HB, arma::vec Gompertz, 
   arma::mat current_GK_T0;
   arma::mat slope_GK_T0;
 
+  if(dep_re_01){
+    h_01_T_i = h_01_T_i%exp(alpha_b_01*b_y);
+    survLong_01_T_i = survLong_01_T_i + arma::repmat(alpha_b_01*b_y,1,nb_pointsGK);
+    if(left_trunc){
+      survLong_01_T0_i = survLong_01_T0_i + arma::repmat(alpha_b_01*b_y,1,nb_pointsGK);
+    }
+  }
+
+  if(dep_re_02){
+    h_02_T_i = h_02_T_i%exp(alpha_b_02*b_y);
+    survLong_02_T_i = survLong_02_T_i + arma::repmat(alpha_b_02*b_y,1,nb_pointsGK);
+    if(left_trunc){
+      survLong_02_T0_i = survLong_02_T0_i + arma::repmat(alpha_b_02*b_y,1,nb_pointsGK);
+    }
+  }
 
   if(dep_cv_01 || dep_cv_02){
     CV_T = arma::dot(beta, X_T_i) + U_T_i*b_y;
@@ -228,7 +246,6 @@ double re_lsjm_classicCR_cpp(arma::vec sharedtype, List HB, arma::vec Gompertz, 
 
 
   arma::vec SurvTotCase2 =  -A_01_T_i - A_02_T_i + log(pow(h_02_T_i,delta2_i))+ log(pow(h_01_T_i,delta1_i));
-
   // Rcout << "The value of v : \n" << 8 << "\n";
   arma::vec f_Y_b_sigma(1,fill::zeros);
   arma::vec CV;
@@ -236,10 +253,9 @@ double re_lsjm_classicCR_cpp(arma::vec sharedtype, List HB, arma::vec Gompertz, 
   double sigma_long;
   sigma_long = sigma_epsilon;
   for(int k=0; k<n_rows_X; k++){
-    CV = dot(beta,X_base_i.row(k)) + b_y*U_base_i.row(k).t();
+    CV = dot(beta,X_base_i.row(k)) + U_base_i.row(k)*b_y;
     f_Y_b_sigma = f_Y_b_sigma + log(1.0 / (sqrt(2.0*M_PI)*sigma_long)) - 0.5*pow((y_i(k)-CV)/sigma_long,2);
   }
-
 
 
   // Rcout << "The value of v : \n" << 9 << "\n";

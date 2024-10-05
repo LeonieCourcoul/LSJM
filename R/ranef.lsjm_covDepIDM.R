@@ -5,9 +5,21 @@
 ranef.lsjm_covDepIDM <- function(object,...){
 
   x <- object
+  if(!inherits(x, "lsjm_covDepIDM")) stop("use only \"lsjm_covDepIDM\" objects")
+  if(x$result_step1$istop != 1|| (!is.null(x$result_step2) && x$result_step2$istop !=1)){
+    stop("The model didn't reach convergence.")
+  }
+  if(is.null(x$result_step2)){
+    param <- x$result_step1$b
+  }
+  else{
+    param <- x$result_step2$b
+  }
+
+  x <- object
   param <- x$result_step2$b
   cv.Pred <- c()
-  x$control$nproc <- 1
+  #x$control$nproc <- 1
 
 
   shape_01 <- 0; shape_02 <- 0; shape_12 <- 0
@@ -16,6 +28,12 @@ ranef.lsjm_covDepIDM <- function(object,...){
   alpha_01 <- c(0); alpha_02 <- c(0); alpha_12<- c(0);
   gamma_01 <- c(0); gamma_02 <- c(0); gamma_12 <- c(0);
   beta_slope <- c(0);  omega <- c(0); alpha.var_01 <- 0; alpha.var_02 <- 0; alpha.var_12 <- 0
+  alpha_b_01 <- c(0); alpha_b_02 <- c(0); alpha_b_12 <- c(0)
+
+  random.effects.PredictionsCase1 <- NULL
+  random.effects.PredictionsCase2 <- NULL
+  random.effects.PredictionsCase1bis <- NULL
+  random.effects.PredictionsCase3 <-NULL
 
   #Manage parameter
   curseur <- 1
@@ -42,7 +60,11 @@ ranef.lsjm_covDepIDM <- function(object,...){
     curseur <- curseur+nb.alpha_01
   }
   ### Association
-  if("current value" %in% x$control$sharedtype_01){
+  if("random effects" %in% x$control$sharedtype_01){
+    alpha_b_01 <- param[curseur:(curseur+x$control$Objectlsmm$control$nb.e.a-1)]
+    curseur <- curseur + x$control$Objectlsmm$control$nb.e.a
+  }
+  if("value" %in% x$control$sharedtype_01){
     alpha.current_01 <-  param[curseur]
     curseur <- curseur + 1
   }
@@ -76,7 +98,11 @@ ranef.lsjm_covDepIDM <- function(object,...){
     curseur <- curseur+nb.alpha_02
   }
   ### Association
-  if("current value" %in% x$control$sharedtype_02){
+  if("random effects" %in% x$control$sharedtype_02){
+    alpha_b_02 <- param[curseur:(curseur+x$control$Objectlsmm$control$nb.e.a-1)]
+    curseur <- curseur + x$control$Objectlsmm$control$nb.e.a
+  }
+  if("value" %in% x$control$sharedtype_02){
     alpha.current_02 <- param[curseur]
     curseur <- curseur + 1
   }
@@ -110,7 +136,11 @@ ranef.lsjm_covDepIDM <- function(object,...){
     curseur <- curseur+nb.alpha_12
   }
   ### Association
-  if("current value" %in%  x$control$sharedtype_12){
+  if("random effects" %in% x$control$sharedtype_12){
+    alpha_b_12 <- param[curseur:(curseur+x$control$Objectlsmm$control$nb.e.a-1)]
+    curseur <- curseur + x$control$Objectlsmm$control$nb.e.a
+  }
+  if("value" %in%  x$control$sharedtype_12){
     alpha.current_12 <- param[curseur]
     curseur <- curseur + 1
   }
@@ -133,7 +163,7 @@ ranef.lsjm_covDepIDM <- function(object,...){
   omega <- param[(curseur):(curseur+x$control$Objectlsmm$control$nb.omega-1)]
   curseur <- curseur+x$control$Objectlsmm$control$nb.omega
   if(x$control$Objectlsmm$control$correlated_re){
-    C1 <- matrix(rep(0,(x$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma)**2),nrow=x$control$Objectlsmm$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma,ncol=x$control$Objectlsmm$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma)
+    C1 <- matrix(rep(0,(x$control$Objectlsmm$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma)**2),nrow=x$control$Objectlsmm$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma,ncol=x$control$Objectlsmm$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma)
     C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
     Cholesky <- C1
     Cholesky <- as.matrix(Cholesky)
@@ -154,9 +184,10 @@ ranef.lsjm_covDepIDM <- function(object,...){
 
   MatCov <- Cholesky%*%t(Cholesky)
 
-  sharedtype <- c("current value" %in% x$control$sharedtype_01, "slope" %in% x$control$sharedtype_01, "variability" %in% x$control$sharedtype_01,
-                  "current value" %in% x$control$sharedtype_02, "slope" %in% x$control$sharedtype_02, "variability" %in% x$control$sharedtype_02,
-                  "current value" %in% x$control$sharedtype_12, "slope" %in% x$control$sharedtype_12, "variability" %in% x$control$sharedtype_12)
+  sharedtype <- c("value" %in% x$control$sharedtype_01, "slope" %in% x$control$sharedtype_01, "variability" %in% x$control$sharedtype_01,
+                  "value" %in% x$control$sharedtype_02, "slope" %in% x$control$sharedtype_02, "variability" %in% x$control$sharedtype_02,
+                  "value" %in% x$control$sharedtype_12, "slope" %in% x$control$sharedtype_12, "variability" %in% x$control$sharedtype_12,
+                  "random effects" %in% x$control$sharedtype_01, "random effects" %in% x$control$sharedtype_02, "random effects" %in% x$control$sharedtype_12)
   HB <- list(x$control$hazard_baseline_01, x$control$hazard_baseline_02, x$control$hazard_baseline_12, x$control$left_trunc)
   W_G <- c(shape_01, shape_02, shape_12, Gompertz.1_01, Gompertz.2_01, Gompertz.1_02, Gompertz.2_02, Gompertz.1_12, Gompertz.2_12)
   alpha_y_slope_var <- c(alpha.current_01,alpha.current_02,alpha.current_12, alpha.slope_01,alpha.slope_02,alpha.slope_12,
@@ -170,7 +201,6 @@ ranef.lsjm_covDepIDM <- function(object,...){
   # => il faut appeler marqlevalg individu par individu !
   #1. On associe chaque individu à un cas
   data.long <-x$control$Objectlsmm$control$data.long
-  data.long <- x$control$Objectlsmm$control$data.long
   Time_T <- x$control$Time[["Time_T"]]
   data.long$Time_T <- data.long[all.vars(Time_T)][,1]
   Time_R <- x$control$Time[["Time_R"]]
@@ -216,7 +246,7 @@ ranef.lsjm_covDepIDM <- function(object,...){
   O_GK_T0 = as.matrix(0); W_GK_T0 = as.matrix(0);
   Bs_T0_01 = as.matrix(0); Bs_T0_02 = as.matrix(0); X_0_LR = as.matrix(0); U_0_LR = as.matrix(0); Xslope_0_LR = as.matrix(0);
   Uslope_0_LR = as.matrix(0);
-  O_0_LR = as.matrix(0); W_0_LR = as.matrix(0);
+  O_0_LR = as.matrix(0); W_0_LR = as.matrix(0); Time_T0_i <- c(0);
   Bs_0_LR_01 <- as.matrix(0);Bs_0_LR_02 <- as.matrix(0); Bs_0_LR_12 <- as.matrix(0)
   if(length(id.Case1)>0){
 
@@ -243,7 +273,7 @@ ranef.lsjm_covDepIDM <- function(object,...){
       st_T0 <- list.GK_T0$st
       Time_T0 <- data.id.Case1$Time_T0
     }
-    if(("current value" %in% x$control$sharedtype_01) || ("current value" %in% x$control$sharedtype_02) || ("current value" %in% x$control$sharedtype_12)){
+    if(("value" %in% x$control$sharedtype_01) || ("value" %in% x$control$sharedtype_02) || ("value" %in% x$control$sharedtype_12)){
       list.data_T <- data.time(data.id.Case1, data.id.Case1$Time_T, x$control$Objectlsmm$control$formFixed, x$control$Objectlsmm$control$formRandom,x$control$Objectlsmm$control$timeVar)
       list.data.GK_T <- data.time(list.GK_T$data.id2, c(t(st_T)),x$control$Objectlsmm$control$formFixed, x$control$Objectlsmm$control$formRandom,x$control$Objectlsmm$control$timeVar)
       list.data.GK_L_R <- data.time(list.GK_L_R$data.id2, c(t(st_L_R)),x$control$Objectlsmm$control$formFixed, x$control$Objectlsmm$control$formRandom,x$control$Objectlsmm$control$timeVar)
@@ -330,7 +360,7 @@ ranef.lsjm_covDepIDM <- function(object,...){
     st_0_LR <- c()
     X_GK_0_LR <- c()
     U_GK_0_LR <- c()
-    if(("current value" %in% x$control$sharedtype_01) || ("current value" %in% x$control$sharedtype_02) || ("current value" %in% x$control$sharedtype_12)){
+    if(("value" %in% x$control$sharedtype_01) || ("value" %in% x$control$sharedtype_02) || ("value" %in% x$control$sharedtype_12)){
       X_GK_0_LR <- c()
       U_GK_0_LR <- c()
     }
@@ -359,7 +389,7 @@ ranef.lsjm_covDepIDM <- function(object,...){
         list.GK_0_stLR <- data.GaussKronrod(data.id.integrale, a = 0, b = st.integrale, k = x$control$nb_pointsGK)
         st_0_stLR_i <- list.GK_0_stLR$st
         st_0_LR <- rbind(st_0_LR, st_0_stLR_i)
-        if(("current value" %in% x$control$sharedtype_01) || ("current value" %in% x$control$sharedtype_02) || ("current value" %in% x$control$sharedtype_12)){
+        if(("value" %in% x$control$sharedtype_01) || ("value" %in% x$control$sharedtype_02) || ("value" %in% x$control$sharedtype_12)){
           list.data.GK_0_stLR <- data.time(list.GK_0_stLR$data.id2, c(t(st_0_stLR_i)),x$control$Objectlsmm$control$formFixed, x$control$Objectlsmm$control$formRandom,x$control$Objectlsmm$control$timeVar)
           X_0_stLR_i <- list.data.GK_0_stLR$Xtime; U_0_stLR_i <- list.data.GK_0_stLR$Utime
           X_GK_0_LR <- rbind(X_GK_0_LR,X_0_stLR_i); U_GK_0_LR <- rbind(U_GK_0_LR,U_0_stLR_i)
@@ -404,12 +434,13 @@ ranef.lsjm_covDepIDM <- function(object,...){
     st_T_i <- c(0); st_T0_i <- c(0)
 
     binit <- matrix(0, nrow = 1, ncol = x$control$Objectlsmm$control$nb.e.a + x$control$Objectlsmm$control$nb.e.a.sigma)
-    for(id.Case1_boucle in 1:nbCase1){
+    random.effects.PredictionsCase1 <- foreach(id.Case1_boucle = 1:length(unique(data.long.Case1$id)),
+                                          .combine = 'rbind', .packages = c("mvtnorm", "marqLevAlg")) %dopar% {
       delta2_i <- data.id.Case1$delta2[id.Case1_boucle]
       Z_01_i <- Z_01[id.Case1_boucle,]
       Z_02_i <- Z_02[id.Case1_boucle,]
       Z_12_i <- Z_12[id.Case1_boucle,]
-      if(("current value" %in% x$control$sharedtype_01) || ("current value" %in% x$control$sharedtype_02) || ("current value" %in% x$control$sharedtype_12)){
+      if(("value" %in% x$control$sharedtype_01) || ("value" %in% x$control$sharedtype_02) || ("value" %in% x$control$sharedtype_12)){
         X_T_i <- X_T[id.Case1_boucle,]
         U_T_i <- U_T[id.Case1_boucle,]
         X_GK_T_i <- as.matrix(X_GK_T[(x$control$nb_pointsGK*(id.Case1_boucle-1)+1):(x$control$nb_pointsGK*(id.Case1_boucle)),])
@@ -499,7 +530,8 @@ ranef.lsjm_covDepIDM <- function(object,...){
       random.effects_i <- marqLevAlg(binit, fn = re_lsjm_covDepIDMCase1, minimize = FALSE, nb.e.a = x$control$Objectlsmm$control$nb.e.a,
                                      nb.e.a.sigma = x$control$Objectlsmm$control$nb.e.a.sigma, Sigma.re = MatCov,
                                      sharedtype = sharedtype, HB = HB, W_G = W_G , nb_pointsGK = x$control$nb_pointsGK,
-                                     alpha_y_slope_var = alpha_y_slope_var, alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope, omega = omega,
+                                     alpha_y_slope_var = alpha_y_slope_var, alpha_b_01 = alpha_b_01, alpha_b_02 = alpha_b_02,alpha_b_12 = alpha_b_12,
+                                     alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope, omega = omega,
                                      wk = wk, rep_wk = rep_wk,
                                      delta2_i = delta2_i, Z_01_i=Z_01_i, Z_02_i=Z_02_i, Z_12_i=Z_12_i,
                                      X_T_i=X_T_i,  U_T_i=U_T_i,Xslope_T_i =Xslope_T_i ,  Uslope_T_i = Uslope_T_i, O_T_i=O_T_i,  W_T_i=W_T_i,
@@ -524,7 +556,8 @@ ranef.lsjm_covDepIDM <- function(object,...){
         random.effects_i <- marqLevAlg(binit, fn = re_lsjm_covDepIDMCase1, minimize = FALSE, nb.e.a = x$control$Objectlsmm$control$nb.e.a,
                                        nb.e.a.sigma = x$control$Objectlsmm$control$nb.e.a.sigma, Sigma.re = MatCov,
                                        sharedtype = sharedtype, HB = HB, W_G = W_G , nb_pointsGK = x$control$nb_pointsGK,
-                                       alpha_y_slope_var = alpha_y_slope_var, alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope,omega = omega,
+                                       alpha_y_slope_var = alpha_y_slope_var, alpha_b_01 = alpha_b_01, alpha_b_02 = alpha_b_02,alpha_b_12 = alpha_b_12,
+                                       alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope,omega = omega,
                                        wk = wk, rep_wk = rep_wk,
                                        delta2_i = delta2_i, Z_01_i=Z_01_i, Z_02_i=Z_02_i, Z_12_i=Z_12_i,
                                        X_T_i=X_T_i,  U_T_i=U_T_i,Xslope_T_i =Xslope_T_i ,  Uslope_T_i = Uslope_T_i, O_T_i=O_T_i,  W_T_i=W_T_i,
@@ -545,16 +578,10 @@ ranef.lsjm_covDepIDM <- function(object,...){
                                        file = "", blinding = TRUE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4, multipleTry = 100)
         binit <- matrix(0, nrow = 1, ncol = x$control$Objectlsmm$control$nb.e.a + x$control$Objectlsmm$control$nb.e.a.sigma)
       }
-
-      random.effects.Predictions[id.Case1_boucle,] <- c(data.id.Case1$id[id.Case1_boucle] ,random.effects_i$b)
-      CV <- X_base_i%*%beta + U_base_i%*%random.effects_i$b[1:(x$control$Objectlsmm$control$nb.e.a)]
-      time.measures_i <- time.measures[offset[id.Case1_boucle]:(offset[id.Case1_boucle+1]-1)]
-      time.measures_i <- unique(time.measures_i)
-      Varia <- exp(O_base_i%*%omega + W_base_i%*%random.effects_i$b[(x$control$Objectlsmm$control$nb.e.a+1):(x$control$Objectlsmm$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma)])
-      cv.Pred <- rbind(cv.Pred, cbind(rep(data.id.Case1$id[id.Case1_boucle], length(CV)),
-                                      time.measures_i, CV,  Varia))
+      return(c(data.id$id[id.Case1_boucle], random.effects_i$b))
     }
 
+    stopCluster(cl)
   }
 
   #3. Cas 1bis
@@ -589,7 +616,7 @@ ranef.lsjm_covDepIDM <- function(object,...){
       st_T0 <- list.GK_T0$st
       Time_T0 <- data.id.Case1bis$Time_T0
     }
-    if(("current value" %in% x$control$sharedtype_01) || ("current value" %in% x$control$sharedtype_02) || ("current value" %in% x$control$sharedtype_12)){
+    if(("value" %in% x$control$sharedtype_01) || ("value" %in% x$control$sharedtype_02) || ("value" %in% x$control$sharedtype_12)){
       list.data_T <- data.time(data.id.Case1bis, data.id.Case1bis$Time_T, x$control$Objectlsmm$control$formFixed, x$control$Objectlsmm$control$formRandom,x$control$Objectlsmm$control$timeVar)
       list.data_L <- data.time(data.id.Case1bis, data.id.Case1bis$Time_L, x$control$Objectlsmm$control$formFixed, x$control$Objectlsmm$control$formRandom,x$control$Objectlsmm$control$timeVar)
       list.data.GK_T <- data.time(list.GK_T$data.id2, c(t(st_T)),x$control$Objectlsmm$control$formFixed, x$control$Objectlsmm$control$formRandom,x$control$Objectlsmm$control$timeVar)
@@ -696,12 +723,14 @@ ranef.lsjm_covDepIDM <- function(object,...){
 
     time.measures <- data.id.Case1bis[,x$control$Objectlsmm$control$timeVar]
 
-    for(id.Case1bis_boucle in 1:nbCase1bis){
+    binit <- matrix(0, nrow = 1, ncol = x$control$Objectlsmm$control$nb.e.a + x$control$Objectlsmm$control$nb.e.a.sigma)
+    random.effects.PredictionsCase1bis <- foreach(id.Case1bis_boucle = 1:length(unique(data.long.Case1bis$id)),
+                                          .combine = 'rbind', .packages = c("mvtnorm", "marqLevAlg")) %dopar% {
       delta2_i <- data.id.Case1bis$delta2[id.Case1bis_boucle]
       Z_01_i <- Z_01[id.Case1bis_boucle,]
       Z_02_i <- Z_02[id.Case1bis_boucle,]
       Z_12_i <- Z_12[id.Case1bis_boucle,]
-      if(("current value" %in% x$control$sharedtype_01) || ("current value" %in% x$control$sharedtype_02) || ("current value" %in% x$control$sharedtype_12)){
+      if(("value" %in% x$control$sharedtype_01) || ("value" %in% x$control$sharedtype_02) || ("value" %in% x$control$sharedtype_12)){
         X_T_i <- X_T[id.Case1bis_boucle,]
         U_T_i <- U_T[id.Case1bis_boucle,]
         X_GK_T_i <- as.matrix(X_GK_T[(x$control$nb_pointsGK*(id.Case1bis_boucle-1)+1):(x$control$nb_pointsGK*(id.Case1bis_boucle)),])
@@ -798,7 +827,8 @@ ranef.lsjm_covDepIDM <- function(object,...){
       random.effects_i <- marqLevAlg(binit, fn = re_lsjm_covDepIDMCase1Bis, minimize = FALSE,nb.e.a = x$control$Objectlsmm$control$nb.e.a,
                                      nb.e.a.sigma = x$control$Objectlsmm$control$nb.e.a.sigma, Sigma.re = MatCov,
                                      sharedtype = sharedtype, HB = HB, W_G = W_G, nb_pointsGK = x$control$nb_pointsGK,
-                                     alpha_y_slope_var = alpha_y_slope_var, alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope, omega= omega,  wk = wk,
+                                     alpha_y_slope_var = alpha_y_slope_var,alpha_b_01 = alpha_b_01, alpha_b_02 = alpha_b_02,alpha_b_12 = alpha_b_12,
+                                     alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope, omega= omega,  wk = wk,
                                      delta2_i = delta2_i, Z_01_i=Z_01_i, Z_02_i=Z_02_i, Z_12_i=Z_12_i,
                                      X_T_i=X_T_i,  U_T_i=U_T_i, Xslope_T_i = Xslope_T_i,  Uslope_T_i = Uslope_T_i, O_T_i=O_T_i,  W_T_i=W_T_i,
                                      X_GK_T_i=X_GK_T_i,  U_GK_T_i=U_GK_T_i,  Xslope_GK_T_i=Xslope_GK_T_i, Uslope_GK_T_i=Uslope_GK_T_i,  O_GK_T_i=O_GK_T_i,  W_GK_T_i=W_GK_T_i,
@@ -821,7 +851,8 @@ ranef.lsjm_covDepIDM <- function(object,...){
         random.effects_i <-  marqLevAlg(binit, fn = re_lsjm_covDepIDMCase1Bis, minimize = FALSE,nb.e.a = x$control$Objectlsmm$control$nb.e.a,
                                         nb.e.a.sigma = x$control$Objectlsmm$control$nb.e.a.sigma, Sigma.re = MatCov,
                                         sharedtype = sharedtype, HB = HB, W_G = W_G, nb_pointsGK = x$control$nb_pointsGK,
-                                        alpha_y_slope_var = alpha_y_slope_var, alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope, omega= omega,  wk = wk,
+                                        alpha_y_slope_var = alpha_y_slope_var, alpha_b_01 = alpha_b_01, alpha_b_02 = alpha_b_02,alpha_b_12 = alpha_b_12,
+                                        alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope, omega= omega,  wk = wk,
                                         delta2_i = delta2_i, Z_01_i=Z_01_i, Z_02_i=Z_02_i, Z_12_i=Z_12_i,
                                         X_T_i=X_T_i,  U_T_i=U_T_i, Xslope_T_i = Xslope_T_i,  Uslope_T_i = Uslope_T_i, O_T_i=O_T_i,  W_T_i=W_T_i,
                                         X_GK_T_i=X_GK_T_i,  U_GK_T_i=U_GK_T_i,  Xslope_GK_T_i=Xslope_GK_T_i, Uslope_GK_T_i=Uslope_GK_T_i,  O_GK_T_i=O_GK_T_i,  W_GK_T_i=W_GK_T_i,
@@ -840,16 +871,10 @@ ranef.lsjm_covDepIDM <- function(object,...){
                                         file = "", blinding = TRUE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4, multipleTry = 100)
         binit <- matrix(0, nrow = 1, ncol = x$control$Objectlsmm$control$nb.e.a + x$control$Objectlsmm$control$nb.e.a.sigma)
       }
-
-      random.effects.Predictions[id.Case1bis_boucle+nbCase1,] <-c( data.id.Case1bis$id[id.Case1bis_boucle], random.effects_i$b)
-      CV <- X_base_i%*%beta + U_base_i%*%random.effects_i$b[1:(x$control$Objectlsmm$control$nb.e.a)]
-      time.measures_i <- time.measures[offset[id.Case1bis_boucle]:(offset[id.Case1bis_boucle+1]-1)]
-      time.measures_i <- unique(time.measures_i)
-      Varia <- exp(O_base_i%*%omega + W_base_i%*%random.effects_i$b[(x$control$Objectlsmm$control$nb.e.a+1):(x$control$Objectlsmm$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma)])
-      cv.Pred <- rbind(cv.Pred, cbind(rep(data.id.Case1bis$id[id.Case1bis_boucle], length(CV)),
-                                      time.measures_i, CV, Varia))
+      return(c(data.id$id[id.Case1bis_boucle], random.effects_i$b))
     }
 
+    stopCluster(cl)
   }
 
   #4. Cas 2
@@ -896,7 +921,7 @@ ranef.lsjm_covDepIDM <- function(object,...){
       list.GK_T0 <- data.GaussKronrod(data.id.Case2, a = 0, b = data.id.Case2$Time_T0, k = x$control$nb_pointsGK)
       st_T0 <- list.GK_T0$st
     }
-    if(("current value" %in% x$control$sharedtype_01) || ("current value" %in% x$control$sharedtype_02) ){
+    if(("value" %in% x$control$sharedtype_01) || ("value" %in% x$control$sharedtype_02) ){
       list.data_T <- data.time(data.id.Case2, data.id.Case2$Time_T, x$control$Objectlsmm$control$formFixed, x$control$Objectlsmm$control$formRandom,x$control$Objectlsmm$control$timeVar)
       list.data.GK_T <- data.time(list.GK_T$data.id2, c(t(st_T)),x$control$Objectlsmm$control$formFixed, x$control$Objectlsmm$control$formRandom,x$control$Objectlsmm$control$timeVar)
       X_T <- list.data_T$Xtime; U_T <- list.data_T$Utime
@@ -960,16 +985,17 @@ ranef.lsjm_covDepIDM <- function(object,...){
         Bs_T0_02 <- splineDesign(x$control$knots_02, c(t(st_T0)), ord = 4L)
       }
     }
-    for(id.Case2_boucle in 1:nbCase2){
+    random.effects.PredictionsCase2 <- foreach(id.Case2_boucle = 1:length(unique(data.long.Case2$id)),
+                                                  .combine = 'rbind', .packages = c("mvtnorm", "marqLevAlg")) %dopar% {
 
-      if("current value" %in% x$control$sharedtype_01 || "current value" %in% x$control$sharedtype_02){
+      if("value" %in% x$control$sharedtype_01 || "value" %in% x$control$sharedtype_02){
         X_T_i <- X_T[id.Case2_boucle,];U_T_i <- U_T[id.Case2_boucle,]
         X_GK_T_i <- as.matrix(X_GK_T[(x$control$nb_pointsGK*(id.Case2_boucle-1)+1):(x$control$nb_pointsGK*id.Case2_boucle),]);U_GK_T_i <- as.matrix(U_GK_T[(x$control$nb_pointsGK*(id.Case2_boucle-1)+1):(x$control$nb_pointsGK*id.Case2_boucle),])
         if(x$control$left_trunc){
           X_GK_T0_i <- as.matrix(X_GK_T0[(x$control$nb_pointsGK*(id.Case2_boucle-1)+1):(x$control$nb_pointsGK*id.Case2_boucle),]);U_GK_T0_i <- as.matrix(U_GK_T0[(x$control$nb_pointsGK*(id.Case2_boucle-1)+1):(x$control$nb_pointsGK*id.Case2_boucle),])
         }
       }
-      if("slope" %in% x$control$sharedtype_01 || "slope" %in%x$control$ sharedtype_02){
+      if("slope" %in% x$control$sharedtype_01 || "slope" %in%x$control$sharedtype_02){
         Xslope_T_i <- Xslope_T[id.Case2_boucle,];Uslope_T_i <- Uslope_T[id.Case2_boucle,]
         Xslope_GK_T_i <- as.matrix(Xslope_GK_T[(x$control$nb_pointsGK*(id.Case2_boucle-1)+1):(x$control$nb_pointsGK*id.Case2_boucle),]);Uslope_GK_T_i <- as.matrix(Uslope_GK_T[(x$control$nb_pointsGK*(id.Case2_boucle-1)+1):(x$control$nb_pointsGK*id.Case2_boucle),])
         if(x$control$left_trunc){
@@ -1031,7 +1057,8 @@ ranef.lsjm_covDepIDM <- function(object,...){
 
                                      nb.e.a = x$control$Objectlsmm$control$nb.e.a, nb.e.a.sigma = x$control$Objectlsmm$control$nb.e.a.sigma, Sigma.re = MatCov,
                                      sharedtype = sharedtype, HB = HB, Gompertz = Gompertz, Weibull = Weibull, nb_pointsGK = x$control$nb_pointsGK,
-                                     alpha_y_slope_var = alpha_y_slope_var, alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope, omega = omega,
+                                     alpha_y_slope_var = alpha_y_slope_var,alpha_b_01 = alpha_b_01, alpha_b_02 = alpha_b_02,
+                                     alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope, omega = omega,
                                      wk = wk,
                                      delta2_i = delta2_i, Z_01_i=Z_01_i, Z_02_i=Z_02_i,  X_T_i=X_T_i,  U_T_i=U_T_i,
                                      Xslope_T_i = Xslope_T_i,  Uslope_T_i = Uslope_T_i,  O_T_i=O_T_i,  W_T_i=W_T_i,
@@ -1053,7 +1080,8 @@ ranef.lsjm_covDepIDM <- function(object,...){
 
                                        nb.e.a = x$control$Objectlsmm$control$nb.e.a, nb.e.a.sigma = x$control$Objectlsmm$control$nb.e.a.sigma, Sigma.re = MatCov,
                                        sharedtype = sharedtype, HB = HB, Gompertz = Gompertz, Weibull = Weibull, nb_pointsGK = x$control$nb_pointsGK,
-                                       alpha_y_slope_var = alpha_y_slope_var, alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope, omega = omega,
+                                       alpha_y_slope_var = alpha_y_slope_var,alpha_b_01 = alpha_b_01, alpha_b_02 = alpha_b_02,
+                                       alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope, omega = omega,
                                        wk = wk,
                                        delta2_i = delta2_i, Z_01_i=Z_01_i, Z_02_i=Z_02_i,  X_T_i=X_T_i,  U_T_i=U_T_i,
                                        Xslope_T_i = Xslope_T_i,  Uslope_T_i = Uslope_T_i,  O_T_i=O_T_i,  W_T_i=W_T_i,
@@ -1071,14 +1099,9 @@ ranef.lsjm_covDepIDM <- function(object,...){
         binit <-matrix(0, nrow = 1, ncol = x$control$Objectlsmm$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma)
       }
 
-      random.effects.Predictions[id.Case2_boucle+nbCase1+nbCase1bis,] <- c(data.id.Case2$id[id.Case2_boucle],random.effects_i$b)
-      time.measures_i <- time.measures[offset[id.Case2_boucle]:(offset[id.Case2_boucle+1]-1)]
-      time.measures_i <- unique(time.measures_i)
-      CV <- X_base_i%*%beta + U_base_i%*%random.effects_i$b[1:(x$control$Objectlsmm$control$nb.e.a)]
-      Varia <- exp(O_base_i%*%omega + W_base_i%*%random.effects_i$b[(x$control$Objectlsmm$control$nb.e.a+1):(x$control$Objectlsmm$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma)])
-      cv.Pred <- rbind(cv.Pred, cbind(rep(data.id.Case2$id[id.Case2_boucle], length(CV)),
-                                      time.measures_i, CV, Varia))
-    }
+      return(c(data.id$id[id.Case2_boucle], random.effects_i$b))
+                                                  }
+    stopCluster(cl)
 
   }
 
@@ -1120,7 +1143,7 @@ ranef.lsjm_covDepIDM <- function(object,...){
       list.GK_T0 <- data.GaussKronrod(data.id.Case3, a = 0, b = data.id.Case3$Time_T0, k = x$control$nb_pointsGK)
       st_T0 <- list.GK_T0$st
     }
-    if(("current value" %in% x$control$sharedtype_01) || ("current value" %in% x$control$sharedtype_02) || ("current value" %in% x$control$sharedtype_12)){
+    if(("value" %in% x$control$sharedtype_01) || ("value" %in% x$control$sharedtype_02) || ("value" %in% x$control$sharedtype_12)){
       list.data_T <- data.time(data.id.Case3, data.id.Case3$Time_T, x$control$Objectlsmm$control$formFixed, x$control$Objectlsmm$control$formRandom,x$control$Objectlsmm$control$timeVar)
       list.data.GK_T <- data.time(list.GK_T$data.id2, c(t(st_T)),x$control$Objectlsmm$control$formFixed, x$control$Objectlsmm$control$formRandom,x$control$Objectlsmm$control$timeVar)
       list.data.GK_L_T <- data.time(list.GK_L_T$data.id2, c(t(st_L_T)),x$control$Objectlsmm$control$formFixed, x$control$Objectlsmm$control$formRandom,x$control$Objectlsmm$control$timeVar)
@@ -1204,7 +1227,7 @@ ranef.lsjm_covDepIDM <- function(object,...){
 
     ## Pour l'intégrale (à optmiser plus tard)
     st_0_LT <- c()
-    if(("current value" %in% x$control$sharedtype_01) || ("current value" %in% x$control$sharedtype_02) || ("current value" %in% x$control$sharedtype_12)){
+    if(("value" %in% x$control$sharedtype_01) || ("value" %in% x$control$sharedtype_02) || ("value" %in% x$control$sharedtype_12)){
       X_0_LT <- c()
       U_0_LT <- c()
     }
@@ -1235,7 +1258,7 @@ ranef.lsjm_covDepIDM <- function(object,...){
         list.GK_0_stLT <- data.GaussKronrod(data.id.integrale, a = 0, b = st.integrale, k = x$control$nb_pointsGK)
         st_0_stLT_i <- list.GK_0_stLT$st
         st_0_LT <- rbind(st_0_LT, st_0_stLT_i)
-        if(("current value" %in% x$control$sharedtype_01) || ("current value" %in% x$control$sharedtype_02) || ("current value" %in% x$control$sharedtype_12)){
+        if(("value" %in% x$control$sharedtype_01) || ("value" %in% x$control$sharedtype_02) || ("value" %in% x$control$sharedtype_12)){
           list.data.GK_0_stLT <- data.time(list.GK_0_stLT$data.id2, c(t(st_0_stLT_i)),x$control$Objectlsmm$control$formFixed, x$control$Objectlsmm$control$formRandom,x$control$Objectlsmm$control$timeVar)
           X_0_stLT_i <- list.data.GK_0_stLT$Xtime; U_0_stLT_i <- list.data.GK_0_stLT$Utime
           X_0_LT <- rbind(X_0_LT,X_0_stLT_i); U_0_LT <- rbind(U_0_LT,U_0_stLT_i)
@@ -1280,9 +1303,10 @@ ranef.lsjm_covDepIDM <- function(object,...){
     Bs_T0_i_01<- as.matrix(0);  Bs_T0_i_02<- as.matrix(0);
     st_T_i <- c(0); st_T0_i <- c(0); st_0_LT_i <- as.matrix(0);
 
-    for(id.Case3_boucle in 1:nbCase3){
+    random.effects.PredictionsCase3 <- foreach(id.Case3_boucle = 1:length(unique(data.long.Case3$id)),
+                                               .combine = 'rbind', .packages = c("mvtnorm", "marqLevAlg")) %dopar% {
       #binit <- mvtnorm::rmvnorm(1, mean = rep(0, x$control$Objectlsmm$control$nb.e.a+2), MatCov)
-      if("current value" %in% x$control$sharedtype_01 || "current value" %in% x$control$sharedtype_02 || "current value" %in% x$control$sharedtype_12){
+      if("value" %in% x$control$sharedtype_01 || "value" %in% x$control$sharedtype_02 || "value" %in% x$control$sharedtype_12){
         X_T_i <- X_T[id.Case3_boucle,];U_T_i <- U_T[id.Case3_boucle,]
         X_GK_T_i <- as.matrix(X_GK_T[(x$control$nb_pointsGK*(id.Case3_boucle-1)+1):(x$control$nb_pointsGK*id.Case3_boucle),]);U_GK_T_i <- as.matrix(U_GK_T[(x$control$nb_pointsGK*(id.Case3_boucle-1)+1):(x$control$nb_pointsGK*id.Case3_boucle),])
         X_GK_L_T_i <- as.matrix(X_GK_L_T[(x$control$nb_pointsGK*(id.Case3_boucle-1)+1):(x$control$nb_pointsGK*id.Case3_boucle),]);U_GK_L_T_i <- as.matrix(U_GK_L_T[(x$control$nb_pointsGK*(id.Case3_boucle-1)+1):(x$control$nb_pointsGK*id.Case3_boucle),])
@@ -1374,7 +1398,8 @@ ranef.lsjm_covDepIDM <- function(object,...){
       random.effects_i <- marqLevAlg(binit, fn = re_lsjm_covDepIDMCase3, minimize = FALSE,nb.e.a = x$control$Objectlsmm$control$nb.e.a, nb.e.a.sigma = x$control$Objectlsmm$control$nb.e.a.sigma,
                                      Sigma.re = MatCov,
                                      sharedtype = sharedtype, HB = HB, W_G = W_G, nb_pointsGK = x$control$nb_pointsGK,
-                                     alpha_y_slope_var = alpha_y_slope_var, alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope, omega = omega,
+                                     alpha_y_slope_var = alpha_y_slope_var, alpha_b_01 = alpha_b_01, alpha_b_02 = alpha_b_02,alpha_b_12 = alpha_b_12,
+                                     alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope, omega = omega,
                                      wk = wk, rep_wk = rep_wk,
                                      delta2_i = delta2_i, Z_01_i=Z_01_i, Z_02_i=Z_02_i, Z_12_i=Z_12_i,
                                      X_T_i=X_T_i,  U_T_i=U_T_i, Xslope_T_i = Xslope_T_i,  Uslope_T_i = Uslope_T_i, O_T_i=O_T_i,  W_T_i=W_T_i,
@@ -1399,7 +1424,8 @@ ranef.lsjm_covDepIDM <- function(object,...){
         random.effects_i <- marqLevAlg(binit, fn = re_lsjm_covDepIDMCase3, minimize = FALSE,nb.e.a = x$control$Objectlsmm$control$nb.e.a, nb.e.a.sigma = x$control$Objectlsmm$control$nb.e.a.sigma,
                                        Sigma.re = MatCov,
                                        sharedtype = sharedtype, HB = HB, G_W = G_W, nb_pointsGK = x$control$nb_pointsGK,
-                                       alpha_y_slope_var = alpha_y_slope_var, alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope, omega = omega,
+                                       alpha_y_slope_var = alpha_y_slope_var,alpha_b_01 = alpha_b_01, alpha_b_02 = alpha_b_02,alpha_b_12 = alpha_b_12,
+                                       alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope, omega = omega,
                                        wk = wk, rep_wk = rep_wk,
                                        delta2_i = delta2_i, Z_01_i=Z_01_i, Z_02_i=Z_02_i, Z_12_i=Z_12_i,
                                        X_T_i=X_T_i,  U_T_i=U_T_i, Xslope_T_i = Xslope_T_i,  Uslope_T_i = Uslope_T_i, O_T_i=O_T_i,  W_T_i=W_T_i,
@@ -1424,239 +1450,24 @@ ranef.lsjm_covDepIDM <- function(object,...){
 
 
 
-      random.effects.Predictions[id.Case3_boucle+nbCase1+nbCase1bis+nbCase2,] <- c(data.id.Case3$id[id.Case3_boucle] ,random.effects_i$b)
-      time.measures_i <- time.measures[offset[id.Case3_boucle]:(offset[id.Case3_boucle+1]-1)]
-      time.measures_i <- unique(time.measures_i)
-      CV <- X_base_i%*%beta + U_base_i%*%random.effects_i$b[1:(x$control$Objectlsmm$control$nb.e.a)]
-      Varia <- exp(O_base_i%*%omega + W_base_i%*%random.effects_i$b[(x$control$Objectlsmm$control$nb.e.a+1):(x$control$Objectlsmm$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma)])
-      cv.Pred <- rbind(cv.Pred, cbind(rep(data.id.Case3$id[id.Case3_boucle], length(CV)),
-                                      time.measures_i, CV, Varia))
+      return(c(data.id$id[id.Case3_boucle], random.effects_i$b))
     }
 
+    stopCluster(cl)
 
   }
 
 
 
-  pred_haz_01 <- 0
-  pred_haz_02 <- 0
-  pred_haz_12 <- 0
-  data.id <- x$control$Objectlsmm$control$data.long[!duplicated(x$control$Objectlsmm$control$data.long$id),]
-  grid.time <- seq(min(data.id[,x$control$Objectlsmm$control$timeVar]), max(data.id[,x$control$Objectlsmm$control$timeVar]), by = (max(data.id[,x$control$Objectlsmm$control$timeVar])-min(data.id[,x$control$Objectlsmm$control$timeVar]))/100)
-  data.GaussKronrod.sort.unique <- data.GaussKronrod(data.id = data.id, a = 0,b = grid.time, k = x$control$nb_pointsGK)
-  st_calc.sort.unique <- data.GaussKronrod.sort.unique$st
-  P.sort.unique <- data.GaussKronrod.sort.unique$P
-
-  Cum_risk_01 <- c()
-  Cum_risk_02 <- c()
-  Cum_risk_12 <- c()
-  wk <- gaussKronrod()$wk
-
-  list.surv <- data.manag.surv(x$control$Objectlsmm$control$formGroup, x$control$formSurv_01, data.long)
-  Z_01 <- list.surv$Z
-  if(x$control$hazard_baseline_01 == "Gompertz"){Z_01 <- as.matrix(Z_01[,-1])}
-  list.surv <- data.manag.surv(x$control$Objectlsmm$control$formGroup, x$control$formSurv_02, data.long)
-  Z_02 <- list.surv$Z
-  if(x$control$hazard_baseline_02 == "Gompertz"){Z_02 <- as.matrix(Z_02[,-1])}
-  list.surv <- data.manag.surv(x$control$Objectlsmm$control$formGroup, x$control$formSurv_12, data.long)
-  Z_12 <- list.surv$Z
-  if(x$control$hazard_baseline_12 == "Gompertz"){Z_12 <- as.matrix(Z_12[,-1])}
-  if(x$control$hazard_baseline_01 == "Splines"){
-    Z_01 <- as.matrix(Z_01[,-1])
-  #  B_T_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, data.id$Time_T, ord = 4L)
-  #  Bs_T_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, c(t(st_T)), ord = 4L)
-  #  if(x$control$left_trunc){
-  #    Bs_T0_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, c(t(st_T0)), ord = 4L)
-  #  }
-  }
-  if(x$control$hazard_baseline_02 == "Splines"){
-    Z_02 <- as.matrix(Z_02[,-1])
-  #  B_T_02 <- splineDesign(x$control$knots.hazard_baseline.splines_02, data.id$Time_T, ord = 4L)
-  #  Bs_T_02 <- splineDesign(x$control$knots.hazard_baseline.splines_02, c(t(st_T)), ord = 4L)
-  #  if(x$control$left_trunc){
-  #    Bs_T0_02 <- splineDesign(x$control$knots.hazard_baseline.splines_02, c(t(st_T0)), ord = 4L)
-  #  }
-  }
-  if(x$control$hazard_baseline_12 == "Splines"){
-    Z_12 <- as.matrix(Z_12[,-1])
-  #  B_T_12 <- splineDesign(x$control$knots.hazard_baseline.splines_12, data.id$Time_T, ord = 4L)
-  #  Bs_T_12 <- splineDesign(x$control$knots.hazard_baseline.splines_12, c(t(st_T)), ord = 4L)
-  #  if(x$control$left_trunc){
-  #    Bs_T0_12 <- splineDesign(x$control$knots.hazard_baseline.splines_12, c(t(st_T0)), ord = 4L)
-  #  }
-  }
-
-  cat("Cumulative risks")
-  for(id_boucle in 1:nrow(data.id)){
-    Cum_risk_01i <- c()
-    Cum_risk_02i  <- c()
-    Cum_risk_12i <- c()
-    for(j in 1:length((grid.time))){
-      pred_haz_01 <- 0
-      pred_haz_02 <- 0
-      pred_haz_12 <- 0
-      if("variability" %in% x$control$sharedtype_01 || "variability" %in% x$control$sharedtype_02){
-        list.data.GK.current.sigma.sort.unique <- data.time(data.GaussKronrod.sort.unique$data.id2[(x$control$nb_pointsGK*(id_boucle-1)+1):(x$control$nb_pointsGK*id_boucle),], st_calc.sort.unique[j,],
-                                                            x$control$Objectlsmm$control$formFixedVar, x$control$Objectlsmm$control$formRandomVar,x$control$Objectlsmm$control$timeVar)
-        Os.j <- list.data.GK.current.sigma.sort.unique$Xtime
-        Ws.j <- list.data.GK.current.sigma.sort.unique$Utime
-        Sigma.current.GK <- exp(omega%*%t(Os.j) + random.effects_i$b[(x$control$Objectlsmm$control$nb.e.a+1):(x$control$Objectlsmm$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma)]%*%t(Ws.j))
-        if("variability" %in% x$control$sharedtype_01){
-          pred_haz_01 <- pred_haz_01 + alpha.var_01*Sigma.current.GK
-        }
-        if("variability" %in% x$control$sharedtype_02){
-          pred_haz_02 <- pred_haz_02 + alpha.var_02*Sigma.current.GK
-        }
-        if("variability" %in% x$control$sharedtype_12){
-          pred_haz_12 <- pred_haz_12 + alpha.var_12*Sigma.current.GK
-        }
-      }
-
-      if("current value" %in% x$control$sharedtype_01 || "current value" %in% x$control$sharedtype_02){
-        list.data.GK.current.sigma.sort.unique <- data.time(data.GaussKronrod.sort.unique$data.id2[(x$control$nb_pointsGK*(id_boucle-1)+1):(x$control$nb_pointsGK*id_boucle),], st_calc.sort.unique[j,],
-                                                            x$control$Objectlsmm$control$formFixed, x$control$Objectlsmm$control$formRandom,x$control$Objectlsmm$control$timeVar)
-        Xs.j <- list.data.GK.current.sigma.sort.unique$Xtime
-        Us.j <- list.data.GK.current.sigma.sort.unique$Utime
-        current.GK <- beta%*%t(Xs.j) + random.effects_i$b[1:(x$control$Objectlsmm$control$nb.e.a)]%*%t(Us.j)
-        if("current value" %in% x$control$sharedtype_01){
-          pred_haz_01 <- pred_haz_01 + alpha.current_01*current.GK
-        }
-        if("current value" %in% x$control$sharedtype_02){
-          pred_haz_02 <- pred_haz_02 + alpha.current_02*current.GK
-        }
-        if("current value" %in% x$control$sharedtype_12){
-          pred_haz_12 <- pred_haz_12 + alpha.current_12*current.GK
-        }
-      }
-
-      if("slope" %in% x$control$sharedtype_01 || "slope" %in% x$control$sharedtype_02){
-        list.data.GK.current.sigma.sort.unique <- data.time(data.GaussKronrod.sort.unique$data.id2[(x$control$nb_pointsGK*(id_boucle-1)+1):(x$control$nb_pointsGK*id_boucle),], st_calc.sort.unique[j,],
-                                                            x$control$formSlopeFixed, x$control$formSlopeRandom,x$control$Objectlsmm$control$timeVar)
-        Xs.slope.j <- list.data.GK.current.sigma.sort.unique$Xtime
-        Us.slope.j <- list.data.GK.current.sigma.sort.unique$Utime
-        bslope <- random.effects_i$b[1:(x$control$Objectlsmm$control$nb.e.a)]
-        bslope <- bslope[x$control$index_b_slope]
-        bslope <- matrix(bslope, nrow = 1)
-        slope.GK <- beta_slope%*%t(Xs.slope.j) + bslope%*%t(Us.slope.j)
-        if("slope" %in% x$control$sharedtype_01){
-          pred_haz_01 <- pred_haz_01 + alpha.slope_01*slope.GK
-        }
-        if("slope" %in% x$control$sharedtype_02){
-          pred_haz_02 <- pred_haz_02 + alpha.slope_02*slope.GK
-        }
-        if("slope" %in% x$control$sharedtype_12){
-          pred_haz_12 <- pred_haz_02 + alpha.slope_12*slope.GK
-        }
-      }
-
-      if(x$control$hazard_baseline_01 == "Exponential"){
-        h_0_01 <- 1
-        h_0.GK_01 <- wk
-      }
-      if(x$control$hazard_baseline_01 == "Weibull"){
-        st_j <- st_calc.sort.unique[j,]
-        h_0.GK_01 <- shape_01*(st_j**(shape_01-1))*wk    #### AJOUTER GOMPERTZ
-      }
-      if(x$control$hazard_baseline_01 == "Gompertz"){
-        stop("Not implemented.")    #### AJOUTER GOMPERTZ
-      }
-      if(x$control$hazard_baseline_01 == "Splines"){
-        st_j <- st_calc.sort.unique[j,]
-        Bs_j <- splines::splineDesign(x$control$knots.hazard_baseline.splines_01, st_j, ord = 4L)
-        #Bs_j <- Bs[(x$control$nb_pointsGK*(j-1)+1):(x$control$nb_pointsGK*j),]
-        mat_h0s <- matrix(gamma_01,ncol=1)
-        h_0.GK_01 <- (wk*exp(Bs_j%*%mat_h0s))
-      }
-
-      Z_01_i <- Z_01[id_boucle,]
-      if(length(Z_01_i)==0){
-        pred_surv_01 <- 0
-      }
-      else{
-        pred_surv_01 <- (alpha_01%*%Z_01_i)[1,1]
-      }
-
-      pred_haz_01 <- pred_haz_01 + pred_surv_01
-
-      Cum_risk_01i <- c(Cum_risk_01i, P.sort.unique[j]*sum(exp(pred_haz_01)%*%h_0.GK_01))
-
-      if(x$control$hazard_baseline_02 == "Exponential"){
-        h_0_02 <- 1
-        h_0.GK_02 <- wk
-      }
-      if(x$control$hazard_baseline_02 == "Weibull"){
-        st_j <- st_calc.sort.unique[j,]
-        h_0.GK_02 <- shape_02*(st_j**(shape_02-1))*wk    #### AJOUTER GOMPERTZ
-      }
-      if(x$control$hazard_baseline_02 == "Gompertz"){
-        stop("Not implemented.")    #### AJOUTER GOMPERTZ
-      }
-      if(x$control$hazard_baseline_02 == "Splines"){
-        st_j <- st_calc.sort.unique[j,]
-        Bs_j <- splines::splineDesign(x$control$knots.hazard_baseline.splines_02, st_j, ord = 4L)
-        #Bs_j <- Bs[(x$control$nb_pointsGK*(j-1)+1):(x$control$nb_pointsGK*j),]
-        mat_h0s <- matrix(gamma_02,ncol=1)
-        h_0.GK_02 <- (wk*exp(Bs_j%*%mat_h0s))
-      }
-
-      Z_02_i <- Z_02[id_boucle,]
-      if(length(Z_02_i)==0){
-        pred_surv_02 <- 0
-      }
-      else{
-        pred_surv_02 <- (alpha_02%*%Z_02_i)[1,1]
-      }
-
-      pred_haz_02 <- pred_haz_02 + pred_surv_02
-
-      Cum_risk_02i <- c(Cum_risk_02i, P.sort.unique[j]*sum(exp(pred_haz_02)%*%h_0.GK_02))
-
-      if(x$control$hazard_baseline_12 == "Exponential"){
-        h_0_12 <- 1
-        h_0.GK_12 <- wk
-      }
-      if(x$control$hazard_baseline_12 == "Weibull"){
-        st_j <- st_calc.sort.unique[j,]
-        h_0.GK_12 <- shape_12*(st_j**(shape_12-1))*wk    #### AJOUTER GOMPERTZ
-      }
-      if(x$control$hazard_baseline_12 == "Gompertz"){
-        stop("Not implemented.")    #### AJOUTER GOMPERTZ
-      }
-      if(x$control$hazard_baseline_12 == "Splines"){
-        st_j <- st_calc.sort.unique[j,]
-        Bs_j <- splines::splineDesign(x$control$knots.hazard_baseline.splines_12, st_j, ord = 4L)
-        #Bs_j <- Bs[(x$control$nb_pointsGK*(j-1)+1):(x$control$nb_pointsGK*j),]
-        mat_h0s <- matrix(gamma_12,ncol=1)
-        h_0.GK_12 <- (wk*exp(Bs_j%*%mat_h0s))
-      }
-
-      Z_12_i <- Z_12[id_boucle,]
-      if(length(Z_12_i)==0){
-        pred_surv_12 <- 0
-      }
-      else{
-        pred_surv_12 <- (alpha_12%*%Z_12_i)[1,1]
-      }
-
-      pred_haz_12 <- pred_haz_12 + pred_surv_12
-
-      Cum_risk_12i <- c(Cum_risk_12i, P.sort.unique[j]*sum(exp(pred_haz_12)%*%h_0.GK_12))
-
-    }
-    Cum_risk_01 <- rbind(Cum_risk_01,Cum_risk_01i)
-    Cum_risk_02 <- rbind(Cum_risk_02,Cum_risk_02i)
-    Cum_risk_12 <- rbind(Cum_risk_12,Cum_risk_12i)
-  }
-
-  Cum_01 <- apply(Cum_risk_01,2,mean)
-  Cum_02 <- apply(Cum_risk_02,2,mean)
-  Cum_12 <- apply(Cum_risk_12,2,mean)
 
 
 
 
-  cv.Pred <- as.data.frame(cv.Pred)
-  colnames(cv.Pred) <- c("id", "time", "CV", "Residual_SD")
-  list(random.effects.Predictions = random.effects.Predictions, cv.Pred = cv.Pred, Cum_01 = Cum_01, Cum_02 = Cum_02, Cum_12 = Cum_12, grid.time.Cum = grid.time)
 
+  random.effects.Predictions <- rbind(random.effects.PredictionsCase1, random.effects.PredictionsCase1bis,
+                                      random.effects.PredictionsCase2, random.effects.PredictionsCase3)
+  random.effects.Predictions <- as.data.frame(random.effects.Predictions)
+  name_b <- grep("*cov*", rownames(x$table.res), value = TRUE)
+  colnames(random.effects.Predictions) <- c("id",unique(unique(gsub("\\*.*", "", gsub("__", "_", name_b)))))
+  random.effects.Predictions
 }

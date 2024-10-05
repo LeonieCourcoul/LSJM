@@ -238,16 +238,19 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
     }
   }
   binit_CI <- c(binit_CI, alpha_01)
+  if("random effects" %in% sharedtype_01){
+    binit_CI <- c(binit_CI, rep(0,nb.e.a))
+  }
   if("value" %in% sharedtype_01){
     binit_CI <- c(binit_CI, 0)
   }
   if("slope" %in% sharedtype_01){
     binit_CI <- c(binit_CI, 0)
   }
-  if("inter visit variability" %in% sharedtype_01){
+  if("variability inter" %in% sharedtype_01){
     binit_CI <- c(binit_CI,0)
   }
-  if("intra visit variability" %in% sharedtype_01){
+  if("variability intra" %in% sharedtype_01){
     binit_CI <- c(binit_CI,0)
   }
   # 02
@@ -266,16 +269,19 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
     }
   }
   binit_CI <- c(binit_CI, alpha_02)
+  if("random effects" %in% sharedtype_02){
+    binit_CI <- c(binit_CI, rep(0,nb.e.a))
+  }
   if("value" %in% sharedtype_02){
     binit_CI <- c(binit_CI, 0)
   }
   if("slope" %in% sharedtype_02){
     binit_CI <- c(binit_CI, 0)
   }
-  if("inter visit variability" %in% sharedtype_02){
+  if("variability inter" %in% sharedtype_02){
     binit_CI <- c(binit_CI,0)
   }
-  if("intra visit variability" %in% sharedtype_02){
+  if("variability intra" %in% sharedtype_02){
     binit_CI <- c(binit_CI,0)
   }
   # 12
@@ -294,16 +300,19 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
     }
   }
   binit_CI <- c(binit_CI, alpha_12)
+  if("random effects" %in% sharedtype_12){
+    binit_CI <- c(binit_CI, rep(0,nb.e.a))
+  }
   if("value" %in% sharedtype_12){
     binit_CI <- c(binit_CI, 0)
   }
   if("slope" %in% sharedtype_12){
     binit_CI <- c(binit_CI, 0)
   }
-  if("inter visit variability" %in% sharedtype_12){
+  if("variability inter" %in% sharedtype_12){
     binit_CI <- c(binit_CI,0)
   }
-  if("intra visit variability" %in% sharedtype_12){
+  if("variability intra" %in% sharedtype_12){
     binit_CI <- c(binit_CI,0)
   }
 
@@ -595,6 +604,10 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
     if(!is.null(alpha_01)){
       names.param <- c(names.param, paste(name_ZO1,"",sep = "_"))
     }
+    if("random effects" %in% sharedtype_01){
+      binit_noCI <- c(binit_noCI, rep(0,nb.e.a))
+      names.param <- c(names.param, paste("re",colnames(U_base),"01",sep = "_"))
+    }
     if("value" %in% sharedtype_01){
       binit_noCI <- c(binit_noCI, 0)
       names.param <- c(names.param, 'value 01')
@@ -603,13 +616,13 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
       binit_noCI <- c(binit_noCI, 0)
       names.param <- c(names.param, 'slope 01')
     }
-    if("inter visit variability" %in% sharedtype_01){
+    if("variability inter" %in% sharedtype_01){
       binit_noCI <- c(binit_noCI,0)
-      names.param <- c(names.param, 'inter visits variability 01')
+      names.param <- c(names.param, 'variability inter 01')
     }
-    if("intra visit variability" %in% sharedtype_01){
+    if("variability intra" %in% sharedtype_01){
       binit_noCI <- c(binit_noCI,0)
-      names.param <- c(names.param, 'inter visits variability 01')
+      names.param <- c(names.param, 'variability intra 01')
     }
     # 02
     if(hazard_baseline_02 == "Weibull"){
@@ -635,6 +648,10 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
     if(!is.null(alpha_02)){
       names.param <- c(names.param, paste(name_ZO2,"",sep = "_"))
     }
+    if("random effects" %in% sharedtype_02){
+      binit_noCI <- c(binit_noCI, rep(0,nb.e.a))
+      names.param <- c(names.param, paste("re",colnames(U_base),"02",sep = "_"))
+    }
     if("value" %in% sharedtype_02){
       binit_noCI <- c(binit_noCI, 0)
       names.param <- c(names.param, 'value 02')
@@ -643,13 +660,13 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
       binit_noCI <- c(binit_noCI, 0)
       names.param <- c(names.param, 'slope 02')
     }
-    if("inter visit variability" %in% sharedtype_02){
+    if("variability inter" %in% sharedtype_02){
       binit_noCI <- c(binit_noCI,0)
-      names.param <- c(names.param, 'inter visits variability 02')
+      names.param <- c(names.param, 'variability inter 02')
     }
-    if("intra visit variability" %in% sharedtype_02){
+    if("variability intra" %in% sharedtype_02){
       binit_noCI <- c(binit_noCI,0)
-      names.param <- c(names.param, 'inter visits variability 02')
+      names.param <- c(names.param, 'variability intra 02')
     }
     # 12
     if(hazard_baseline_12 == "Weibull"){
@@ -675,6 +692,10 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
     if(!is.null(alpha_12)){
       names.param <- c(names.param, paste(name_Z12,"",sep = "_"))
     }
+    if("random effects" %in% sharedtype_12){
+      binit_noCI <- c(binit_noCI, rep(0,nb.e.a))
+      names.param <- c(names.param, paste("re",colnames(U_base),"12",sep = "_"))
+    }
     if("value" %in% sharedtype_12){
       binit_noCI <- c(binit_noCI, 0)
       names.param <- c(names.param, 'value 12')
@@ -683,16 +704,21 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
       binit_noCI <- c(binit_noCI, 0)
       names.param <- c(names.param, 'slope 12')
     }
-    if("inter visit variability" %in% sharedtype_12){
+    if("variability inter" %in% sharedtype_12){
       binit_noCI <- c(binit_noCI,0)
-      names.param <- c(names.param, 'inter visits variability 12')
+      names.param <- c(names.param, 'variability inter 12')
     }
-    if("intra visit variability" %in% sharedtype_12){
+    if("variability intra" %in% sharedtype_12){
       binit_noCI <- c(binit_noCI,0)
-      names.param <- c(names.param, 'inter visits variability 12')
+      names.param <- c(names.param, 'variability intra 12')
     }
 
-    binit_noCI <- c(binit_noCI, Objectlsmm$result_step2$b)
+    if(is.null(Objectlsmm$result_step2)){
+      binit_noCI <- c(binit_noCI, Objectlsmm$result_step1$b)
+    }
+    else{
+      binit_noCI <- c(binit_noCI, Objectlsmm$result_step2$b)
+    }
 
     if(variability_inter_visit && variability_intra_visit){
       Zq1 <- spacefillr::generate_sobol_owen_set(S1,  nb.e.a+2)
@@ -1316,17 +1342,20 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
   if(!is.null(alpha_01)){
     names.param <- c(names.param, paste(name_ZO1,"01",sep = "_"))
   }
+  if("random effects" %in% sharedtype_01){
+    names.param <- c(names.param, paste("re",colnames(U_base),"01",sep = "_"))
+  }
   if("value" %in% sharedtype_01){
     names.param <- c(names.param, 'value 01')
   }
   if("slope" %in% sharedtype_01){
     names.param <- c(names.param, 'slope 01')
   }
-  if("inter visit variability" %in% sharedtype_01){
-    names.param <- c(names.param, 'inter visits variability 01')
+  if("variability inter" %in% sharedtype_01){
+    names.param <- c(names.param, 'variability inter 01')
   }
-  if("intra visit variability" %in% sharedtype_01){
-    names.param <- c(names.param, 'intra visit variability 01')
+  if("variability intra" %in% sharedtype_01){
+    names.param <- c(names.param, 'variability intra 01')
   }
   # 02
   if(hazard_baseline_02 == "Weibull"){
@@ -1348,17 +1377,20 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
   if(!is.null(alpha_02)){
     names.param <- c(names.param, paste(name_ZO2,"02",sep = "_"))
   }
+  if("random effects" %in% sharedtype_02){
+    names.param <- c(names.param, paste("re",colnames(U_base),"02",sep = "_"))
+  }
   if("value" %in% sharedtype_02){
     names.param <- c(names.param, 'value 02')
   }
   if("slope" %in% sharedtype_02){
     names.param <- c(names.param, 'slope 02')
   }
-  if("inter visit variability" %in% sharedtype_02){
-    names.param <- c(names.param, 'inter visits variability 02')
+  if("variability inter" %in% sharedtype_02){
+    names.param <- c(names.param, 'variability inter 02')
   }
-  if("intra visit variability" %in% sharedtype_02){
-    names.param <- c(names.param, 'intra visit variability 02')
+  if("variability intra" %in% sharedtype_02){
+    names.param <- c(names.param, 'variability intra 02')
   }
   # 12
   if(hazard_baseline_12 == "Weibull"){
@@ -1380,17 +1412,20 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
   if(!is.null(alpha_12)){
     names.param <- c(names.param, paste(name_Z12,"12",sep = "_"))
   }
+  if("random effects" %in% sharedtype_12){
+    names.param <- c(names.param, paste("re",colnames(U_base),"12",sep = "_"))
+  }
   if("value" %in% sharedtype_12){
     names.param <- c(names.param, 'value 12')
   }
   if("slope" %in% sharedtype_12){
     names.param <- c(names.param, 'slope 12')
   }
-  if("inter visit variability" %in% sharedtype_12){
-    names.param <- c(names.param, 'inter visits variability 12')
+  if("variability inter" %in% sharedtype_12){
+    names.param <- c(names.param, 'variability inter 12')
   }
-  if("intra visit variability" %in% sharedtype_12){
-    names.param <- c(names.param, 'intra visit variability 12')
+  if("variability intra" %in% sharedtype_12){
+    names.param <- c(names.param, 'variability intra 12')
   }
 
 

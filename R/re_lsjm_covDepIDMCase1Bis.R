@@ -1,6 +1,6 @@
 re_lsjm_covDepIDMCase1Bis <- function(param, nb.e.a, nb.e.a.sigma, Sigma.re,
                                        sharedtype, HB, W_G, nb_pointsGK,
-                                       alpha_y_slopevar, alpha_z,  gamma_z0,  beta,  beta_slope, omega,  wk,
+                                       alpha_y_slopevar, alpha_b_01, alpha_b_02, alpha_b_12,alpha_z,  gamma_z0,  beta,  beta_slope, omega,  wk,
                                        delta2_i, Z_01_i, Z_02_i, Z_12_i, X_T_i,  U_T_i,
                                        Xslope_T_i,  Uslope_T_i,   O_T_i,  W_T_i,
                                        X_GK_T_i,  U_GK_T_i,  Xslope_GK_T_i,
@@ -33,9 +33,11 @@ re_lsjm_covDepIDMCase1Bis <- function(param, nb.e.a, nb.e.a.sigma, Sigma.re,
   fixed_par <- list(beta, beta_slope, omega)
   list_Times = list(Time_T_i, Time_L_i, Time_T0_i, delta2_i)
 
+  alpha_b <- list(alpha_b_01, alpha_b_02, alpha_b_12)
+
   log_f_Y_f_T <- re_lsjm_covDepIDMCase1Bis_cpp( sharedtype,  HB,  W_G,
                                                  nb_pointsGK,
-                                                 alpha_y_slope_var,  alpha_z,  gamma_z0,  fixed_par,
+                                                 alpha_y_slope_var, alpha_b,  alpha_z,  gamma_z0,  fixed_par,
                                                  b_y=t(matrix(b_re, nrow = 1)),  b_y_slope= t(matrix(b_y_slope, nrow = 1)), tau_re=t(matrix(tau_re, nrow = 1)),
                                                  wk,
                                                   Z_01_i,  Z_02_i,  Z_12_i,  X_T_i,  U_T_i,

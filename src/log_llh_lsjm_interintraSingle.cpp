@@ -13,7 +13,7 @@ using namespace std;
 
 arma::vec log_llh_lsjm_interintraSingle(arma::vec sharedtype, List HB, arma::vec Gompertz, arma::vec Weibull,
                                         arma::vec nb_points_integral, arma::vec alpha_inter_intra,
-                                        arma::vec alpha_y_slope, List alpha_z, List gamma, arma::vec beta, arma::vec beta_slope,
+                                        arma::vec alpha_y_slope, arma::vec alpha_b_01,List alpha_z, List gamma, arma::vec beta, arma::vec beta_slope,
                                         arma::mat b_y, arma::mat b_y_slope, arma::vec wk, List sigma_inter_intra,
                                         arma::vec delta1, arma::mat Z_01, arma::mat X_T, arma::mat U_T,
                                         arma::mat Xslope_T, arma::mat Uslope_T, arma::mat X_GK_T, arma::mat U_GK_T, arma::mat Xslope_GK_T,
@@ -29,6 +29,7 @@ arma::vec log_llh_lsjm_interintraSingle(arma::vec sharedtype, List HB, arma::vec
   bool dep_slope_01 = sharedtype[1];
   bool dep_var_inter_01 = sharedtype[2];
   bool dep_var_intra_01 = sharedtype[3];
+  bool dep_re_01 = sharedtype[4];
   const std::string& hazard_baseline_01 = HB[0];
   double Gompertz_1_01 = Gompertz[0];
   double Gompertz_2_01 = Gompertz[1];
@@ -87,6 +88,13 @@ arma::vec log_llh_lsjm_interintraSingle(arma::vec sharedtype, List HB, arma::vec
     arma::mat current_GK_T0;
     arma::mat slope_GK_T0;
 
+    if(dep_re_01){
+      h_01_T_i = h_01_T_i%exp(b_y*alpha_b_01);
+      survLong_01_T_i = survLong_01_T_i + arma::repmat(b_y*alpha_b_01,1,nb_pointsGK);
+      if(left_trunc){
+        survLong_01_T0_i = survLong_01_T0_i + arma::repmat(b_y*alpha_b_01,1,nb_pointsGK);
+      }
+    }
 
     if(dep_cv_01){
       arma::rowvec X_T_i = X_T.row(i_provCase1bis);

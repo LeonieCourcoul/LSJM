@@ -186,7 +186,6 @@ summary.lsjm_covDepCR <- function(object,...)
   omega.name <- param.names[curseur:(curseur+x$control$Objectlsmm$control$nb.omega-1)]
   curseur <- curseur + x$control$Objectlsmm$control$nb.omega
 
-
   ## Matrice de variance-covariance de l'ensemble des effets aléatoires :
   if(x$control$Objectlsmm$control$correlated_re){
     borne1 <- curseur + choose(n = x$control$Objectlsmm$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma, k = 2) + x$control$Objectlsmm$control$nb.e.a +x$control$Objectlsmm$control$nb.e.a.sigma- 1
@@ -194,7 +193,7 @@ summary.lsjm_covDepCR <- function(object,...)
     C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
     MatCov <- C1
     MatCov <- as.matrix(MatCov)
-    borne2 <- borne1 + choose(n = x$control$nb.e.a+x$control$nb.e.a.sigma, k = 2) + x$control$nb.e.a +x$control$nb.e.a.sigma
+    borne2 <- borne1 + choose(n = x$control$Objectlsmm$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma, k = 2) + x$control$Objectlsmm$control$nb.e.a +x$control$Objectlsmm$control$nb.e.a.sigma
     Matcov.name <- unique( unique(gsub("\\*.*", "", gsub("__", "_", param.names[(borne1+1):borne2]))))
 
   }
@@ -207,12 +206,12 @@ summary.lsjm_covDepCR <- function(object,...)
     C3[lower.tri(C3, diag=T)] <- param[(borne1+1):borne3]
     MatCovb <- as.matrix(C1)
     MatCovSig <- as.matrix(C3)
-    borne4 <- borne3 + choose(n = x$control$nb.e.a, k = 2) + x$control$nb.e.a
-    borne5 <- borne4 + choose(n = x$control$nb.e.a.sigma, k = 2) + x$control$nb.e.a.sigma
-    Matcovb.name.mat <- matrix(rep(0,(x$control$nb.e.a)**2),nrow=x$control$nb.e.a,ncol=x$control$nb.e.a)
+    borne4 <- borne3 + choose(n = x$control$Objectlsmm$control$nb.e.a, k = 2) + x$control$Objectlsmm$control$nb.e.a
+    borne5 <- borne4 + choose(n = x$control$Objectlsmm$control$nb.e.a.sigma, k = 2) + x$control$Objectlsmm$control$nb.e.a.sigma
+    Matcovb.name.mat <- matrix(rep(0,(x$control$Objectlsmm$control$nb.e.a)**2),nrow=x$control$Objectlsmm$control$nb.e.a,ncol=x$control$Objectlsmm$control$nb.e.a)
     Matcovb.name.mat[lower.tri(Matcovb.name.mat, diag=T)] <- param.names[(borne3+1):borne4]
     Matcovb.name <- unique(gsub("_Location.*", "", unlist(regmatches(Matcovb.name.mat, gregexpr("\\(?[A-Za-z0-9\\.\\^]+\\)?_Location", Matcovb.name.mat)))))
-    MatcovSig.name.mat <- matrix(rep(0,(x$control$nb.e.a.sigma)**2),nrow=x$control$nb.e.a.sigma,ncol=x$control$nb.e.a.sigma)
+    MatcovSig.name.mat <- matrix(rep(0,(x$control$Objectlsmm$control$nb.e.a.sigma)**2),nrow=x$control$Objectlsmm$control$nb.e.a.sigma,ncol=x$control$Objectlsmm$control$nb.e.a.sigma)
     MatcovSig.name.mat[lower.tri(MatcovSig.name.mat, diag=T)] <- param.names[(borne4+1):borne5]
     MatcovSig.name <- unique(gsub("_Scale.*", "", unlist(regmatches(MatcovSig.name.mat, gregexpr("\\(?[A-Za-z0-9\\.\\^]+\\)?_Scale", MatcovSig.name.mat)))))
 
@@ -402,6 +401,7 @@ summary.lsjm_covDepCR <- function(object,...)
   e1_surv_tab <- round(e1_surv_tab, 4)
   e1_surv_tab$Pvalue <- ifelse(e1_surv_tab$Pvalue < 0.001, "<0.001", round(e1_surv_tab$Pvalue,3))
   e1_bas_tab <- round(e1_bas_tab, 4)
+  e1_bas_tab <- as.data.frame(e1_bas_tab)
   e1_bas_tab$Pvalue <- ifelse(e1_bas_tab$Pvalue < 0.001, "<0.001", round(e1_bas_tab$Pvalue,3))
 
   if(nrow(e1_bas_tab)!=0){
@@ -413,9 +413,6 @@ summary.lsjm_covDepCR <- function(object,...)
   cat("\n")
   cat(paste("     Baseline: ",x$control$hazard_baseline_01), "\n")
   cat("\n")
-  e1_bas_tab <- as.data.frame(e1_bas_tab)
-  e1_bas_tab <- round(e1_bas_tab, 4)
-  e1_bas_tab$Pvalue <- ifelse(e1_bas_tab$Pvalue < 0.001, "<0.001", round(e1_bas_tab$Pvalue,3))
   print(e1_bas_tab)
 
 
@@ -539,8 +536,7 @@ summary.lsjm_covDepCR <- function(object,...)
   e2_surv_tab <- as.data.frame(e2_surv_tab)
   e2_surv_tab <- round(e2_surv_tab, 4)
   e2_surv_tab$Pvalue <- ifelse(e2_surv_tab$Pvalue < 0.001, "<0.001", round(e2_surv_tab$Pvalue,3))
-  e2_bas_tab <- round(e2_bas_tab, 4)
-  e2_bas_tab$Pvalue <- ifelse(e2_bas_tab$Pvalue < 0.001, "<0.001", round(e2_bas_tab$Pvalue,3))
+
 
   if(nrow(e2_bas_tab)!=0){
     cat("\n")

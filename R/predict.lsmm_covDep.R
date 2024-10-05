@@ -115,7 +115,7 @@ predict.lsmm_covDep <- function(Objectlsmm, which = "RE", Objectranef = NULL, da
                                                           nb.e.a = x$control$nb.e.a, nb.e.a.sigma = x$control$nb.e.a.sigma,
                                                           Sigma.re = MatCov, beta = beta, omega = omega,
                                                           X_base_i = X_base_i, U_base_i = U_base_i, O_base_i = O_base_i,
-                                                          W_base_i = W_base_i, y_i = y_i, nproc = x$control$nproc,
+                                                          W_base_i = W_base_i, y_i = y_i, nproc = 1,
                                                           clustertype = x$control$clustertype, maxiter = x$control$maxiter,
                                                           print.info = FALSE, file = "", blinding = FALSE,
                                                           epsa = 1e-4, epsb = 1e-4, epsd = 1e-4)
@@ -126,7 +126,7 @@ predict.lsmm_covDep <- function(Objectlsmm, which = "RE", Objectranef = NULL, da
                                                             nb.e.a = x$control$nb.e.a, nb.e.a.sigma = x$control$nb.e.a.sigma,
                                                             Sigma.re = MatCov, beta = beta, omega = omega,
                                                             X_base_i = X_base_i, U_base_i = U_base_i, O_base_i = O_base_i,
-                                                            W_base_i = W_base_i, y_i = y_i, nproc = x$control$nproc,
+                                                            W_base_i = W_base_i, y_i = y_i, nproc = 1,
                                                             clustertype = x$control$clustertype, maxiter = x$control$maxiter,
                                                             print.info = FALSE, file = "", blinding = TRUE,
                                                             epsa = 1e-4, epsb = 1e-4, epsd = 1e-4, multipleTry = 100)

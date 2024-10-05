@@ -21,7 +21,7 @@ logR_llh_lsjm_classicSingle <- function(param,hazard_baseline_01, sharedtype_01,
   st_T0_i <- c(0); B_T_i_01 <- c(0);
   Bs_T_i_01 <- as.matrix(1);
   Bs_T0_i_01 <- as.matrix(1); Time_T0_i <- 0;
-  st_T_i <- c(0); st_T0_i <- c(0);
+  st_T_i <- c(0); st_T0_i <- c(0); alpha_b_01 <- c(0);
   #Manage parameter
   curseur <- 1
   ## Risque 01
@@ -46,6 +46,10 @@ logR_llh_lsjm_classicSingle <- function(param,hazard_baseline_01, sharedtype_01,
     curseur <- curseur+nb.alpha_01
   }
   ### Association
+  if("random effects" %in% sharedtype_01){
+    alpha_b_01 <- param[curseur:(curseur+nb.e.a-1)]
+    curseur <- curseur + nb.e.a
+  }
   if("value" %in% sharedtype_01){
     alpha.current_01 <-  param[curseur]
     curseur <- curseur + 1
@@ -74,7 +78,7 @@ logR_llh_lsjm_classicSingle <- function(param,hazard_baseline_01, sharedtype_01,
   ll_glob <- rep(NA, Ind)
 
   # Creations entrees rcpp
-  sharedtype <- c("value" %in% sharedtype_01, "slope" %in% sharedtype_01
+  sharedtype <- c("value" %in% sharedtype_01, "slope" %in% sharedtype_01,"random effects" %in% sharedtype_01
   )
   HB <- list(hazard_baseline_01)
   Weibull <- c(shape_01)
@@ -100,7 +104,7 @@ logR_llh_lsjm_classicSingle <- function(param,hazard_baseline_01, sharedtype_01,
     Bs_T0_01 <- Matrices[["Bs_T0_01"]]
 
   ll_glob <- log_llh_lsjm_classicSingle(sharedtype, HB, Gompertz, Weibull,
-                                        nb_points_integral, alpha_y_slope, alpha_z,
+                                        nb_points_integral, alpha_y_slope,t(alpha_b_01), alpha_z,
                                         gamma_z0,beta, beta_slope, b_y, b_y_slope,
                                         wk, sigma_epsilon, delta1, Z_01,  X_T,  U_T,
                                         Xslope_T,  Uslope_T,  X_GK_T,  U_GK_T,  Xslope_GK_T,

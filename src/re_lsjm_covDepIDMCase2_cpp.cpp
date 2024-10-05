@@ -13,7 +13,7 @@ using namespace std;
 
 double re_lsjm_covDepIDMCase2_cpp(arma::vec sharedtype, List HB, arma::vec W_G,
                                    double nb_pointsGK ,
-                                   arma::vec alpha_y_slope_var, List alpha_z, List gamma, arma::vec beta, arma::vec beta_slope, arma::vec omega,
+                                   arma::vec alpha_y_slope_var, arma::vec alpha_b_01, arma::vec alpha_b_02, List alpha_z, List gamma, arma::vec beta, arma::vec beta_slope, arma::vec omega,
                                    arma::mat b_y, arma::mat b_y_slope, arma::mat tau_re, arma::vec wk,
                                    int delta2_i, arma::rowvec Z_01_i, arma::rowvec Z_02_i, arma::rowvec X_T_i, arma::rowvec U_T_i,
                                    arma::rowvec Xslope_T_i, arma::rowvec Uslope_T_i, arma::rowvec O_T_i, arma::rowvec W_T_i,
@@ -35,6 +35,9 @@ double re_lsjm_covDepIDMCase2_cpp(arma::vec sharedtype, List HB, arma::vec W_G,
   bool dep_cv_02 = sharedtype[3];
   bool dep_slope_02 = sharedtype[4];
   bool dep_var_02 = sharedtype[5];
+
+  bool dep_re_01 = sharedtype[9];
+  bool dep_re_02 = sharedtype[10];
 
   const std::string& hazard_baseline_01 = HB[0];
   const std::string& hazard_baseline_02 = HB[1];
@@ -82,6 +85,21 @@ double re_lsjm_covDepIDMCase2_cpp(arma::vec sharedtype, List HB, arma::vec W_G,
   arma::mat Sigma_T;
   arma::mat sigma_GK_T;
   arma::mat sigma_GK_T0;
+
+  if(dep_re_01){
+    survLong_01_T_i = survLong_01_T_i + arma::repmat(b_y*alpha_b_01,1,nb_pointsGK);
+    if(left_trunc){
+      survLong_01_T0_i = survLong_01_T0_i + arma::repmat(b_y*alpha_b_01,1,nb_pointsGK);
+    }
+  }
+
+  if(dep_re_02){
+    survLong_02_T_i = survLong_02_T_i + arma::repmat(b_y*alpha_b_02,1,nb_pointsGK);
+    h_02_T_i = h_02_T_i%exp(b_y*alpha_b_02);
+    if(left_trunc){
+      survLong_02_T0_i = survLong_02_T0_i + arma::repmat(b_y*alpha_b_02,1,nb_pointsGK);
+    }
+  }
 
 
   if(dep_cv_01 || dep_cv_02){

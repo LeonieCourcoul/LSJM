@@ -13,7 +13,7 @@ using namespace std;
 
 double re_lsjm_interintraIDMCase2_cpp(arma::vec sharedtype, List HB, arma::vec Gompertz, arma::vec Weibull,
                             double nb_pointsGK , arma::vec alpha_inter_intra,
-                            arma::vec alpha_y_slope, List alpha_z, List gamma, arma::vec beta, arma::vec beta_slope,
+                            arma::vec alpha_y_slope, arma::vec alpha_b_01, arma::vec alpha_b_02, List alpha_z, List gamma, arma::vec beta, arma::vec beta_slope,
                             arma::mat b_y, arma::mat b_y_slope, arma::vec wk, List sigma_inter_intra,
                             int delta2_i, arma::rowvec Z_01_i, arma::rowvec Z_02_i, arma::rowvec X_T_i, arma::rowvec U_T_i,
                             arma::rowvec Xslope_T_i, arma::rowvec Uslope_T_i, arma::mat X_GK_T_i, arma::mat U_GK_T_i, arma::mat Xslope_GK_T_i,
@@ -34,6 +34,8 @@ double re_lsjm_interintraIDMCase2_cpp(arma::vec sharedtype, List HB, arma::vec G
   bool dep_slope_02 = sharedtype[5];
   bool dep_var_inter_02 = sharedtype[6];
   bool dep_var_intra_02 = sharedtype[7];
+  bool dep_re_01 = sharedtype[12];
+  bool dep_re_02 = sharedtype[13];
   const std::string& hazard_baseline_01 = HB[0];
   const std::string& hazard_baseline_02 = HB[1];
   double Gompertz_1_01 = Gompertz[0];
@@ -106,6 +108,21 @@ double re_lsjm_interintraIDMCase2_cpp(arma::vec sharedtype, List HB, arma::vec G
     etaBaseline_02_T_i = etaBaseline_02_T_i + alpha_intra_02*sigma_intra;
     if(left_trunc){
       etaBaseline_02_T0_i = etaBaseline_02_T0_i + alpha_intra_02*sigma_intra;
+    }
+  }
+
+  if(dep_re_01){
+    survLong_01_T_i = survLong_01_T_i + arma::repmat(alpha_b_01*b_y,1,nb_pointsGK);
+    if(left_trunc){
+      survLong_01_T0_i = survLong_01_T0_i + arma::repmat(alpha_b_01*b_y,1,nb_pointsGK);
+    }
+  }
+
+  if(dep_re_02){
+    survLong_02_T_i = survLong_02_T_i + arma::repmat(alpha_b_02*b_y,1,nb_pointsGK);
+    h_02_T_i = h_02_T_i%exp(alpha_b_02*b_y);
+    if(left_trunc){
+      survLong_02_T0_i = survLong_02_T0_i + arma::repmat(alpha_b_02*b_y,1,nb_pointsGK);
     }
   }
 

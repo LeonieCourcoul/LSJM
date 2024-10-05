@@ -345,7 +345,12 @@ lsjm_covDepCR <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_b
     names.param <- c(names.param, 'variability 02')
   }
 
-  binit_CR <- c(binit_CR, Objectlsmm$result_step2$b)
+  if(is.null(Objectlsmm$result_step2)){
+    binit_CR <- c(binit_CR, Objectlsmm$result_step1$b)
+  }
+  else{
+    binit_CR <- c(binit_CR, Objectlsmm$result_step2$b)
+  }
 
   Zq1 <- spacefillr::generate_sobol_owen_set(S1,  nb.e.a+nb.e.a.sigma)
   Zq <- apply(Zq1, 2, qnorm)

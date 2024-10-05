@@ -36,6 +36,7 @@ logR_llh_lsjm_covDepIDM <- function(param,hazard_baseline_01, sharedtype_01,
   Bs_L_T_i_01 <- as.matrix(1); Bs_L_T_i_02 <- as.matrix(1); Bs_L_T_i_12<- as.matrix(1);
   Bs_T0_i_01 <- as.matrix(1); Bs_T0_i_02 <- as.matrix(1); Bs_T0_i_12 <- as.matrix(1); Time_T0_i <- 0;
   st_T_i <- c(0); st_L_i <- c(0); st_0_LR_i <- as.matrix(1); st_L_R_i <- c(0); st_T0_i <- c(0); st_0_LT_i <- as.matrix(1); st_L_T_i <- c(0);
+  alpha_b_01 <- c(0); alpha_b_02 <- c(0); alpha_b_12 <- c(0)
   B_L_i_01 <- c(0);
   #Manage parameter
   curseur <- 1
@@ -62,6 +63,10 @@ logR_llh_lsjm_covDepIDM <- function(param,hazard_baseline_01, sharedtype_01,
     curseur <- curseur+nb.alpha_01
   }
   ### Association
+  if("random effects" %in% sharedtype_01){
+    alpha_b_01 <- param[curseur:(curseur+nb.e.a-1)]
+    curseur <- curseur + nb.e.a
+  }
   if("value" %in% sharedtype_01){
     alpha.current_01 <-  param[curseur]
     curseur <- curseur + 1
@@ -95,6 +100,10 @@ logR_llh_lsjm_covDepIDM <- function(param,hazard_baseline_01, sharedtype_01,
     curseur <- curseur+nb.alpha_02
   }
   ### Association
+  if("random effects" %in% sharedtype_02){
+    alpha_b_02 <- param[curseur:(curseur+nb.e.a-1)]
+    curseur <- curseur + nb.e.a
+  }
   if("value" %in% sharedtype_02){
     alpha.current_02 <- param[curseur]
     curseur <- curseur + 1
@@ -128,6 +137,10 @@ logR_llh_lsjm_covDepIDM <- function(param,hazard_baseline_01, sharedtype_01,
     curseur <- curseur+nb.alpha_12
   }
   ### Association
+  if("random effects" %in% sharedtype_12){
+    alpha_b_12 <- param[curseur:(curseur+nb.e.a-1)]
+    curseur <- curseur + nb.e.a
+  }
   if("value" %in% sharedtype_12){
     alpha.current_12 <- param[curseur]
     curseur <- curseur + 1
@@ -181,7 +194,8 @@ logR_llh_lsjm_covDepIDM <- function(param,hazard_baseline_01, sharedtype_01,
   # Creations entrees rcpp
   sharedtype <- c("value" %in% sharedtype_01, "slope" %in% sharedtype_01,"variability" %in% sharedtype_01,
                   "value" %in% sharedtype_02, "slope" %in% sharedtype_02,"variability" %in% sharedtype_02,
-                  "value" %in% sharedtype_12, "slope" %in% sharedtype_12,"variability" %in% sharedtype_12)
+                  "value" %in% sharedtype_12, "slope" %in% sharedtype_12,"variability" %in% sharedtype_12,
+                  "random effects" %in% sharedtype_01, "random effects" %in% sharedtype_02, "random effects" %in% sharedtype_12)
   HB <- list(hazard_baseline_01, hazard_baseline_02, hazard_baseline_12, left_trunc)
   W_G <- c(shape_01, shape_02, shape_12, Gompertz.1_01, Gompertz.2_01, Gompertz.1_02, Gompertz.2_02, Gompertz.1_12, Gompertz.2_12)
   alpha_y_slope_var <- c(alpha.current_01,alpha.current_02,alpha.current_12,
@@ -193,6 +207,8 @@ logR_llh_lsjm_covDepIDM <- function(param,hazard_baseline_01, sharedtype_01,
 
 
   ll_glob <- rep(NA, nbCase1 + nbCase1bis + nbCase2 + nbCase3)
+
+  alpha_b <- list(t(alpha_b_01), t(alpha_b_02), t(alpha_b_12))
 
 
   if(nbCase1 != 0){
@@ -238,7 +254,7 @@ logR_llh_lsjm_covDepIDM <- function(param,hazard_baseline_01, sharedtype_01,
 
     ll_glob[1:nbCase1] <- log_llh_lsjm_covDepIDM_C1(sharedtype, HB,  W_G,
                                                      nb_points_integral,
-                                                     alpha_y_slope_var, alpha_z,  gamma_z0,  fixed_par,
+                                                     alpha_y_slope_var, alpha_b, alpha_z,  gamma_z0,  fixed_par,
                                                      b_y,  b_y_slope, b_om,
                                                      Z_01,  Z_02,  Z_12, X_T,  U_T,
                                                      Xslope_T,  Uslope_T,  X_GK_T,  U_GK_T,  Xslope_GK_T,
@@ -296,7 +312,7 @@ logR_llh_lsjm_covDepIDM <- function(param,hazard_baseline_01, sharedtype_01,
 
     ll_glob[(nbCase1+1):(nbCase1 + nbCase1bis)] <- log_llh_lsjm_covDepIDM_C1bis( sharedtype,  HB,  W_G,
                                                                                   nb_points_integral,
-                                                                                  alpha_y_slope_var,  alpha_z,  gamma_z0,  fixed_par,
+                                                                                  alpha_y_slope_var,   alpha_b, alpha_z,  gamma_z0,  fixed_par,
                                                                                   b_y,  b_y_slope, b_om,  wk,
                                                                                   Z_01,  Z_02,  Z_12,  X_T,  U_T,
                                                                                   Xslope_T,  Uslope_T,  X_GK_T,  U_GK_T,  Xslope_GK_T,
@@ -343,7 +359,7 @@ logR_llh_lsjm_covDepIDM <- function(param,hazard_baseline_01, sharedtype_01,
     nb_points_integral <- c(S, nb_pointsGK, nbCase2)
     ll_glob[(nbCase1 + nbCase1bis + 1):(nbCase1 + nbCase1bis + nbCase2)] <- log_llh_lsjm_covDepIDM_C2( sharedtype,  HB,  W_G,
                                                                                                         nb_points_integral,
-                                                                                                        alpha_y_slope_var,  alpha_z,  gamma_z0,  fixed_par,
+                                                                                                        alpha_y_slope_var, alpha_b,  alpha_z,  gamma_z0,  fixed_par,
                                                                                                         b_y,  b_y_slope, b_om,  wk,
                                                                                                         Z_01,  Z_02,  X_T,  U_T,
                                                                                                         Xslope_T,  Uslope_T,  X_GK_T,  U_GK_T,  Xslope_GK_T,
@@ -392,9 +408,10 @@ logR_llh_lsjm_covDepIDM <- function(param,hazard_baseline_01, sharedtype_01,
     ck = list(sk_GK = sk_GK, wk = wk, rep_wk = rep_wk)
     list_Times = list(Time_T, Time_L,Time_L_T, Time_T0, delta2)
     long <- list(y.new,offset, S, nb_pointsGK, nbCase3)
+    vector_b <- list(b_y, b_y_slope)
     ll_glob[(nbCase1 + nbCase1bis + nbCase2 + 1):(nbCase1 + nbCase1bis + nbCase2 + nbCase3)] <- log_llh_lsjm_covDepIDM_C3( sharedtype,  HB,  W_G,
-                                                                                                                             alpha_y_slope_var, alpha_z,  gamma_z0,  fixed_par,
-                                                                                                                             b_y,  b_y_slope, b_om,
+                                                                                                                             alpha_y_slope_var, alpha_b, alpha_z,  gamma_z0,  fixed_par,
+                                                                                                                             vector_b, b_om,
                                                                                                                              Z_01,  Z_02,  Z_12,  X_T,  U_T,
                                                                                                                              Xslope_T,  Uslope_T,  X_GK_T,  U_GK_T,  Xslope_GK_T,
                                                                                                                              Uslope_GK_T,  X_GK_L_T,  U_GK_L_T,  Xslope_GK_L_T,  Uslope_GK_L_T,

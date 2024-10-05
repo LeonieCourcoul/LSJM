@@ -1,9 +1,25 @@
+#' ranef : Compute the random effects of the longitudinal submodel
+#'
+#' @param object A lsmm or lsjm object
+#'
+#' @name ranef
+#' @rdname ranef
+#' @export
+#'
+
 ranef.lsjm_covDepSingle <- function(object,...){
 
   x <- object
-  param <- x$result_step2$b
-  cv.Pred <- c()
-  x$control$nproc <- 1
+  if(!inherits(x, "lsjm_covDepSingle")) stop("use only \"lsjm_covDepSingle\" objects")
+  if(x$result_step1$istop != 1|| (!is.null(x$result_step2) && x$result_step2$istop !=1)){
+    stop("The model didn't reach convergence.")
+  }
+  if(is.null(x$result_step2)){
+    param <- x$result_step1$b
+  }
+  else{
+    param <- x$result_step2$b
+  }
 
 
   shape_01 <- 0;
@@ -12,7 +28,7 @@ ranef.lsjm_covDepSingle <- function(object,...){
   alpha.var_01 <- 0;
   alpha_01 <- c(0);
   gamma_01 <- c(0);
-  beta_slope <- c(0);
+  beta_slope <- c(0);alpha_b_01 <- c(0);
 
   #Manage parameter
   curseur <- 1
@@ -39,7 +55,11 @@ ranef.lsjm_covDepSingle <- function(object,...){
     curseur <- curseur+nb.alpha_01
   }
   ### Association
-  if("current value" %in% x$control$sharedtype_01){
+  if("random effects" %in% x$control$sharedtype_01){
+    alpha_b_01 <- param[curseur:(curseur+x$control$Objectlsmm$control$nb.e.a-1)]
+    curseur <- curseur + x$control$Objectlsmm$control$nb.e.a
+  }
+  if("value" %in% x$control$sharedtype_01){
     alpha.current_01 <-  param[curseur]
     curseur <- curseur + 1
   }
@@ -63,7 +83,7 @@ ranef.lsjm_covDepSingle <- function(object,...){
   omega <- param[(curseur):(curseur+x$control$Objectlsmm$control$nb.omega-1)]
   curseur <- curseur+x$control$Objectlsmm$control$nb.omega
   if(x$control$correlated_re){
-    C1 <- matrix(rep(0,(x$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma)**2),nrow=x$control$Objectlsmm$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma,ncol=x$control$Objectlsmm$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma)
+    C1 <- matrix(rep(0,(x$control$Objectlsmm$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma)**2),nrow=x$control$Objectlsmm$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma,ncol=x$control$Objectlsmm$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma)
     C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
     Cholesky <- C1
     Cholesky <- as.matrix(Cholesky)
@@ -84,7 +104,7 @@ ranef.lsjm_covDepSingle <- function(object,...){
 
   MatCov <- Cholesky%*%t(Cholesky)
 
-  sharedtype <- c("current value" %in% x$control$sharedtype_01, "slope" %in% x$control$sharedtype_01, "variability" %in% sharedtype_01)
+  sharedtype <- c("value" %in% x$control$sharedtype_01, "slope" %in% x$control$sharedtype_01, "variability" %in% x$control$sharedtype_01, "random effects" %in% x$control$sharedtype_01)
   HB <- list(x$control$hazard_baseline_01)
   Weibull <- c(shape_01)
   Gompertz <- c(Gompertz.1_01, Gompertz.2_01)
@@ -140,7 +160,7 @@ ranef.lsjm_covDepSingle <- function(object,...){
     list.GK_T0 <- data.GaussKronrod(data.id, a = 0, b = data.id$Time_T0, k = x$control$nb_pointsGK)
     st_T0 <- list.GK_T0$st
   }
-  if(("current value" %in% x$control$sharedtype_01)){
+  if(("value" %in% x$control$sharedtype_01)){
     list.data_T <- data.time(data.id, data.id$Time_T, x$control$Objectlsmm$control$formFixed, x$control$Objectlsmm$control$formRandom,x$control$Objectlsmm$control$timeVar)
     list.data.GK_T <- data.time(list.GK_T$data.id2, c(t(st_T)),x$control$Objectlsmm$control$formFixed, x$control$Objectlsmm$control$formRandom,x$control$Objectlsmm$control$timeVar)
     X_T <- list.data_T$Xtime; U_T <- list.data_T$Utime
@@ -196,7 +216,7 @@ ranef.lsjm_covDepSingle <- function(object,...){
 
   for(id_boucle in 1:length(unique(data.long$id))){
 
-    if("current value" %in% x$control$sharedtype_01){
+    if("value" %in% x$control$sharedtype_01){
       X_T_i <- X_T[id_boucle,];U_T_i <- U_T[id_boucle,]
       X_GK_T_i <- as.matrix(X_GK_T[(x$control$nb_pointsGK*(id_boucle-1)+1):(x$control$nb_pointsGK*id_boucle),]);U_GK_T_i <- as.matrix(U_GK_T[(x$control$nb_pointsGK*(id_boucle-1)+1):(x$control$nb_pointsGK*id_boucle),])
       if(x$control$left_trunc){
@@ -261,7 +281,7 @@ ranef.lsjm_covDepSingle <- function(object,...){
                                    nb.e.a = x$control$Objectlsmm$control$nb.e.a, nb.e.a.sigma = x$control$Objectlsmm$control$nb.e.a.sigma,
                                    Sigma.re = MatCov,
                                    sharedtype = sharedtype, HB = HB, Gompertz = Gompertz, Weibull = Weibull, nb_pointsGK = x$control$nb_pointsGK,
-                                   alpha_y_slope_var = alpha_y_slope_var,   alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope, omega = omega,  wk = wk,
+                                   alpha_y_slope_var = alpha_y_slope_var, alpha_b_01 = alpha_b_01,  alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope, omega = omega,  wk = wk,
                                    delta1_i = delta1_i, Z_01_i=Z_01_i,    X_T_i=X_T_i,  U_T_i=U_T_i,
                                    Xslope_T_i = Xslope_T_i,  Uslope_T_i = Uslope_T_i, O_T_i=O_T_i,  W_T_i=W_T_i,
                                    X_GK_T_i=X_GK_T_i,  U_GK_T_i=U_GK_T_i,  Xslope_GK_T_i=Xslope_GK_T_i,
@@ -282,7 +302,7 @@ ranef.lsjm_covDepSingle <- function(object,...){
                                      nb.e.a = x$control$Objectlsmm$control$nb.e.a, nb.e.a.sigma = x$control$Objectlsmm$control$nb.e.a.sigma,
                                      Sigma.re = MatCov,
                                      sharedtype = sharedtype, HB = HB, Gompertz = Gompertz, Weibull = Weibull, nb_pointsGK = x$control$nb_pointsGK,
-                                     alpha_y_slope_var = alpha_y_slope_var,   alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope, omega = omega,  wk = wk,
+                                     alpha_y_slope_var = alpha_y_slope_var, alpha_b_01 = alpha_b_01,  alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope, omega = omega,  wk = wk,
                                      delta1_i = delta1_i, Z_01_i=Z_01_i,    X_T_i=X_T_i,  U_T_i=U_T_i,
                                      Xslope_T_i = Xslope_T_i,  Uslope_T_i = Uslope_T_i, O_T_i=O_T_i,  W_T_i=W_T_i,
                                      X_GK_T_i=X_GK_T_i,  U_GK_T_i=U_GK_T_i,  Xslope_GK_T_i=Xslope_GK_T_i,

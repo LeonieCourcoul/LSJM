@@ -70,7 +70,7 @@ ranef.lsmm_classic <- function(object,...){
                        random.effects_i <- marqLevAlg(binit, fn = re_lsmm_classic, minimize = FALSE,
                                                       nb.e.a = x$control$nb.e.a, Sigma.re = MatCov, beta = beta,
                                                       X_base_i = X_base_i, U_base_i = U_base_i, y_i = y_i,
-                                                      sigma_epsilon = sigma_epsilon, nproc = x$control$nproc,
+                                                      sigma_epsilon = sigma_epsilon, nproc = 1,
                                                       clustertype = x$control$clustertype, maxiter = x$control$maxiter,
                                                       print.info = FALSE, file = "", blinding = FALSE,
                                                       epsa = 1e-4, epsb = 1e-4, epsd = 1e-4)
@@ -81,7 +81,7 @@ ranef.lsmm_classic <- function(object,...){
                          random.effects_i <- marqLevAlg(binit, fn = re_lsmm_classic, minimize = FALSE,
                                                         nb.e.a = x$control$nb.e.a, Sigma.re = MatCov, beta = beta,
                                                         X_base_i = X_base_i, U_base_i = U_base_i, y_i = y_i,
-                                                        sigma_epsilon = sigma_epsilon, nproc = x$control$nproc,
+                                                        sigma_epsilon = sigma_epsilon, nproc = 1,
                                                         clustertype = x$control$clustertype, maxiter = x$control$maxiter,
                                                         print.info = FALSE, file = "", blinding = TRUE,
                                                         epsa = 1e-4, epsb = 1e-4, epsd = 1e-4, multipleTry = 100)

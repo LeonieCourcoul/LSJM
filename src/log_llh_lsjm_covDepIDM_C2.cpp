@@ -13,7 +13,7 @@ using namespace std;
 
 arma::vec log_llh_lsjm_covDepIDM_C2(arma::vec sharedtype, List HB, arma::vec W_G,
                                      arma::vec nb_points_integral,
-                                     arma::vec alpha_y_slope_var, List alpha_z, List gamma, List fixed_par,
+                                     arma::vec alpha_y_slope_var, List alpha_b, List alpha_z, List gamma, List fixed_par,
                                      arma::mat b_y, arma::mat b_y_slope, arma::mat b_om, arma::vec wk,
                                      arma::mat Z_01, arma::mat Z_02, arma::mat X_T, arma::mat U_T,
                                      arma::mat Xslope_T, arma::mat Uslope_T, arma::mat X_GK_T, arma::mat U_GK_T, arma::mat Xslope_GK_T,
@@ -33,6 +33,8 @@ arma::vec log_llh_lsjm_covDepIDM_C2(arma::vec sharedtype, List HB, arma::vec W_G
   bool dep_cv_02 = sharedtype[3];
   bool dep_slope_02 = sharedtype[4];
   bool dep_var_02 = sharedtype[5];
+  bool dep_re_01 = sharedtype[9];
+  bool dep_re_02 = sharedtype[10];
 
   const std::string& hazard_baseline_01 = HB[0];
   const std::string& hazard_baseline_02 = HB[1];
@@ -65,6 +67,8 @@ arma::vec log_llh_lsjm_covDepIDM_C2(arma::vec sharedtype, List HB, arma::vec W_G
   arma::vec gamma_01 = gamma[0];
   arma::vec gamma_02 = gamma[1];
 
+  arma::vec alpha_b_01 = alpha_b[0];
+  arma::vec alpha_b_02 = alpha_b[1];
 
   arma::vec beta = fixed_par[0];
   arma::vec beta_slope = fixed_par[1];
@@ -108,6 +112,23 @@ arma::vec log_llh_lsjm_covDepIDM_C2(arma::vec sharedtype, List HB, arma::vec W_G
     arma::mat sigma_T;
     arma::mat sigma_GK_T;
     arma::mat sigma_GK_T0;
+
+
+    if(dep_re_01){
+      survLong_01_T_i = survLong_01_T_i + arma::repmat(b_y*alpha_b_01,1,nb_pointsGK);
+      if(left_trunc){
+        survLong_01_T0_i = survLong_01_T0_i + arma::repmat(b_y*alpha_b_01,1,nb_pointsGK);
+      }
+    }
+
+    if(dep_re_02){
+      survLong_02_T_i = survLong_02_T_i + arma::repmat(b_y*alpha_b_02,1,nb_pointsGK);
+      h_02_T_i = h_02_T_i%exp(b_y*alpha_b_02);
+      if(left_trunc){
+        survLong_02_T0_i = survLong_02_T0_i + arma::repmat(b_y*alpha_b_02,1,nb_pointsGK);
+      }
+    }
+
 
     if(dep_cv_01 || dep_cv_02){
       arma::rowvec X_T_i = X_T.row(i_provCase2);

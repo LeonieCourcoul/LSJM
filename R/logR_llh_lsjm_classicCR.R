@@ -23,7 +23,7 @@ logR_llh_lsjm_classicCR <- function(param,hazard_baseline_01, sharedtype_01,
   st_T0_i <- c(0); B_T_i_01 <- c(0); B_T_i_02 <- c(0);
   Bs_T_i_01 <- as.matrix(1);Bs_T_i_02 <- as.matrix(1);
   Bs_T0_i_01 <- as.matrix(1); Bs_T0_i_02 <- as.matrix(1); Time_T0_i <- 0;
-  st_T_i <- c(0); st_T0_i <- c(0);
+  st_T_i <- c(0); st_T0_i <- c(0); alpha_b_01 <- c(0); alpha_b_02 <- c(0)
   #Manage parameter
   curseur <- 1
   ## Risque 01
@@ -48,6 +48,10 @@ logR_llh_lsjm_classicCR <- function(param,hazard_baseline_01, sharedtype_01,
     curseur <- curseur+nb.alpha_01
   }
   ### Association
+  if("random effects" %in% sharedtype_01){
+    alpha_b_01 <- param[curseur:(curseur+nb.e.a-1)]
+    curseur <- curseur + nb.e.a
+  }
   if("value" %in% sharedtype_01){
     alpha.current_01 <-  param[curseur]
     curseur <- curseur + 1
@@ -77,6 +81,10 @@ logR_llh_lsjm_classicCR <- function(param,hazard_baseline_01, sharedtype_01,
     curseur <- curseur+nb.alpha_02
   }
   ### Association
+  if("random effects" %in% sharedtype_02){
+    alpha_b_02 <- param[curseur:(curseur+nb.e.a-1)]
+    curseur <- curseur + nb.e.a
+  }
   if("value" %in% sharedtype_02){
     alpha.current_02 <- param[curseur]
     curseur <- curseur + 1
@@ -106,7 +114,8 @@ logR_llh_lsjm_classicCR <- function(param,hazard_baseline_01, sharedtype_01,
 
   # Creations entrees rcpp
   sharedtype <- c("value" %in% sharedtype_01, "slope" %in% sharedtype_01,
-                  "value" %in% sharedtype_02, "slope" %in% sharedtype_02
+                  "value" %in% sharedtype_02, "slope" %in% sharedtype_02,
+                  "random effects" %in% sharedtype_01, "random effects" %in% sharedtype_02
   )
   HB <- list(hazard_baseline_01, hazard_baseline_02)
   Weibull <- c(shape_01, shape_02)
@@ -135,7 +144,7 @@ logR_llh_lsjm_classicCR <- function(param,hazard_baseline_01, sharedtype_01,
 
   ll_glob <- log_llh_lsjm_classicCR(sharedtype,  HB,  Gompertz,  Weibull,
                                        nb_points_integral,
-                                       alpha_y_slope,  alpha_z,  gamma_z0,  beta,  beta_slope,
+                                       alpha_y_slope, t(alpha_b_01), t(alpha_b_02), alpha_z,  gamma_z0,  beta,  beta_slope,
                                        b_y,  b_y_slope,  wk,  sigma_epsilon,
                                        delta1, delta2,  Z_01,  Z_02,  X_T,  U_T,
                                        Xslope_T,  Uslope_T,  X_GK_T,  U_GK_T,  Xslope_GK_T,

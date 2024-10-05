@@ -5,9 +5,16 @@
 ranef.lsjm_interintraIDM <- function(object,...){
 
   x <- object
-  param <- x$result_step2$b
-  cv.Pred <- c()
-  x$control$nproc <- 1
+  if(!inherits(x, "lsjm_interintraIDM")) stop("use only \"lsjm_interintraIDM\" objects")
+  if(x$result_step1$istop != 1|| (!is.null(x$result_step2) && x$result_step2$istop !=1)){
+    stop("The model didn't reach convergence.")
+  }
+  if(is.null(x$result_step2)){
+    param <- x$result_step1$b
+  }
+  else{
+    param <- x$result_step2$b
+  }
 
 
   shape_01 <- 0; shape_02 <- 0; shape_12 <- 0
@@ -17,6 +24,7 @@ ranef.lsjm_interintraIDM <- function(object,...){
   alpha_01 <- c(0); alpha_02 <- c(0); alpha_12<- c(0);
   gamma_01 <- c(0); gamma_02 <- c(0); gamma_12 <- c(0);
   beta_slope <- c(0); mu.inter <- 0; sigma.epsilon.inter <-0; mu.intra <- 0;sigma.epsilon.intra <- 0
+  alpha_b_01 <- c(0); alpha_b_02 <- c(0); alpha_b_12 <- c(0)
 
   #Manage parameter
   curseur <- 1
@@ -43,7 +51,11 @@ ranef.lsjm_interintraIDM <- function(object,...){
     curseur <- curseur+nb.alpha_01
   }
   ### Association
-  if("current value" %in% x$control$sharedtype_01){
+  if("random effects" %in% x$control$sharedtype_01){
+    alpha_b_01 <- param[curseur:(curseur+x$control$Objectlsmm$control$nb.e.a-1)]
+    curseur <- curseur + x$control$Objectlsmm$control$nb.e.a
+  }
+  if("value" %in% x$control$sharedtype_01){
     alpha.current_01 <-  param[curseur]
     curseur <- curseur + 1
   }
@@ -51,11 +63,11 @@ ranef.lsjm_interintraIDM <- function(object,...){
     alpha.slope_01 <- param[curseur]
     curseur <- curseur + 1
   }
-  if("inter visit variability" %in% x$control$sharedtype_01){
+  if("variability inter" %in% x$control$sharedtype_01){
     alpha.inter_01 <- param[curseur]
     curseur <- curseur + 1
   }
-  if("intra visit variability" %in% x$control$sharedtype_01){
+  if("variability intra" %in% x$control$sharedtype_01){
     alpha.intra_01 <- param[curseur]
     curseur <- curseur + 1
   }
@@ -80,7 +92,11 @@ ranef.lsjm_interintraIDM <- function(object,...){
     curseur <- curseur+nb.alpha_02
   }
   ### Association
-  if("current value" %in% x$control$sharedtype_02){
+  if("random effects" %in% x$control$sharedtype_02){
+    alpha_b_02 <- param[curseur:(curseur+x$control$Objectlsmm$control$nb.e.a-1)]
+    curseur <- curseur + x$control$Objectlsmm$control$nb.e.a
+  }
+  if("value" %in% x$control$sharedtype_02){
     alpha.current_02 <- param[curseur]
     curseur <- curseur + 1
   }
@@ -88,11 +104,11 @@ ranef.lsjm_interintraIDM <- function(object,...){
     alpha.slope_02 <- param[curseur]
     curseur <- curseur + 1
   }
-  if("inter visit variability" %in% x$control$sharedtype_02){
+  if("variability inter" %in% x$control$sharedtype_02){
     alpha.inter_02 <- param[curseur]
     curseur <- curseur + 1
   }
-  if("intra visit variability" %in% x$control$sharedtype_02){
+  if("variability intra" %in% x$control$sharedtype_02){
     alpha.intra_02 <- param[curseur]
     curseur <- curseur + 1
   }
@@ -117,7 +133,11 @@ ranef.lsjm_interintraIDM <- function(object,...){
     curseur <- curseur+nb.alpha_12
   }
   ### Association
-  if("current value" %in%  x$control$sharedtype_12){
+  if("random effects" %in% x$control$sharedtype_12){
+    alpha_b_12 <- param[curseur:(curseur+x$control$Objectlsmm$control$nb.e.a-1)]
+    curseur <- curseur + x$control$Objectlsmm$control$nb.e.a
+  }
+  if("value" %in%  x$control$sharedtype_12){
     alpha.current_12 <- param[curseur]
     curseur <- curseur + 1
   }
@@ -125,11 +145,11 @@ ranef.lsjm_interintraIDM <- function(object,...){
     alpha.slope_12 <- param[curseur]
     curseur <- curseur + 1
   }
-  if("inter visit variability" %in%  x$control$sharedtype_12){
+  if("variability inter" %in%  x$control$sharedtype_12){
     alpha.inter_12 <- param[curseur]
     curseur <- curseur + 1
   }
-  if("intra visit variability" %in%  x$control$sharedtype_12){
+  if("variability intra" %in%  x$control$sharedtype_12){
     alpha.intra_12 <- param[curseur]
     curseur <- curseur + 1
   }
@@ -222,9 +242,10 @@ ranef.lsjm_interintraIDM <- function(object,...){
 
   MatCov <- Cholesky%*%t(Cholesky)
 
-  sharedtype <- c("current value" %in% x$control$sharedtype_01, "slope" %in% x$control$sharedtype_01, "inter visit variability" %in% x$control$sharedtype_01, "intra visit variability" %in% x$control$sharedtype_01,
-                  "current value" %in% x$control$sharedtype_02, "slope" %in% x$control$sharedtype_02, "inter visit variability" %in% x$control$sharedtype_02, "intra visit variability" %in% x$control$sharedtype_02,
-                  "current value" %in% x$control$sharedtype_12, "slope" %in% x$control$sharedtype_12, "inter visit variability" %in% x$control$sharedtype_12, "intra visit variability" %in% x$control$sharedtype_12)
+  sharedtype <- c("value" %in% x$control$sharedtype_01, "slope" %in% x$control$sharedtype_01, "variability inter" %in% x$control$sharedtype_01, "variability intra" %in% x$control$sharedtype_01,
+                  "value" %in% x$control$sharedtype_02, "slope" %in% x$control$sharedtype_02, "variability inter" %in% x$control$sharedtype_02, "variability intra" %in% x$control$sharedtype_02,
+                  "value" %in% x$control$sharedtype_12, "slope" %in% x$control$sharedtype_12, "variability inter" %in% x$control$sharedtype_12, "variability intra" %in% x$control$sharedtype_12,
+                  "random effects" %in% x$control$sharedtype_01, "random effects" %in% x$control$sharedtype_02,"random effects" %in% x$control$sharedtype_12)
   HB <- list(x$control$hazard_baseline_01, x$control$hazard_baseline_02, x$control$hazard_baseline_12)
   Weibull <- c(shape_01, shape_02, shape_12)
   Gompertz <- c(Gompertz.1_01, Gompertz.2_01, Gompertz.1_02, Gompertz.2_02, Gompertz.1_12, Gompertz.2_12)
@@ -323,7 +344,7 @@ ranef.lsjm_interintraIDM <- function(object,...){
       st_T0 <- list.GK_T0$st
       Time_T0 <- data.id.Case1$Time_T0
     }
-    if(("current value" %in% x$control$sharedtype_01) || ("current value" %in% x$control$sharedtype_02) || ("current value" %in% x$control$sharedtype_12)){
+    if(("value" %in% x$control$sharedtype_01) || ("value" %in% x$control$sharedtype_02) || ("value" %in% x$control$sharedtype_12)){
       list.data_T <- data.time(data.id.Case1, data.id.Case1$Time_T, x$control$Objectlsmm$control$formFixed, x$control$Objectlsmm$control$formRandom,x$control$Objectlsmm$control$timeVar)
       list.data.GK_T <- data.time(list.GK_T$data.id2, c(t(st_T)),x$control$Objectlsmm$control$formFixed, x$control$Objectlsmm$control$formRandom,x$control$Objectlsmm$control$timeVar)
       list.data.GK_L_R <- data.time(list.GK_L_R$data.id2, c(t(st_L_R)),x$control$Objectlsmm$control$formFixed, x$control$Objectlsmm$control$formRandom,x$control$Objectlsmm$control$timeVar)
@@ -393,7 +414,7 @@ ranef.lsjm_interintraIDM <- function(object,...){
     st_0_LR <- c()
     X_GK_0_LR <- c()
     U_GK_0_LR <- c()
-    if(("current value" %in% x$control$sharedtype_01) || ("current value" %in% x$control$sharedtype_02) || ("current value" %in% x$control$sharedtype_12)){
+    if(("value" %in% x$control$sharedtype_01) || ("value" %in% x$control$sharedtype_02) || ("value" %in% x$control$sharedtype_12)){
       X_GK_0_LR <- c()
       U_GK_0_LR <- c()
     }
@@ -418,7 +439,7 @@ ranef.lsjm_interintraIDM <- function(object,...){
         list.GK_0_stLR <- data.GaussKronrod(data.id.integrale, a = 0, b = st.integrale, k = x$control$nb_pointsGK)
         st_0_stLR_i <- list.GK_0_stLR$st
         st_0_LR <- rbind(st_0_LR, st_0_stLR_i)
-        if(("current value" %in% x$control$sharedtype_01) || ("current value" %in% x$control$sharedtype_02) || ("current value" %in% x$control$sharedtype_12)){
+        if(("value" %in% x$control$sharedtype_01) || ("value" %in% x$control$sharedtype_02) || ("value" %in% x$control$sharedtype_12)){
           list.data.GK_0_stLR <- data.time(list.GK_0_stLR$data.id2, c(t(st_0_stLR_i)),x$control$Objectlsmm$control$formFixed, x$control$Objectlsmm$control$formRandom,x$control$Objectlsmm$control$timeVar)
           X_0_stLR_i <- list.data.GK_0_stLR$Xtime; U_0_stLR_i <- list.data.GK_0_stLR$Utime
           X_GK_0_LR <- rbind(X_GK_0_LR,X_0_stLR_i); U_GK_0_LR <- rbind(U_GK_0_LR,U_0_stLR_i)
@@ -471,7 +492,7 @@ ranef.lsjm_interintraIDM <- function(object,...){
       Z_01_i <- Z_01[id.Case1_boucle,]
       Z_02_i <- Z_02[id.Case1_boucle,]
       Z_12_i <- Z_12[id.Case1_boucle,]
-      if(("current value" %in% x$control$sharedtype_01) || ("current value" %in% x$control$sharedtype_02) || ("current value" %in% x$control$sharedtype_12)){
+      if(("value" %in% x$control$sharedtype_01) || ("value" %in% x$control$sharedtype_02) || ("value" %in% x$control$sharedtype_12)){
         X_T_i <- X_T[id.Case1_boucle,]
         U_T_i <- U_T[id.Case1_boucle,]
         X_GK_T_i <- as.matrix(X_GK_T[(x$control$nb_pointsGK*(id.Case1_boucle-1)+1):(x$control$nb_pointsGK*(id.Case1_boucle)),])
@@ -543,7 +564,8 @@ ranef.lsjm_interintraIDM <- function(object,...){
       random.effects_i <- marqLevAlg(binit, fn = re_lsjm_interintraIDMCase1, minimize = FALSE, nb.e.a = x$control$Objectlsmm$control$nb.e.a, variability_inter_visit = x$control$Objectlsmm$control$var_inter,
                                      variability_intra_visit = x$control$Objectlsmm$control$var_intra, Sigma.re = MatCov,
                                      sharedtype = sharedtype, HB = HB, Gompertz = Gompertz, Weibull = Weibull, nb_pointsGK = x$control$nb_pointsGK, alpha_inter_intra = alpha_inter_intra,
-                                     alpha_y_slope = alpha_y_slope, alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope,  wk = wk, rep_wk = rep_wk,
+                                     alpha_y_slope = alpha_y_slope, alpha_b_01 = alpha_b_01, alpha_b_02 = alpha_b_02,alpha_b_12 = alpha_b_12,
+                                     alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope,  wk = wk, rep_wk = rep_wk,
                                      mu.inter = mu.inter , sigma.epsilon.inter = sigma.epsilon.inter, mu.intra = mu.intra,sigma.epsilon.intra = sigma.epsilon.intra,
                                      delta2_i = delta2_i, Z_01_i=Z_01_i, Z_02_i=Z_02_i, Z_12_i=Z_12_i, X_T_i=X_T_i,  U_T_i=U_T_i,
                                      Xslope_T_i =Xslope_T_i ,  Uslope_T_i = Uslope_T_i,  X_GK_T_i = X_GK_T_i,  U_GK_T_i = U_GK_T_i,  Xslope_GK_T_i= Xslope_GK_T_i,
@@ -566,7 +588,8 @@ ranef.lsjm_interintraIDM <- function(object,...){
         random.effects_i <- marqLevAlg(binit, fn = re_lsjm_interintraIDMCase1, minimize = FALSE, nb.e.a = x$control$Objectlsmm$control$nb.e.a, variability_inter_visit = x$control$Objectlsmm$control$var_inter,
                                        variability_intra_visit = x$control$Objectlsmm$control$var_intra, Sigma.re = MatCov,
                                        sharedtype = sharedtype, HB = HB, Gompertz = Gompertz, Weibull = Weibull, nb_pointsGK = x$control$nb_pointsGK, alpha_inter_intra = alpha_inter_intra,
-                                       alpha_y_slope = alpha_y_slope, alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope,  wk = wk, rep_wk = rep_wk,
+                                       alpha_y_slope = alpha_y_slope, alpha_b_01 = alpha_b_01, alpha_b_02 = alpha_b_02,alpha_b_12 = alpha_b_12,
+                                       alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope,  wk = wk, rep_wk = rep_wk,
                                        mu.inter = mu.inter , sigma.epsilon.inter = sigma.epsilon.inter, mu.intra = mu.intra,sigma.epsilon.intra = sigma.epsilon.intra,
                                        delta2_i = delta2_i, Z_01_i=Z_01_i, Z_02_i=Z_02_i, Z_12_i=Z_12_i, X_T_i=X_T_i,  U_T_i=U_T_i,
                                        Xslope_T_i =Xslope_T_i ,  Uslope_T_i = Uslope_T_i,  X_GK_T_i = X_GK_T_i,  U_GK_T_i = U_GK_T_i,  Xslope_GK_T_i= Xslope_GK_T_i,
@@ -665,7 +688,7 @@ ranef.lsjm_interintraIDM <- function(object,...){
       st_T0 <- list.GK_T0$st
       Time_T0 <- data.id.Case1bis$Time_T0
     }
-    if(("current value" %in% x$control$sharedtype_01) || ("current value" %in% x$control$sharedtype_02) || ("current value" %in% x$control$sharedtype_12)){
+    if(("value" %in% x$control$sharedtype_01) || ("value" %in% x$control$sharedtype_02) || ("value" %in% x$control$sharedtype_12)){
       list.data_T <- data.time(data.id.Case1bis, data.id.Case1bis$Time_T, x$control$Objectlsmm$control$formFixed, x$control$Objectlsmm$control$formRandom,x$control$Objectlsmm$control$timeVar)
       list.data_L <- data.time(data.id.Case1bis, data.id.Case1bis$Time_L, x$control$Objectlsmm$control$formFixed, x$control$Objectlsmm$control$formRandom,x$control$Objectlsmm$control$timeVar)
       list.data.GK_T <- data.time(list.GK_T$data.id2, c(t(st_T)),x$control$Objectlsmm$control$formFixed, x$control$Objectlsmm$control$formRandom,x$control$Objectlsmm$control$timeVar)
@@ -757,7 +780,7 @@ ranef.lsjm_interintraIDM <- function(object,...){
       Z_01_i <- Z_01[id.Case1bis_boucle,]
       Z_02_i <- Z_02[id.Case1bis_boucle,]
       Z_12_i <- Z_12[id.Case1bis_boucle,]
-      if(("current value" %in% x$control$sharedtype_01) || ("current value" %in% x$control$sharedtype_02) || ("current value" %in% x$control$sharedtype_12)){
+      if(("value" %in% x$control$sharedtype_01) || ("value" %in% x$control$sharedtype_02) || ("value" %in% x$control$sharedtype_12)){
         X_T_i <- X_T[id.Case1bis_boucle,]
         U_T_i <- U_T[id.Case1bis_boucle,]
         X_GK_T_i <- as.matrix(X_GK_T[(x$control$nb_pointsGK*(id.Case1bis_boucle-1)+1):(x$control$nb_pointsGK*(id.Case1bis_boucle)),])
@@ -834,7 +857,8 @@ ranef.lsjm_interintraIDM <- function(object,...){
       random.effects_i <- marqLevAlg(binit, fn = re_lsjm_interintraIDMCase1Bis, minimize = FALSE,nb.e.a = x$control$Objectlsmm$control$nb.e.a, variability_inter_visit = x$control$Objectlsmm$control$var_inter,
                                      variability_intra_visit = x$control$Objectlsmm$control$var_intra, Sigma.re = MatCov,
                                      sharedtype = sharedtype, HB = HB, Gompertz = Gompertz, Weibull = Weibull, nb_pointsGK = x$control$nb_pointsGK, alpha_inter_intra = alpha_inter_intra,
-                                     alpha_y_slope = alpha_y_slope, alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope,  wk = wk,
+                                     alpha_y_slope = alpha_y_slope, alpha_b_01 = alpha_b_01, alpha_b_02 = alpha_b_02,alpha_b_12 = alpha_b_12,
+                                     alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope,  wk = wk,
                                      mu.inter = mu.inter , sigma.epsilon.inter = sigma.epsilon.inter, mu.intra = mu.intra,sigma.epsilon.intra = sigma.epsilon.intra,
                                      delta2_i = delta2_i, Z_01_i=Z_01_i, Z_02_i=Z_02_i, Z_12_i=Z_12_i, X_T_i=X_T_i,  U_T_i=U_T_i,
                                      Xslope_T_i = Xslope_T_i,  Uslope_T_i = Uslope_T_i,  X_GK_T_i=X_GK_T_i,  U_GK_T_i=U_GK_T_i,  Xslope_GK_T_i=Xslope_GK_T_i,
@@ -857,7 +881,8 @@ ranef.lsjm_interintraIDM <- function(object,...){
         random.effects_i <-  marqLevAlg(binit, fn = re_lsjm_interintraIDMCase1Bis, minimize = FALSE,nb.e.a = x$control$Objectlsmm$control$nb.e.a, variability_inter_visit = x$control$Objectlsmm$control$var_inter,
                                         variability_intra_visit = x$control$Objectlsmm$control$var_intra, Sigma.re = MatCov,
                                         sharedtype = sharedtype, HB = HB, Gompertz = Gompertz, Weibull = Weibull, nb_pointsGK = x$control$nb_pointsGK, alpha_inter_intra = alpha_inter_intra,
-                                        alpha_y_slope = alpha_y_slope, alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope,  wk = wk,
+                                        alpha_y_slope = alpha_y_slope, alpha_b_01 = alpha_b_01, alpha_b_02 = alpha_b_02,alpha_b_12 = alpha_b_12,
+                                        alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope,  wk = wk,
                                         mu.inter = mu.inter , sigma.epsilon.inter = sigma.epsilon.inter, mu.intra = mu.intra,sigma.epsilon.intra = sigma.epsilon.intra,
                                         delta2_i = delta2_i, Z_01_i=Z_01_i, Z_02_i=Z_02_i, Z_12_i=Z_12_i, X_T_i=X_T_i,  U_T_i=U_T_i,
                                         Xslope_T_i = Xslope_T_i,  Uslope_T_i = Uslope_T_i,  X_GK_T_i=X_GK_T_i,  U_GK_T_i=U_GK_T_i,  Xslope_GK_T_i=Xslope_GK_T_i,
@@ -962,7 +987,7 @@ ranef.lsjm_interintraIDM <- function(object,...){
       list.GK_T0 <- data.GaussKronrod(data.id.Case2, a = 0, b = data.id.Case2$Time_T0, k = x$control$nb_pointsGK)
       st_T0 <- list.GK_T0$st
     }
-    if(("current value" %in% x$control$sharedtype_01) || ("current value" %in% x$control$sharedtype_02) ){
+    if(("value" %in% x$control$sharedtype_01) || ("value" %in% x$control$sharedtype_02) ){
       list.data_T <- data.time(data.id.Case2, data.id.Case2$Time_T, x$control$Objectlsmm$control$formFixed, x$control$Objectlsmm$control$formRandom,x$control$Objectlsmm$control$timeVar)
       list.data.GK_T <- data.time(list.GK_T$data.id2, c(t(st_T)),x$control$Objectlsmm$control$formFixed, x$control$Objectlsmm$control$formRandom,x$control$Objectlsmm$control$timeVar)
       X_T <- list.data_T$Xtime; U_T <- list.data_T$Utime
@@ -1014,14 +1039,14 @@ ranef.lsjm_interintraIDM <- function(object,...){
     }
     for(id.Case2_boucle in 1:nbCase2){
 
-      if("current value" %in% x$control$sharedtype_01 || "current value" %in% x$control$sharedtype_02){
+      if("value" %in% x$control$sharedtype_01 || "value" %in% x$control$sharedtype_02){
         X_T_i <- X_T[id.Case2_boucle,];U_T_i <- U_T[id.Case2_boucle,]
         X_GK_T_i <- as.matrix(X_GK_T[(x$control$nb_pointsGK*(id.Case2_boucle-1)+1):(x$control$nb_pointsGK*id.Case2_boucle),]);U_GK_T_i <- as.matrix(U_GK_T[(x$control$nb_pointsGK*(id.Case2_boucle-1)+1):(x$control$nb_pointsGK*id.Case2_boucle),])
         if(x$control$left_trunc){
           X_GK_T0_i <- as.matrix(X_GK_T0[(x$control$nb_pointsGK*(id.Case2_boucle-1)+1):(x$control$nb_pointsGK*id.Case2_boucle),]);U_GK_T0_i <- as.matrix(U_GK_T0[(x$control$nb_pointsGK*(id.Case2_boucle-1)+1):(x$control$nb_pointsGK*id.Case2_boucle),])
         }
       }
-      if("slope" %in% x$control$sharedtype_01 || "slope" %in%x$control$ sharedtype_02){
+      if("slope" %in% x$control$sharedtype_01 || "slope" %in%x$control$sharedtype_02){
         Xslope_T_i <- Xslope_T[id.Case2_boucle,];Uslope_T_i <- Uslope_T[id.Case2_boucle,]
         Xslope_GK_T_i <- as.matrix(Xslope_GK_T[(x$control$nb_pointsGK*(id.Case2_boucle-1)+1):(x$control$nb_pointsGK*id.Case2_boucle),]);Uslope_GK_T_i <- as.matrix(Uslope_GK_T[(x$control$nb_pointsGK*(id.Case2_boucle-1)+1):(x$control$nb_pointsGK*id.Case2_boucle),])
         if(x$control$left_trunc){
@@ -1073,7 +1098,8 @@ ranef.lsjm_interintraIDM <- function(object,...){
                                      nb.e.a = x$control$Objectlsmm$control$nb.e.a, variability_inter_visit = x$control$Objectlsmm$control$var_inter,
                                      variability_intra_visit = x$control$Objectlsmm$control$var_intra, Sigma.re = MatCov,
                                      sharedtype = sharedtype, HB = HB, Gompertz = Gompertz, Weibull = Weibull, nb_pointsGK = x$control$nb_pointsGK, alpha_inter_intra = alpha_inter_intra,
-                                     alpha_y_slope = alpha_y_slope, alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope,  wk = wk,
+                                     alpha_y_slope = alpha_y_slope, alpha_b_01 = alpha_b_01, alpha_b_02 = alpha_b_02,
+                                     alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope,  wk = wk,
                                      mu.inter = mu.inter , sigma.epsilon.inter = sigma.epsilon.inter, mu.intra = mu.intra,sigma.epsilon.intra = sigma.epsilon.intra,
                                      delta2_i = delta2_i, Z_01_i=Z_01_i, Z_02_i=Z_02_i,  X_T_i=X_T_i,  U_T_i=U_T_i,
                                      Xslope_T_i = Xslope_T_i,  Uslope_T_i = Uslope_T_i,  X_GK_T_i=X_GK_T_i,  U_GK_T_i=U_GK_T_i,  Xslope_GK_T_i=Xslope_GK_T_i,
@@ -1094,7 +1120,8 @@ ranef.lsjm_interintraIDM <- function(object,...){
                                        nb.e.a = x$control$Objectlsmm$control$nb.e.a, variability_inter_visit = x$control$Objectlsmm$control$var_inter,
                                        variability_intra_visit = x$control$Objectlsmm$control$var_intra, Sigma.re = MatCov,
                                        sharedtype = sharedtype, HB = HB, Gompertz = Gompertz, Weibull = Weibull, nb_pointsGK = x$control$nb_pointsGK, alpha_inter_intra = alpha_inter_intra,
-                                       alpha_y_slope = alpha_y_slope, alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope,  wk = wk,
+                                       alpha_y_slope = alpha_y_slope, alpha_b_01 = alpha_b_01, alpha_b_02 = alpha_b_02,
+                                       alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope,  wk = wk,
                                        mu.inter = mu.inter , sigma.epsilon.inter = sigma.epsilon.inter, mu.intra = mu.intra,sigma.epsilon.intra = sigma.epsilon.intra,
                                        delta2_i = delta2_i, Z_01_i=Z_01_i, Z_02_i=Z_02_i,  X_T_i=X_T_i,  U_T_i=U_T_i,
                                        Xslope_T_i = Xslope_T_i,  Uslope_T_i = Uslope_T_i,  X_GK_T_i=X_GK_T_i,  U_GK_T_i=U_GK_T_i,  Xslope_GK_T_i=Xslope_GK_T_i,
@@ -1189,7 +1216,7 @@ ranef.lsjm_interintraIDM <- function(object,...){
       list.GK_T0 <- data.GaussKronrod(data.id.Case3, a = 0, b = data.id.Case3$Time_T0, k = x$control$nb_pointsGK)
       st_T0 <- list.GK_T0$st
     }
-    if(("current value" %in% x$control$sharedtype_01) || ("current value" %in% x$control$sharedtype_02) || ("current value" %in% x$control$sharedtype_12)){
+    if(("value" %in% x$control$sharedtype_01) || ("value" %in% x$control$sharedtype_02) || ("value" %in% x$control$sharedtype_12)){
       list.data_T <- data.time(data.id.Case3, data.id.Case3$Time_T, x$control$Objectlsmm$control$formFixed, x$control$Objectlsmm$control$formRandom,x$control$Objectlsmm$control$timeVar)
       list.data.GK_T <- data.time(list.GK_T$data.id2, c(t(st_T)),x$control$Objectlsmm$control$formFixed, x$control$Objectlsmm$control$formRandom,x$control$Objectlsmm$control$timeVar)
       list.data.GK_L_T <- data.time(list.GK_L_T$data.id2, c(t(st_L_T)),x$control$Objectlsmm$control$formFixed, x$control$Objectlsmm$control$formRandom,x$control$Objectlsmm$control$timeVar)
@@ -1257,7 +1284,7 @@ ranef.lsjm_interintraIDM <- function(object,...){
 
     ## Pour l'intégrale (à optmiser plus tard)
     st_0_LT <- c()
-    if(("current value" %in% x$control$sharedtype_01) || ("current value" %in% x$control$sharedtype_02) || ("current value" %in% x$control$sharedtype_12)){
+    if(("value" %in% x$control$sharedtype_01) || ("value" %in% x$control$sharedtype_02) || ("value" %in% x$control$sharedtype_12)){
       X_0_LT <- c()
       U_0_LT <- c()
     }
@@ -1284,7 +1311,7 @@ ranef.lsjm_interintraIDM <- function(object,...){
         list.GK_0_stLT <- data.GaussKronrod(data.id.integrale, a = 0, b = st.integrale, k = x$control$nb_pointsGK)
         st_0_stLT_i <- list.GK_0_stLT$st
         st_0_LT <- rbind(st_0_LT, st_0_stLT_i)
-        if(("current value" %in% x$control$sharedtype_01) || ("current value" %in% x$control$sharedtype_02) || ("current value" %in% x$control$sharedtype_12)){
+        if(("value" %in% x$control$sharedtype_01) || ("value" %in% x$control$sharedtype_02) || ("value" %in% x$control$sharedtype_12)){
           list.data.GK_0_stLT <- data.time(list.GK_0_stLT$data.id2, c(t(st_0_stLT_i)),x$control$Objectlsmm$control$formFixed, x$control$Objectlsmm$control$formRandom,x$control$Objectlsmm$control$timeVar)
           X_0_stLT_i <- list.data.GK_0_stLT$Xtime; U_0_stLT_i <- list.data.GK_0_stLT$Utime
           X_0_LT <- rbind(X_0_LT,X_0_stLT_i); U_0_LT <- rbind(U_0_LT,U_0_stLT_i)
@@ -1324,7 +1351,7 @@ ranef.lsjm_interintraIDM <- function(object,...){
 
     for(id.Case3_boucle in 1:nbCase3){
       #binit <- mvtnorm::rmvnorm(1, mean = rep(0, x$control$Objectlsmm$control$nb.e.a+2), MatCov)
-      if("current value" %in% x$control$sharedtype_01 || "current value" %in% x$control$sharedtype_02 || "current value" %in% x$control$sharedtype_12){
+      if("value" %in% x$control$sharedtype_01 || "value" %in% x$control$sharedtype_02 || "value" %in% x$control$sharedtype_12){
         X_T_i <- X_T[id.Case3_boucle,];U_T_i <- U_T[id.Case3_boucle,]
         X_GK_T_i <- as.matrix(X_GK_T[(x$control$nb_pointsGK*(id.Case3_boucle-1)+1):(x$control$nb_pointsGK*id.Case3_boucle),]);U_GK_T_i <- as.matrix(U_GK_T[(x$control$nb_pointsGK*(id.Case3_boucle-1)+1):(x$control$nb_pointsGK*id.Case3_boucle),])
         X_GK_L_T_i <- as.matrix(X_GK_L_T[(x$control$nb_pointsGK*(id.Case3_boucle-1)+1):(x$control$nb_pointsGK*id.Case3_boucle),]);U_GK_L_T_i <- as.matrix(U_GK_L_T[(x$control$nb_pointsGK*(id.Case3_boucle-1)+1):(x$control$nb_pointsGK*id.Case3_boucle),])
@@ -1400,7 +1427,8 @@ ranef.lsjm_interintraIDM <- function(object,...){
       random.effects_i <- marqLevAlg(binit, fn = re_lsjm_interintraIDMCase3, minimize = FALSE,nb.e.a = x$control$Objectlsmm$control$nb.e.a, variability_inter_visit = x$control$Objectlsmm$control$var_inter,
                                      variability_intra_visit = x$control$Objectlsmm$control$var_intra, Sigma.re = MatCov,
                                      sharedtype = sharedtype, HB = HB, Gompertz = Gompertz, Weibull = Weibull, nb_pointsGK = x$control$nb_pointsGK, alpha_inter_intra = alpha_inter_intra,
-                                     alpha_y_slope = alpha_y_slope, alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope,  wk = wk, rep_wk = rep_wk,
+                                     alpha_y_slope = alpha_y_slope, alpha_b_01 = alpha_b_01, alpha_b_02 = alpha_b_02,alpha_b_12 = alpha_b_12,
+                                     alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope,  wk = wk, rep_wk = rep_wk,
                                      mu.inter = mu.inter , sigma.epsilon.inter = sigma.epsilon.inter, mu.intra = mu.intra,sigma.epsilon.intra = sigma.epsilon.intra,
                                      delta2_i = delta2_i, Z_01_i=Z_01_i, Z_02_i=Z_02_i, Z_12_i=Z_12_i, X_T_i=X_T_i,  U_T_i=U_T_i,
                                      Xslope_T_i = Xslope_T_i,  Uslope_T_i = Uslope_T_i,  X_GK_T_i = X_GK_T_i,  U_GK_T_i = U_GK_T_i,  Xslope_GK_T_i = Xslope_GK_T_i,
@@ -1424,7 +1452,8 @@ ranef.lsjm_interintraIDM <- function(object,...){
         random.effects_i <- marqLevAlg(binit, fn = re_lsjm_interintraIDMCase3, minimize = FALSE,nb.e.a = x$control$Objectlsmm$control$nb.e.a, variability_inter_visit = x$control$Objectlsmm$control$var_inter,
                                        variability_intra_visit = x$control$Objectlsmm$control$var_intra, Sigma.re = MatCov,
                                        sharedtype = sharedtype, HB = HB, Gompertz = Gompertz, Weibull = Weibull, nb_pointsGK = x$control$nb_pointsGK, alpha_inter_intra = alpha_inter_intra,
-                                       alpha_y_slope = alpha_y_slope, alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope,  wk = wk, rep_wk = rep_wk,
+                                       alpha_y_slope = alpha_y_slope, alpha_b_01 = alpha_b_01, alpha_b_02 = alpha_b_02,alpha_b_12 = alpha_b_12,
+                                       alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope,  wk = wk, rep_wk = rep_wk,
                                        mu.inter = mu.inter , sigma.epsilon.inter = sigma.epsilon.inter, mu.intra = mu.intra,sigma.epsilon.intra = sigma.epsilon.intra,
                                        delta2_i = delta2_i, Z_01_i=Z_01_i, Z_02_i=Z_02_i, Z_12_i=Z_12_i, X_T_i=X_T_i,  U_T_i=U_T_i,
                                        Xslope_T_i = Xslope_T_i,  Uslope_T_i = Uslope_T_i,  X_GK_T_i = X_GK_T_i,  U_GK_T_i = U_GK_T_i,  Xslope_GK_T_i = Xslope_GK_T_i,
@@ -1547,43 +1576,43 @@ ranef.lsjm_interintraIDM <- function(object,...){
       pred_haz_02 <- 0
       pred_haz_12 <- 0
 
-      if("inter visit variability" %in% x$control$sharedtype_12){
+      if("variability inter" %in% x$control$sharedtype_12){
         pred_haz_12 <- pred_haz_12 + alpha.inter_12*exp(mu.inter+random.effects.Predictions[id_boucle,4])
       }
 
-      if("inter visit variability" %in% x$control$sharedtype_02){
+      if("variability inter" %in% x$control$sharedtype_02){
         pred_haz_02 <- pred_haz_02 + alpha.inter_02*exp(mu.inter+random.effects.Predictions[id_boucle,4])
       }
-      if("inter visit variability" %in% x$control$sharedtype_01){
+      if("variability inter" %in% x$control$sharedtype_01){
         pred_haz_01 <- pred_haz_01 + alpha.inter_01*exp(mu.inter+random.effects.Predictions[id_boucle,4])
       }
-      if("intra visit variability" %in% x$control$sharedtype_12){
+      if("variability intra" %in% x$control$sharedtype_12){
         pred_haz_12 <- pred_haz_12 + alpha.intra_12*exp(mu.intra+random.effects.Predictions[id_boucle,5])
       }
 
-      if("intra visit variability" %in% x$control$sharedtype_02){
+      if("variability intra" %in% x$control$sharedtype_02){
         pred_haz_02 <- pred_haz_02 + alpha.intra_02*exp(mu.intra+random.effects.Predictions[id_boucle,5])
 
       }
-      if("intra visit variability" %in% x$control$sharedtype_01){
+      if("variability intra" %in% x$control$sharedtype_01){
         pred_haz_01 <- pred_haz_01 + alpha.intra_01*exp(mu.intra+random.effects.Predictions[id_boucle,5])
 
       }
 
 
-      if("current value" %in% x$control$sharedtype_01 || "current value" %in% x$control$sharedtype_02){
+      if("value" %in% x$control$sharedtype_01 || "value" %in% x$control$sharedtype_02){
         list.data.GK.current.sigma.sort.unique <- data.time(data.GaussKronrod.sort.unique$data.id2[(x$control$nb_pointsGK*(id_boucle-1)+1):(x$control$nb_pointsGK*id_boucle),], st_calc.sort.unique[j,],
                                                             x$control$Objectlsmm$control$formFixed, x$control$Objectlsmm$control$formRandom,x$control$Objectlsmm$control$timeVar)
         Xs.j <- list.data.GK.current.sigma.sort.unique$Xtime
         Us.j <- list.data.GK.current.sigma.sort.unique$Utime
         current.GK <- beta%*%t(Xs.j) + random.effects_i$b[1:(x$control$Objectlsmm$control$nb.e.a)]%*%t(Us.j)
-        if("current value" %in% x$control$sharedtype_01){
+        if("value" %in% x$control$sharedtype_01){
           pred_haz_01 <- pred_haz_01 + alpha.current_01*current.GK
         }
-        if("current value" %in% x$control$sharedtype_02){
+        if("value" %in% x$control$sharedtype_02){
           pred_haz_02 <- pred_haz_02 + alpha.current_02*current.GK
         }
-        if("current value" %in% x$control$sharedtype_12){
+        if("value" %in% x$control$sharedtype_12){
           pred_haz_12 <- pred_haz_12 + alpha.current_12*current.GK
         }
       }

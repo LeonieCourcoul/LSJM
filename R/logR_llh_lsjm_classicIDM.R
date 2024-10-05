@@ -32,7 +32,7 @@ logR_llh_lsjm_classicIDM <- function(param,hazard_baseline_01, sharedtype_01,
   Bs_L_R_i_01 <- as.matrix(1); Bs_L_R_i_02 <- as.matrix(1); Bs_L_R_i_12<- as.matrix(1);
   Bs_L_T_i_01 <- as.matrix(1); Bs_L_T_i_02 <- as.matrix(1); Bs_L_T_i_12<- as.matrix(1);
   Bs_T0_i_01 <- as.matrix(1); Bs_T0_i_02 <- as.matrix(1); Bs_T0_i_12 <- as.matrix(1); Time_T0_i <- 0;
-  st_T_i <- c(0); st_L_i <- c(0); st_0_LR_i <- as.matrix(1); st_L_R_i <- c(0); st_T0_i <- c(0); st_0_LT_i <- as.matrix(1); st_L_T_i <- c(0);
+  st_T_i <- c(0); st_L_i <- c(0); st_0_LR_i <- as.matrix(1); st_L_R_i <- c(0); st_T0_i <- c(0); st_0_LT_i <- as.matrix(1); st_L_T_i <- c(0); alpha_b_01 <- c(0); alpha_b_02 <- c(0); alpha_b_12 <- c(0)
   B_L_i_01 <- c(0);
   #Manage parameter
   curseur <- 1
@@ -59,6 +59,10 @@ logR_llh_lsjm_classicIDM <- function(param,hazard_baseline_01, sharedtype_01,
     curseur <- curseur+nb.alpha_01
   }
   ### Association
+  if("random effects" %in% sharedtype_01){
+    alpha_b_01 <- param[curseur:(curseur+nb.e.a-1)]
+    curseur <- curseur + nb.e.a
+  }
   if("value" %in% sharedtype_01){
     alpha.current_01 <-  param[curseur]
     curseur <- curseur + 1
@@ -88,6 +92,10 @@ logR_llh_lsjm_classicIDM <- function(param,hazard_baseline_01, sharedtype_01,
     curseur <- curseur+nb.alpha_02
   }
   ### Association
+  if("random effects" %in% sharedtype_02){
+    alpha_b_02 <- param[curseur:(curseur+nb.e.a-1)]
+    curseur <- curseur + nb.e.a
+  }
   if("value" %in% sharedtype_02){
     alpha.current_02 <- param[curseur]
     curseur <- curseur + 1
@@ -117,6 +125,10 @@ logR_llh_lsjm_classicIDM <- function(param,hazard_baseline_01, sharedtype_01,
     curseur <- curseur+nb.alpha_12
   }
   ### Association
+  if("random effects" %in% sharedtype_12){
+    alpha_b_12 <- param[curseur:(curseur+nb.e.a-1)]
+    curseur <- curseur + nb.e.a
+  }
   if("value" %in% sharedtype_12){
     alpha.current_12 <- param[curseur]
     curseur <- curseur + 1
@@ -147,7 +159,8 @@ logR_llh_lsjm_classicIDM <- function(param,hazard_baseline_01, sharedtype_01,
   # Creations entrees rcpp
   sharedtype <- c("value" %in% sharedtype_01, "slope" %in% sharedtype_01,
                   "value" %in% sharedtype_02, "slope" %in% sharedtype_02,
-                  "value" %in% sharedtype_12, "slope" %in% sharedtype_12)
+                  "value" %in% sharedtype_12, "slope" %in% sharedtype_12,
+                  "random effects" %in% sharedtype_01, "random effects" %in% sharedtype_02, "random effects" %in% sharedtype_12)
   HB <- list(hazard_baseline_01, hazard_baseline_02, hazard_baseline_12)
   Weibull <- c(shape_01, shape_02, shape_12)
   Gompertz <- c(Gompertz.1_01, Gompertz.2_01, Gompertz.1_02, Gompertz.2_02, Gompertz.1_12, Gompertz.2_12)
@@ -191,7 +204,7 @@ logR_llh_lsjm_classicIDM <- function(param,hazard_baseline_01, sharedtype_01,
 
     ll_glob[1:nbCase1] <- log_llh_lsjm_classicIDM_C1(sharedtype, HB,  Gompertz,  Weibull,
                                                         nb_points_integral,
-                                                        alpha_y_slope, alpha_z,  gamma_z0,  beta, beta_slope,
+                                                        alpha_y_slope, t(alpha_b_01), t(alpha_b_02), t(alpha_b_12), alpha_z,  gamma_z0,  beta, beta_slope,
                                                         b_y,  b_y_slope, wk,  rep_wk,  sigma_epsilon,
                                                         delta2,  Z_01,  Z_02,  Z_12, X_T,  U_T,
                                                         Xslope_T,  Uslope_T,  X_GK_T,  U_GK_T,  Xslope_GK_T,
@@ -236,7 +249,8 @@ logR_llh_lsjm_classicIDM <- function(param,hazard_baseline_01, sharedtype_01,
 
     ll_glob[(nbCase1+1):(nbCase1 + nbCase1bis)] <- log_llh_lsjm_classicIDM_C1bis( sharedtype,  HB,  Gompertz,  Weibull,
                                                                                      nb_points_integral,
-                                                                                     alpha_y_slope,  alpha_z,  gamma_z0,  beta,  beta_slope,
+                                                                                     alpha_y_slope, t(alpha_b_01), t(alpha_b_02),
+                                                                                  t(alpha_b_12),alpha_z,  gamma_z0,  beta,  beta_slope,
                                                                                      b_y,  b_y_slope,  wk,  sigma_epsilon,
                                                                                      delta2,  Z_01,  Z_02,  Z_12,  X_T,  U_T,
                                                                                      Xslope_T,  Uslope_T,  X_GK_T,  U_GK_T,  Xslope_GK_T,
@@ -275,7 +289,7 @@ logR_llh_lsjm_classicIDM <- function(param,hazard_baseline_01, sharedtype_01,
 
     ll_glob[(nbCase1 + nbCase1bis + 1):(nbCase1 + nbCase1bis + nbCase2)] <- log_llh_lsjm_classicIDM_C2( sharedtype,  HB,  Gompertz,  Weibull,
                                                                                                            nb_points_integral,
-                                                                                                           alpha_y_slope,  alpha_z,  gamma_z0,  beta,  beta_slope,
+                                                                                                           alpha_y_slope, t(alpha_b_01), t(alpha_b_02), alpha_z,  gamma_z0,  beta,  beta_slope,
                                                                                                            b_y,  b_y_slope,  wk,  sigma_epsilon,
                                                                                                            delta2,  Z_01,  Z_02,  X_T,  U_T,
                                                                                                            Xslope_T,  Uslope_T,  X_GK_T,  U_GK_T,  Xslope_GK_T,
@@ -321,7 +335,7 @@ logR_llh_lsjm_classicIDM <- function(param,hazard_baseline_01, sharedtype_01,
 
     ll_glob[(nbCase1 + nbCase1bis + nbCase2 + 1):(nbCase1 + nbCase1bis + nbCase2 + nbCase3)] <- log_llh_lsjm_classicIDM_C3( sharedtype,  HB,  Gompertz,  Weibull,
                                                                                                                                nb_points_integral,
-                                                                                                                               alpha_y_slope,  alpha_z,  gamma_z0,  beta,  beta_slope,
+                                                                                                                               alpha_y_slope, t(alpha_b_01), t(alpha_b_02), t(alpha_b_12), alpha_z,  gamma_z0,  beta,  beta_slope,
                                                                                                                                b_y,  b_y_slope,  wk,  rep_wk,   sigma_epsilon,
                                                                                                                                delta2,  Z_01,  Z_02,  Z_12,  X_T,  U_T,
                                                                                                                                Xslope_T,  Uslope_T,  X_GK_T,  U_GK_T,  Xslope_GK_T,

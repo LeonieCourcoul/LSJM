@@ -180,7 +180,7 @@ predict.lsmm_interintra <- function(Objectlsmm, which = "RE", Objectranef = NULL
                                                         beta = beta,
                                                         mu.inter = mu.inter , sigma.epsilon.inter = sigma.epsilon.inter, mu.intra = mu.intra,sigma.epsilon.intra = sigma.epsilon.intra,
                                                         len_visit_i = len_visit_i, X_base_i = X_base_i, U_base_i = U_base_i, y_i = y_i, offset_ID_i = offset_ID_i,
-                                                        nproc = x$control$nproc, clustertype = x$control$clustertype, maxiter = x$control$maxiter, print.info = FALSE,
+                                                        nproc = 1, clustertype = x$control$clustertype, maxiter = x$control$maxiter, print.info = FALSE,
                                                         file = "", blinding = FALSE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4)
 
                          while(random.effects_i$istop !=1){
@@ -190,7 +190,7 @@ predict.lsmm_interintra <- function(Objectlsmm, which = "RE", Objectranef = NULL
                                                           beta = beta,
                                                           mu.inter = mu.inter , sigma.epsilon.inter = sigma.epsilon.inter, mu.intra = mu.intra,sigma.epsilon.intra = sigma.epsilon.intra,
                                                           len_visit_i = len_visit_i, X_base_i = X_base_i, U_base_i = U_base_i, y_i = y_i, offset_ID_i = offset_ID_i,
-                                                          nproc = x$control$nproc, clustertype = x$control$clustertype, maxiter = x$control$maxiter, print.info = FALSE,
+                                                          nproc = 1, clustertype = x$control$clustertype, maxiter = x$control$maxiter, print.info = FALSE,
                                                           file = "", blinding = TRUE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4, multipleTry = 100)
                            if(x$control$var_inter && x$control$var_intra){
                              binit <-matrix(0, nrow = 1, ncol = x$control$nb.e.a+2)

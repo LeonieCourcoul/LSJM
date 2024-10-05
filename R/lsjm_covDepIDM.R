@@ -238,6 +238,9 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
     }
   }
   binit_CI <- c(binit_CI, alpha_01)
+  if("random effects" %in% sharedtype_01){
+    binit_CI <- c(binit_CI, rep(0,nb.e.a))
+  }
   if("value" %in% sharedtype_01){
     binit_CI <- c(binit_CI, 0)
   }
@@ -263,6 +266,9 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
     }
   }
   binit_CI <- c(binit_CI, alpha_02)
+  if("random effects" %in% sharedtype_02){
+    binit_CI <- c(binit_CI, rep(0,nb.e.a))
+  }
   if("value" %in% sharedtype_02){
     binit_CI <- c(binit_CI, 0)
   }
@@ -288,6 +294,9 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
     }
   }
   binit_CI <- c(binit_CI, alpha_12)
+  if("random effects" %in% sharedtype_12){
+    binit_CI <- c(binit_CI, rep(0,nb.e.a))
+  }
   if("value" %in% sharedtype_12){
     binit_CI <- c(binit_CI, 0)
   }
@@ -615,6 +624,10 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
     if(!is.null(alpha_01)){
       names.param <- c(names.param, paste(name_ZO1,"",sep = "_"))
     }
+    if("random effects" %in% sharedtype_01){
+      binit_CR <- c(binit_CR, rep(0,nb.e.a))
+      names.param <- c(names.param, paste("re",colnames(U_base),"01",sep = "_"))
+    }
     if("value" %in% sharedtype_01){
       binit_noCI <- c(binit_noCI, 0)
       names.param <- c(names.param, 'value 01')
@@ -652,6 +665,10 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
     if(!is.null(alpha_02)){
       names.param <- c(names.param, paste(name_ZO2,"",sep = "_"))
     }
+    if("random effects" %in% sharedtype_02){
+      binit_CR <- c(binit_CR, rep(0,nb.e.a))
+      names.param <- c(names.param, paste("re",colnames(U_base),"02",sep = "_"))
+    }
     if("value" %in% sharedtype_02){
       binit_noCI <- c(binit_noCI, 0)
       names.param <- c(names.param, 'value 02')
@@ -688,6 +705,10 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
     if(!is.null(alpha_12)){
       names.param <- c(names.param, paste(name_Z12,"",sep = "_"))
     }
+    if("random effects" %in% sharedtype_12){
+      binit_CR <- c(binit_CR, rep(0,nb.e.a))
+      names.param <- c(names.param, paste("re",colnames(U_base),"12",sep = "_"))
+    }
     if("value" %in% sharedtype_12){
       binit_noCI <- c(binit_noCI, 0)
       names.param <- c(names.param, 'value 12')
@@ -701,7 +722,12 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
       names.param <- c(names.param, 'variability 12')
     }
 
-    binit_noCI <- c(binit_noCI, Objectlsmm$result_step2$b)
+    if(is.null(Objectlsmm$result_step2)){
+      binit_noCI <- c(binit_noCI, Objectlsmm$result_step1$b)
+    }
+    else{
+      binit_noCI <- c(binit_noCI, Objectlsmm$result_step2$b)
+    }
 
     Zq1 <- spacefillr::generate_sobol_owen_set(S1,  nb.e.a+nb.e.a.sigma)
     Zq <- apply(Zq1, 2, qnorm)
@@ -721,7 +747,7 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
                                   index_beta_slope = index_beta_slope, index_b_slope = index_b_slope,
                                   nb.omega = nb.omega,  nb.e.a.sigma = nb.e.a.sigma,correlated_re = correlated_re,
                                   nproc = nproc, clustertype = clustertype, maxiter = maxiter, print.info = print.info,
-                                  file = file, blinding = FALSE, epsa = epsa, epsb = epsb, epsd = 1.9)
+                                  file = file, blinding = FALSE, epsa = epsa, epsb = epsb, epsd = 1.9, partialH = c(1))
 
 
   }
@@ -1389,6 +1415,9 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
   if(!is.null(alpha_01)){
     names.param <- c(names.param, paste(name_ZO1,"01",sep = "_"))
   }
+  if("random effects" %in% sharedtype_01){
+    names.param <- c(names.param, paste("re",colnames(U_base),"01",sep = "_"))
+  }
   if("value" %in% sharedtype_01){
     names.param <- c(names.param, 'value 01')
   }
@@ -1419,6 +1448,9 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
   if(!is.null(alpha_02)){
     names.param <- c(names.param, paste(name_ZO2,"02",sep = "_"))
   }
+  if("random effects" %in% sharedtype_02){
+    names.param <- c(names.param, paste("re",colnames(U_base),"02",sep = "_"))
+  }
   if("value" %in% sharedtype_02){
     names.param <- c(names.param, 'value 02')
   }
@@ -1447,6 +1479,9 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
   }
   if(!is.null(alpha_12)){
     names.param <- c(names.param, paste(name_Z12,"12",sep = "_"))
+  }
+  if("random effects" %in% sharedtype_12){
+    names.param <- c(names.param, paste("re",colnames(U_base),"12",sep = "_"))
   }
   if("value" %in% sharedtype_12){
     names.param <- c(names.param, 'value 12')

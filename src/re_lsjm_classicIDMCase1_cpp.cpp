@@ -14,7 +14,8 @@ using namespace std;
 
 double re_lsjm_classicIDMCase1_cpp(arma::vec sharedtype, List HB, arma::vec Gompertz, arma::vec Weibull,
                                       double nb_pointsGK,
-                                      arma::vec alpha_y_slope, List alpha_z, List gamma, arma::vec beta, arma::vec beta_slope,
+                                      arma::vec alpha_y_slope, arma::vec alpha_b_01, arma::vec alpha_b_02, arma::vec alpha_b_12,
+                                      List alpha_z, List gamma, arma::vec beta, arma::vec beta_slope,
                                       arma::mat b_y, arma::mat b_y_slope, arma::vec wk, arma::vec rep_wk, double sigma_epsilon,
                                       int delta2_i, arma::rowvec Z_01_i, arma::rowvec Z_02_i, arma::rowvec Z_12_i, arma::rowvec X_T_i, arma::rowvec U_T_i,
                                       arma::rowvec Xslope_T_i, arma::rowvec Uslope_T_i, arma::mat X_GK_T_i, arma::mat U_GK_T_i, arma::mat Xslope_GK_T_i,
@@ -38,6 +39,9 @@ double re_lsjm_classicIDMCase1_cpp(arma::vec sharedtype, List HB, arma::vec Gomp
 
   bool dep_cv_12 = sharedtype[4];
   bool dep_slope_12 = sharedtype[5];
+  bool dep_re_01 = sharedtype[6];
+  bool dep_re_02 = sharedtype[7];
+  bool dep_re_12 = sharedtype[8];
 
   const std::string& hazard_baseline_01 = HB[0];
   const std::string& hazard_baseline_02 = HB[1];
@@ -94,6 +98,26 @@ double re_lsjm_classicIDMCase1_cpp(arma::vec sharedtype, List HB, arma::vec Gomp
   arma::mat slope_GK_0_LR;
   arma::mat current_GK_T0;
   arma::mat slope_GK_T0;
+
+  if(dep_re_01){
+    survLong_01_L_R_i = survLong_01_L_R_i + arma::repmat(alpha_b_01*b_y,1,nb_pointsGK);
+    survLong_01_0_LR_i = survLong_01_0_LR_i + arma::repmat(alpha_b_01*b_y,1,nb_pointsGK*nb_pointsGK);
+    if(left_trunc){
+      survLong_01_T0_i = survLong_01_T0_i + arma::repmat(alpha_b_01*b_y,1,nb_pointsGK);
+    }
+  }
+
+  if(dep_re_02){
+    survLong_02_0_LR_i = survLong_02_0_LR_i + arma::repmat(alpha_b_02*b_y,1,nb_pointsGK*nb_pointsGK);
+    if(left_trunc){
+      survLong_02_T0_i = survLong_02_T0_i + arma::repmat(alpha_b_02*b_y,1,nb_pointsGK);
+    }
+  }
+  if(dep_re_12){
+    survLong_12_0_LR_i = survLong_12_0_LR_i + arma::repmat(alpha_b_12*b_y,1,nb_pointsGK*nb_pointsGK);
+    survLong_12_T_i = survLong_12_T_i + arma::repmat(alpha_b_12*b_y,1,nb_pointsGK);
+    h_12_T_i = h_12_T_i%exp(alpha_b_12*b_y);
+  }
 
   if(dep_cv_01 || dep_cv_02 || dep_cv_12){
     //Rcout << "The value of v : \n" << 1 << "\n";

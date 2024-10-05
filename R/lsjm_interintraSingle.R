@@ -199,6 +199,10 @@ lsjm_interintraSingle <- function(Objectlsmm, Time, deltas, hazard_baseline_01, 
   if(!is.null(alpha_01)){
     names.param <- c(names.param, paste(name_ZO1,"01",sep = "_"))
   }
+  if("random effects" %in% sharedtype_01){
+    binit_CR <- c(binit_CR, rep(0,nb.e.a))
+    names.param <- c(names.param, paste("re",colnames(U_base),"01",sep = "_"))
+  }
   if("value" %in% sharedtype_01){
     binit_CR <- c(binit_CR, 0)
     names.param <- c(names.param, 'value 01')
@@ -207,15 +211,20 @@ lsjm_interintraSingle <- function(Objectlsmm, Time, deltas, hazard_baseline_01, 
     binit_CR <- c(binit_CR, 0)
     names.param <- c(names.param, 'slope 01')
   }
-  if("inter visit variability" %in% sharedtype_01){
+  if("variability inter" %in% sharedtype_01){
     binit_CR <- c(binit_CR,0)
-    names.param <- c(names.param, 'inter visits variability 01')
+    names.param <- c(names.param, 'variability inter 01')
   }
-  if("intra visit variability" %in% sharedtype_01){
+  if("variability intra" %in% sharedtype_01){
     binit_CR <- c(binit_CR,0)
-    names.param <- c(names.param, 'intra visit variability 01')
+    names.param <- c(names.param, 'variability intra 01')
   }
-  binit_CR <- c(binit_CR, Objectlsmm$result_step2$b)
+  if(is.null(Objectlsmm$result_step2)){
+    binit_CR <- c(binit_CR, Objectlsmm$result_step1$b)
+  }
+  else{
+    binit_CR <- c(binit_CR, Objectlsmm$result_step2$b)
+  }
 
   if(variability_inter_visit && variability_intra_visit){
     Zq1 <- spacefillr::generate_sobol_owen_set(S1,  nb.e.a+2)

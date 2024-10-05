@@ -15,37 +15,36 @@ summary.lsjm_interintraIDM <- function(object,...)
     cat("We recommend to not interpret the following results and to try to reach convergence for the first step. \n")
 
     cat("--------------------------------------------------------------------------------------------------------- \n")
-    cat("\n")
+    stop("\n")
   }
 
-  cat("Joint location-scale model with within and between visits residual variability for quantitative outcome and an illness-death model", "\n")
+
+
+  cat("Location-scale joint model with an illness-death model fitted by maximum likelihood method", "\n")
 
   #ajouter le code d'appelle à la fonction
   cat("\n")
   cat("Statistical Model:", "\n")
-  cat(paste("    Number of subjects:", x$control$Objectlsmm$control$Ind),"\n")
-  cat(paste("    Number of observations:", nrow(x$control$Objectlsmm$control$data.long)),"\n")
+  cat(paste("    Number of subjects:", x$control$Ind),"\n")
+  cat(paste("    Number of observations:", nrow(x$control$data.long)),"\n")
 
   cat("\n")
   cat("Iteration process:", "\n")
 
-  if(x$info_conv_step2$conv==1) cat("    Convergence criteria satisfied")
-  if(x$info_conv_step2$conv==2) cat("    Maximum number of iteration reached without convergence")
-  if(x$info_conv_step2$conv==4) {cat("    The program stopped abnormally. No results can be displayed. \n")
+  if(!is.null(x$info_conv_step2)){
+    if(x$info_conv_step2$conv==1) cat("    Convergence criteria satisfied")
+    if(x$info_conv_step2$conv==2) cat("    Maximum number of iteration reached without convergence")
+    if(x$info_conv_step2$conv==4) cat("    The program stopped abnormally. No results can be displayed. \n")
   }
-  else{
-    cat("\n")
-    cat(paste("     Number of iterations: "), "\n")
-    cat(paste("          Step 1: ",x$result_step1$ni), "\n")
-    cat(paste("          Step 2: ",x$info_conv_step2$niter), "\n")
-    cat(paste("     Convergence criteria (Step1): parameters =" ,signif(x$info_conv_step1$convcrit[1],3)), "\n")
-    cat(paste("                                 : likelihood =" ,signif(x$info_conv_step1$convcrit[2],3)), "\n")
-    cat(paste("                                 : second derivatives =" ,signif(x$info_conv_step1$convcrit[3],3)), "\n")
-    cat(paste("     Time of computation :" , format(x$info_conv_step2$time)),  "\n")
-
-  }
-
   cat("\n")
+  cat(paste("     Number of iterations: "), "\n")
+  cat(paste("          Step 1: ",x$result_step1$ni), "\n")
+  cat(paste("          Step 2: ",x$info_conv_step2$niter), "\n")
+  cat(paste("     Convergence criteria (Step1): parameters =" ,signif(x$info_conv_step1$convcrit[1],3)), "\n")
+  cat(paste("                                 : likelihood =" ,signif(x$info_conv_step1$convcrit[2],3)), "\n")
+  cat(paste("                                 : second derivatives =" ,signif(x$info_conv_step1$convcrit[3],3)), "\n")
+  cat(paste("     Time of computation :" , format(x$time.computation)),  "\n")
+
   cat("\n")
   cat("Goodness-of-fit statistics:")
   cat("\n")
@@ -94,7 +93,13 @@ summary.lsjm_interintraIDM <- function(object,...)
     curseur <- curseur+nb.alpha_01
   }
   ### Association
-  if("current value" %in% x$control$sharedtype_01){
+  if("random effects" %in% x$control$sharedtype_01){
+    alpha.re_01 <- param[curseur:(curseur+x$control$Objectlsmm$control$nb.e.a-1)]
+    alpha.re_01.se <- param.se[curseur:(curseur+x$control$Objectlsmm$control$nb.e.a-1)]
+    alpha.re_01.name <- param.names[curseur:(curseur+x$control$Objectlsmm$control$nb.e.a-1)]
+    curseur <- curseur + x$control$Objectlsmm$control$nb.e.a
+  }
+  if("value" %in% x$control$sharedtype_01){
     alpha.current_01 <-  param[curseur]
     alpha.current_01.se <-  param.se[curseur]
     alpha.current_01.name <-  param.names[curseur]
@@ -106,13 +111,13 @@ summary.lsjm_interintraIDM <- function(object,...)
     alpha.slope_01.name <- param.names[curseur]
     curseur <- curseur + 1
   }
-  if("inter visit variability" %in% x$control$sharedtype_01){
+  if("variability inter" %in% x$control$sharedtype_01){
     alpha.intervar_01 <- param[curseur]
     alpha.intervar_01.se <- param.se[curseur]
     alpha.intervar_01.name <- param.names[curseur]
     curseur <- curseur + 1
   }
-  if("intra visit variability" %in% x$control$sharedtype_01){
+  if("variability intra" %in% x$control$sharedtype_01){
     alpha.intravar_01 <- param[curseur]
     alpha.intravar_01.se <- param.se[curseur]
     alpha.intravar_01.name <- param.names[curseur]
@@ -149,7 +154,13 @@ summary.lsjm_interintraIDM <- function(object,...)
     curseur <- curseur+nb.alpha_02
   }
   ### Association
-  if("current value" %in% x$control$sharedtype_02){
+  if("random effects" %in% x$control$sharedtype_02){
+    alpha.re_02 <- param[curseur:(curseur+x$control$Objectlsmm$control$nb.e.a-1)]
+    alpha.re_02.se <- param.se[curseur:(curseur+x$control$Objectlsmm$control$nb.e.a-1)]
+    alpha.re_02.name <- param.names[curseur:(curseur+x$control$Objectlsmm$control$nb.e.a-1)]
+    curseur <- curseur + x$control$Objectlsmm$control$nb.e.a
+  }
+  if("value" %in% x$control$sharedtype_02){
     alpha.current_02 <- param[curseur]
     alpha.current_02.se <- param.se[curseur]
     alpha.current_02.name <- param.names[curseur]
@@ -161,13 +172,13 @@ summary.lsjm_interintraIDM <- function(object,...)
     alpha.slope_02.name <- param.names[curseur]
     curseur <- curseur + 1
   }
-  if("inter visit variability" %in% x$control$sharedtype_02){
+  if("variability inter" %in% x$control$sharedtype_02){
     alpha.intervar_02 <- param[curseur]
     alpha.intervar_02.se <- param.se[curseur]
     alpha.intervar_02.name <- param.names[curseur]
     curseur <- curseur + 1
   }
-  if("intra visit variability" %in% x$control$sharedtype_02){
+  if("variability intra" %in% x$control$sharedtype_02){
     alpha.intravar_02 <- param[curseur]
     alpha.intravar_02.se <- param.se[curseur]
     alpha.intravar_02.name <- param.names[curseur]
@@ -204,7 +215,13 @@ summary.lsjm_interintraIDM <- function(object,...)
     curseur <- curseur+nb.alpha_12
   }
   ### Association
-  if("current value" %in% x$control$sharedtype_12){
+  if("random effects" %in% x$control$sharedtype_12){
+    alpha.re_12 <- param[curseur:(curseur+x$control$Objectlsmm$control$nb.e.a-1)]
+    alpha.re_12.se <- param.se[curseur:(curseur+x$control$Objectlsmm$control$nb.e.a-1)]
+    alpha.re_12.name <- param.names[curseur:(curseur+x$control$Objectlsmm$control$nb.e.a-1)]
+    curseur <- curseur + x$control$Objectlsmm$control$nb.e.a
+  }
+  if("value" %in% x$control$sharedtype_12){
     alpha.current_12 <- param[curseur]
     alpha.current_12.se <- param.se[curseur]
     alpha.current_12.name <- param.names[curseur]
@@ -216,13 +233,13 @@ summary.lsjm_interintraIDM <- function(object,...)
     alpha.slope_12.name <- param.names[curseur]
     curseur <- curseur + 1
   }
-  if("inter visit variability" %in% x$control$sharedtype_12){
+  if("variability inter" %in% x$control$sharedtype_12){
     alpha.intervar_12 <- param[curseur]
     alpha.intervar_12.se <- param.se[curseur]
     alpha.intervar_12.name <- param.names[curseur]
     curseur <- curseur + 1
   }
-  if("intra visit variability" %in% x$control$sharedtype_12){
+  if("variability intra" %in% x$control$sharedtype_12){
     alpha.intravar_12 <- param[curseur]
     alpha.intravar_12.se <- param.se[curseur]
     alpha.intravar_12.name <- param.names[curseur]
@@ -271,6 +288,9 @@ summary.lsjm_interintraIDM <- function(object,...)
       C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
       MatCov <- C1
       MatCov <- as.matrix(MatCov)
+      borne2 <- borne1 + choose(n = x$control$Objectlsmm$control$nb.e.a+2, k = 2) + x$control$Objectlsmm$control$nb.e.a +2
+      Matcov.name <- unique( unique(gsub("\\*.*", "", gsub("__", "_", param.names[(borne1+1):borne2]))))
+
     }
     else{
       borne1 <- curseur + choose(n = x$control$Objectlsmm$control$nb.e.a, k = 2) + x$control$Objectlsmm$control$nb.e.a - 1
@@ -279,6 +299,19 @@ summary.lsjm_interintraIDM <- function(object,...)
       C2 <-matrix(c(param[(borne1+1)], 0,param[borne1+2], param[borne1+3]),nrow=2,ncol=2, byrow = TRUE)
       MatCovb <- as.matrix(C1)
       MatCovSig <- as.matrix(C2)
+      borne3 <- borne1 + choose(n = 2, k = 2) + 2
+
+      borne4 <- borne3 + choose(n = x$control$Objectlsmm$control$nb.e.a, k = 2) + x$control$Objectlsmm$control$nb.e.a
+      borne5 <- borne4 + choose(n = 2, k = 2) + 2
+
+      Matcovb.name.mat <- matrix(rep(0,(x$control$Objectlsmm$control$nb.e.a)**2),nrow=x$control$Objectlsmm$control$nb.e.a,ncol=x$control$Objectlsmm$control$nb.e.a)
+      Matcovb.name.mat[lower.tri(Matcovb.name.mat, diag=T)] <- param.names[(borne3+1):borne4]
+      Matcovb.name <- unique(gsub("_Location.*", "", unlist(regmatches(Matcovb.name.mat, gregexpr("\\(?[A-Za-z0-9\\.\\^]+\\)?_Location", Matcovb.name.mat)))))
+
+      MatcovSig.name.mat <- matrix(rep(0,(2)**2),nrow=2,ncol=2)
+      MatcovSig.name.mat[lower.tri(MatcovSig.name.mat, diag=T)] <- param.names[(borne4+1):borne5]
+      MatcovSig.name <- unique(gsub("_Scale.*", "", unlist(regmatches(MatcovSig.name.mat, gregexpr("\\(?[A-Za-z0-9\\.\\^]+\\)?_Scale", MatcovSig.name.mat)))))
+
     }
   }
   else{
@@ -289,6 +322,8 @@ summary.lsjm_interintraIDM <- function(object,...)
         C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
         MatCov <- C1
         MatCov <- as.matrix(MatCov)
+        borne2 <- borne1 + choose(n = x$control$Objectlsmm$control$nb.e.a+1, k = 2) + x$control$Objectlsmm$control$nb.e.a +1
+        Matcov.name <- unique( unique(gsub("\\*.*", "", gsub("__", "_", param.names[(borne1+1):borne2]))))
       }
       else{
         borne1 <- curseur + choose(n = x$control$Objectlsmm$control$nb.e.a, k = 2) + x$control$Objectlsmm$control$nb.e.a - 1
@@ -297,6 +332,19 @@ summary.lsjm_interintraIDM <- function(object,...)
         C2 <-matrix(c(param[(borne1+1)]),nrow=1,ncol=1, byrow = TRUE)
         MatCovb <- as.matrix(C1)
         MatCovSig <- as.matrix(C2)
+        borne3 <- borne1 + choose(n = 1, k = 2) + 1
+
+        borne4 <- borne3 + choose(n = x$control$Objectlsmm$control$nb.e.a, k = 2) + x$control$Objectlsmm$control$nb.e.a
+        borne5 <- borne4 + choose(n = 1, k = 2) + 1
+
+        Matcovb.name.mat <- matrix(rep(0,(x$control$Objectlsmm$control$nb.e.a)**2),nrow=x$control$Objectlsmm$control$nb.e.a,ncol=x$control$Objectlsmm$control$nb.e.a)
+        Matcovb.name.mat[lower.tri(Matcovb.name.mat, diag=T)] <- param.names[(borne3+1):borne4]
+        Matcovb.name <- unique(gsub("_Location.*", "", unlist(regmatches(Matcovb.name.mat, gregexpr("\\(?[A-Za-z0-9\\.\\^]+\\)?_Location", Matcovb.name.mat)))))
+
+        MatcovSig.name.mat <- matrix(rep(0,(1)**2),nrow=1,ncol=1)
+        MatcovSig.name.mat[lower.tri(MatcovSig.name.mat, diag=T)] <- param.names[(borne4+1):borne5]
+        MatcovSig.name <- unique(gsub("_Scale.*", "", unlist(regmatches(MatcovSig.name.mat, gregexpr("\\(?[A-Za-z0-9\\.\\^]+\\)?_Scale", MatcovSig.name.mat)))))
+
       }
     }
     else{
@@ -307,6 +355,8 @@ summary.lsjm_interintraIDM <- function(object,...)
           C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
           MatCov <- C1
           MatCov <- as.matrix(MatCov)
+          borne2 <- borne1 + choose(n = x$control$Objectlsmm$control$nb.e.a+1, k = 2) + x$control$Objectlsmm$control$nb.e.a +1
+          Matcov.name <- unique( unique(gsub("\\*.*", "", gsub("__", "_", param.names[(borne1+1):borne2]))))
         }
         else{
           borne1 <- curseur + choose(n = x$control$Objectlsmm$control$nb.e.a, k = 2) + x$control$Objectlsmm$control$nb.e.a - 1
@@ -315,6 +365,19 @@ summary.lsjm_interintraIDM <- function(object,...)
           C2 <-matrix(c(param[(borne1+1)]),nrow=1,ncol=1, byrow = TRUE)
           MatCovb <- as.matrix(C1)
           MatCovSig <- as.matrix(C2)
+          borne3 <- borne1 + choose(n = 1, k = 2) + 1
+
+          borne4 <- borne3 + choose(n = x$control$Objectlsmm$control$nb.e.a, k = 2) + x$control$Objectlsmm$control$nb.e.a
+          borne5 <- borne4 + choose(n = 1, k = 2) + 1
+
+          Matcovb.name.mat <- matrix(rep(0,(x$control$Objectlsmm$control$nb.e.a)**2),nrow=x$control$Objectlsmm$control$nb.e.a,ncol=x$control$Objectlsmm$control$nb.e.a)
+          Matcovb.name.mat[lower.tri(Matcovb.name.mat, diag=T)] <- param.names[(borne3+1):borne4]
+          Matcovb.name <- unique(gsub("_Location.*", "", unlist(regmatches(Matcovb.name.mat, gregexpr("\\(?[A-Za-z0-9\\.\\^]+\\)?_Location", Matcovb.name.mat)))))
+
+          MatcovSig.name.mat <- matrix(rep(0,(1)**2),nrow=1,ncol=1)
+          MatcovSig.name.mat[lower.tri(MatcovSig.name.mat, diag=T)] <- param.names[(borne4+1):borne5]
+          MatcovSig.name <- unique(gsub("_Scale.*", "", unlist(regmatches(MatcovSig.name.mat, gregexpr("\\(?[A-Za-z0-9\\.\\^]+\\)?_Scale", MatcovSig.name.mat)))))
+
         }
       }
     }
@@ -326,6 +389,8 @@ summary.lsjm_interintraIDM <- function(object,...)
       MatCovb <- as.matrix(MatCovb)
       MatCov <- C1
       MatCov <- as.matrix(MatCov)
+      borne2 <- borne1 + choose(n = x$control$Objectlsmm$control$nb.e.a+0, k = 2) + x$control$Objectlsmm$control$nb.e.a +0
+      Matcovb.name <- unique( unique(gsub("\\*.*", "", gsub("__", "_", param.names[(borne1+1):borne2]))))
     }
 
   }
@@ -335,7 +400,7 @@ summary.lsjm_interintraIDM <- function(object,...)
   cat("Longitudinal model:")
   cat("\n")
 
-  cat("      Fixed effects:")
+  cat("      Fixed effects of the location part:")
 
   betas_tab <- matrix(nrow = length(beta), ncol = 4)
   betas_tab[,1] <- beta
@@ -343,7 +408,7 @@ summary.lsjm_interintraIDM <- function(object,...)
   betas_tab[,3] <- betas_tab[,1]/betas_tab[,2]
   betas_tab[,4] <- 1 - pchisq(betas_tab[,3]**2,1)
   betas_tab <- as.data.frame(betas_tab)
-  rownames(betas_tab) <- beta.name
+  rownames(betas_tab) <- gsub("_Y", "",beta.name)
   colnames(betas_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
   betas_tab <- round(betas_tab, 4)
   betas_tab$Pvalue <- ifelse(betas_tab$Pvalue < 0.001, "<0.001", round(betas_tab$Pvalue,3))
@@ -368,8 +433,9 @@ summary.lsjm_interintraIDM <- function(object,...)
     print(var_inter)
     cat("\n")
   }
-  if(!x$control$Objectlsmm$control$var_intra){
-    cat("     Fixed intercept of the intra-visit variability:")
+
+  if(!x$control$var_intra){
+    cat("     Residual standard error for constant intra-visit variability:")
     var_intra <- matrix(nrow = length(1), ncol = 4)
     var_intra[,1] <- sigma.epsilon.intra
     var_intra[,2] <- sigma.epsilon.intra.se
@@ -386,58 +452,96 @@ summary.lsjm_interintraIDM <- function(object,...)
   }
 
 
-  if(x$control$Objectlsmm$control$var_inter){
-    cat("     Fixed intercept of the inter-visits variability:")
+  if(x$control$var_inter && x$control$var_intra){
+    cat("     Fixed intercept of the scale part(inter/intra variabilities):")
     var_inter <- matrix(nrow = length(1), ncol = 4)
     var_inter[,1] <- mu.inter
     var_inter[,2] <- mu.inter.se
     var_inter[,3] <- var_inter[,1]/var_inter[,2]
     var_inter[,4] <- 1 - pchisq(var_inter[,3]**2,1)
     var_inter <- as.data.frame(var_inter)
-    rownames(var_inter) <- mu.inter.name
-    colnames(var_inter) <- c("Coeff", "SE", "Wald", "Pvalue")
-    var_inter <- round(var_inter, 4)
-    var_inter$Pvalue <- ifelse(var_inter$Pvalue < 0.001, "<0.001", round(var_inter$Pvalue,3))
-    cat("\n")
-    print(var_inter)
-    cat("\n")
-  }
-  if(x$control$Objectlsmm$control$var_intra){
-    cat("     Fixed intercept of the intra-visit variability:")
     var_intra <- matrix(nrow = length(1), ncol = 4)
     var_intra[,1] <- mu.intra
     var_intra[,2] <- mu.intra.se
     var_intra[,3] <- var_intra[,1]/var_intra[,2]
     var_intra[,4] <- 1 - pchisq(var_intra[,3]**2,1)
     var_intra <- as.data.frame(var_intra)
-    rownames(var_intra) <- mu.intra.name
-    colnames(var_intra) <- c("Coeff", "SE", "Wald", "Pvalue")
-    var_intra <- round(var_intra, 4)
-    var_intra$Pvalue <- ifelse(var_intra$Pvalue < 0.001, "<0.001", round(var_intra$Pvalue,3))
+    var_part <- rbind(var_inter, var_intra)
+    var_part <- as.data.frame(var_part)
+    rownames(var_part) <- c("inter","intra")
+    colnames(var_part) <- c("Coeff", "SE", "Wald", "Pvalue")
+    var_part <- round(var_part, 4)
+    var_part$Pvalue <- ifelse(var_part$Pvalue < 0.001, "<0.001", round(var_part$Pvalue,3))
     cat("\n")
-    print(var_intra)
+    print(var_part)
     cat("\n")
   }
+  else{
+    if(x$control$var_inter){
+      cat("     Fixed intercept of the scale part (inter variability):")
+      var_inter <- matrix(nrow = length(1), ncol = 4)
+      var_inter[,1] <- mu.inter
+      var_inter[,2] <- mu.inter.se
+      var_inter[,3] <- var_inter[,1]/var_inter[,2]
+      var_inter[,4] <- 1 - pchisq(var_inter[,3]**2,1)
+      var_inter <- as.data.frame(var_inter)
+      rownames(var_inter) <- "inter"
+      colnames(var_inter) <- c("Coeff", "SE", "Wald", "Pvalue")
+      var_inter <- round(var_inter, 4)
+      var_inter$Pvalue <- ifelse(var_inter$Pvalue < 0.001, "<0.001", round(var_inter$Pvalue,3))
+      cat("\n")
+      print(var_inter)
+      cat("\n")
+    }
+    if(x$control$var_intra){
+      cat("     Fixed intercept of the scale part (inter variability):")
+      var_intra <- matrix(nrow = length(1), ncol = 4)
+      var_intra[,1] <- mu.intra
+      var_intra[,2] <- mu.intra.se
+      var_intra[,3] <- var_intra[,1]/var_intra[,2]
+      var_intra[,4] <- 1 - pchisq(var_intra[,3]**2,1)
+      var_intra <- as.data.frame(var_intra)
+      rownames(var_intra) <- "intra"
+      colnames(var_intra) <- c("Coeff", "SE", "Wald", "Pvalue")
+      var_intra <- round(var_intra, 4)
+      var_intra$Pvalue <- ifelse(var_intra$Pvalue < 0.001, "<0.001", round(var_intra$Pvalue,3))
+      cat("\n")
+      print(var_intra)
+      cat("\n")
+    }
+  }
+
+
+
 
 
   cat("\n")
 
-  if(x$control$Objectlsmm$control$correlated_re){
+  if(x$control$correlated_re){
     cat("     Covariance matrix of the random effects:")
     cat("\n")
-    print(MatCov%*%t(MatCov),quote=FALSE,na.print="")
+    Cov <- MatCov%*%t(MatCov)
+    colnames(Cov) <- Matcov.name
+    rownames(Cov) <- Matcov.name
+    print(Cov)
     cat("\n")
   }
   else{
     cat("     Covariance matrix of the random effects of the mean:")
     cat("\n")
-    print(MatCovb%*%t(MatCovb),quote=FALSE,na.print="")
+    Covb <- MatCovb%*%t(MatCovb)
+    colnames(Covb) <- Matcovb.name
+    rownames(Covb) <- Matcovb.name
+    print(Covb)
     cat("\n")
 
-    if(x$control$Objectlsmm$control$var_inter || x$control$Objectlsmm$control$var_intra){
+    if(x$control$var_inter || x$control$var_intra){
       cat("     Covariance matrix of the random effects of the variance:")
       cat("\n")
-      print(MatCovSig%*%t(MatCovSig),quote=FALSE,na.print="")
+      CovSig <- MatCovSig%*%t(MatCovSig)
+      colnames(CovSig) <- MatcovSig.name
+      rownames(CovSig) <- MatcovSig.name
+      print(CovSig)
       cat("\n")
     }
 
@@ -448,12 +552,21 @@ summary.lsjm_interintraIDM <- function(object,...)
   #browser()
   e1_share_intravar_tab <- NULL
   e1_share_intervar_tab <- NULL
+  e1_share_random_tab <- NULL
   e1_share_current_tab <- NULL
   e1_share_slope_tab <- NULL
   e1_alpha_tab <- NULL
   e1_names_tab <- c()
 
-  if(c("current value") %in% x$control$sharedtype_01){
+  if(c("random effects") %in% x$control$sharedtype_01){
+    e1_share_random_tab <- matrix(nrow = 1, ncol = 4)
+    e1_share_random_tab[,1] <- alpha.re_01
+    e1_share_random_tab[,2] <- alpha.re_01.se
+    e1_share_random_tab[,3] <- e1_share_random_tab[,1]/e1_share_random_tab[,2]
+    e1_share_random_tab[,4] <- 1 - pchisq(e1_share_random_tab[,3]**2,1)
+    e1_names_tab <- c(e1_names_tab, alpha.re_01.name)
+  }
+  if(c("value") %in% x$control$sharedtype_01){
     e1_share_current_tab <- matrix(nrow = 1, ncol = 4)
     e1_share_current_tab[,1] <- alpha.current_01
     e1_share_current_tab[,2] <- alpha.current_01.se
@@ -469,7 +582,7 @@ summary.lsjm_interintraIDM <- function(object,...)
     e1_share_slope_tab[,4] <- 1 - pchisq(e1_share_slope_tab[,3]**2,1)
     e1_names_tab <- c(e1_names_tab, alpha.slope_01.name)
   }
-  if(c("inter visit variability") %in% x$control$sharedtype_01){
+  if(c("variability inter") %in% x$control$sharedtype_01){
     e1_share_intervar_tab <- matrix(nrow = 1, ncol = 4)
     e1_share_intervar_tab[,1] <- c(alpha.intervar_01)
     e1_share_intervar_tab[,2] <- c(alpha.intervar_01.se)
@@ -477,7 +590,7 @@ summary.lsjm_interintraIDM <- function(object,...)
     e1_share_intervar_tab[,4] <- 1 - pchisq(e1_share_intervar_tab[,3]**2,1)
     e1_names_tab <- c(e1_names_tab, alpha.intervar_01.name)
   }
-  if(c("intra visit variability") %in% x$control$sharedtype_01){
+  if(c("variability intra") %in% x$control$sharedtype_01){
     e1_share_intravar_tab <- matrix(nrow = 1, ncol = 4)
     e1_share_intravar_tab[,1] <- c(alpha.intravar_01)
     e1_share_intravar_tab[,2] <- c(alpha.intravar_01.se)
@@ -554,12 +667,15 @@ summary.lsjm_interintraIDM <- function(object,...)
     rownames(e1_bas_tab) <- gamma_01.name
     colnames(e1_bas_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
   }
-  e1_surv_tab <- rbind(e1_share_current_tab, e1_share_slope_tab, e1_share_intervar_tab, e1_share_intravar_tab, e1_alpha_tab)
+  e1_surv_tab <- rbind(e1_share_random_tab, e1_share_current_tab, e1_share_slope_tab, e1_share_intervar_tab, e1_share_intravar_tab,  e1_alpha_tab)
   rownames(e1_surv_tab) <- e1_names_tab
   colnames(e1_surv_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
   e1_surv_tab <- as.data.frame(e1_surv_tab)
   e1_surv_tab <- round(e1_surv_tab, 4)
   e1_surv_tab$Pvalue <- ifelse(e1_surv_tab$Pvalue < 0.001, "<0.001", round(e1_surv_tab$Pvalue,3))
+  e1_bas_tab <- round(e1_bas_tab, 4)
+  e1_bas_tab$Pvalue <- ifelse(e1_bas_tab$Pvalue < 0.001, "<0.001", round(e1_bas_tab$Pvalue,3))
+
 
   if(nrow(e1_bas_tab)!=0){
     cat("\n")
@@ -570,9 +686,6 @@ summary.lsjm_interintraIDM <- function(object,...)
   cat("\n")
   cat(paste("     Baseline: ",x$control$hazard_baseline_01), "\n")
   cat("\n")
-  e1_bas_tab <- as.data.frame(e1_bas_tab)
-  e1_bas_tab <- round(e1_bas_tab, 4)
-  e1_bas_tab$Pvalue <- ifelse(e1_bas_tab$Pvalue < 0.001, "<0.001", round(e1_bas_tab$Pvalue,3))
   print(e1_bas_tab)
 
 
@@ -586,8 +699,15 @@ summary.lsjm_interintraIDM <- function(object,...)
   e2_alpha_tab <- NULL
   e2_names_tab <- c()
 
-
-  if(c("current value") %in% x$control$sharedtype_02){
+  if(c("random effects") %in% x$control$sharedtype_02){
+    e2_share_random_tab <- matrix(nrow = 1, ncol = 4)
+    e2_share_random_tab[,1] <- alpha.re_02
+    e2_share_random_tab[,2] <- alpha.re_02.se
+    e2_share_random_tab[,3] <- e2_share_random_tab[,1]/e2_share_random_tab[,2]
+    e2_share_random_tab[,4] <- 1 - pchisq(e2_share_random_tab[,3]**2,1)
+    e2_names_tab <- c(e2_names_tab, alpha.re_02.name)
+  }
+  if(c("value") %in% x$control$sharedtype_02){
     e2_share_current_tab <- matrix(nrow = 1, ncol = 4)
     e2_share_current_tab[,1] <- alpha.current_02
     e2_share_current_tab[,2] <- alpha.current_02.se
@@ -603,7 +723,7 @@ summary.lsjm_interintraIDM <- function(object,...)
     e2_share_slope_tab[,4] <- 1 - pchisq(e2_share_slope_tab[,3]**2,1)
     e2_names_tab <- c(e2_names_tab, alpha.slope_02.name)
   }
-  if(c("inter visit variability") %in% x$control$sharedtype_02){
+  if(c("variability inter") %in% x$control$sharedtype_02){
     e2_share_intervar_tab <- matrix(nrow = 1, ncol = 4)
     e2_share_intervar_tab[,1] <- alpha.intervar_02
     e2_share_intervar_tab[,2] <- alpha.intervar_02.se
@@ -611,7 +731,7 @@ summary.lsjm_interintraIDM <- function(object,...)
     e2_share_intervar_tab[,4] <- 1 - pchisq(e2_share_intervar_tab[,3]**2,1)
     e2_names_tab <- c(e2_names_tab, alpha.intervar_02.name)
   }
-  if(c("intra visit variability") %in% x$control$sharedtype_02){
+  if(c("variability intra") %in% x$control$sharedtype_02){
     e2_share_intravar_tab <- matrix(nrow = 1, ncol = 4)
     e2_share_intravar_tab[,1] <- alpha.intravar_02
     e2_share_intravar_tab[,2] <- alpha.intravar_02.se
@@ -691,12 +811,14 @@ summary.lsjm_interintraIDM <- function(object,...)
     colnames(e2_bas_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
   }
 
-  e2_surv_tab <- rbind(e2_share_current_tab, e2_share_slope_tab, e2_share_intervar_tab, e2_share_intravar_tab, e2_alpha_tab)
+  e2_surv_tab <- rbind(e2_share_random_tab, e2_share_current_tab, e2_share_slope_tab, e2_share_intervar_tab, e2_share_intravar_tab, e2_alpha_tab)
   rownames(e2_surv_tab) <- e2_names_tab
   colnames(e2_surv_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
   e2_surv_tab <- as.data.frame(e2_surv_tab)
   e2_surv_tab <- round(e2_surv_tab, 4)
   e2_surv_tab$Pvalue <- ifelse(e2_surv_tab$Pvalue < 0.001, "<0.001", round(e2_surv_tab$Pvalue,3))
+  e2_bas_tab <- round(e2_bas_tab, 4)
+  e2_bas_tab$Pvalue <- ifelse(e2_bas_tab$Pvalue < 0.001, "<0.001", round(e2_bas_tab$Pvalue,3))
 
   if(nrow(e2_bas_tab)!=0){
     cat("\n")
@@ -707,9 +829,6 @@ summary.lsjm_interintraIDM <- function(object,...)
   cat("\n")
   cat(paste("     Baseline: ",x$control$hazard_baseline_02), "\n")
   cat("\n")
-  e2_bas_tab <- as.data.frame(e2_bas_tab)
-  e2_bas_tab <- round(e2_bas_tab, 4)
-  e2_bas_tab$Pvalue <- ifelse(e2_bas_tab$Pvalue < 0.001, "<0.001", round(e2_bas_tab$Pvalue,3))
   print(e2_bas_tab)
 
   cat("\n")
@@ -725,8 +844,15 @@ summary.lsjm_interintraIDM <- function(object,...)
   e12_alpha_tab <- NULL
   e12_names_tab <- c()
 
-
-  if(c("current value") %in% x$control$sharedtype_12){
+  if(c("random effects") %in% x$control$sharedtype_12){
+    e12_share_random_tab <- matrix(nrow = 1, ncol = 4)
+    e12_share_random_tab[,1] <- alpha.re_12
+    e12_share_random_tab[,2] <- alpha.re_12.se
+    e12_share_random_tab[,3] <- e12_share_random_tab[,1]/e12_share_random_tab[,2]
+    e12_share_random_tab[,4] <- 1 - pchisq(e12_share_random_tab[,3]**2,1)
+    e12_names_tab <- c(e12_names_tab, alpha.re_12.name)
+  }
+  if(c("value") %in% x$control$sharedtype_12){
     e12_share_current_tab <- matrix(nrow = 1, ncol = 4)
     e12_share_current_tab[,1] <- alpha.current_12
     e12_share_current_tab[,2] <- alpha.current_12.se
@@ -742,7 +868,7 @@ summary.lsjm_interintraIDM <- function(object,...)
     e12_share_slope_tab[,4] <- 1 - pchisq(e12_share_slope_tab[,3]**2,1)
     e12_names_tab <- c(e12_names_tab, alpha.slope_12.name)
   }
-  if(c("inter visit variability") %in% x$control$sharedtype_12){
+  if(c("variability inter") %in% x$control$sharedtype_12){
     e12_share_intervar_tab <- matrix(nrow = 1, ncol = 4)
     e12_share_intervar_tab[,1] <- alpha.intervar_12
     e12_share_intervar_tab[,2] <- alpha.intervar_12.se
@@ -750,7 +876,7 @@ summary.lsjm_interintraIDM <- function(object,...)
     e12_share_intervar_tab[,4] <- 1 - pchisq(e12_share_intervar_tab[,3]**2,1)
     e12_names_tab <- c(e12_names_tab, alpha.intervar_12.name)
   }
-  if(c("intra visit variability") %in% x$control$sharedtype_12){
+  if(c("variability intra") %in% x$control$sharedtype_12){
     e12_share_intravar_tab <- matrix(nrow = 1, ncol = 4)
     e12_share_intravar_tab[,1] <- alpha.intravar_12
     e12_share_intravar_tab[,2] <- alpha.intravar_12.se
@@ -830,12 +956,14 @@ summary.lsjm_interintraIDM <- function(object,...)
     colnames(e12_bas_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
   }
 
-  e12_surv_tab <- rbind(e12_share_current_tab, e12_share_slope_tab, e12_share_intervar_tab, e12_share_intravar_tab, e12_alpha_tab)
+  e12_surv_tab <- rbind(e12_share_random_tab, e12_share_current_tab, e12_share_slope_tab, e12_share_intervar_tab, e12_share_intravar_tab,  e12_alpha_tab)
   rownames(e12_surv_tab) <- e12_names_tab
   colnames(e12_surv_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
   e12_surv_tab <- as.data.frame(e12_surv_tab)
   e12_surv_tab <- round(e12_surv_tab, 4)
   e12_surv_tab$Pvalue <- ifelse(e12_surv_tab$Pvalue < 0.001, "<0.001", round(e12_surv_tab$Pvalue,3))
+  e12_bas_tab <- round(e12_bas_tab, 4)
+  e12_bas_tab$Pvalue <- ifelse(e12_bas_tab$Pvalue < 0.001, "<0.001", round(e12_bas_tab$Pvalue,3))
 
   if(nrow(e12_bas_tab)!=0){
     cat("\n")
@@ -846,9 +974,6 @@ summary.lsjm_interintraIDM <- function(object,...)
   cat("\n")
   cat(paste("     Baseline: ",x$control$hazard_baseline_12), "\n")
   cat("\n")
-  e12_bas_tab <- as.data.frame(e12_bas_tab)
-  e12_bas_tab <- round(e12_bas_tab, 4)
-  e12_bas_tab$Pvalue <- ifelse(e12_bas_tab$Pvalue < 0.001, "<0.001", round(e12_bas_tab$Pvalue,3))
   print(e12_bas_tab)
 
   cat("\n")

@@ -1,6 +1,6 @@
 re_lsjm_interintraSingle <- function(param, nb.e.a, variability_inter_visit, variability_intra_visit, Sigma.re,
                                  sharedtype, HB, Gompertz, Weibull, nb_pointsGK,
-                                 alpha_y_slope, alpha_inter_intra, alpha_z,  gamma_z0,  beta,  beta_slope,  wk,
+                                 alpha_y_slope, alpha_inter_intra, alpha_b_01,alpha_z,  gamma_z0,  beta,  beta_slope,  wk,
                                  mu.inter, sigma.epsilon.inter, mu.intra,sigma.epsilon.intra,
                                  delta1_i,  Z_01_i,   X_T_i,  U_T_i,
                                  Xslope_T_i,  Uslope_T_i,  X_GK_T_i,  U_GK_T_i,  Xslope_GK_T_i,
@@ -58,7 +58,7 @@ re_lsjm_interintraSingle <- function(param, nb.e.a, variability_inter_visit, var
 
   log_f_Y_f_T <- re_lsjm_interintraSingle_cpp(sharedtype,  HB,  Gompertz,  Weibull,
                                           nb_pointsGK ,
-                                          alpha_y_slope, alpha_inter_intra, alpha_z,  gamma_z0,  beta,  beta_slope,
+                                          alpha_y_slope, alpha_inter_intra, alpha_b_01, alpha_z,  gamma_z0,  beta,  beta_slope,
                                           b_y=t(matrix(b_re, nrow = 1)),  b_y_slope= t(matrix(b_y_slope, nrow = 1)),  wk,  sigma_inter_intra,
                                           delta1_i,  Z_01_i,  X_T_i,  U_T_i,
                                           Xslope_T_i,  Uslope_T_i,  X_GK_T_i,  U_GK_T_i,  Xslope_GK_T_i,

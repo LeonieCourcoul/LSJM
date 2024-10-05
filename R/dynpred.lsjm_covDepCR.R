@@ -1,15 +1,14 @@
+#' @rdname dynpred
 #' @export
 
 dynpred.lsjm_covDepCR <- function(newdata, Objectlsjm, s, horizon, event, IC = 95, nb.draws = 1000){
 
+
   if(!is.null(IC) && (IC<=0 || IC>=100)) stop("IC must be between 0 and 100")
   if(!is.null(IC) && (is.null(nb.draws) || nb.draws <=0)) stop("draw must be higher 1")
-
-
-
-
-
-
+  if(Objectlsjm$result_step1$istop != 1|| (!is.null(Objectlsjm$result_step2) && Objectlsjm$result_step2$istop !=1)){
+    stop("The model didn't reach convergence.")
+  }
 
   id <- as.integer(newdata[all.vars(Objectlsjm$control$Objectlsmm$control$formGroup)][,1])
   newdata$id <- id

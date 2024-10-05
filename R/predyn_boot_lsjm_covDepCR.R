@@ -1,10 +1,20 @@
 predyn_boot_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, window, event, nb.draws){
 
 
+  if(is.null(Objectlsjm$result_step2)){
+    grad <- Objectlsjm$result_step1$grad
+    v_mat <- Objectlsjm$result_step1$v
+    nbQMC <- Objectlsjm$control$S1
+  }
+  else{
+    grad <- Objectlsjm$result_step2$grad
+    v_mat <- Objectlsjm$result_step2$v
+    nbQMC <- Objectlsjm$control$S2
+  }
 
   result <- c()
-  Hess <- matrix(rep(0,length(Objectlsjm$result_step2$grad)**2),nrow=length(Objectlsjm$result_step2$grad),ncol=length(Objectlsjm$result_step2$grad))
-  Hess[upper.tri(Hess, diag=T)] <- Objectlsjm$result_step2$v
+  Hess <- matrix(rep(0,length(grad)**2),nrow=length(grad),ncol=length(grad))
+  Hess[upper.tri(Hess, diag=T)] <- v_mat
   Hess2 = Hess + t(Hess)
   diag(Hess2) <- diag(Hess2) - diag(Hess)
 
@@ -31,7 +41,7 @@ predyn_boot_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, win
   wk.den <- data.GaussKronrod.den$wk
   data.id.den <- data.GaussKronrod.den$data.id2
 
-  if("current value" %in% Objectlsjm$control$sharedtype_01 ||"current value" %in% Objectlsjm$control$sharedtype_02){
+  if("value" %in% Objectlsjm$control$sharedtype_01 ||"value" %in% Objectlsjm$control$sharedtype_02){
     list.data.GK.current <-  data.time(data.id.1, c(t(st.1)),
                                        Objectlsjm$control$Objectlsmm$control$formFixed, Objectlsjm$control$Objectlsmm$control$formRandom,Objectlsjm$control$Objectlsmm$control$timeVar)
     Xs <- list.data.GK.current$Xtime
@@ -122,7 +132,7 @@ predyn_boot_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, win
       O_0_st_u <- list.data.GK_0_u$Xtime; W_0_st_u <- list.data.GK_0_u$Utime
       O_0_u <- rbind(O_0_u,O_0_st_u); W_0_u <- rbind(W_0_u,W_0_st_u)
     }
-    if(("current value" %in% Objectlsjm$control$sharedtype_01) || ( "current value" %in% Objectlsjm$control$sharedtype_02)){
+    if(("value" %in% Objectlsjm$control$sharedtype_01) || ( "value" %in% Objectlsjm$control$sharedtype_02)){
       list.data.GK_0_u <- data.time(list.GK_0_st.2$data.id2, c(t(st.2)),Objectlsjm$control$Objectlsmm$control$formFixed, Objectlsjm$control$Objectlsmm$control$formRandom,Objectlsjm$control$Objectlsmm$control$timeVar)
       X_0_st_u <- list.data.GK_0_u$Xtime; U_0_st_u <- list.data.GK_0_u$Utime
       X_0_u <- rbind(X_0_u,X_0_st_u); U_0_u <- rbind(U_0_u,U_0_st_u)
@@ -142,7 +152,13 @@ predyn_boot_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, win
 
 
   for(l in 1:nb.draws){
-    param <- mvtnorm::rmvnorm(1, mean = Objectlsjm$result_step2$b, sigma = Hess2)
+    if(is.null(Objectlsjm$result_step2)){
+      param <- Objectlsjm$result_step1$b
+    }
+    else{
+      param <- Objectlsjm$result_step2$b
+    }
+    param <- mvtnorm::rmvnorm(1, mean = param_mean, sigma = Hess2)
     ## Param
     #Manage parameter
     curseur <- 1
@@ -169,7 +185,7 @@ predyn_boot_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, win
       curseur <- curseur+nb.alpha_01
     }
     ### Association
-    if("current value" %in% Objectlsjm$control$sharedtype_01){
+    if("value" %in% Objectlsjm$control$sharedtype_01){
       alpha.current_01 <-  param[curseur]
       curseur <- curseur + 1
     }
@@ -203,7 +219,7 @@ predyn_boot_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, win
       curseur <- curseur+nb.alpha_02
     }
     ### Association
-    if("current value" %in% Objectlsjm$control$sharedtype_02){
+    if("value" %in% Objectlsjm$control$sharedtype_02){
       alpha.current_02 <- param[curseur]
       curseur <- curseur + 1
     }
@@ -224,7 +240,7 @@ predyn_boot_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, win
     omega <- param[(curseur):(curseur+Objectlsjm$control$Objectlsmm$control$nb.omega-1)]
     curseur <- curseur+Objectlsjm$control$Objectlsmm$control$nb.omega
 
-    Zq1 <- spacefillr::generate_sobol_owen_set(Objectlsjm$control$S2,  Objectlsjm$control$Objectlsmm$control$nb.e.a+Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma)
+    Zq1 <- spacefillr::generate_sobol_owen_set(nbQMC,  Objectlsjm$control$Objectlsmm$control$nb.e.a+Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma)
     Zq <- apply(Zq1, 2, qnorm)
 
     if(Objectlsjm$control$Objectlsmm$control$correlated_re){
@@ -265,7 +281,7 @@ predyn_boot_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, win
       CV <- (beta%*%X_base)[1,1] + b_al%*%U
       f_Y_b_sigma <- dnorm(x=y.new.prog, mean = CV, sd = sigma.long)
     }else{
-      f_Y_b_sigma <- rep(1,Objectlsjm$control$S2)
+      f_Y_b_sigma <- rep(1,nbQMC)
       for(k in 1:nrow(X_base)){
         sigma.long <- exp((omega%*%O_base[k,])[1,1] + b_om%*%W_base[k,])
         CV <- (beta%*%X_base[k,])[1,1] + b_al%*%U[k,]
@@ -278,18 +294,33 @@ predyn_boot_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, win
     etaBaseline_0_s_02 <- 0; survLong_0_s_02 <- 0; etaBaseline_0_u_01 <- 0; survLong_0_u_01 <- 0;
     etaBaseline_0_u_02 <- 0; survLong_0_u_02 <- 0
 
-    if((c("current value") %in% Objectlsjm$control$sharedtype_01 )|| (c("current value") %in% Objectlsjm$control$sharedtype_02)){
-      current.GK <- matrix(rep(beta%*%t(Xs),Objectlsjm$control$S2),nrow=Objectlsjm$control$S2,byrow = T) + b_al%*%t(Us)
-      current.GK.den <- matrix(rep(beta%*%t(Xs.den),Objectlsjm$control$S2),nrow=Objectlsjm$control$S2,byrow = T) + b_al%*%t(Us.den)
-      current.GK.0_u <- matrix(rep(beta%*%t(X_0_u),Objectlsjm$control$S2),nrow=Objectlsjm$control$S2,byrow = T) + b_al%*%t(U_0_u)
-      if(c("current value") %in% Objectlsjm$control$sharedtype_01){
+    if(c("random effects") %in% Objectlsjm$control$sharedtype_01){
+      survLong_0_s_01 <- survLong_0_s_01 + c(b_al%*%alpha_b_01)
+      survLong_0_u_01 <- survLong_0_u_01 + c(b_al%*%alpha_b_01)
+      if(event == 1){
+        survLong_s_t_0k <- survLong_s_t_0k + c(b_al%*%alpha_b_01)
+      }
+    }
+    if(c("random effects") %in% Objectlsjm$control$sharedtype_02){
+      survLong_0_s_02 <- survLong_0_s_02 + c(b_al%*%alpha_b_02)
+      survLong_0_u_02 <- survLong_0_u_02 + c(b_al%*%alpha_b_02)
+      if(event == 2){
+        survLong_s_t_0k <- survLong_s_t_0k + c(b_al%*%alpha_b_02)
+      }
+    }
+
+    if((c("value") %in% Objectlsjm$control$sharedtype_01 )|| (c("value") %in% Objectlsjm$control$sharedtype_02)){
+      current.GK <- matrix(rep(beta%*%t(Xs),nbQMC),nrow=nbQMC,byrow = T) + b_al%*%t(Us)
+      current.GK.den <- matrix(rep(beta%*%t(Xs.den),nbQMC),nrow=nbQMC,byrow = T) + b_al%*%t(Us.den)
+      current.GK.0_u <- matrix(rep(beta%*%t(X_0_u),nbQMC),nrow=nbQMC,byrow = T) + b_al%*%t(U_0_u)
+      if(c("value") %in% Objectlsjm$control$sharedtype_01){
         survLong_0_s_01 <- survLong_0_s_01 + alpha.current_01*current.GK.den
         survLong_0_u_01 <- survLong_0_u_01 + alpha.current_01*current.GK.0_u
         if(event == 1){
           survLong_s_t_0k <- survLong_s_t_0k + alpha.current_01*current.GK
         }
       }
-      if(c("current value") %in% Objectlsjm$control$sharedtype_02){
+      if(c("value") %in% Objectlsjm$control$sharedtype_02){
         survLong_0_s_02 <- survLong_0_s_02 + alpha.current_02*current.GK.den
         survLong_0_u_02 <- survLong_0_u_02 + alpha.current_02*current.GK.0_u
         if(event == 2){
@@ -299,9 +330,9 @@ predyn_boot_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, win
     }
 
     if((c("slope") %in% Objectlsjm$control$sharedtype_01 )|| (c("slope") %in% Objectlsjm$control$sharedtype_02)){
-      slope.GK <- matrix(rep(beta_slope%*%t(Xs.slope),Objectlsjm$control$S2),nrow=Objectlsjm$control$S2,byrow = T) + b_al_slope%*%t(Us.slope)
-      slope.GK.den <- matrix(rep(beta_slope%*%t(Xs.slope.den),Objectlsjm$control$S2),nrow=Objectlsjm$control$S2,byrow = T) + b_al_slope%*%t(Us.slope.den)
-      slope.GK.0_u <- matrix(rep(beta_slope%*%t(Xslope_0_u),Objectlsjm$control$S2),nrow=Objectlsjm$control$S2,byrow = T) + b_al_slope%*%t(Uslope_0_u)
+      slope.GK <- matrix(rep(beta_slope%*%t(Xs.slope),nbQMC),nrow=nbQMC,byrow = T) + b_al_slope%*%t(Us.slope)
+      slope.GK.den <- matrix(rep(beta_slope%*%t(Xs.slope.den),nbQMC),nrow=nbQMC,byrow = T) + b_al_slope%*%t(Us.slope.den)
+      slope.GK.0_u <- matrix(rep(beta_slope%*%t(Xslope_0_u),nbQMC),nrow=nbQMC,byrow = T) + b_al_slope%*%t(Uslope_0_u)
       if(c("slope") %in% Objectlsjm$control$sharedtype_01){
         survLong_0_s_01 <- survLong_0_s_01 + alpha.slope_01*slope.GK.den
         survLong_0_u_01 <- survLong_0_u_01 + alpha.slope_01*slope.GK.0_u
@@ -319,9 +350,9 @@ predyn_boot_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, win
     }
 
     if((c("variability") %in% Objectlsjm$control$sharedtype_01 )|| (c("variability") %in% Objectlsjm$control$sharedtype_02)){
-      var.GK <- matrix(rep(omega%*%t(Os),Objectlsjm$control$S2),nrow=Objectlsjm$control$S2,byrow = T) + b_om%*%t(Ws)
-      var.GK.den <- matrix(rep(omega%*%t(Os.den),Objectlsjm$control$S2),nrow=Objectlsjm$control$S2,byrow = T) + b_om%*%t(Ws.den)
-      var.GK.0_u <- matrix(rep(omega%*%t(O_0_u),Objectlsjm$control$S2),nrow=Objectlsjm$control$S2,byrow = T) + b_om%*%t(W_0_u)
+      var.GK <- matrix(rep(omega%*%t(Os),nbQMC),nrow=nbQMC,byrow = T) + b_om%*%t(Ws)
+      var.GK.den <- matrix(rep(omega%*%t(Os.den),nbQMC),nrow=nbQMC,byrow = T) + b_om%*%t(Ws.den)
+      var.GK.0_u <- matrix(rep(omega%*%t(O_0_u),nbQMC),nrow=nbQMC,byrow = T) + b_om%*%t(W_0_u)
       if(c("variability") %in% Objectlsjm$control$sharedtype_01){
         survLong_0_s_01 <- survLong_0_s_01 + alpha.var_01*var.GK.den
         survLong_0_u_01 <- survLong_0_u_01 + alpha.var_01*var.GK.0_u
@@ -440,7 +471,7 @@ predyn_boot_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, win
 
 
 
-    survLong_s_t_0k <- exp(survLong_s_t_0k)*matrix(rep(t(h_0.GK_s_t_0k), Objectlsjm$control$S2), nrow = Objectlsjm$control$S2, byrow = TRUE)
+    survLong_s_t_0k <- exp(survLong_s_t_0k)*matrix(rep(t(h_0.GK_s_t_0k), nbQMC), nrow = nbQMC, byrow = TRUE)
     h_0k <- exp(etaBaseline_s_t_0k)*survLong_s_t_0k
 
     survLong_0_s_01 <- exp(survLong_0_s_01)%*%t(h_0.GK_0_s_01)
@@ -449,8 +480,8 @@ predyn_boot_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, win
     survLong_0_s_02 <- exp(survLong_0_s_02)%*%t(h_0.GK_0_s_02)
     A_0_s_02 <- exp(etaBaseline_0_s_02)*P.den*survLong_0_s_02
 
-    survLong_0_u_01 <- exp(survLong_0_u_01)*matrix(rep(c(t(h_0.GK_0_u_01)),each = Objectlsjm$control$S2), nrow = Objectlsjm$control$S2, byrow = F)
-    survLong_0_u_02 <- exp(survLong_0_u_02)*matrix(rep(c(t(h_0.GK_0_u_02)),each = Objectlsjm$control$S2), nrow = Objectlsjm$control$S2, byrow = F)
+    survLong_0_u_01 <- exp(survLong_0_u_01)*matrix(rep(c(t(h_0.GK_0_u_01)),each = nbQMC), nrow = nbQMC, byrow = F)
+    survLong_0_u_02 <- exp(survLong_0_u_02)*matrix(rep(c(t(h_0.GK_0_u_02)),each = nbQMC), nrow = nbQMC, byrow = F)
 
 
     survLong_red1 <- c()
@@ -459,8 +490,8 @@ predyn_boot_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, win
       survLong_red1 <- cbind(survLong_red1, rowSums(survLong_0_u_01[,(Objectlsjm$control$nb_pointsGK*(nb.col-1)+1):(Objectlsjm$control$nb_pointsGK*nb.col)]))
       survLong_red2 <- cbind(survLong_red2, rowSums(survLong_0_u_02[,(Objectlsjm$control$nb_pointsGK*(nb.col-1)+1):(Objectlsjm$control$nb_pointsGK*nb.col)]))
     }
-    A1_comp <- 0.5*matrix(rep(st.1, Objectlsjm$control$S2), nrow = Objectlsjm$control$S2, byrow = T)*exp(etaBaseline_0_u_01)*survLong_red1
-    A2_comp <- 0.5*matrix(rep(st.1, Objectlsjm$control$S2), nrow = Objectlsjm$control$S2, byrow = T)*exp(etaBaseline_0_u_02)*survLong_red2
+    A1_comp <- 0.5*matrix(rep(st.1, nbQMC), nrow = nbQMC, byrow = T)*exp(etaBaseline_0_u_01)*survLong_red1
+    A2_comp <- 0.5*matrix(rep(st.1, nbQMC), nrow = nbQMC, byrow = T)*exp(etaBaseline_0_u_02)*survLong_red2
 
     Surv.num <- P.1*rowSums(h_0k*exp(-A1_comp - A2_comp))
     Surv.den <- exp(-A_0_s_01-A_0_s_02)

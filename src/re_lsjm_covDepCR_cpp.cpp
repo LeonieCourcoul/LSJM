@@ -13,7 +13,8 @@ using namespace std;
 
 double re_lsjm_covDepCR_cpp(arma::vec sharedtype, List HB, arma::vec Gompertz, arma::vec Weibull,
                              double nb_pointsGK ,
-                             arma::vec alpha_y_slope, arma::vec alpha_var, List alpha_z, List gamma, arma::vec beta, arma::vec beta_slope, arma::vec omega,
+                             arma::vec alpha_y_slope, arma::vec alpha_b_01, arma::vec alpha_b_02,
+                             arma::vec alpha_var, List alpha_z, List gamma, arma::vec beta, arma::vec beta_slope, arma::vec omega,
                              arma::mat b_y, arma::mat b_y_slope, arma::mat tau_re, arma::vec wk,
                              int delta1_i, int delta2_i, arma::rowvec Z_01_i, arma::rowvec Z_02_i, arma::rowvec X_T_i, arma::rowvec U_T_i,
                              arma::rowvec Xslope_T_i, arma::rowvec Uslope_T_i, arma::rowvec O_T_i, arma::rowvec W_T_i,
@@ -34,6 +35,9 @@ double re_lsjm_covDepCR_cpp(arma::vec sharedtype, List HB, arma::vec Gompertz, a
   bool dep_cv_02 = sharedtype[3];
   bool dep_slope_02 = sharedtype[4];
   bool dep_var_02 = sharedtype[5];
+
+  bool dep_re_01 = sharedtype[6];
+  bool dep_re_02 = sharedtype[7];
 
   const std::string& hazard_baseline_01 = HB[0];
   const std::string& hazard_baseline_02 = HB[1];
@@ -80,6 +84,23 @@ double re_lsjm_covDepCR_cpp(arma::vec sharedtype, List HB, arma::vec Gompertz, a
   arma::mat Sigma_T;
   arma::mat sigma_GK_T;
   arma::mat sigma_GK_T0;
+
+  if(dep_re_01){
+    h_01_T_i = h_01_T_i%exp(alpha_b_01*b_y);
+    survLong_01_T_i = survLong_01_T_i + arma::repmat(alpha_b_01*b_y,1,nb_pointsGK);
+    if(left_trunc){
+      survLong_01_T0_i = survLong_01_T0_i + arma::repmat(alpha_b_01*b_y,1,nb_pointsGK);
+    }
+  }
+
+  if(dep_re_02){
+    h_02_T_i = h_02_T_i%exp(b_y*alpha_b_02);
+    survLong_02_T_i = survLong_02_T_i + arma::repmat(alpha_b_02*b_y,1,nb_pointsGK);
+    if(left_trunc){
+      survLong_02_T0_i = survLong_02_T0_i + arma::repmat(alpha_b_02*b_y,1,nb_pointsGK);
+    }
+  }
+
   if(dep_cv_01 || dep_cv_02){
     CV_T = arma::dot(beta, X_T_i) + U_T_i*b_y;
     current_GK_T = X_GK_T_i*beta+U_GK_T_i*b_y;

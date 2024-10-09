@@ -7,3 +7,8 @@ ranef <- function(object, ...) {
 plot <- function(object, ...) {
   UseMethod("plot")
 }
+
+#' @export
+dynpred <- function(object, ...) {
+  UseMethod("dynpred")
+}

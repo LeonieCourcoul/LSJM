@@ -1,6 +1,7 @@
 predyn_boot_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, window, event, nb.draws){
 
 
+
   if(is.null(Objectlsjm$result_step2)){
     grad <- Objectlsjm$result_step1$grad
     v_mat <- Objectlsjm$result_step1$v
@@ -152,11 +153,12 @@ predyn_boot_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, win
 
 
   for(l in 1:nb.draws){
+    browser()
     if(is.null(Objectlsjm$result_step2)){
-      param <- Objectlsjm$result_step1$b
+      param_mean <- Objectlsjm$result_step1$b
     }
     else{
-      param <- Objectlsjm$result_step2$b
+      param_mean <- Objectlsjm$result_step2$b
     }
     param <- mvtnorm::rmvnorm(1, mean = param_mean, sigma = Hess2)
     ## Param
@@ -354,17 +356,17 @@ predyn_boot_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, win
       var.GK.den <- matrix(rep(omega%*%t(Os.den),nbQMC),nrow=nbQMC,byrow = T) + b_om%*%t(Ws.den)
       var.GK.0_u <- matrix(rep(omega%*%t(O_0_u),nbQMC),nrow=nbQMC,byrow = T) + b_om%*%t(W_0_u)
       if(c("variability") %in% Objectlsjm$control$sharedtype_01){
-        survLong_0_s_01 <- survLong_0_s_01 + alpha.var_01*var.GK.den
-        survLong_0_u_01 <- survLong_0_u_01 + alpha.var_01*var.GK.0_u
+        survLong_0_s_01 <- survLong_0_s_01 + alpha.var_01*exp(var.GK.den)
+        survLong_0_u_01 <- survLong_0_u_01 + alpha.var_01*exp(var.GK.0_u)
         if(event == 1){
-          survLong_s_t_0k <- survLong_s_t_0k + alpha.var_01*var.GK
+          survLong_s_t_0k <- survLong_s_t_0k + alpha.var_01*exp(var.GK)
         }
       }
       if(c("variability") %in% Objectlsjm$control$sharedtype_02){
-        survLong_0_s_02 <- survLong_0_s_02 + alpha.var_02*var.GK.den
-        survLong_0_u_02 <- survLong_0_u_02 + alpha.var_02*var.GK.0_u
+        survLong_0_s_02 <- survLong_0_s_02 + alpha.var_02*exp(var.GK.den)
+        survLong_0_u_02 <- survLong_0_u_02 + alpha.var_02*exp(var.GK.0_u)
         if(event == 2){
-          survLong_s_t_0k <- survLong_s_t_0k + alpha.var_02*var.GK
+          survLong_s_t_0k <- survLong_s_t_0k + alpha.var_02*exp(var.GK)
         }
       }
     }

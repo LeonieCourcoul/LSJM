@@ -6,8 +6,8 @@ predict.lsjm_classicCR <- function(Objectlsmm, which = "RE", Objectranef = NULL,
 
   if(missing(Objectlsmm)) stop("The argument Objectlsmm must be specified")
   if(!inherits((Objectlsmm),"lsjm_classicCR")) stop("use only \"lsjm_classicCR\" objects")
-  if(missing(data.long)) stop("The argument data.long must be specified")
-  if(!inherits((data.long),"data.frame")) stop("use only \"data.frame\" objects")
+  #if(missing(data.long)) stop("The argument data.long must be specified")
+  #if(!inherits((data.long),"data.frame")) stop("use only \"data.frame\" objects")
   if(missing(which)) stop("The argument which must be specified")
   if(!inherits((which),"character")) stop("The argument which must be a character object")
   #if(!is.null(Objectranef)&&!inherits((Objectranef),"ranef.lsmm_classic")) stop("The argument Objectranef must be a \"ranef.lsmm_classic\" object")
@@ -45,8 +45,8 @@ predict.lsjm_classicCR <- function(Objectlsmm, which = "RE", Objectranef = NULL,
     curseur <- curseur + 2
   }
   if(x$control$hazard_baseline_01 == "Splines"){
-    gamma_01 <- param[(curseur):(curseur+x$control$nb.knots.splines[1]-2+1)]
-    curseur <- curseur + x$control$nb.knots.splines[1]-2 + 2
+    gamma_01 <- param[(curseur):(curseur+x$control$nb.knots.splines[1]+2+1)]
+    curseur <- curseur + x$control$nb.knots.splines[1]+2 + 2
   }
   ### Covariables :
   nb.alpha_01 <- x$control$nb.alpha[1]
@@ -79,8 +79,8 @@ predict.lsjm_classicCR <- function(Objectlsmm, which = "RE", Objectranef = NULL,
     curseur <- curseur + 2
   }
   if(x$control$hazard_baseline_02 == "Splines"){
-    gamma_02 <- param[(curseur):(curseur+x$control$nb.knots.splines[2]-2+1)]
-    curseur <- curseur + x$control$nb.knots.splines[2]-2+ 2
+    gamma_02 <- param[(curseur):(curseur+x$control$nb.knots.splines[2]+2+1)]
+    curseur <- curseur + x$control$nb.knots.splines[2]+2+ 2
   }
   ### Covariables :
   nb.alpha_02 <- x$control$nb.alpha[2]

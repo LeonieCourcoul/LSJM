@@ -144,44 +144,44 @@ predyn_boot_lsjm_interintraSingle <- function(Objectlsjm, data.long.until.time.s
     curseur <- 1
     ## Risque 01
     ### Hazard baseline
-    if(x$control$hazard_baseline_01 == "Weibull"){
+    if(Objectlsjm$control$hazard_baseline_01 == "Weibull"){
       shape_01 <- param[curseur]**2
       curseur <- curseur + 1
     }
 
-    if(x$control$hazard_baseline_01 == "Gompertz"){
+    if(Objectlsjm$control$hazard_baseline_01 == "Gompertz"){
       Gompertz.1_01 <- param[curseur]**2
       Gompertz.2_01 <- param[curseur+1]
       curseur <- curseur + 2
     }
-    if(x$control$hazard_baseline_01 == "Splines"){
-      gamma_01 <- param[(curseur):(curseur+x$control$nb.knots.splines[1]-2+1)]
-      curseur <- curseur + x$control$nb.knots.splines[1]-2 + 2
+    if(Objectlsjm$control$hazard_baseline_01 == "Splines"){
+      gamma_01 <- param[(curseur):(curseur+Objectlsjm$control$nb.knots.splines[1]-2+1)]
+      curseur <- curseur + Objectlsjm$control$nb.knots.splines[1]-2 + 2
     }
     ### Covariables :
-    nb.alpha_01 <- x$control$nb.alpha[1]
+    nb.alpha_01 <- Objectlsjm$control$nb.alpha[1]
     if(nb.alpha_01 >=1){
       alpha_01 <-  param[(curseur):(curseur+nb.alpha_01-1)]
       curseur <- curseur+nb.alpha_01
     }
     ### Association
-    if("random effects" %in% x$control$sharedtype_01){
-      alpha_b_01 <- param[curseur:(curseur+x$control$Objectlsmm$control$nb.e.a-1)]
-      curseur <- curseur + x$control$Objectlsmm$control$nb.e.a
+    if("random effects" %in% Objectlsjm$control$sharedtype_01){
+      alpha_b_01 <- param[curseur:(curseur+Objectlsjm$control$Objectlsmm$control$nb.e.a-1)]
+      curseur <- curseur + Objectlsjm$control$Objectlsmm$control$nb.e.a
     }
-    if("value" %in% x$control$sharedtype_01){
+    if("value" %in% Objectlsjm$control$sharedtype_01){
       alpha.current_01 <-  param[curseur]
       curseur <- curseur + 1
     }
-    if("slope" %in% x$control$sharedtype_01){
+    if("slope" %in% Objectlsjm$control$sharedtype_01){
       alpha.slope_01 <- param[curseur]
       curseur <- curseur + 1
     }
-    if("variability inter" %in% x$control$sharedtype_01){
+    if("variability inter" %in% Objectlsjm$control$sharedtype_01){
       alpha.inter_01 <- param[curseur]
       curseur <- curseur + 1
     }
-    if("variability intra" %in% x$control$sharedtype_01){
+    if("variability intra" %in% Objectlsjm$control$sharedtype_01){
       alpha.intra_01 <- param[curseur]
       curseur <- curseur + 1
     }
@@ -189,9 +189,9 @@ predyn_boot_lsjm_interintraSingle <- function(Objectlsjm, data.long.until.time.s
 
     ## Marker
     ### Fixed effects
-    beta <- param[curseur:(curseur+ x$control$Objectlsmm$control$nb.beta-1)]
-    curseur <- curseur+x$control$Objectlsmm$control$nb.beta
-    if(x$control$Objectlsmm$control$var_inter){
+    beta <- param[curseur:(curseur+ Objectlsjm$control$Objectlsmm$control$nb.beta-1)]
+    curseur <- curseur+Objectlsjm$control$Objectlsmm$control$nb.beta
+    if(Objectlsjm$control$Objectlsmm$control$var_inter){
       mu.inter <- param[curseur]
       curseur <- curseur + 1
     }
@@ -199,7 +199,7 @@ predyn_boot_lsjm_interintraSingle <- function(Objectlsjm, data.long.until.time.s
       sigma.epsilon.inter <- param[curseur]
       curseur <- curseur +1
     }
-    if(x$control$Objectlsmm$control$var_intra){
+    if(Objectlsjm$control$Objectlsmm$control$var_intra){
       mu.intra <- param[curseur]
       curseur <- curseur + 1
     }
@@ -208,25 +208,25 @@ predyn_boot_lsjm_interintraSingle <- function(Objectlsjm, data.long.until.time.s
       curseur <- curseur +1
     }
 
-    if(x$control$Objectlsmm$control$var_inter && x$control$Objectlsmm$control$var_intra){
-      Zq1 <- spacefillr::generate_sobol_owen_set(nbQMC,  x$control$Objectlsmm$control$nb.e.a+2)
+    if(Objectlsjm$control$Objectlsmm$control$var_inter && Objectlsjm$control$Objectlsmm$control$var_intra){
+      Zq1 <- spacefillr::generate_sobol_owen_set(nbQMC,  Objectlsjm$control$Objectlsmm$control$nb.e.a+2)
       Zq <- apply(Zq1, 2, qnorm)
     }
     else{
-      if(x$control$Objectlsmm$control$var_inter || x$control$Objectlsmm$control$var_intra){
-        Zq1 <- spacefillr::generate_sobol_owen_set(nbQMC,  x$control$Objectlsmm$control$nb.e.a+1)
+      if(Objectlsjm$control$Objectlsmm$control$var_inter || Objectlsjm$control$Objectlsmm$control$var_intra){
+        Zq1 <- spacefillr::generate_sobol_owen_set(nbQMC,  Objectlsjm$control$Objectlsmm$control$nb.e.a+1)
         Zq <- apply(Zq1, 2, qnorm)
       }
       else{
-        Zq1 <- spacefillr::generate_sobol_owen_set(nbQMC,  x$control$Objectlsmm$control$nb.e.a)
+        Zq1 <- spacefillr::generate_sobol_owen_set(nbQMC,  Objectlsjm$control$Objectlsmm$control$nb.e.a)
         Zq <- apply(Zq1, 2, qnorm)
       }
     }
 
-    if(x$control$Objectlsmm$control$var_inter && x$control$Objectlsmm$control$var_intra){
-      if(x$control$Objectlsmm$control$correlated_re){
+    if(Objectlsjm$control$Objectlsmm$control$var_inter && Objectlsjm$control$Objectlsmm$control$var_intra){
+      if(Objectlsjm$control$Objectlsmm$control$correlated_re){
 
-        C1 <- matrix(rep(0,(x$control$Objectlsmm$control$nb.e.a+2)**2),nrow=x$control$Objectlsmm$control$nb.e.a+2,ncol=x$control$Objectlsmm$control$nb.e.a+2)
+        C1 <- matrix(rep(0,(Objectlsjm$control$Objectlsmm$control$nb.e.a+2)**2),nrow=Objectlsjm$control$Objectlsmm$control$nb.e.a+2,ncol=Objectlsjm$control$Objectlsmm$control$nb.e.a+2)
         C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
         Cholesky <- as.matrix(C1)
         random.effects <- Zq%*%t(Cholesky)
@@ -242,12 +242,12 @@ predyn_boot_lsjm_interintraSingle <- function(Objectlsjm, data.long.until.time.s
         var.intra <- sigma_intra**2
       }
       else{
-        borne1 <- curseur + choose(n = x$control$Objectlsmm$control$nb.e.a, k = 2) + x$control$Objectlsmm$control$nb.e.a - 1
-        C1 <- matrix(rep(0,(x$control$Objectlsmm$control$nb.e.a)**2),nrow=x$control$Objectlsmm$control$nb.e.a,ncol=x$control$Objectlsmm$control$nb.e.a)
+        borne1 <- curseur + choose(n = Objectlsjm$control$Objectlsmm$control$nb.e.a, k = 2) + Objectlsjm$control$Objectlsmm$control$nb.e.a - 1
+        C1 <- matrix(rep(0,(Objectlsjm$control$Objectlsmm$control$nb.e.a)**2),nrow=Objectlsjm$control$Objectlsmm$control$nb.e.a,ncol=Objectlsjm$control$Objectlsmm$control$nb.e.a)
         C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
         C2 <-matrix(c(param[(borne1+1)], 0,param[borne1+2], param[borne1+3]),nrow=2,ncol=2, byrow = TRUE)
-        C3 <- matrix(rep(0,2*x$control$Objectlsmm$control$nb.e.a), ncol = x$control$Objectlsmm$control$nb.e.a)
-        C4 <- matrix(rep(0,2*x$control$Objectlsmm$control$nb.e.a), nrow = x$control$Objectlsmm$control$nb.e.a)
+        C3 <- matrix(rep(0,2*Objectlsjm$control$Objectlsmm$control$nb.e.a), ncol = Objectlsjm$control$Objectlsmm$control$nb.e.a)
+        C4 <- matrix(rep(0,2*Objectlsjm$control$Objectlsmm$control$nb.e.a), nrow = Objectlsjm$control$Objectlsmm$control$nb.e.a)
         Cholesky <- rbind(cbind(C1,C4),cbind(C3,C2))
         Cholesky <- as.matrix(Cholesky)
         random.effects <- Zq%*%t(Cholesky)
@@ -264,9 +264,9 @@ predyn_boot_lsjm_interintraSingle <- function(Objectlsjm, data.long.until.time.s
       }
     }
     else{
-      if(x$control$Objectlsmm$control$var_inter){
-        if(x$control$Objectlsmm$control$correlated_re){
-          C1 <- matrix(rep(0,(x$control$Objectlsmm$control$nb.e.a+1)**2),nrow=x$control$Objectlsmm$control$nb.e.a+1,ncol=x$control$Objectlsmm$control$nb.e.a+1)
+      if(Objectlsjm$control$Objectlsmm$control$var_inter){
+        if(Objectlsjm$control$Objectlsmm$control$correlated_re){
+          C1 <- matrix(rep(0,(Objectlsjm$control$Objectlsmm$control$nb.e.a+1)**2),nrow=Objectlsjm$control$Objectlsmm$control$nb.e.a+1,ncol=Objectlsjm$control$Objectlsmm$control$nb.e.a+1)
           C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
           Cholesky <- as.matrix(C1)
           random.effects <- Zq%*%t(Cholesky)
@@ -281,12 +281,12 @@ predyn_boot_lsjm_interintraSingle <- function(Objectlsjm, data.long.until.time.s
 
         }
         else{
-          borne1 <- curseur + choose(n = x$control$Objectlsmm$control$nb.e.a, k = 2) + x$control$Objectlsmm$control$nb.e.a - 1
-          C1 <- matrix(rep(0,(x$control$Objectlsmm$control$nb.e.a)**2),nrow=x$control$Objectlsmm$control$nb.e.a,ncol=x$control$Objectlsmm$control$nb.e.a)
+          borne1 <- curseur + choose(n = Objectlsjm$control$Objectlsmm$control$nb.e.a, k = 2) + Objectlsjm$control$Objectlsmm$control$nb.e.a - 1
+          C1 <- matrix(rep(0,(Objectlsjm$control$Objectlsmm$control$nb.e.a)**2),nrow=Objectlsjm$control$Objectlsmm$control$nb.e.a,ncol=Objectlsjm$control$Objectlsmm$control$nb.e.a)
           C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
           C2 <-matrix(c(param[(borne1+1)]),nrow=1,ncol=1, byrow = TRUE)
-          C3 <- matrix(rep(0,x$control$Objectlsmm$control$nb.e.a), ncol = 1)
-          C4 <- matrix(rep(0,x$control$Objectlsmm$control$nb.e.a), nrow = 1)
+          C3 <- matrix(rep(0,Objectlsjm$control$Objectlsmm$control$nb.e.a), ncol = 1)
+          C4 <- matrix(rep(0,Objectlsjm$control$Objectlsmm$control$nb.e.a), nrow = 1)
           Cholesky <- rbind(cbind(C1,C3),cbind(C4,C2))
           Cholesky <- as.matrix(Cholesky)
           random.effects <- Zq%*%t(Cholesky)
@@ -301,9 +301,9 @@ predyn_boot_lsjm_interintraSingle <- function(Objectlsjm, data.long.until.time.s
         }
       }
       else{
-        if(x$control$Objectlsmm$control$var_intra){
-          if(x$control$Objectlsmm$control$correlated_re){
-            C1 <- matrix(rep(0,(x$control$Objectlsmm$control$nb.e.a+1)**2),nrow=x$control$Objectlsmm$control$nb.e.a+1,ncol=x$control$Objectlsmm$control$nb.e.a+1)
+        if(Objectlsjm$control$Objectlsmm$control$var_intra){
+          if(Objectlsjm$control$Objectlsmm$control$correlated_re){
+            C1 <- matrix(rep(0,(Objectlsjm$control$Objectlsmm$control$nb.e.a+1)**2),nrow=Objectlsjm$control$Objectlsmm$control$nb.e.a+1,ncol=Objectlsjm$control$Objectlsmm$control$nb.e.a+1)
             C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
             Cholesky <- as.matrix(C1)
             random.effects <- Zq%*%t(Cholesky)
@@ -317,12 +317,12 @@ predyn_boot_lsjm_interintraSingle <- function(Objectlsjm, data.long.until.time.s
             var.inter <- sigma.epsilon.inter**2
           }
           else{
-            borne1 <- curseur + choose(n = x$control$Objectlsmm$control$nb.e.a, k = 2) + x$control$Objectlsmm$control$nb.e.a - 1
-            C1 <- matrix(rep(0,(x$control$Objectlsmm$control$nb.e.a)**2),nrow=x$control$Objectlsmm$control$nb.e.a,ncol=x$control$Objectlsmm$control$nb.e.a)
+            borne1 <- curseur + choose(n = Objectlsjm$control$Objectlsmm$control$nb.e.a, k = 2) + Objectlsjm$control$Objectlsmm$control$nb.e.a - 1
+            C1 <- matrix(rep(0,(Objectlsjm$control$Objectlsmm$control$nb.e.a)**2),nrow=Objectlsjm$control$Objectlsmm$control$nb.e.a,ncol=Objectlsjm$control$Objectlsmm$control$nb.e.a)
             C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
             C2 <-matrix(c(param[(borne1+1)]),nrow=1,ncol=1, byrow = TRUE)
-            C3 <- matrix(rep(0,x$control$Objectlsmm$control$nb.e.a), ncol = 1)
-            C4 <- matrix(rep(0,x$control$Objectlsmm$control$nb.e.a), nrow = 1)
+            C3 <- matrix(rep(0,Objectlsjm$control$Objectlsmm$control$nb.e.a), ncol = 1)
+            C4 <- matrix(rep(0,Objectlsjm$control$Objectlsmm$control$nb.e.a), nrow = 1)
             Cholesky <- rbind(cbind(C1,C3),cbind(C4,C2))
             Cholesky <- as.matrix(Cholesky)
             random.effects <- Zq%*%t(Cholesky)
@@ -337,7 +337,7 @@ predyn_boot_lsjm_interintraSingle <- function(Objectlsjm, data.long.until.time.s
           }
         }
       }
-      if(!x$control$Objectlsmm$control$var_inter && !x$control$Objectlsmm$control$var_intra){
+      if(!Objectlsjm$control$Objectlsmm$control$var_inter && !Objectlsjm$control$Objectlsmm$control$var_intra){
         C1 <- matrix(rep(0,(length(param)-curseur)**2),nrow=length(param)-curseur,ncol=length(param)-curseur)
         C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
         Cholesky <- C1

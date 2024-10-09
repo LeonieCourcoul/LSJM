@@ -36,9 +36,9 @@ predyn_ponct_lsjm_classicSingle <- function(Objectlsjm, data.long.until.time.s, 
     curseur <- curseur+nb.alpha_01
   }
   ### Association
-  if("random effects" %in%x$control$sharedtype_01){
-    alpha_b_01 <- param[curseur:(curseur+x$control$Objectlsmm$control$nb.e.a-1)]
-    curseur <- curseur + x$control$Objectlsmm$control$nb.e.a
+  if("random effects" %in%Objectlsjm$control$sharedtype_01){
+    alpha_b_01 <- param[curseur:(curseur+Objectlsjm$control$Objectlsmm$control$nb.e.a-1)]
+    curseur <- curseur + Objectlsjm$control$Objectlsmm$control$nb.e.a
   }
   if("value" %in% Objectlsjm$control$sharedtype_01){
     alpha.current_01 <-  param[curseur]
@@ -54,8 +54,8 @@ predyn_ponct_lsjm_classicSingle <- function(Objectlsjm, data.long.until.time.s, 
 
   ## Marker
   ### Fixed effects
-  beta <- param[curseur:(curseur+ x$control$Objectlsmm$control$nb.beta-1)]
-  curseur <- curseur+x$control$Objectlsmm$control$nb.beta
+  beta <- param[curseur:(curseur+ Objectlsjm$control$Objectlsmm$control$nb.beta-1)]
+  curseur <- curseur+Objectlsjm$control$Objectlsmm$control$nb.beta
   sigma_epsilon <- param[curseur]
   curseur <- curseur +1
 
@@ -65,8 +65,8 @@ predyn_ponct_lsjm_classicSingle <- function(Objectlsjm, data.long.until.time.s, 
   Zq1 <- spacefillr::generate_sobol_owen_set(nbQMC,  Objectlsjm$control$Objectlsmm$control$nb.e.a+Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma)
   Zq <- apply(Zq1, 2, qnorm)
 
-  borne1 <- curseur + choose(n = x$control$Objectlsmm$control$nb.e.a, k = 2) + x$control$Objectlsmm$control$nb.e.a - 1
-  C1 <- matrix(rep(0,(x$control$Objectlsmm$control$nb.e.a)**2),nrow=x$control$Objectlsmm$control$nb.e.a,ncol=x$control$Objectlsmm$control$nb.e.a)
+  borne1 <- curseur + choose(n = Objectlsjm$control$Objectlsmm$control$nb.e.a, k = 2) + Objectlsjm$control$Objectlsmm$control$nb.e.a - 1
+  C1 <- matrix(rep(0,(Objectlsjm$control$Objectlsmm$control$nb.e.a)**2),nrow=Objectlsjm$control$Objectlsmm$control$nb.e.a,ncol=Objectlsjm$control$Objectlsmm$control$nb.e.a)
   C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
   Cholesky <- C1
   Cholesky <- as.matrix(Cholesky)

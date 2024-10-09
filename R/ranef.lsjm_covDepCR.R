@@ -287,10 +287,10 @@ ranef.lsjm_covDepCR <- function(object,...){
   # Parallélisation avec foreach
   random.effects.Predictions <- foreach(id.boucle = 1:length(unique(data.long$id)),
                                         .combine = 'rbind', .packages = c("mvtnorm", "marqLevAlg")) %dopar% {
- # for(id.boucle in 1:length(unique(data.long$id))){
-#
-#
- #    print(id.boucle)
+  #for(id.boucle in 1:length(unique(data.long$id))){
+
+
+    # print(id.boucle)
 
     if("value" %in% x$control$sharedtype_01 || "value" %in% x$control$sharedtype_02){
       X_T_i <- X_T[id.boucle,];U_T_i <- U_T[id.boucle,]
@@ -345,18 +345,14 @@ ranef.lsjm_covDepCR <- function(object,...){
 
     X_base_i <- X_base[offset[id.boucle]:(offset[id.boucle+1]-1),]
     X_base_i <- matrix(X_base_i, nrow = offset[id.boucle+1]-offset[id.boucle])
-    X_base_i <- unique(X_base_i)
     U_i <- U_base[offset[id.boucle]:(offset[id.boucle+1]-1),]
-    U_i <- matrix(U_i, nrow = offset[id.boucle+1]-offset[id.boucle])
-    U_base_i <- unique(U_i)
+    U_base_i <- matrix(U_i, nrow = offset[id.boucle+1]-offset[id.boucle])
     y_i <- y.new[offset[id.boucle]:(offset[id.boucle+1]-1)]
 
     W_base_i <- W_base[offset[id.boucle]:(offset[id.boucle+1]-1),]
     W_base_i <- matrix(W_base_i, nrow = offset[id.boucle+1]-offset[id.boucle])
-    W_base_i <- unique(W_base_i)
     O_base_i <- O_base[offset[id.boucle]:(offset[id.boucle+1]-1),]
     O_base_i <- matrix(O_base_i, nrow = offset[id.boucle+1]-offset[id.boucle])
-    O_base_i <- unique(O_base_i)
 
 
 

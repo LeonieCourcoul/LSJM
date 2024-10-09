@@ -24,12 +24,13 @@ dynpred.lsjm_covDepIDM <- function(newdata, Objectlsjm, s, horizon, IC = 95, nb.
     pred.boot <- c()
     pred.ponct <- c()
     for(t in window){
-      pred.ponct <- c(pred.ponct,predyn_ponct_lsjm_covDepCR(Objectlsjm,  data.long.until.time.s, s, t, event))
+      pred.ponct <- c(pred.ponct,predyn_ponct_lsjm_covDepIDM(Objectlsjm,  data.long.until.time.s, s, t, event))
       if(!is.null(IC)){
-        pred.boot <- cbind(pred.boot, predyn_boot_lsjm_covDepCR(Objectlsjm, data.long.until.time.s, s, t, event, nb.draws) )
+        pred.boot <- cbind(pred.boot, predyn_boot_lsjm_covDepIDM(Objectlsjm, data.long.until.time.s, s, t, event, nb.draws) )
       }
     }
     if(!is.null(IC)){
+      #browser()
       table.pred.id <- cbind(i, times, pred.ponct, apply(pred.boot,2, function(x) quantile(x, 0.50)),
                              apply(pred.boot,2, function(x) quantile(x, ((100-IC)/2)/100)),
                              apply(pred.boot,2, function(x) quantile(x, 1-((100-IC)/2)/100)),

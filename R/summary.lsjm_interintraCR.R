@@ -25,8 +25,8 @@ summary.lsjm_interintraCR <- function(object,...)
   #ajouter le code d'appelle à la fonction
   cat("\n")
   cat("Statistical Model:", "\n")
-  cat(paste("    Number of subjects:", x$control$Ind),"\n")
-  cat(paste("    Number of observations:", nrow(x$control$data.long)),"\n")
+  cat(paste("    Number of subjects:", x$control$Objectlsmm$control$Ind),"\n")
+  cat(paste("    Number of observations:", nrow(x$control$Objectlsmm$control$data.long)),"\n")
 
   cat("\n")
   cat("Iteration process:", "\n")

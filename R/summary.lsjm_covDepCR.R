@@ -25,8 +25,8 @@ summary.lsjm_covDepCR <- function(object,...)
   #ajouter le code d'appelle à la fonction
   cat("\n")
   cat("Statistical Model:", "\n")
-  cat(paste("    Number of subjects:", x$control$Ind),"\n")
-  cat(paste("    Number of observations:", nrow(x$control$data.long)),"\n")
+  cat(paste("    Number of subjects:", x$control$Objectlsmm$control$Ind),"\n")
+  cat(paste("    Number of observations:", nrow(x$control$Objectlsmm$control$data.long)),"\n")
 
   cat("\n")
   cat("Iteration process:", "\n")
@@ -295,7 +295,7 @@ summary.lsjm_covDepCR <- function(object,...)
   e1_names_tab <- c()
 
   if(c("random effects") %in% x$control$sharedtype_01){
-    e1_share_random_tab <- matrix(nrow = 1, ncol = 4)
+    e1_share_random_tab <- matrix(nrow = length(alpha.re_01), ncol = 4)
     e1_share_random_tab[,1] <- alpha.re_01
     e1_share_random_tab[,2] <- alpha.re_01.se
     e1_share_random_tab[,3] <- e1_share_random_tab[,1]/e1_share_random_tab[,2]
@@ -428,7 +428,7 @@ summary.lsjm_covDepCR <- function(object,...)
 
 
   if(c("random effects") %in% x$control$sharedtype_02){
-    e2_share_random_tab <- matrix(nrow = 1, ncol = 4)
+    e2_share_random_tab <- matrix(nrow = length(alpha.re_02), ncol = 4)
     e2_share_random_tab[,1] <- alpha.re_02
     e2_share_random_tab[,2] <- alpha.re_02.se
     e2_share_random_tab[,3] <- e2_share_random_tab[,1]/e2_share_random_tab[,2]

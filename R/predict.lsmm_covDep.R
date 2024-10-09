@@ -6,8 +6,8 @@ predict.lsmm_covDep <- function(Objectlsmm, which = "RE", Objectranef = NULL, da
 
   if(missing(Objectlsmm)) stop("The argument Objectlsmm must be specified")
   if(!inherits((Objectlsmm),"lsmm_covDep")) stop("use only \"lsmm_covDep\" objects")
-  if(missing(data.long)) stop("The argument data.long must be specified")
-  if(!inherits((data.long),"data.frame")) stop("use only \"data.frame\" objects")
+ # if(missing(data.long)) stop("The argument data.long must be specified")
+ # if(!inherits((data.long),"data.frame")) stop("use only \"data.frame\" objects")
   if(missing(which)) stop("The argument which must be specified")
   if(!inherits((which),"character")) stop("The argument which must be a character object")
 

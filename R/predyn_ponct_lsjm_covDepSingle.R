@@ -36,9 +36,9 @@ predyn_ponct_lsjm_covDepSingle <- function(Objectlsjm, data.long.until.time.s, s
     curseur <- curseur+nb.alpha_01
   }
   ### Association
-  if("random effects" %in%x$control$sharedtype_01){
-    alpha_b_01 <- param[curseur:(curseur+x$control$Objectlsmm$control$nb.e.a-1)]
-    curseur <- curseur + x$control$Objectlsmm$control$nb.e.a
+  if("random effects" %in%Objectlsjm$control$sharedtype_01){
+    alpha_b_01 <- param[curseur:(curseur+Objectlsjm$control$Objectlsmm$control$nb.e.a-1)]
+    curseur <- curseur + Objectlsjm$control$Objectlsmm$control$nb.e.a
   }
   if("value" %in% Objectlsjm$control$sharedtype_01){
     alpha.current_01 <-  param[curseur]
@@ -260,9 +260,9 @@ predyn_ponct_lsjm_covDepSingle <- function(Objectlsjm, data.long.until.time.s, s
     var.GK <- matrix(rep(omega%*%t(Os),nbQMC),nrow=nbQMC,byrow = T) + b_om%*%t(Ws)
     var.GK.den <- matrix(rep(omega%*%t(Os.den),nbQMC),nrow=nbQMC,byrow = T) + b_om%*%t(Ws.den)
     var.GK.0_u <- matrix(rep(omega%*%t(O_0_u),nbQMC),nrow=nbQMC,byrow = T) + b_om%*%t(W_0_u)
-      survLong_0_s_01 <- survLong_0_s_01 + alpha.var_01*var.GK.den
-      survLong_0_u_01 <- survLong_0_u_01 + alpha.var_01*var.GK.0_u
-        survLong_s_t_0k <- survLong_s_t_0k + alpha.var_01*var.GK
+      survLong_0_s_01 <- survLong_0_s_01 + alpha.var_01*exp(var.GK.den)
+      survLong_0_u_01 <- survLong_0_u_01 + alpha.var_01*exp(var.GK.0_u)
+        survLong_s_t_0k <- survLong_s_t_0k + alpha.var_01*exp(var.GK)
   }
 
   wk <- wk.1

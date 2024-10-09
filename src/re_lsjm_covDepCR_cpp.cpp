@@ -86,21 +86,20 @@ double re_lsjm_covDepCR_cpp(arma::vec sharedtype, List HB, arma::vec Gompertz, a
   arma::mat sigma_GK_T0;
 
   if(dep_re_01){
-    h_01_T_i = h_01_T_i%exp(alpha_b_01*b_y);
-    survLong_01_T_i = survLong_01_T_i + arma::repmat(alpha_b_01*b_y,1,nb_pointsGK);
+    h_01_T_i = h_01_T_i%exp(alpha_b_01.t()*b_y);
+    survLong_01_T_i = survLong_01_T_i + arma::repmat(alpha_b_01.t()*b_y,1,nb_pointsGK);
     if(left_trunc){
-      survLong_01_T0_i = survLong_01_T0_i + arma::repmat(alpha_b_01*b_y,1,nb_pointsGK);
+      survLong_01_T0_i = survLong_01_T0_i + arma::repmat(alpha_b_01.t()*b_y,1,nb_pointsGK);
     }
   }
 
   if(dep_re_02){
-    h_02_T_i = h_02_T_i%exp(b_y*alpha_b_02);
-    survLong_02_T_i = survLong_02_T_i + arma::repmat(alpha_b_02*b_y,1,nb_pointsGK);
+    h_02_T_i = h_02_T_i%exp(b_y.t()*alpha_b_02);
+    survLong_02_T_i = survLong_02_T_i + arma::repmat(alpha_b_02.t()*b_y,1,nb_pointsGK);
     if(left_trunc){
-      survLong_02_T0_i = survLong_02_T0_i + arma::repmat(alpha_b_02*b_y,1,nb_pointsGK);
+      survLong_02_T0_i = survLong_02_T0_i + arma::repmat(alpha_b_02.t()*b_y,1,nb_pointsGK);
     }
   }
-
   if(dep_cv_01 || dep_cv_02){
     CV_T = arma::dot(beta, X_T_i) + U_T_i*b_y;
     current_GK_T = X_GK_T_i*beta+U_GK_T_i*b_y;
@@ -168,7 +167,6 @@ double re_lsjm_covDepCR_cpp(arma::vec sharedtype, List HB, arma::vec Gompertz, a
       }
     }
   }
-
   ///// h0
   ///////// 0-1
   double h_0_01_T_i;
@@ -224,6 +222,7 @@ double re_lsjm_covDepCR_cpp(arma::vec sharedtype, List HB, arma::vec Gompertz, a
     survLong_01_T0_i = exp(survLong_01_T0_i)*h_0_GK_01_T0_i;
     A_01_T0_i = (exp(etaBaseline_01_T0_i)%survLong_01_T0_i*(Time_T0_i/2));
   }
+
 
   ///////// 0-2
   double h_0_02_T_i;
@@ -284,7 +283,6 @@ double re_lsjm_covDepCR_cpp(arma::vec sharedtype, List HB, arma::vec Gompertz, a
 
 
 
-
   arma::vec f_Y_b_sigma(1,fill::zeros);
   arma::vec sigma_long;
   arma::vec CV;
@@ -295,7 +293,6 @@ double re_lsjm_covDepCR_cpp(arma::vec sharedtype, List HB, arma::vec Gompertz, a
 
     f_Y_b_sigma = f_Y_b_sigma + log(1.0 / (sqrt(2.0*M_PI)*sigma_long)) - 0.5*pow((y_i(k)-CV)/sigma_long,2);
   }
-
 
 
 

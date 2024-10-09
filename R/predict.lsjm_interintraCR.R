@@ -6,8 +6,8 @@ predict.lsjm_interintraCR <- function(Objectlsmm, which = "RE", Objectranef = NU
 
   if(missing(Objectlsmm)) stop("The argument Objectlsmm must be specified")
   if(!inherits((Objectlsmm),"lsjm_interintraCR")) stop("use only \"lsjm_interintraCR\" objects")
-  if(missing(data.long)) stop("The argument data.long must be specified")
-  if(!inherits((data.long),"data.frame")) stop("use only \"data.frame\" objects")
+ # if(missing(data.long)) stop("The argument data.long must be specified")
+  #if(!inherits((data.long),"data.frame")) stop("use only \"data.frame\" objects")
   if(missing(which)) stop("The argument which must be specified")
   if(!inherits((which),"character")) stop("The argument which must be a character object")
 

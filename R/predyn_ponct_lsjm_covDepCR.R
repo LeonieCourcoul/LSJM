@@ -36,9 +36,9 @@ predyn_ponct_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, wi
     curseur <- curseur+nb.alpha_01
   }
   ### Association
-  if("random effects" %in%x$control$sharedtype_01){
-    alpha_b_01 <- param[curseur:(curseur+x$control$Objectlsmm$control$nb.e.a-1)]
-    curseur <- curseur + x$control$Objectlsmm$control$nb.e.a
+  if("random effects" %in% Objectlsjm$control$sharedtype_01){
+    alpha_b_01 <- param[curseur:(curseur+Objectlsjm$control$Objectlsmm$control$nb.e.a-1)]
+    curseur <- curseur + Objectlsjm$control$Objectlsmm$control$nb.e.a
   }
   if("value" %in% Objectlsjm$control$sharedtype_01){
     alpha.current_01 <-  param[curseur]
@@ -74,9 +74,9 @@ predyn_ponct_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, wi
     curseur <- curseur+nb.alpha_02
   }
   ### Association
-  if("random effects" %in%x$control$sharedtype_02){
-    alpha_b_02 <- param[curseur:(curseur+x$control$Objectlsmm$control$nb.e.a-1)]
-    curseur <- curseur + x$control$Objectlsmm$control$nb.e.a
+  if("random effects" %in% Objectlsjm$control$sharedtype_02){
+    alpha_b_02 <- param[curseur:(curseur+Objectlsjm$control$Objectlsmm$control$nb.e.a-1)]
+    curseur <- curseur + Objectlsjm$control$Objectlsmm$control$nb.e.a
   }
   if("value" %in% Objectlsjm$control$sharedtype_02){
     alpha.current_02 <- param[curseur]
@@ -346,17 +346,17 @@ predyn_ponct_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, wi
     var.GK.den <- matrix(rep(omega%*%t(Os.den),nbQMC),nrow=nbQMC,byrow = T) + b_om%*%t(Ws.den)
     var.GK.0_u <- matrix(rep(omega%*%t(O_0_u),nbQMC),nrow=nbQMC,byrow = T) + b_om%*%t(W_0_u)
     if(c("variability") %in% Objectlsjm$control$sharedtype_01){
-      survLong_0_s_01 <- survLong_0_s_01 + alpha.var_01*var.GK.den
-      survLong_0_u_01 <- survLong_0_u_01 + alpha.var_01*var.GK.0_u
+      survLong_0_s_01 <- survLong_0_s_01 + alpha.var_01*exp(var.GK.den)
+      survLong_0_u_01 <- survLong_0_u_01 + alpha.var_01*exp(var.GK.0_u)
       if(event == 1){
-        survLong_s_t_0k <- survLong_s_t_0k + alpha.var_01*var.GK
+        survLong_s_t_0k <- survLong_s_t_0k + alpha.var_01*exp(var.GK)
       }
     }
     if(c("variability") %in% Objectlsjm$control$sharedtype_02){
-      survLong_0_s_02 <- survLong_0_s_02 + alpha.var_02*var.GK.den
-      survLong_0_u_02 <- survLong_0_u_02 + alpha.var_02*var.GK.0_u
+      survLong_0_s_02 <- survLong_0_s_02 + alpha.var_02*exp(var.GK.den)
+      survLong_0_u_02 <- survLong_0_u_02 + alpha.var_02*exp(var.GK.0_u)
       if(event == 2){
-        survLong_s_t_0k <- survLong_s_t_0k + alpha.var_02*var.GK
+        survLong_s_t_0k <- survLong_s_t_0k + alpha.var_02*exp(var.GK)
       }
     }
   }

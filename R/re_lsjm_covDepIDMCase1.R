@@ -32,7 +32,6 @@ re_lsjm_covDepIDMCase1 <- function(param, nb.e.a, nb.e.a.sigma, Sigma.re,
 
   alpha_b <- list(alpha_b_01, alpha_b_02, alpha_b_12)
 
-
   log_f_Y_f_T <- re_lsjm_covDepIDMCase1_cpp(sharedtype, HB, W_G,
                                              nb_pointsGK,
                                              alpha_y_slope_var, alpha_b, alpha_z,  gamma_z0,  fixed_par, b_y = t(matrix(b_re, nrow = 1)),

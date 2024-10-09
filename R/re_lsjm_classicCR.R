@@ -22,7 +22,6 @@ re_lsjm_classicCR <- function(param, nb.e.a,  Sigma.re,
   f_b_tau <- mvtnorm::dmvnorm(x = c(b_re), mean = rep(0,length(b_re)), sigma = Sigma.re)
 
 
-
   log_f_Y_f_T <- re_lsjm_classicCR_cpp(  sharedtype,  HB,  Gompertz,  Weibull,
                                                nb_pointsGK ,
                                                alpha_y_slope, alpha_b_01, alpha_b_02, alpha_z,  gamma_z0,  beta,  beta_slope,

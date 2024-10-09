@@ -160,16 +160,16 @@ predyn_boot_lsjm_classicSingle <- function(Objectlsjm, data.long.until.time.s, s
 
     ## Marker
     ### Fixed effects
-    beta <- param[curseur:(curseur+ x$control$Objectlsmm$control$nb.beta-1)]
-    curseur <- curseur+x$control$Objectlsmm$control$nb.beta
+    beta <- param[curseur:(curseur+ Objectlsjm$control$Objectlsmm$control$nb.beta-1)]
+    curseur <- curseur+Objectlsjm$control$Objectlsmm$control$nb.beta
     sigma_epsilon <- param[curseur]
     curseur <- curseur +1
 
     Zq1 <- spacefillr::generate_sobol_owen_set(nbQMC,  Objectlsjm$control$Objectlsmm$control$nb.e.a+Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma)
     Zq <- apply(Zq1, 2, qnorm)
 
-    borne1 <- curseur + choose(n = x$control$Objectlsmm$control$nb.e.a, k = 2) + x$control$Objectlsmm$control$nb.e.a - 1
-    C1 <- matrix(rep(0,(x$control$Objectlsmm$control$nb.e.a)**2),nrow=x$control$Objectlsmm$control$nb.e.a,ncol=x$control$Objectlsmm$control$nb.e.a)
+    borne1 <- curseur + choose(n = Objectlsjm$control$Objectlsmm$control$nb.e.a, k = 2) + Objectlsjm$control$Objectlsmm$control$nb.e.a - 1
+    C1 <- matrix(rep(0,(Objectlsjm$control$Objectlsmm$control$nb.e.a)**2),nrow=Objectlsjm$control$Objectlsmm$control$nb.e.a,ncol=Objectlsjm$control$Objectlsmm$control$nb.e.a)
     C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
     Cholesky <- C1
     Cholesky <- as.matrix(Cholesky)

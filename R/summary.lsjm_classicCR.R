@@ -25,8 +25,8 @@ summary.lsjm_classicCR <- function(object,...)
   #ajouter le code d'appelle à la fonction
   cat("\n")
   cat("Statistical Model:", "\n")
-  cat(paste("    Number of subjects:", x$control$Ind),"\n")
-  cat(paste("    Number of observations:", nrow(x$control$data.long)),"\n")
+  cat(paste("    Number of subjects:", x$control$Objectlsmm$control$Ind),"\n")
+  cat(paste("    Number of observations:", nrow(x$control$Objectlsmm$control$data.long)),"\n")
 
   cat("\n")
   cat("Iteration process:", "\n")
@@ -325,8 +325,10 @@ summary.lsjm_classicCR <- function(object,...)
   rownames(e1_surv_tab) <- e1_names_tab
   colnames(e1_surv_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
 
+  e1_surv_tab <- as.data.frame(e1_surv_tab)
   e1_surv_tab <- round(e1_surv_tab, 4)
   e1_surv_tab$Pvalue <- ifelse(e1_surv_tab$Pvalue < 0.001, "<0.001", round(e1_surv_tab$Pvalue,3))
+  e1_bas_tab <- as.data.frame(e1_bas_tab)
   e1_bas_tab <- round(e1_bas_tab, 4)
   e1_bas_tab$Pvalue <- ifelse(e1_bas_tab$Pvalue < 0.001, "<0.001", round(e1_bas_tab$Pvalue,3))
 
@@ -441,11 +443,13 @@ summary.lsjm_classicCR <- function(object,...)
     }
 
     e2_surv_tab <- rbind(e2_var_tab, e2_share_random_tab, e2_share_current_tab, e2_share_slope_tab, e2_alpha_tab)
+    e2_surv_tab <- as.data.frame(e2_surv_tab)
     rownames(e2_surv_tab) <- e2_names_tab
     colnames(e2_surv_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
 
     e2_surv_tab <- round(e2_surv_tab, 4)
     e2_surv_tab$Pvalue <- ifelse(e2_surv_tab$Pvalue < 0.001, "<0.001", round(e2_surv_tab$Pvalue,3))
+    e2_bas_tab <- as.data.frame(e2_bas_tab)
     e2_bas_tab <- round(e2_bas_tab, 4)
     e2_bas_tab$Pvalue <- ifelse(e2_bas_tab$Pvalue < 0.001, "<0.001", round(e2_bas_tab$Pvalue,3))
 

@@ -6,8 +6,8 @@ predict.lsmm_classic <- function(Objectlsmm, which = "RE", Objectranef = NULL, d
 
   if(missing(Objectlsmm)) stop("The argument Objectlsmm must be specified")
   if(!inherits((Objectlsmm),"lsmm_classic")) stop("use only \"lsmm_classic\" objects")
-  if(missing(data.long)) stop("The argument data.long must be specified")
-  if(!inherits((data.long),"data.frame")) stop("use only \"data.frame\" objects")
+ # if(missing(data.long)) stop("The argument data.long must be specified")
+ # if(!inherits((data.long),"data.frame")) stop("use only \"data.frame\" objects")
   if(missing(which)) stop("The argument which must be specified")
   if(!inherits((which),"character")) stop("The argument which must be a character object")
   #if(!is.null(Objectranef)&&!inherits((Objectranef),"ranef.lsmm_classic")) stop("The argument Objectranef must be a \"ranef.lsmm_classic\" object")

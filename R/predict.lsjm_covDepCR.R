@@ -5,8 +5,8 @@
 predict.lsjm_covDepCR <- function(Objectlsmm, which = "RE", Objectranef = NULL, data.long = NULL){
 
   if(missing(Objectlsmm)) stop("The argument Objectlsmm must be specified")
-  if(!inherits((Objectlsmm),"lsjm_covDepCR")) stop("use only \"lsjm_covDepCR\" objects")
-  if(missing(data.long)) stop("The argument data.long must be specified")
+  #if(!inherits((Objectlsmm),"lsjm_covDepCR")) stop("use only \"lsjm_covDepCR\" objects")
+  #if(missing(data.long)) stop("The argument data.long must be specified")
   if(!inherits((data.long),"data.frame")) stop("use only \"data.frame\" objects")
   if(missing(which)) stop("The argument which must be specified")
   if(!inherits((which),"character")) stop("The argument which must be a character object")
@@ -123,6 +123,7 @@ predict.lsjm_covDepCR <- function(Objectlsmm, which = "RE", Objectranef = NULL, 
   curseur <- curseur+x$control$Objectlsmm$control$nb.beta
   omega <- param[(curseur):(curseur+x$control$Objectlsmm$control$nb.omega-1)]
   curseur <- curseur+x$control$Objectlsmm$control$nb.omega
+
   if(x$control$Objectlsmm$control$correlated_re){
     C1 <- matrix(rep(0,(x$control$Objectlsmm$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma)**2),nrow=x$control$Objectlsmm$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma,ncol=x$control$Objectlsmm$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma)
     C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
@@ -364,18 +365,18 @@ predict.lsjm_covDepCR <- function(Objectlsmm, which = "RE", Objectranef = NULL, 
 
                          X_base_i <- X_base[offset[id.boucle]:(offset[id.boucle+1]-1),]
                          X_base_i <- matrix(X_base_i, nrow = offset[id.boucle+1]-offset[id.boucle])
-                         X_base_i <- unique(X_base_i)
+                         #X_base_i <- unique(X_base_i)
                          U_i <- U_base[offset[id.boucle]:(offset[id.boucle+1]-1),]
-                         U_i <- matrix(U_i, nrow = offset[id.boucle+1]-offset[id.boucle])
-                         U_base_i <- unique(U_i)
+                         U_base_i <- matrix(U_i, nrow = offset[id.boucle+1]-offset[id.boucle])
+                         #U_base_i <- unique(U_i)
                          y_i <- y.new[offset[id.boucle]:(offset[id.boucle+1]-1)]
 
                          W_base_i <- W_base[offset[id.boucle]:(offset[id.boucle+1]-1),]
                          W_base_i <- matrix(W_base_i, nrow = offset[id.boucle+1]-offset[id.boucle])
-                         W_base_i <- unique(W_base_i)
+                        # W_base_i <- unique(W_base_i)
                          O_base_i <- O_base[offset[id.boucle]:(offset[id.boucle+1]-1),]
                          O_base_i <- matrix(O_base_i, nrow = offset[id.boucle+1]-offset[id.boucle])
-                         O_base_i <- unique(O_base_i)
+                         #O_base_i <- unique(O_base_i)
 
 
 

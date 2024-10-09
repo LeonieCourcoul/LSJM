@@ -43,8 +43,8 @@ ranef.lsjm_classicCR <- function(object,...){
     curseur <- curseur + 2
   }
   if(x$control$hazard_baseline_01 == "Splines"){
-    gamma_01 <- param[(curseur):(curseur+x$control$nb.knots.splines[1]-2+1)]
-    curseur <- curseur + x$control$nb.knots.splines[1]-2 + 2
+    gamma_01 <- param[(curseur):(curseur+x$control$nb.knots.splines[1]+2+1)]
+    curseur <- curseur + x$control$nb.knots.splines[1]+2 + 2
   }
   ### Covariables :
   nb.alpha_01 <- x$control$nb.alpha[1]
@@ -77,8 +77,8 @@ ranef.lsjm_classicCR <- function(object,...){
     curseur <- curseur + 2
   }
   if(x$control$hazard_baseline_02 == "Splines"){
-    gamma_02 <- param[(curseur):(curseur+x$control$nb.knots.splines[2]-2+1)]
-    curseur <- curseur + x$control$nb.knots.splines[2]-2+ 2
+    gamma_02 <- param[(curseur):(curseur+x$control$nb.knots.splines[2]+2+1)]
+    curseur <- curseur + x$control$nb.knots.splines[2]+2+ 2
   }
   ### Covariables :
   nb.alpha_02 <- x$control$nb.alpha[2]
@@ -245,7 +245,7 @@ ranef.lsjm_classicCR <- function(object,...){
 
 
 
-    # Parallélisation avec foreach
+     #Parallélisation avec foreach
     random.effects.Predictions <- foreach(id.boucle = 1:length(unique(data.long$id)),
                                           .combine = 'rbind', .packages = c("mvtnorm", "marqLevAlg")) %dopar% {
 

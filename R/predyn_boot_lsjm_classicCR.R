@@ -136,10 +136,10 @@ predyn_boot_lsjm_classicCR <- function(Objectlsjm, data.long.until.time.s, s, wi
 
   for(l in 1:nb.draws){
     if(is.null(Objectlsjm$result_step2)){
-      param <- Objectlsjm$result_step1$b
+      param_mean <- Objectlsjm$result_step1$b
     }
     else{
-      param <- Objectlsjm$result_step2$b
+      param_mean <- Objectlsjm$result_step2$b
     }
     param <- mvtnorm::rmvnorm(1, mean = param_mean, sigma = Hess2)
     ## Param
@@ -214,7 +214,7 @@ predyn_boot_lsjm_classicCR <- function(Objectlsjm, data.long.until.time.s, s, wi
     sigma_epsilon <- param[curseur]
     curseur <- curseur +1
 
-    Zq1 <- spacefillr::generate_sobol_owen_set(nbQMC,  Objectlsjm$control$Objectlsmm$control$nb.e.a+Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma)
+    Zq1 <- spacefillr::generate_sobol_owen_set(nbQMC,  Objectlsjm$control$Objectlsmm$control$nb.e.a)
     Zq <- apply(Zq1, 2, qnorm)
 
     borne1 <- curseur + choose(n = Objectlsjm$control$Objectlsmm$control$nb.e.a, k = 2) + Objectlsjm$control$Objectlsmm$control$nb.e.a - 1

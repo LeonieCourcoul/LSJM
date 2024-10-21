@@ -1,7 +1,7 @@
 #' @rdname dynpred
 #' @export
 
-dynpred.lsjm_interintraSingle <- function(newdata, Objectlsjm, s, horizon, IC = 95, nb.draws = 1000){
+dynpred.lsjm_interintraSingle <- function(Objectlsjm,newdata,  s, horizon, IC = 95, nb.draws = 1000){
 
   if(!is.null(IC) && (IC<=0 || IC>=100)) stop("IC must be between 0 and 100")
   if(!is.null(IC) && (is.null(nb.draws) || nb.draws <=0)) stop("draw must be higher 1")

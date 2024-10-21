@@ -1,7 +1,7 @@
 #' @rdname dynpred
 #' @export
 
-dynpred.lsjm_covDepCR <- function(newdata, Objectlsjm, s, horizon, event, IC = 95, nb.draws = 1000){
+dynpred.lsjm_covDepCR <- function(Objectlsjm, newdata,  s, horizon, event, IC = 95, nb.draws = 1000){
 
 
   if(!is.null(IC) && (IC<=0 || IC>=100)) stop("IC must be between 0 and 100")

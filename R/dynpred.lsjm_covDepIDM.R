@@ -1,7 +1,7 @@
 #' @rdname dynpred
 #' @export
 
-dynpred.lsjm_covDepIDM <- function(newdata, Objectlsjm, s, horizon, IC = 95, nb.draws = 1000){
+dynpred.lsjm_covDepIDM <- function(Objectlsjm,newdata,  s, horizon, IC = 95, nb.draws = 1000){
 
   event <- 1
 

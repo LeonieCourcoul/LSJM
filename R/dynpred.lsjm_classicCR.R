@@ -1,8 +1,7 @@
 #' @rdname dynpred
 #' @export
 
-dynpred.lsjm_classicCR <- function(newdata, Objectlsjm, s, horizon, event, IC = 95, nb.draws = 1000){
-
+dynpred.lsjm_classicCR <- function(Objectlsjm,newdata,  s, horizon, event, IC = 95, nb.draws = 1000){
 
   if(!is.null(IC) && (IC<=0 || IC>=100)) stop("IC must be between 0 and 100")
   if(!is.null(IC) && (is.null(nb.draws) || nb.draws <=0)) stop("draw must be higher 1")

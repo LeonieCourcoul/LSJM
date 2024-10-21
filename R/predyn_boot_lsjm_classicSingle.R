@@ -165,7 +165,7 @@ predyn_boot_lsjm_classicSingle <- function(Objectlsjm, data.long.until.time.s, s
     sigma_epsilon <- param[curseur]
     curseur <- curseur +1
 
-    Zq1 <- spacefillr::generate_sobol_owen_set(nbQMC,  Objectlsjm$control$Objectlsmm$control$nb.e.a+Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma)
+    Zq1 <- spacefillr::generate_sobol_owen_set(nbQMC,  Objectlsjm$control$Objectlsmm$control$nb.e.a)
     Zq <- apply(Zq1, 2, qnorm)
 
     borne1 <- curseur + choose(n = Objectlsjm$control$Objectlsmm$control$nb.e.a, k = 2) + Objectlsjm$control$Objectlsmm$control$nb.e.a - 1

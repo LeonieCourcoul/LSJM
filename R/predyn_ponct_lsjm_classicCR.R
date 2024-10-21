@@ -1,6 +1,5 @@
 predyn_ponct_lsjm_classicCR <- function(Objectlsjm, data.long.until.time.s, s, window, event){
 
-
   if(is.null(Objectlsjm$result_step2)){
     param <- Objectlsjm$result_step1$b
     nbQMC <- Objectlsjm$control$S1
@@ -95,7 +94,7 @@ predyn_ponct_lsjm_classicCR <- function(Objectlsjm, data.long.until.time.s, s, w
 
 
 
-  Zq1 <- spacefillr::generate_sobol_owen_set(nbQMC,  Objectlsjm$control$Objectlsmm$control$nb.e.a+Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma)
+  Zq1 <- spacefillr::generate_sobol_owen_set(nbQMC,  Objectlsjm$control$Objectlsmm$control$nb.e.a)
   Zq <- apply(Zq1, 2, qnorm)
 
   borne1 <- curseur + choose(n = Objectlsjm$control$Objectlsmm$control$nb.e.a, k = 2) + Objectlsjm$control$Objectlsmm$control$nb.e.a - 1

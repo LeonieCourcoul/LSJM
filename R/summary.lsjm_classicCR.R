@@ -324,7 +324,7 @@ summary.lsjm_classicCR <- function(object,...)
   e1_surv_tab <- rbind(e1_var_tab, e1_share_random_tab, e1_share_current_tab, e1_share_slope_tab, e1_alpha_tab)
   rownames(e1_surv_tab) <- e1_names_tab
   colnames(e1_surv_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
-
+#  browser()
   e1_surv_tab <- as.data.frame(e1_surv_tab)
   e1_surv_tab <- round(e1_surv_tab, 4)
   e1_surv_tab$Pvalue <- ifelse(e1_surv_tab$Pvalue < 0.001, "<0.001", round(e1_surv_tab$Pvalue,3))

@@ -4,21 +4,26 @@
 #' @export
 #'
 
-plot.lsjm_covDepCR <- function(Objectlsjm, which = 'long.fit', Objectranef = NULL, break.times = NULL, ID.ind = NULL, xlim = NULL, ylim = NULL){
+plot.lsjm_covDepCR <- function(Objectlsjm, which = 'long.fit', Objectpredict, break.times = NULL, ID.ind = NULL, xlim = NULL, ylim = NULL){
 
 
   Objectlsmm <- Objectlsjm$control$Objectlsmm
-  if(is.null(Objectranef)){
-    Objectranef <- ranef(Objectlsmm)
+  if(is.null(Objectpredict)){
+    stop("Not implemented")
   }
+
   graph <- NULL
 
-    if(which == 'long.fit'){
+  oldpar <- graphics::par(no.readonly = TRUE) # code line i
+  on.exit(graphics::par(oldpar)) # code line i + 1
+
+  ObjectpredictY <- Objectpredict$predictY
+  if(which == 'long.fit'){
     formFixed <- Objectlsmm$control$formFixed
     timeVar <- Objectlsmm$control$timeVar
     data.long <- Objectlsmm$control$data.long
     value.var <- as.character(formFixed[[2]])
-    pred.CV <- Objectranef$cv.Pred[,3]
+    pred.CV <- ObjectpredictY$predY
     if(is.null(break.times)){
       timeInterv <- range(data.long[,timeVar])
       break.times <- quantile(timeInterv,prob=seq(0,1,length.out=10))
@@ -34,28 +39,27 @@ plot.lsjm_covDepCR <- function(Objectlsjm, which = 'long.fit', Objectranef = NUL
     obstime.mean <- by(data.long[,timeVar], data.long$window, mean)
     df <- cbind(obstime.mean, mean.obs, IC.sup, IC.inf, mean.pred)
     df <- as.data.frame(df)
-    oldpar <- graphics::par(no.readonly = TRUE) # code line i
-    on.exit(graphics::par(oldpar)) # code line i + 1
     k <- ggplot2::ggplot(df,  ggplot2::aes(obstime.mean, mean.obs, ymin = IC.sup, ymax = IC.inf))
-    graph.fit.long <- k +  ggplot2::geom_pointrange( ggplot2::aes(ymin = IC.sup, ymax = IC.inf), shape =1) +
+    graph.fit.long <- k +  ggplot2::geom_pointrange( ggplot2::aes(ymin = IC.sup, ymax = IC.inf), shape =1)+
       ggplot2::geom_point(ggplot2::aes(obstime.mean, mean.pred), size = 3, shape = 17) +
       ggplot2::scale_x_continuous(name = "Time") +
       ggplot2::scale_y_continuous(name = "Current Value") +
       ggplot2::theme(panel.grid.major = ggplot2::element_blank(), panel.grid.minor = ggplot2::element_blank(),
                      panel.background = ggplot2::element_blank(), axis.line = ggplot2::element_line(colour = "black"),
-                     axis.text=ggplot2::element_text(size=12),
-                     axis.title=ggplot2::element_text(size=14,face="bold"))+
-      ggplot2::ggtitle("Longitudinal goodness-of-fit")
-    graph <- list(graph.fit.long = graph.fit.long)
+                     axis.text=ggplot2::element_text(size=15),
+                     axis.title=ggplot2::element_text(size=18),
+                     plot.title = ggplot2::element_text(size = 20, face = "bold"))+
+      ggplot2::ggtitle("Longitudinal goodness-of-fit")+ggplot2::coord_cartesian(xlim = xlim,ylim = ylim, expand = TRUE)
+    graph <- list(long.fit = graph.fit.long)
   }
 
+
   if(which == 'traj.ind'){
-    #browser()
     if(is.null(ID.ind)){
       stop("You have to design some individual ID to plot the the individual trajectories.")
     }
     ID.ind <- as.vector(ID.ind)
-    pred.CV <- as.data.frame(Objectranef$cv.Pred)
+    pred.CV <- as.data.frame(ObjectpredictY)
     data.long <- Objectlsmm$control$data.long
     formFixed <- Objectlsmm$control$formFixed
     value.var <- as.character(formFixed[[2]])
@@ -63,47 +67,48 @@ plot.lsjm_covDepCR <- function(Objectlsjm, which = 'long.fit', Objectranef = NUL
     for(ind in ID.ind){
       pred.CV.id <- pred.CV[which(pred.CV$id == ind),]
       pred.CV.id$y <- data.long[which(data.long$id == ind), value.var]
-      pred.CV.id$CI.sup <- pred.CV.id$CV + 1.96*pred.CV.id$Residual_SD
-      pred.CV.id$CI.inf <- pred.CV.id$CV - 1.96*pred.CV.id$Residual_SD
+      pred.CV.id$CI.sup <- pred.CV.id$predY + 1.96*pred.CV.id$predSD
+      pred.CV.id$CI.inf <- pred.CV.id$predY - 1.96*pred.CV.id$predSD
 
       #browser()
       traj_ind <- ggplot2::ggplot() +
 
-        ggplot2::geom_line(pred.CV.id, mapping = aes(x=time, y=CV, group = id, color = 'Predicted'))+
-        ggplot2::geom_line(pred.CV.id, mapping = aes(x=time, y=CI.sup, group = id,  color = 'Predicted'))+
-        ggplot2::geom_line(pred.CV.id, mapping = aes(x=time, y=CI.inf, group = id,  color = 'Predicted'))+
+        ggplot2::geom_line(pred.CV.id, mapping = aes(x=time, y=predY, group = id, color = 'Predicted'))+
+        ggplot2::geom_line(pred.CV.id, mapping = aes(x=time, y=CI.sup, group = id,  color = 'Predicted'),linetype = 2)+
+        ggplot2::geom_line(pred.CV.id, mapping = aes(x=time, y=CI.inf, group = id,  color = 'Predicted'),linetype = 2)+
 
         ggplot2::geom_ribbon( pred.CV.id,mapping=
-                       aes(x=time,ymin=CI.inf,ymax=CI.sup), fill="#998ec3", alpha=0.3)+
+                                aes(x=time,ymin=CI.inf,ymax=CI.sup), fill="#998ec3", alpha=0.3,linetype = 3)+
 
         ggplot2::geom_point(pred.CV.id, mapping = aes(x=time, y=y, group = id,color = "Observed"),shape =17)+
         xlab("Time") + ylab("Y") +
 
         ggplot2::facet_wrap(~id, ncol = 3)+
         ggplot2::scale_color_manual(name='',
-                           breaks=c('Predicted', 'Observed'),
-                           values=c('Predicted'='#998ec3', 'Observed'='#000000'),
-                           guide = guide_legend(override.aes = list(
-                             linetype = c(rep("solid", 1), "blank"),
-                             shape = c(NA,  17))))+
+                                    breaks=c('Predicted', 'Observed'),
+                                    values=c('Predicted'='#998ec3', 'Observed'='#000000'),
+                                    guide = guide_legend(override.aes = list(
+                                      linetype = c(rep("solid", 1), "blank"),
+                                      shape = c(NA,  17))))+
         ggplot2::theme(
           panel.background = element_blank(),
           legend.position = "bottom",
           legend.box = "vertical",
-          axis.title.x = element_text(color = "black", size = 13),
-          axis.title.y = element_text(color = "black", size = 13),
+          #axis.title.x = element_text(color = "black", size = 10),
+          #axis.title.y = element_text(color = "black", size = 10),
           panel.grid = element_blank(),
           #legend.key = element_blank(),
-          legend.text = element_text(color = "black", size = 13),
+          axis.text=ggplot2::element_text(size=15),
+          axis.title=ggplot2::element_text(size=18),
+          plot.title = ggplot2::element_text(size = 20, face = "bold"),
+          legend.text = element_text(color = "black", size = 14),
           axis.line = element_line(color = "black",
-                                   linetype = "solid"),
-          axis.text = element_text(size = 13, color = "black")
-        )
+                                   linetype = "solid")
+          #axis.text = element_text(size = 10, color = "black")
+        )+coord_cartesian(xlim = xlim,ylim = ylim, expand = TRUE)
 
-      graph.traj.ind <- c(graph.traj.ind, traj_ind)
-      print(traj_ind)
+      graph[[paste("traj.ind",ind, sep = "_")]] <- traj_ind
     }
-    graph <- graph.traj.ind
 
   }
 
@@ -112,7 +117,7 @@ plot.lsjm_covDepCR <- function(Objectlsjm, which = 'long.fit', Objectranef = NUL
     data.id <- data.long[!duplicated(data.long$id),]
     data.id$e1.new <- data.id[,all.vars(Objectlsjm$control$deltas[["delta1"]])]
     C1.sort <- data.id[order(data.id[,all.vars(Objectlsjm$control$Time[["Time_T"]])]),]
-    Cum.pred1 <- apply(Objectranef$Cum_risk1, 2, mean)
+    Cum.pred1 <- apply(Objectpredict$predictCum_01, 2, mean)
     Cum.pred1 <- cbind(Cum.pred1, unique(sort(data.id[,all.vars(Objectlsjm$control$Time[["Time_T"]])])))
     Cum.pred1 <- as.data.frame(Cum.pred1)
     Cum.pred1.sort <- Cum.pred1[order(Cum.pred1[,2]),]
@@ -126,22 +131,22 @@ plot.lsjm_covDepCR <- function(Objectlsjm, which = 'long.fit', Objectranef = NUL
     C1.sort$delta1sort <- C1.sort[all.vars(delta1sort)][,1]
     Surv.fit1 <- survminer::surv_fit(Surv(Time_Tsort, delta1sort) ~ 1, data = C1.sort)
     surv_plot <- survminer::ggsurvplot(Surv.fit1, data = C1.sort, fun = "cumhaz",
-                            conf.int = TRUE, legend.title = "",
-                            legend.labs = c("Survival Curve"),
-                            xlab = "Time", palette = "#B2BABB", ylim = ylim)
+                                       conf.int = TRUE, legend.title = "",
+                                       legend.labs = c("Survival Curve"),
+                                       xlab = "Time", palette = "#B2BABB", ylim = ylim)
     surv_plot <- surv_plot$plot
     color_mapping <- c("#B2BABB","#E74C3C")
     graph.surv.1<-surv_plot +
       ggplot2::geom_step(aes(timeFormSurv, pred, color = "Nelson-Aalen"),
-                data = Cum.pred1.sort,
-                linetype = "3313",
-                size = 1) +
+                         data = Cum.pred1.sort,
+                         linetype = "3313",
+                         size = 1) +
       ggplot2::geom_step(aes(timeFormSurv, pred, color = "Prediction"),
-                data = Cum.pred1.sort,
-                linetype = "3313",
-                size = 1)+
+                         data = Cum.pred1.sort,
+                         linetype = "3313",
+                         size = 1)+
       ggplot2::scale_color_manual(name = "",
-                         values = setNames(color_mapping, c("Nelson-Aalen", "Prediction"))) +
+                                  values = setNames(color_mapping, c("Nelson-Aalen", "Prediction"))) +
       ggplot2::guides(color = guide_legend(title = "", override.aes = list(linetype = "solid", size = 2)))+
       ggplot2::theme(
         legend.key.size = unit(3, "lines"),  # Ajuster la taille de la clé dans la légende
@@ -153,7 +158,7 @@ plot.lsjm_covDepCR <- function(Objectlsjm, which = 'long.fit', Objectranef = NUL
 
     data.id$e2.new <- data.id[,all.vars(Objectlsjm$control$deltas[["delta2"]])]
     C2.sort <-  data.id[order(data.id[,all.vars(Objectlsjm$control$Time[["Time_T"]])]),]
-    Cum.pred2 <- apply(Objectranef$Cum_risk2, 2, mean)
+    Cum.pred2 <- apply(Objectpredict$predictCum_02, 2, mean)
     Cum.pred2 <- cbind(Cum.pred2, unique(sort(data.id[,all.vars(Objectlsjm$control$Time[["Time_T"]])])))
     Cum.pred2 <- as.data.frame(Cum.pred2)
     Cum.pred2.sort <- Cum.pred2[order(Cum.pred2[,2]),]
@@ -173,15 +178,15 @@ plot.lsjm_covDepCR <- function(Objectlsjm, which = 'long.fit', Objectranef = NUL
     color_mapping <- c("#B2BABB","#E74C3C")
     graph.surv.2<-surv_plot +
       ggplot2::geom_step(aes(timeFormSurv, pred, color = "Nelson-Aalen"),
-                data = Cum.pred2.sort,
-                linetype = "3313",
-                size = 1) +
+                         data = Cum.pred2.sort,
+                         linetype = "3313",
+                         size = 1) +
       ggplot2::geom_step(aes(timeFormSurv, pred, color = "Prediction"),
-                data = Cum.pred2.sort,
-                linetype = "3313",
-                size = 1)+
+                         data = Cum.pred2.sort,
+                         linetype = "3313",
+                         size = 1)+
       ggplot2::scale_color_manual(name = "",
-                         values = setNames(color_mapping, c("Nelson-Aalen", "Prediction"))) +
+                                  values = setNames(color_mapping, c("Nelson-Aalen", "Prediction"))) +
       ggplot2::guides(color = guide_legend(title = "", override.aes = list(linetype = "solid", size = 2)))+
       theme(
         legend.key.size = unit(3, "lines"),  # Ajuster la taille de la clé dans la légende

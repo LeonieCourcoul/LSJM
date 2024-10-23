@@ -40,7 +40,7 @@ arma::vec log_llh_lsjm_covDepSingle(arma::vec sharedtype, List HB, arma::vec Gom
   int S = nb_points_integral[0];
   int nb_pointsGK = nb_points_integral[1];
   double alpha_y_01 = alpha_y_slope[0];
-  double alpha_slope_01 = alpha_y_slope[2];
+  double alpha_slope_01 = alpha_y_slope[1];
   arma::vec alpha_z_01 = alpha_z[0];
   arma::vec gamma_01 = gamma[0];
   arma::vec ll_glob(Ind,fill::ones);

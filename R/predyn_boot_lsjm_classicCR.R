@@ -369,7 +369,7 @@ predyn_boot_lsjm_classicCR <- function(Objectlsjm, data.long.until.time.s, s, wi
         }
         else{
           if(Objectlsjm$control$hazard_baseline_02 == "Splines"){
-            mat_h0s <- matrix(gamma_01,ncol=1)
+            mat_h0s <- matrix(gamma_02,ncol=1)
             h_0.GK_0_s_02 <- t((wk*exp(Bs.den_02%*%mat_h0s)))
             h_0.GK_0_u_02 <- exp(Bs_0_u_02%*%mat_h0s)*rep(wk, length(wk))
             if(event == 2){

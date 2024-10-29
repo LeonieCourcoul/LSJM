@@ -1,6 +1,6 @@
 predyn_ponct_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, window, event){
 
-
+# browser()
   if(is.null(Objectlsjm$result_step2)){
     param <- Objectlsjm$result_step1$b
     nbQMC <- Objectlsjm$control$S1
@@ -424,7 +424,7 @@ predyn_ponct_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, wi
       }
       else{
         if(Objectlsjm$control$hazard_baseline_02 == "Splines"){
-          mat_h0s <- matrix(gamma_01,ncol=1)
+          mat_h0s <- matrix(gamma_02,ncol=1)
           h_0.GK_0_s_02 <- t((wk*exp(Bs.den_02%*%mat_h0s)))
           h_0.GK_0_u_02 <- exp(Bs_0_u_02%*%mat_h0s)*rep(wk, length(wk))
           if(event == 2){
@@ -462,6 +462,7 @@ predyn_ponct_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, wi
 
 
 
+  #browser()
 
   survLong_s_t_0k <- exp(survLong_s_t_0k)*matrix(rep(t(h_0.GK_s_t_0k), nbQMC), nrow = nbQMC, byrow = TRUE)
   h_0k <- exp(etaBaseline_s_t_0k)*survLong_s_t_0k

@@ -124,6 +124,7 @@ lsmm <- function(formFixed, formRandom, formGroup, timeVar,
   data.long$y.new <-  y.new_glob
   data.long <- as.data.frame(data.long)
 
+  browser()
   if(formVar == "classic"){
     lsmm.result <- lsmm_classic(formFixed, formRandom, formGroup, data.long, idVar, list.long, time.prog1,S1 , S2, nproc , clustertype, maxiter, print.info ,file, epsa, epsb, epsd, binit)
   }

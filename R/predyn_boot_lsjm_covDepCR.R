@@ -153,7 +153,6 @@ predyn_boot_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, win
 
 
   for(l in 1:nb.draws){
-    browser()
     if(is.null(Objectlsjm$result_step2)){
       param_mean <- Objectlsjm$result_step1$b
     }
@@ -246,10 +245,11 @@ predyn_boot_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, win
     Zq <- apply(Zq1, 2, qnorm)
 
     if(Objectlsjm$control$Objectlsmm$control$correlated_re){
-      C1 <- matrix(rep(0,(Objectlsjm$control$Objectlsmm$control$nb.e.a+Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma)**2),nrow=Objectlsjm$control$Objectlsmm$control$nb.e.a+Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma,ncol=Objectlsjm$control$nb.e.a+Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma)
+      C1 <- matrix(rep(0,(Objectlsjm$control$Objectlsmm$control$nb.e.a+Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma)**2),nrow=Objectlsjm$control$Objectlsmm$control$nb.e.a+Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma,ncol=Objectlsjm$control$Objectlsmm$control$nb.e.a+Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma)
       C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
       Cholesky <- C1
       Cholesky <- as.matrix(Cholesky)
+      random.effects <- Zq%*%t(Cholesky)
       b_al <- random.effects[,1:Objectlsjm$control$Objectlsmm$control$nb.e.a]
       b_al <- matrix(b_al, ncol = Objectlsjm$control$Objectlsmm$control$nb.e.a)
       b_om <- random.effects[,(Objectlsjm$control$Objectlsmm$control$nb.e.a+1):(Objectlsjm$control$Objectlsmm$control$nb.e.a+Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma)]
@@ -434,7 +434,7 @@ predyn_boot_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, win
         }
         else{
           if(Objectlsjm$control$hazard_baseline_02 == "Splines"){
-            mat_h0s <- matrix(gamma_01,ncol=1)
+            mat_h0s <- matrix(gamma_02,ncol=1)
             h_0.GK_0_s_02 <- t((wk*exp(Bs.den_02%*%mat_h0s)))
             h_0.GK_0_u_02 <- exp(Bs_0_u_02%*%mat_h0s)*rep(wk, length(wk))
             if(event == 2){

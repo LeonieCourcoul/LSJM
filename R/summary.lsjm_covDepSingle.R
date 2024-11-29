@@ -327,6 +327,8 @@ summary.lsjm_covDepSingle <- function(object,...)
     colnames(e1_bas_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
   }
   e1_surv_tab <- rbind(e1_share_random_tab, e1_share_current_tab, e1_share_slope_tab,e1_share_var_tab,  e1_alpha_tab)
+  e1_bas_tab <- as.data.frame(e1_bas_tab)
+  e1_surv_tab <- as.data.frame(e1_surv_tab)
   rownames(e1_surv_tab) <- e1_names_tab
   colnames(e1_surv_tab) <- c("Coeff", "SE", "Wald", "Pvalue")
   e1_surv_tab <- as.data.frame(e1_surv_tab)

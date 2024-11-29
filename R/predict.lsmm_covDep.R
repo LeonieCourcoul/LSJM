@@ -50,7 +50,6 @@ predict.lsmm_covDep <- function(Objectlsmm, which = "RE", Objectranef = NULL, da
     Cholesky <- rbind(cbind(C1,C2),cbind(C4,C3))
     Cholesky <- as.matrix(Cholesky)
   }
-
   MatCov <- Cholesky%*%t(Cholesky)
   data.long <- as.data.frame(data.long)
   id <- as.integer(data.long[all.vars(x$control$formGroup)][,1])
@@ -60,6 +59,7 @@ predict.lsmm_covDep <- function(Objectlsmm, which = "RE", Objectranef = NULL, da
   else{
     data.long$id <- as.integer(data.long$id)
   }
+
   data.long <- data.long
   random.effects.Predictions <- matrix(NA, nrow = length(unique(data.long$id)), ncol = x$control$nb.e.a+x$control$nb.e.a.sigma+1)
   binit <- matrix(0, nrow = 1, ncol = x$control$nb.e.a+x$control$nb.e.a.sigma)
@@ -91,6 +91,7 @@ predict.lsmm_covDep <- function(Objectlsmm, which = "RE", Objectranef = NULL, da
                        .multicombine = TRUE,
                        .packages = c("mvtnorm", "marqLevAlg")) %dopar% {
 
+    #for(id.boucle in 1:length(unique(data.long$id))){
                          # Extraire les données spécifiques à l'individu
                          X_base_i <- X_base[offset[id.boucle]:(offset[id.boucle+1]-1),]
                          X_base_i <- matrix(X_base_i, nrow = offset[id.boucle+1]-offset[id.boucle])
@@ -132,13 +133,16 @@ predict.lsmm_covDep <- function(Objectlsmm, which = "RE", Objectranef = NULL, da
                                                             epsa = 1e-4, epsb = 1e-4, epsd = 1e-4, multipleTry = 100)
                              binit <- matrix(0, nrow = 1, ncol = x$control$nb.e.a + x$control$nb.e.a.sigma)
                            }
-
                            random_effects_pred <- c(data.id$id[id.boucle], random.effects_i$b)
 
                          # Calcul des prédictions si nécessaire
                          if ('Y' %in% which) {
                            CV <- X_base_i %*% beta + U_base_i %*% random.effects_i$b[1:(x$control$nb.e.a)]
                            Varia <- exp(O_base_i %*% omega + W_base_i %*% random.effects_i$b[(x$control$nb.e.a + 1):(x$control$nb.e.a + x$control$nb.e.a.sigma)])
+                           if(nrow(Varia) == 1 && nrow(CV)>1){
+                             Varia <- matrix(rep(Varia,nrow(CV)), nrow = nrow(CV))
+                           }
+
                            time.measures_i <- time.measures[offset[id.boucle]:(offset[id.boucle+1]-1)]
                            cv_pred <- cbind(rep(data.id$id[id.boucle], length(CV)), time.measures_i, CV, Varia)
                          } else {
@@ -149,7 +153,9 @@ predict.lsmm_covDep <- function(Objectlsmm, which = "RE", Objectranef = NULL, da
                          list(random_effects_pred, cv_pred)
                        }
 
-    # Extraire les deux tables finales
+
+
+     #Extraire les deux tables finales
     random.effects.Predictions <- results$random.effects.Predictions
     cv.Pred <- results$cv.Pred
 
@@ -190,7 +196,6 @@ predict.lsmm_covDep <- function(Objectlsmm, which = "RE", Objectranef = NULL, da
 
     }
   }
-
 
 
   if('RE' %in% which){

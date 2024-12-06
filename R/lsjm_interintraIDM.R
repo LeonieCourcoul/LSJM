@@ -1322,6 +1322,9 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
   }
 
   names.param <- c()
+  name_ZO1 <- colnames(Z_01)
+  name_ZO2 <- colnames(Z_02)
+  name_Z12 <- colnames(Z_12)
   # 01
   if(hazard_baseline_01 == "Weibull"){
     names.param <- c(names.param, 'shape_01')
@@ -1462,6 +1465,7 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
     }
   }
   message(paste("First estimation with ", S1, " QMC draws"))
+
   estimation1 <- marqLevAlg(binit, fn = logR_llh_lsjm_interintraIDM, minimize = FALSE,
                                  hazard_baseline_01 = hazard_baseline_01, sharedtype_01 = sharedtype_01,
                                  hazard_baseline_02 = hazard_baseline_02, sharedtype_02 = sharedtype_02,

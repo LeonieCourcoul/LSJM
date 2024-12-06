@@ -12,26 +12,24 @@ using namespace std;
 // [[Rcpp::export]]
 
 arma::vec log_llh_lsjm_interintraIDM_C3(arma::vec sharedtype, List HB, arma::vec Gompertz, arma::vec Weibull,
-                                arma::vec nb_points_integral, arma::vec alpha_inter_intra,
-                                arma::vec alpha_y_slope, List alpha_b, List alpha_z, List gamma_B, arma::vec beta, arma::vec beta_slope,
-                                arma::mat b_y, arma::mat b_y_slope, List sigma_inter_intra,
-                                arma::vec delta2, arma::mat Z_01, arma::mat Z_02, arma::mat Z_12, arma::mat X_T, arma::mat U_T,
-                                arma::mat Xslope_T, arma::mat Uslope_T, arma::mat X_GK_T, arma::mat U_GK_T, arma::mat Xslope_GK_T,
-                                arma::mat Uslope_GK_T, arma::mat X_GK_L_T, arma::mat U_GK_L_T, arma::mat Xslope_GK_L_T, arma::mat Uslope_GK_L_T,
-                                arma::mat X_GK_0_LT, arma::mat U_GK_0_LT, arma::mat Xslope_GK_0_LT, arma::mat Uslope_GK_0_LT,
-                                arma::mat X_GK_T0, arma::mat U_GK_T0, arma::mat Xslope_GK_T0, arma::mat Uslope_GK_T0,
-                                List list_Times, arma::mat st_T, arma::mat st_0_LT, arma::mat st_L_T, arma::mat st_T0,
-                                arma::mat B_T_02, arma::mat B_T_12,
-                                arma::mat Bs_T_01, arma::mat Bs_T_02, arma::mat Bs_T_12,
-                                arma::mat Bs_0_LT_01, arma::mat Bs_0_LT_02, arma::mat Bs_0_LT_12,
-                                arma::mat Bs_L_T_01,
-                                arma::mat Bs_T0_01, arma::mat Bs_T0_02, bool left_trunc,
-                                arma::vec len_visit, arma::mat X_base, arma::mat U_base,  arma::vec y_new, arma::vec offset_ID,
-                                arma::vec offset, arma::vec offset_position, List ck
+                                        arma::vec nb_points_integral, arma::vec alpha_inter_intra,
+                                        arma::vec alpha_y_slope, List alpha_b, List alpha_z, List gamma_B, arma::vec beta, arma::vec beta_slope,
+                                        arma::mat b_y, arma::mat b_y_slope, List sigma_inter_intra,
+                                        arma::vec delta2, arma::mat Z_01, arma::mat Z_02, arma::mat Z_12, arma::mat X_T, arma::mat U_T,
+                                        arma::mat Xslope_T, arma::mat Uslope_T, arma::mat X_GK_T, arma::mat U_GK_T, arma::mat Xslope_GK_T,
+                                        arma::mat Uslope_GK_T, arma::mat X_GK_L_T, arma::mat U_GK_L_T, arma::mat Xslope_GK_L_T, arma::mat Uslope_GK_L_T,
+                                        arma::mat X_GK_0_LT, arma::mat U_GK_0_LT, arma::mat Xslope_GK_0_LT, arma::mat Uslope_GK_0_LT,
+                                        arma::mat X_GK_T0, arma::mat U_GK_T0, arma::mat Xslope_GK_T0, arma::mat Uslope_GK_T0,
+                                        List list_Times, arma::mat st_T, arma::mat st_0_LT, arma::mat st_L_T, arma::mat st_T0,
+                                        arma::mat B_T_02, arma::mat B_T_12,
+                                        arma::mat Bs_T_01, arma::mat Bs_T_02, arma::mat Bs_T_12,
+                                        arma::mat Bs_0_LT_01, arma::mat Bs_0_LT_02, arma::mat Bs_0_LT_12,
+                                        arma::mat Bs_L_T_01,
+                                        arma::mat Bs_T0_01, arma::mat Bs_T0_02, bool left_trunc,
+                                        arma::vec len_visit, arma::mat X_base, arma::mat U_base,  arma::vec y_new, arma::vec offset_ID,
+                                        arma::vec offset, arma::vec offset_position, List ck
 ){
 
-  //Rcout << "The value of v : \n" << 1 << "\n";
-  // parameters
   bool dep_cv_01 = sharedtype[0];
   bool dep_slope_01 = sharedtype[1];
   bool dep_var_inter_01 = sharedtype[2];
@@ -95,8 +93,8 @@ arma::vec log_llh_lsjm_interintraIDM_C3(arma::vec sharedtype, List HB, arma::vec
   arma::vec sk_GK = ck[0];
   arma::vec Time_L = ck[1];
   int nbCase3 = ck[2];
-  arma::vec wk= ck[4];
-  arma::vec rep_wk = ck[5];
+  arma::vec wk= ck[3];
+  arma::vec rep_wk = ck[4];
   arma::vec ll_glob(nbCase3,fill::ones);
 
   // Survival part
@@ -608,17 +606,17 @@ arma::vec log_llh_lsjm_interintraIDM_C3(arma::vec sharedtype, List HB, arma::vec
     log_dens_int = log_dens_int - Clogexp;
     log_dens = Clogexp + log(sum(exp(log_dens_int))) - log(S);
     //Rcout << "The value of log_dens : \n" << log_dens << "\n";
-//    double den = 0;
-  //  if(left_trunc){
-  //    //Rcout << "The value of A_01_T0_i : \n" << A_01_T0_i(0) << "\n";
-  //    //Rcout << "The value of A_02_T0_i : \n" << A_02_T0_i(0) << "\n";
-  //    den = log(sum(exp(-A_01_T0_i - A_02_T0_i)))-log(S);
-  //    //Rcout << "The value of den : \n" << den << "\n";
-//
-  //    log_dens = log_dens - den;
-  //    //Rcout << "The value of 3 : \n" << log_dens << "\n";
-//
-  //  }
+    //    double den = 0;
+    //  if(left_trunc){
+    //    //Rcout << "The value of A_01_T0_i : \n" << A_01_T0_i(0) << "\n";
+    //    //Rcout << "The value of A_02_T0_i : \n" << A_02_T0_i(0) << "\n";
+    //    den = log(sum(exp(-A_01_T0_i - A_02_T0_i)))-log(S);
+    //    //Rcout << "The value of den : \n" << den << "\n";
+    //
+    //    log_dens = log_dens - den;
+    //    //Rcout << "The value of 3 : \n" << log_dens << "\n";
+    //
+    //  }
 
     ll_glob(i_provCase3) = log_dens;
 

@@ -14,7 +14,7 @@ LinkingTo:
     Rcpp,
     RcppArmadillo
 Imports: 
-    Rcpp, marqLevAlg, survival
+    Rcpp, marqLevAlg, survival, flexsurv, ggplot2, lcmm
 Depends: 
     R (>= 3.5.0),
     splines,

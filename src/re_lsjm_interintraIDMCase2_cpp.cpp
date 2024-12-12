@@ -11,7 +11,7 @@ using namespace std;
 
 // [[Rcpp::export]]
 
-double re_lsjm_interintraIDMCase2_cpp(arma::vec sharedtype, List HB, arma::vec Gompertz, arma::vec Weibull,
+double re_lsjm_interintraIDMCase2_cpp(arma::vec sharedtype, List HB, arma::vec W_G,
                             double nb_pointsGK , arma::vec alpha_inter_intra,
                             arma::vec alpha_y_slope, arma::vec alpha_b_01, arma::vec alpha_b_02, List alpha_z, List gamma, arma::vec beta, arma::vec beta_slope,
                             arma::mat b_y, arma::mat b_y_slope, arma::vec wk, List sigma_inter_intra,
@@ -38,12 +38,12 @@ double re_lsjm_interintraIDMCase2_cpp(arma::vec sharedtype, List HB, arma::vec G
   bool dep_re_02 = sharedtype[13];
   const std::string& hazard_baseline_01 = HB[0];
   const std::string& hazard_baseline_02 = HB[1];
-  double Gompertz_1_01 = Gompertz[0];
-  double Gompertz_2_01 = Gompertz[1];
-  double Gompertz_1_02 = Gompertz[2];
-  double Gompertz_2_02 = Gompertz[3];
-  double shape_01 = Weibull[0];
-  double shape_02 = Weibull[1];
+  double shape_01 = W_G[0];
+  double shape_02 = W_G[1];
+  double Gompertz_1_01 = W_G[3];
+  double Gompertz_2_01 = W_G[4];
+  double Gompertz_1_02 = W_G[5];
+  double Gompertz_2_02 = W_G[6];
   double alpha_inter_01 = alpha_inter_intra[0];
   double alpha_inter_02 = alpha_inter_intra[1];
   double alpha_intra_01 = alpha_inter_intra[3];

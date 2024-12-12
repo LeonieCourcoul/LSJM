@@ -316,6 +316,12 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
     binit_CI <- c(binit_CI,0)
   }
 
+  if(is.null(Objectlsmm$result_step2)){
+    binit_CI <- c(binit_CI, Objectlsmm$result_step1$b)
+  }
+  else{
+    binit_CI <- c(binit_CI, Objectlsmm$result_step2$b)
+  }
 
 
   # Initialisation avec le mileu de l'intervalle
@@ -1465,7 +1471,6 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
     }
   }
   message(paste("First estimation with ", S1, " QMC draws"))
-
   estimation1 <- marqLevAlg(binit, fn = logR_llh_lsjm_interintraIDM, minimize = FALSE,
                                  hazard_baseline_01 = hazard_baseline_01, sharedtype_01 = sharedtype_01,
                                  hazard_baseline_02 = hazard_baseline_02, sharedtype_02 = sharedtype_02,

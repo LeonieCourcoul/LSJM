@@ -663,10 +663,11 @@ predict.lsjm_interintraCR <- function(Objectlsmm, which = "RE", Objectranef = NU
 
   }
   else{
-    random.effects_i <- as.matrix(Objectranef[id.boucle,-1], nrow = 1)
+
     if('Y' %in% which){
       cv.Pred <- NULL
       for(id.boucle in 1:length(unique(data.long$id))){
+      random.effects_i <- as.matrix(Objectranef[id.boucle,-1], nrow = 1)
       X_base_i <- X_base[offset[id.boucle]:(offset[id.boucle+1]-1),]
       X_base_i <- matrix(X_base_i, nrow = offset[id.boucle+1]-offset[id.boucle])
       X_base_i <- unique(X_base_i)
@@ -707,13 +708,6 @@ predict.lsjm_interintraCR <- function(Objectlsmm, which = "RE", Objectranef = NU
                        time.measures_i, CV, rep(Varia.inter,length(time.measures_i)), rep(Varia.intra, length(time.measures_i)))
       cv.Pred <- rbind(cv.Pred,cv_pred)
     }
-
-
-
-
-
-
-
     }
     if('Cum' %in% which){
       for(id.boucle in 1:length(unique(data.long$id))){

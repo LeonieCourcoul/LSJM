@@ -1,6 +1,6 @@
 re_lsjm_interintraIDMCase2 <- function(param, nb.e.a, variability_inter_visit, variability_intra_visit, Sigma.re,
-                          sharedtype, HB, Gompertz, Weibull, nb_pointsGK, alpha_inter_intra,
-                          alpha_y_slope, alpha_b_01, alpha_b_02, alpha_z,  gamma_z0,  beta,  beta_slope,  wk,
+                          sharedtype, HB, W_G, nb_pointsGK,
+                          alpha_y_slope, alpha_inter_intra,alpha_b_01, alpha_b_02, alpha_z,  gamma_z0,  beta,  beta_slope,  wk,
                           mu.inter, sigma.epsilon.inter, mu.intra,sigma.epsilon.intra,
                           delta2_i, Z_01_i, Z_02_i,  X_T_i,  U_T_i,
                           Xslope_T_i,  Uslope_T_i,  X_GK_T_i,  U_GK_T_i,  Xslope_GK_T_i,
@@ -56,7 +56,7 @@ re_lsjm_interintraIDMCase2 <- function(param, nb.e.a, variability_inter_visit, v
   }
   sigma_inter_intra <- list(sigma_inter, sigma_intra, var.inter+var.intra, var.inter, var.intra, var.intra*(2*var.inter+var.intra))
 
-  log_f_Y_f_T <- re_lsjm_interintraIDMCase2_cpp(  sharedtype,  HB,  Gompertz,  Weibull,
+  log_f_Y_f_T <- re_lsjm_interintraIDMCase2_cpp(  sharedtype,  HB,  W_G,
                                         nb_pointsGK ,  alpha_inter_intra,
                                         alpha_y_slope, alpha_b_01, alpha_b_02,  alpha_z,  gamma_z0,  beta,  beta_slope,
                                         b_y=t(matrix(b_re, nrow = 1)),  b_y_slope= t(matrix(b_y_slope, nrow = 1)),  wk,  sigma_inter_intra,

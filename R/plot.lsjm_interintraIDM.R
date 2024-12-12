@@ -3,22 +3,28 @@
 #' @export
 #'
 
-plot.lsjm_interintraIDM <- function(Objectlsjm, which = 'long.fit', Objectranef = NULL, break.times = NULL, ID.ind = NULL, Objectsmooth = NULL, xlim = NULL, ylim = NULL){
+plot.lsjm_interintraIDM <- function(Objectlsjm, which = 'long.fit', Objectpredict = NULL, break.times = NULL, ID.ind = NULL, ObjectSmoothHazard = NULL, xlim = NULL, ylim = NULL){
 
 
   Objectlsmm <- Objectlsjm$control$Objectlsmm
-  if(is.null(Objectranef)){
-    Objectranef <- ranef(Objectlsmm)
+  if(is.null(Objectpredict)){
+    stop("Not implemented")
   }
 
   graph <- NULL
+
+  oldpar <- graphics::par(no.readonly = TRUE) # code line i
+  on.exit(graphics::par(oldpar)) # code line i + 1
+
+  ObjectpredictY <- Objectpredict$predictY
+
 
   if(which == 'long.fit'){
     formFixed <- Objectlsmm$control$formFixed
     timeVar <- Objectlsmm$control$timeVar
     data.long <- Objectlsmm$control$data.long
     value.var <- as.character(formFixed[[2]])
-    pred.CV <- Objectranef$cv.Pred[,3]
+    pred.CV <- ObjectpredictY$predY
     if(is.null(break.times)){
       timeInterv <- range(data.long[,timeVar])
       break.times <- quantile(timeInterv,prob=seq(0,1,length.out=10))
@@ -29,23 +35,23 @@ plot.lsjm_interintraIDM <- function(Objectlsjm, which = 'long.fit', Objectranef 
     length.obs <- by(data.long[,value.var], data.long$window, length)
     IC.inf <- mean.obs - 1.96*sd.obs/sqrt(length.obs)
     IC.sup <- mean.obs + 1.96*sd.obs/sqrt(length.obs)
-    window.pred <- cut(Objectranef$cv.Pred[,2], break.times, include.lowest = T)
-    prediction <- cbind(pred.CV, window.pred)
+    prediction <- cbind(pred.CV, data.long$window)
     mean.pred <- by(prediction[,1], prediction[,ncol(prediction)], mean)
     obstime.mean <- by(data.long[,timeVar], data.long$window, mean)
     df <- cbind(obstime.mean, mean.obs, IC.sup, IC.inf, mean.pred)
     df <- as.data.frame(df)
-    oldpar <- graphics::par(no.readonly = TRUE) # code line i
-    on.exit(graphics::par(oldpar)) # code line i + 1
     k <- ggplot2::ggplot(df,  ggplot2::aes(obstime.mean, mean.obs, ymin = IC.sup, ymax = IC.inf))
     graph.fit.long <- k +  ggplot2::geom_pointrange( ggplot2::aes(ymin = IC.sup, ymax = IC.inf), shape =1) +
       ggplot2::geom_point(ggplot2::aes(obstime.mean, mean.pred), size = 3, shape = 17) +
       ggplot2::scale_x_continuous(name = "Time") +
       ggplot2::scale_y_continuous(name = "Current Value") +
       ggplot2::theme(panel.grid.major = ggplot2::element_blank(), panel.grid.minor = ggplot2::element_blank(),
-                     panel.background = ggplot2::element_blank(), axis.line = ggplot2::element_line(colour = "black"))+
+                     panel.background = ggplot2::element_blank(), axis.line = ggplot2::element_line(colour = "black"),
+                     axis.text=ggplot2::element_text(size=15),
+                     axis.title=ggplot2::element_text(size=18),
+                     plot.title = ggplot2::element_text(size = 20, face = "bold"))+
       ggplot2::ggtitle("Longitudinal goodness-of-fit")
-    graph <- graph.fit.long
+    graph <- list(long.fit = graph.fit.long)
   }
 
   if(which == 'traj.ind'){
@@ -53,7 +59,7 @@ plot.lsjm_interintraIDM <- function(Objectlsjm, which = 'long.fit', Objectranef 
       stop("You have to design some individual ID to plot the the individual trajectories.")
     }
     ID.ind <- as.vector(ID.ind)
-    pred.CV <- as.data.frame(Objectranef$cv.Pred)
+    pred.CV <- as.data.frame(ObjectpredictY)
     data.long <- Objectlsmm$control$data.long
     formFixed <- Objectlsmm$control$formFixed
     value.var <- as.character(formFixed[[2]])
@@ -108,31 +114,31 @@ plot.lsjm_interintraIDM <- function(Objectlsjm, which = 'long.fit', Objectranef 
   }
   if(which == 'survival.fit'){
     #Objectranef$grid.time.Cum
-    Cum_01Smooth_est <- intensity(times = Objectranef$grid.time.Cum, knots = Objectsmooth$knots01,
-                                  number.knots = Objectsmooth$nknots01,
-                                  theta = Objectsmooth$theta01^2)
+    Cum_01Smooth_est <- intensity(times = Objectpredict$grid.time.Cum, knots = ObjectSmoothHazard$knots01,
+                                  number.knots = ObjectSmoothHazard$nknots01,
+                                  theta = ObjectSmoothHazard$theta01^2)
 
-    Cum_02Smooth_est <- intensity(times = Objectranef$grid.time.Cum,knots = Objectsmooth$knots02,
-                                  number.knots = Objectsmooth$nknots02,
-                                  theta = Objectsmooth$theta02^2)
+    Cum_02Smooth_est <- intensity(times = Objectpredict$grid.time.Cum,knots = ObjectSmoothHazard$knots02,
+                                  number.knots = ObjectSmoothHazard$nknots02,
+                                  theta = ObjectSmoothHazard$theta02^2)
 
-    Cum_12Smooth_est <- intensity(times = Objectranef$grid.time.Cum, knots = Objectsmooth$knots12,
-                                  number.knots = Objectsmooth$nknots12,
-                                  theta = Objectsmooth$theta12^2)
-    V <- Objectsmooth$V
+    Cum_12Smooth_est <- intensity(times = Objectpredict$grid.time.Cum, knots = ObjectSmoothHazard$knots12,
+                                  number.knots = ObjectSmoothHazard$nknots12,
+                                  theta = ObjectSmoothHazard$theta12^2)
+    V <- ObjectSmoothHazard$V
     Cum_01.cum <- c()
     Cum_02.cum <- c()
     Cum_12.cum <- c()
     for(boot in 1:5000){
-      tirage <- mvtnorm::rmvnorm(1, mean = c(Objectsmooth$theta01,Objectsmooth$theta02,Objectsmooth$theta12), sigma = V)
-      Cum_01Smooth <- intensity(times = Objectranef$grid.time.Cum, knots = Objectsmooth$knots01,
-                                number.knots = Objectsmooth$nknots01,
+      tirage <- mvtnorm::rmvnorm(1, mean = c(ObjectSmoothHazard$theta01,ObjectSmoothHazard$theta02,ObjectSmoothHazard$theta12), sigma = V)
+      Cum_01Smooth <- intensity(times = Objectpredict$grid.time.Cum, knots = ObjectSmoothHazard$knots01,
+                                number.knots = ObjectSmoothHazard$nknots01,
                                 theta = tirage[1:17]^2)
-      Cum_02Smooth <- intensity(times = Objectranef$grid.time.Cum, knots = Objectsmooth$knots02,
-                                number.knots = Objectsmooth$nknots02,
+      Cum_02Smooth <- intensity(times = Objectpredict$grid.time.Cum, knots = ObjectSmoothHazard$knots02,
+                                number.knots = ObjectSmoothHazard$nknots02,
                                 theta = tirage[18:34]^2)
-      Cum_12Smooth <- intensity(times = Objectranef$grid.time.Cum, knots = Objectsmooth$knots12,
-                                number.knots = Objectsmooth$nknots12,
+      Cum_12Smooth <- intensity(times = Objectpredict$grid.time.Cum, knots = ObjectSmoothHazard$knots12,
+                                number.knots = ObjectSmoothHazard$nknots12,
                                 theta = tirage[35:51]^2)
 
       Cum_01.cum <- rbind(Cum_01.cum, Cum_01Smooth$cumulative.intensity)
@@ -144,11 +150,15 @@ plot.lsjm_interintraIDM <- function(Objectlsjm, which = 'long.fit', Objectranef 
     Cum_02.quant <- apply(Cum_02.cum,2,quantile, probs = c(0.025,0.5,0.975))
     Cum_12.quant <- apply(Cum_12.cum,2,quantile, probs = c(0.025,0.5,0.975))
 
-    data_tot <- cbind(Objectranef$grid.time.Cum, Cum_01Smooth_est$cumulative.intensity, Cum_02Smooth_est$cumulative.intensity, Cum_12Smooth_est$cumulative.intensity,
+    Cum_01_pred <- apply(Objectpredict$predictCum_01,2,mean)
+    Cum_02_pred <- apply(Objectpredict$predictCum_02,2,mean)
+    Cum_12_pred <- apply(Objectpredict$predictCum_12,2,mean)
+
+    data_tot <- cbind(Objectpredict$grid.time.Cum, Cum_01Smooth_est$cumulative.intensity, Cum_02Smooth_est$cumulative.intensity, Cum_12Smooth_est$cumulative.intensity,
                       Cum_01.quant[1,],Cum_01.quant[2,],Cum_01.quant[3,],
                       Cum_02.quant[1,],Cum_02.quant[2,],Cum_02.quant[3,],
                       Cum_12.quant[1,],Cum_12.quant[2,],Cum_12.quant[3,],
-                      Objectranef$Cum_01,Objectranef$Cum_02,Objectranef$Cum_12)
+                      Cum_01_pred,Cum_02_pred,Cum_12_pred)
 
     data_tot <- as.data.frame(data_tot)
 
@@ -182,25 +192,25 @@ plot.lsjm_interintraIDM <- function(Objectlsjm, which = 'long.fit', Objectranef 
                  "Cum_02_pred" = "Transition 0 -> 2",
                  "Cum_12_pred" = "Transition 1 -> 2")) +
       ggplot2::scale_fill_manual(values = c("Cum_01_pred" = "#f1a340", "Cum_02_pred" = "#998ec3", "Cum_12_pred" = "palegreen3"),
-                        labels = c("Cum_01_pred" = "Transition 0 -> 1",
-                                   "Cum_02_pred" = "Transition 0 -> 2",
-                                   "Cum_12_pred" = "Transition 1 -> 2")) +
+                                 labels = c("Cum_01_pred" = "Transition 0 -> 1",
+                                            "Cum_02_pred" = "Transition 0 -> 2",
+                                            "Cum_12_pred" = "Transition 1 -> 2")) +
       ggplot2::scale_linetype_manual(values = c("Joint Model" = 3, "Smooth Hazard" = 1)) +
 
       ggplot2::theme(
         panel.background = element_blank(),
         legend.position = "bottom",
         legend.box = "vertical",
-        axis.title.x = element_text(color = "black", size = 14),
-        axis.title.y = element_text(color = "black", size = 14),
+        axis.title.x = element_text(color = "black", size = 16),
+        axis.title.y = element_text(color = "black", size = 16),
         panel.grid = element_blank(),
-        legend.text = element_text(color = "black", size = 10),
+        legend.text = element_text(color = "black", size = 16),
         axis.line = element_line(color = "black", linetype = "solid"),
         axis.text = element_text(size = 14, color = "black")
       ) +
       ggplot2::guides(color = guide_legend(title = "", nrow = 1, byrow = TRUE,keywidth = 4),
-             fill = guide_legend(title = "",keywidth = 4),
-             linetype = guide_legend(title = "", keywidth = 4, keyheight = 1))
+                      fill = guide_legend(title = "",keywidth = 4),
+                      linetype = guide_legend(title = "", keywidth = 4, keyheight = 1))
 
 
     print(survB)

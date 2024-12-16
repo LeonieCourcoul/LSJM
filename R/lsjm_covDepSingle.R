@@ -580,7 +580,7 @@ lsjm_covDepSingle <- function(Objectlsmm, Time, deltas, hazard_baseline_01,  nb.
                                   epsd = epsd
                  ))
 
-  class(result) <- c("lsjm_covDepCR")
+  class(result) <- c("lsjm_covDepSingle")
   return(result)
 
 }

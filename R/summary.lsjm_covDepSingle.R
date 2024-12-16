@@ -229,7 +229,7 @@ summary.lsjm_covDepSingle <- function(object,...)
 
   cat("Survival model:")
   #browser()
-  e1_var_tab <- NULL
+  e1_share_var_tab <- NULL
   e1_share_random_tab <- NULL
   e1_share_current_tab <- NULL
   e1_share_slope_tab <- NULL

@@ -444,7 +444,7 @@ predict.lsjm_covDepSingle <- function(Objectlsmm, which = "RE", Objectranef = NU
 
 
                            }
-                           Cum_risk1 <- Cum_risk_1i
+                           Cum_risk1 <- c(data.id$id[id.boucle],Cum_risk_1i)
                          }
                          else{
                            Cum_risk1 <- NULL
@@ -566,7 +566,8 @@ predict.lsjm_covDepSingle <- function(Objectlsmm, which = "RE", Objectranef = NU
           Cum_risk_1i <- c(Cum_risk_1i, P.sort.unique[j]*sum(exp(pred_haz_01)%*%h_0.GK_01))
 
         }
-        Cum_risk01 <- rbind(Cum_risk01, Cum_risk_1i)
+        Cum_risk1 <- c(data.id$id[id.boucle],Cum_risk_1i)
+        Cum_risk01 <- rbind(Cum_risk01, Cum_risk1)
       }
     }
   }

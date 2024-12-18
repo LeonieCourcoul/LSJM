@@ -399,7 +399,7 @@ predict.lsjm_covDepCR <- function(Objectlsmm, which = "RE", Objectranef = NULL, 
                                                         nproc = 1, clustertype = x$control$clustertype, maxiter = x$control$maxiter, print.info = FALSE,
                                                         file = "", blinding = FALSE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4, multipleTry = 100)
 
-                         while(random.effects_i$istop <1){
+                         while(random.effects_i$istop >1){
                            binit <- mvtnorm::rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
                            random.effects_i <- marqLevAlg(binit, fn = re_lsjm_covDepCR, minimize = FALSE,
 

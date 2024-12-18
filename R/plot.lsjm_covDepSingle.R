@@ -117,7 +117,7 @@ plot.lsjm_covDepSingle <- function(Objectlsjm, which = 'long.fit', Objectpredict
     data.id <- data.long[!duplicated(data.long$id),]
     data.id$e1.new <- data.id[,all.vars(Objectlsjm$control$deltas[["delta1"]])]
     C1.sort <- data.id[order(data.id[,all.vars(Objectlsjm$control$Time[["Time_T"]])]),]
-    Cum.pred1 <- apply(Objectpredict$predictCum_01, 2, mean)
+    Cum.pred1 <- apply(Objectpredict$predictCum_01[,-1], 2, mean)
     Cum.pred1 <- cbind(Cum.pred1, unique(sort(data.id[,all.vars(Objectlsjm$control$Time[["Time_T"]])])))
     Cum.pred1 <- as.data.frame(Cum.pred1)
     Cum.pred1.sort <- Cum.pred1[order(Cum.pred1[,2]),]

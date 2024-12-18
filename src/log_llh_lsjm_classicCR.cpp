@@ -83,7 +83,7 @@ arma::vec log_llh_lsjm_classicCR(arma::vec sharedtype, List HB, arma::vec Gomper
     arma::mat slope_GK_T0;
 
     if(dep_re_01){
-      h_01_T_i = h_01_T_i%exp(b_y*alpha_b_01);
+      h_01_T_i = h_01_T_i%exp(b_y*alpha_b_01)+0;
       survLong_01_T_i = survLong_01_T_i + arma::repmat(b_y*alpha_b_01,1,nb_pointsGK);
       if(left_trunc){
         survLong_01_T0_i = survLong_01_T0_i + arma::repmat(b_y*alpha_b_01,1,nb_pointsGK);

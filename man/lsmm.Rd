@@ -82,8 +82,9 @@ A lsmm object which contains the following elements :
 \describe{
 \item{\code{table.res}}{The table of results : Estimation and SE}
 \item{\code{result_step1}}{A marqLevAlg object with the results of the first step estimation.}
-\item{\code{result_step1}}{A marqLevAlg object with the results of the second step estimation.}#'
-\item{\code{info_conv_step2}}{Information about convergence (criteria and time)}
+\item{\code{result_step2}}{A marqLevAlg object with the results of the second step estimation.}
+\item{\code{info_conv_step1}}{Information about first step convergence (criteria and time)}
+\item{\code{info_conv_step2}}{Information about second step convergence (criteria and time)}
 \item{\code{control}}{A list of control elements}
 
 }
@@ -95,16 +96,25 @@ Parameters are estimated through a maximum likelihood method, using a Marquardt-
 }
 \details{
 The model is defined by:
+
 \eqn{Y_{ij} = Y_{i}(t_{ij}) = \widetilde{Y}_i(t_{ij}) + \epsilon_{ij} = X_{ij}^{\top} \beta+Z_{ij}^{\top} b_{i}+\epsilon_{ij}},
-where $X_{ij}$ and $Z_{ij}$ vectors of explanatory variables for subject $i$ at visit $j$, respectively associated with the fixed-effect vector \eqn{\beta} and the subject-specific random-effect vector \eqn{b_i}.
-\enumerate{
-\item Standard linear mixed model:
+
+where \eqn{X_{ij}} and \eqn{Z_{ij}} vectors of explanatory variables for subject \eqn{i} at visit \eqn{j}, respectively associated with the fixed-effect vector \eqn{\beta} and the subject-specific random-effect vector \eqn{b_i}.
+
+A. Standard linear mixed model:
+
 In this case, \eqn{b_i \sim \mathcal{N}(0,B)}, with \eqn{B} an unspecified matrix and the measurements error \eqn{\epsilon_{ij}} are independent Gaussian errors with variance \eqn{\sigma^2_{\epsilon}}.
-\item Location-scale mixed model with time and/or covariate-dependent variability:
+
+B. Location-scale mixed model with time and/or covariate-dependent variability:
+
 In this model we assume the following specification for the residual error:
+
 \eqn{\epsilon_{ij} \sim \mathcal{N}(0,\sigma_i^2)} with \eqn{ \log(\sigma_i(t_{ij}))  = O_{ij}^{\top} \mu+M_{ij}^{\top} \tau_{i}}.
-where $O_{ij}$ and $M_{ij}$ vectors of explanatory variables for subject $i$ at visit $j$, respectively associated with the fixed-effect vector \eqn{\mu} and the subject-specific random-effect vector \eqn{\tau_i}.
+
+where \eqn{O_{ij}} and \eqn{M_{ij}} vectors of explanatory variables for subject \eqn{i} at visit \eqn{j}, respectively associated with the fixed-effect vector \eqn{\mu} and the subject-specific random-effect vector \eqn{\tau_i}.
+
 For the random effects we assume :
+
 \eqn{\quad\left(\begin{array}{c}
              b_{i} \\
              \tau_i
@@ -115,16 +125,19 @@ For the random effects we assume :
                                                                            \Sigma_{b} & \Sigma_{\tau b} \\
                                                                            \Sigma_{\tau b}' & \Sigma_{\tau}
 \end{array}\right)\right)}
-}
 
 As conventionally assumed in practice, the random effects \eqn{b_i} can be considered independent of the errors by setting \eqn{\Sigma_{\tau b} =0}.
-\enumerate{
-\item Location-scale mixed model distinguishing within and between visits variabilities:
+
+C. Location-scale mixed model distinguishing within and between visits variabilities:
+
 In some studies, multiple measurements of a marker are collected at each time point.
+
 For example, in medical research, 2 or 3 blood pressure readings are typically taken per visit,
 and intra-visit variability can be informative. To capture this, we propose an LSMM that distinguishes within- and between-visit variabilities.
+
 We introduce an additional level in longitudinal data, grouping repeated measurements by time.
 For each subject \eqn{i} \eqn{(i=1,...,N)}, \eqn{Y_{ijl}} represents the \eqn{l}-th \eqn{(l=1,...,n_{ij})} measurement at visit \eqn{j} \eqn{(j=1,...,n_i)} and time \eqn{t_{ij}}.
+
 We then define the following LSMM to decompose individual residual variance within and between visits:
 \eqn{
 \left\{
@@ -134,23 +147,96 @@ We then define the following LSMM to decompose individual residual variance with
   \nu_{ijl} \sim \mathcal{N}(0,\kappa_i^2) \hspace{3mm} \text{with} \hspace{3mm} \log(\kappa_i)  = \mu_\kappa + \tau_{\kappa i},\\
   \end{array}
   \right.}
-}
 
 The parameter \eqn{\mu_\sigma} and \eqn{\mu_\kappa} are the fixed intercepts for the between-visits and within-visit variances respectively.
+
 The subject-specific random-effect \eqn{b_i} and \eqn{\tau_i = (\tau_{\sigma i},\tau_{\kappa i})^\top} are assumed to be Gaussian as presented previously.
 }
 \examples{
 
 \donttest{
 
-First example : a standard linear mixed model (constant residual variance, in time and between subjects)
+data(threeC)
+threeC$age.visit65 <- (threeC$age.visit-65)/10
+threeC$SBP <- threeC$SBP/10
+threeC <- threeC
+threeC <- threeC \%>\% group_by(ID, num.visit) \%>\% mutate(SBPvisit = mean(SBP))
+threeC_ex1 <- threeC[!duplicated(threeC[, c("ID", "num.visit")]), c("ID", "SBPvisit", "age.visit65", "sex")]
+
+First example : a standard linear mixed model (constant residual variance, in time and between subjects, case A in details)
+
+m1 <- lsmm(formFixed = SBPvisit ~ age.visit65+I(age.visit65^2),
+               formRandom = ~ age.visit65+I(age.visit65^2),
+               formGroup = ~ ID,
+               timeVar = 'age.visit65',
+               data.long = threeC_ex1,
+               formVar = "standard",
+               S1 = 500,
+               S2 = 1000,
+               nproc = 1)
+
+summary(m1)
 
 
-Second example : a linear mixed model with subject-specific time-dependent and covariate-dependent variability
+Second example : a linear mixed model with subject-specific time-dependent and covariate-dependent variability (case B in details)
+
+We adjust the individual residual variability on age and the sex.
+
+m2 <- lsmm(formFixed = SBPvisit ~ age.visit65,
+               formRandom = ~ age.visit65,
+               formGroup = ~ ID,
+               timeVar = 'age.visit65',
+               data.long = threeC_ex1,
+               formVar = "cov-dependent",
+               formFixedVar = ~ age.visit65+sex,
+               formRandomVar = ~ age.visit65,
+               correlated_re = FALSE,
+               S1 = 500,
+               S2 = 1000,
+               nproc = 1)
+
+summary(m2)
 
 Third example : a linear mixed model with subject-specific inter-visits and intra-visits variabilities
 
+threeC_ex2 <- threeC[, c("ID", "SBP", "age.visit65", "sex", "num.visit")]
+
+m3 <- lsmm(formFixed = SBP ~ age.visit65,
+               formRandom = ~ age.visit65,
+               formGroup = ~ ID,
+               timeVar = 'age.visit65',
+               data.long = threeC_ex2,
+               formVar = "inter-intra",
+               random_inter = T,
+               random_intra = T,
+               formGroupVisit = ~num.visit,
+               correlated_re = FALSE,
+               S1 = 500,
+               S2 = 1000,
+               nproc = 1)
+
+summary(m3)
+
+
+
+
 Fourth example : a linear mixed model with subject-specific inter-visits variability and constant intra-visit variability
+
+m4 <- lsmm(formFixed = SBP ~ age.visit65+sex,
+               formRandom = ~ age.visit65,
+               formGroup = ~ ID,
+               timeVar = 'age.visit65',
+               data.long = threeC_ex2,
+               formVar = "inter-intra",
+               random_inter = T,
+               random_intra = F,
+               formGroupVisit = ~num.visit,
+               correlated_re = FALSE,
+               S1 = 500,
+               S2 = 1000,
+               nproc = 1)
+
+summary(m4)
 
 }
 

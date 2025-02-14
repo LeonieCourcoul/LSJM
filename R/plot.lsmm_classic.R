@@ -38,13 +38,16 @@ plot.lsmm_classic <- function(Objectlsmm, which = 'long.fit', ObjectpredictY = N
     oldpar <- graphics::par(no.readonly = TRUE) # code line i
     on.exit(graphics::par(oldpar)) # code line i + 1
     k <- ggplot2::ggplot(df,  ggplot2::aes(obstime.mean, mean.obs, ymin = IC.sup, ymax = IC.inf))
-    graph.fit.long <- k +  ggplot2::geom_pointrange( ggplot2::aes(ymin = IC.sup, ymax = IC.inf), shape =1) +
+    graph.fit.long <- k +  ggplot2::geom_pointrange( ggplot2::aes(ymin = IC.sup, ymax = IC.inf), shape =1)+
       ggplot2::geom_point(ggplot2::aes(obstime.mean, mean.pred), size = 3, shape = 17) +
       ggplot2::scale_x_continuous(name = "Time") +
       ggplot2::scale_y_continuous(name = "Current Value") +
       ggplot2::theme(panel.grid.major = ggplot2::element_blank(), panel.grid.minor = ggplot2::element_blank(),
-                     panel.background = ggplot2::element_blank(), axis.line = ggplot2::element_line(colour = "black"))+
-      ggplot2::ggtitle("Longitudinal goodness-of-fit")
+                     panel.background = ggplot2::element_blank(), axis.line = ggplot2::element_line(colour = "black"),
+                     axis.text=ggplot2::element_text(size=15),
+                     axis.title=ggplot2::element_text(size=18),
+                     plot.title = ggplot2::element_text(size = 20, face = "bold"))+
+      ggplot2::ggtitle("Longitudinal goodness-of-fit")+ggplot2::coord_cartesian(xlim = xlim,ylim = ylim, expand = TRUE)
     graph <- list(long.fit = graph.fit.long)
   }
 

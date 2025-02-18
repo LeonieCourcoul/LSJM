@@ -2,8 +2,9 @@
 #' @export
 #'
 
-predict.lsmm_covDep <- function(Objectlsmm, which = "RE", Objectranef = NULL, data.long = NULL){
+predict.lsmm_covDep <- function(object, which = "RE", Objectranef = NULL, data.long = NULL){
 
+  Objectlsmm <- object
   if(missing(Objectlsmm)) stop("The argument Objectlsmm must be specified")
   if(!inherits((Objectlsmm),"lsmm_covDep")) stop("use only \"lsmm_covDep\" objects")
  # if(missing(data.long)) stop("The argument data.long must be specified")

@@ -113,7 +113,9 @@ predict.lsmm_interintra <- function(object, which = "RE", Objectranef = NULL, da
   }
 
   MatCov <- Cholesky%*%t(Cholesky)
-  data.long <- x$control$data.long
+  if(is.null(data.long)){
+    data.long <- x$control$data.long
+  }
   if(x$control$var_inter && x$control$var_intra){
     random.effects.Predictions <- matrix(NA, nrow = length(unique(data.long$id)), ncol = x$control$nb.e.a+2+1)
     binit <- matrix(0, nrow = 1, ncol = x$control$nb.e.a+2)

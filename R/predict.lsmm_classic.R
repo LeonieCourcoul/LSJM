@@ -39,7 +39,10 @@ predict.lsmm_classic <- function(object, which = "RE", Objectranef = NULL, data.
   Cholesky <- as.matrix(Cholesky)
 
   MatCov <- Cholesky%*%t(Cholesky)
-  data.long <- x$control$data.long
+  if(is.null(data.long)){
+    data.long <- x$control$data.long
+  }
+
   random.effects.Predictions <- matrix(NA, nrow = length(unique(data.long$id)), ncol = x$control$nb.e.a+1)
   binit <- matrix(0, nrow = 1, ncol = x$control$nb.e.a)
 

@@ -23,6 +23,9 @@ predict.lsmm_covDep <- function(object, which = "RE", Objectranef = NULL, data.l
     param <- x$result_step2$b
   }
 
+  if(is.null(data.long)){
+    data.long <- x$control$data.long
+  }
   #x$control$nproc <- 1
   #Manage parameter
   curseur <- 1
@@ -61,7 +64,6 @@ predict.lsmm_covDep <- function(object, which = "RE", Objectranef = NULL, data.l
     data.long$id <- as.integer(data.long$id)
   }
 
-  data.long <- data.long
   random.effects.Predictions <- matrix(NA, nrow = length(unique(data.long$id)), ncol = x$control$nb.e.a+x$control$nb.e.a.sigma+1)
   binit <- matrix(0, nrow = 1, ncol = x$control$nb.e.a+x$control$nb.e.a.sigma)
 

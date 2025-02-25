@@ -3,10 +3,10 @@
 #' @export
 #'
 
-plot.lsmm_classic <- function(Objectlsmm, which = 'long.fit', ObjectpredictY = NULL, break.times = NULL, ID.ind = NULL, ylim = NULL, xlim = NULL){
+plot.lsmm_classic <- function(object, which = 'long.fit', predictObject = NULL, break.times = NULL, ID.ind = NULL, ylim = NULL, xlim = NULL){
 
-  if(is.null(ObjectpredictY)){
-    stop("ObjectpredictY is missing.")
+  if(is.null(predictObject)){
+    stop("predictObject is missing.")
   }
 
   graph <- NULL
@@ -15,11 +15,11 @@ plot.lsmm_classic <- function(Objectlsmm, which = 'long.fit', ObjectpredictY = N
   on.exit(graphics::par(oldpar)) # code line i + 1
 
   if(which == 'long.fit'){
-    formFixed <- Objectlsmm$control$formFixed
-    timeVar <- Objectlsmm$control$timeVar
-    data.long <- Objectlsmm$control$data.long
+    formFixed <- object$control$formFixed
+    timeVar <- object$control$timeVar
+    data.long <- object$control$data.long
     value.var <- as.character(formFixed[[2]])
-    pred.CV <- ObjectpredictY$predY
+    pred.CV <- predictObject$predY
     if(is.null(break.times)){
       timeInterv <- range(data.long[,timeVar])
       break.times <- quantile(timeInterv,prob=seq(0,1,length.out=10))
@@ -56,9 +56,9 @@ plot.lsmm_classic <- function(Objectlsmm, which = 'long.fit', ObjectpredictY = N
       stop("You have to design some individual ID to plot the the individual trajectories.")
     }
     ID.ind <- as.vector(ID.ind)
-    pred.CV <- as.data.frame(ObjectpredictY)
-    data.long <- Objectlsmm$control$data.long
-    formFixed <- Objectlsmm$control$formFixed
+    pred.CV <- as.data.frame(predictObject)
+    data.long <- object$control$data.long
+    formFixed <- object$control$formFixed
     value.var <- as.character(formFixed[[2]])
     graph <- list()
     for(ind in ID.ind){
@@ -90,14 +90,17 @@ plot.lsmm_classic <- function(Objectlsmm, which = 'long.fit', ObjectpredictY = N
           panel.background = element_blank(),
           legend.position = "bottom",
           legend.box = "vertical",
-          axis.title.x = element_text(color = "black", size = 10),
-          axis.title.y = element_text(color = "black", size = 10),
+          #axis.title.x = element_text(color = "black", size = 10),
+          #axis.title.y = element_text(color = "black", size = 10),
           panel.grid = element_blank(),
           #legend.key = element_blank(),
-          legend.text = element_text(color = "black", size = 10),
+          axis.text=ggplot2::element_text(size=15),
+          axis.title=ggplot2::element_text(size=18),
+          plot.title = ggplot2::element_text(size = 20, face = "bold"),
+          legend.text = element_text(color = "black", size = 14),
           axis.line = element_line(color = "black",
-                                   linetype = "solid"),
-          axis.text = element_text(size = 10, color = "black")
+                                   linetype = "solid")
+          #axis.text = element_text(size = 10, color = "black")
         )+coord_cartesian(xlim = xlim,ylim = ylim, expand = TRUE)
 
       graph[[paste("traj.ind",ind, sep = "_")]] <- traj_ind

@@ -5,14 +5,25 @@
 #' Nine differents models can be estimated (see details below).
 #' Parameters are estimated through a maximum likelihood method, using a Marquardt-Levenberg algorithm.
 #'
+#' @details
+#' A joint model is composed of two submodels: a linear mixed model, or a LSMM (see details in ?LSJM::lsmm) and a survival model.
+#' Three main survival processes are considered and detailed in this section.
+#'
+#' A. A single event: a proportional hazard model
+#'
+#' In this case, we consider only a single event. We denote \eqn{T_i = min(T^*_{i1},C_i)} the observed time with \eqn{T^*_{i1}} the real time for the event and \eqn{C_i} the censoring time for the i$th individual.
+#' We denote also \eqn{\delta_i \in \{0,1\}} the individual indicator of event.
+#' The risk of event is then described using a
+#'
+#'
 #' @param Objectlsmm The result of the lsmm function
 #' @param survival_type a character defining which type of survival scheme to use either 'Single', or 'CR' or 'IDM'
 #' @param formSurv_01 one-sided formula providing on the right-side the regression variable of the risk function for transition 0-1
 #' @param formSurv_02 one-sided formula providing on the right-side the regression variable of the risk function for transition 0-2
 #' @param formSurv_12 one-sided formula providing on the right-side the regression variable of the risk function for transition 1-2
-#' @param sharedtype_01 a vector indicating the form(s) of the dependence structure. If the longitudinal model estimated is a standard mixed model, it should be included in c("value", "slope"). If it is a location-scale mixed model with a covariate and time-dependent variability one can add "current variability" and if it a model distinguishing within from between visits variabilities one can add c("variability inter", "variability intra") if there are subject-specifics.
-#' @param sharedtype_02 a vector indicating the form(s) of the dependence structure. If the longitudinal model estimated is a standard mixed model, it should be included in c("value", "slope"). If it is a location-scale mixed model with a covariate and time-dependent variability one can add "current variability" and if it a model distinguishing within from between visits variabilities one can add c("variability inter", "variability intra") if there are subject-specifics.
-#' @param sharedtype_12 a vector indicating the form(s) of the dependence structure. If the longitudinal model estimated is a standard mixed model, it should be included in c("value", "slope"). If it is a location-scale mixed model with a covariate and time-dependent variability one can add "current variability" and if it a model distinguishing within from between visits variabilities one can add c("variability inter", "variability intra") if there are subject-specifics.
+#' @param sharedtype_01 a vector indicating the form(s) of the dependence structure. If the longitudinal model estimated is a standard mixed model, it should be included in c("value", "slope", "random effects"). If it is a location-scale mixed model with a covariate and time-dependent variability one can add "variability" and if it a model distinguishing within from between visits variabilities one can add c("variability inter", "variability intra") if there are subject-specifics.
+#' @param sharedtype_02 a vector indicating the form(s) of the dependence structure. If the longitudinal model estimated is a standard mixed model, it should be included in c("value", "slope", "random effects"). If it is a location-scale mixed model with a covariate and time-dependent variability one can add "variability" and if it a model distinguishing within from between visits variabilities one can add c("variability inter", "variability intra") if there are subject-specifics.
+#' @param sharedtype_12 a vector indicating the form(s) of the dependence structure. If the longitudinal model estimated is a standard mixed model, it should be included in c("value", "slope", "random effects"). If it is a location-scale mixed model with a covariate and time-dependent variability one can add "variability" and if it a model distinguishing within from between visits variabilities one can add c("variability inter", "variability intra") if there are subject-specifics.
 #' @param hazardBase_01 a character providing the baseline hazard function, which is in c("Exponential", "Weibull", "Gompertz", "Splines")} of the risk function for transition 0-1
 #' @param hazardBase_02 a character providing the baseline hazard function, which is in c("Exponential", "Weibull", "Gompertz", "Splines")} of the risk function for transition 0-2
 #' @param hazardBase_12 a character providing the baseline hazard function, which is in c("Exponential", "Weibull", "Gompertz", "Splines")} of the risk function for transition 1-2

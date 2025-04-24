@@ -1,7 +1,7 @@
 #' @rdname dynpred
 #' @export
 
-dynpred.lsjm_covDepCR <- function(Objectlsjm, newdata,  s, horizon, event, IC = 95, nb.draws = 1000){
+dynpred.lsjm_covDepCR <- function(Objectlsjm, newdata,  s, horizon, event, IC = 95, nb.draws = 1000, param = NULL){
 
 
   if(!is.null(IC) && (IC<=0 || IC>=100)) stop("IC must be between 0 and 100")
@@ -23,7 +23,7 @@ dynpred.lsjm_covDepCR <- function(Objectlsjm, newdata,  s, horizon, event, IC = 
     pred.boot <- c()
     pred.ponct <- c()
     for(t in window){
-      pred.ponct <- c(pred.ponct,predyn_ponct_lsjm_covDepCR(Objectlsjm,  data.long.until.time.s, s, t, event))
+      pred.ponct <- c(pred.ponct,predyn_ponct_lsjm_covDepCR(Objectlsjm,  data.long.until.time.s, s, t, event, param))
       if(!is.null(IC)){
         pred.boot <- cbind(pred.boot, predyn_boot_lsjm_covDepCR(Objectlsjm, data.long.until.time.s, s, t, event, nb.draws) )
       }

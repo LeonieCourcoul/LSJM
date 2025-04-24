@@ -1,11 +1,15 @@
-predyn_ponct_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, window, event){
+predyn_ponct_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, window, event, param = NULL){
 
   if(is.null(Objectlsjm$result_step2)){
-    param <- Objectlsjm$result_step1$b
+    if(is.null(param)){
+      param <- Objectlsjm$result_step1$b
+    }
     nbQMC <- Objectlsjm$control$S1
   }
   else{
-    param <- Objectlsjm$result_step2$b
+    if(is.null(param)){
+      param <- Objectlsjm$result_step2$b
+    }
     nbQMC <- Objectlsjm$control$S2
   }
 

@@ -348,6 +348,8 @@ logR_llh_lsjm_interintraIDM <- function(param,hazard_baseline_01, sharedtype_01,
     )
 
 
+
+
   }
   if(nbCase1bis != 0){
     delta2 <- Case1bis[["delta2"]]; Z_12 <- Case1bis[["Z_12"]]; Z_01 <- Case1bis[["Z_01"]]; Z_02 <- Case1bis[["Z_02"]]
@@ -392,6 +394,8 @@ logR_llh_lsjm_interintraIDM <- function(param,hazard_baseline_01, sharedtype_01,
                                                                              offset,  offset_position
     )
 
+
+
   }
 
   if(nbCase2 != 0){
@@ -426,6 +430,8 @@ logR_llh_lsjm_interintraIDM <- function(param,hazard_baseline_01, sharedtype_01,
                                                                                                    len_visit,  X_base,  U_base,   y.new,  offset_ID,  nbCase2,
                                                                                                    offset,  offset_position
     )
+
+
   }
 
 
@@ -476,6 +482,8 @@ logR_llh_lsjm_interintraIDM <- function(param,hazard_baseline_01, sharedtype_01,
                                                                                                                        offset,  offset_position,  ck
     )
 
+
+
   }
 
   ll_glob2 <- sum(ll_glob)
@@ -484,6 +492,7 @@ logR_llh_lsjm_interintraIDM <- function(param,hazard_baseline_01, sharedtype_01,
     #print(ll_glob2)
     ll_glob2 <- -1E09
   }
+
   ll_glob2
 
 }

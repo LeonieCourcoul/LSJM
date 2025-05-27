@@ -277,6 +277,7 @@ logR_llh_lsjm_covDepIDM <- function(param,hazard_baseline_01, sharedtype_01,
     )#63
 
 
+
   }
   if(nbCase1bis != 0){
     delta2 <- Case1bis[["delta2"]]; Z_12 <- Case1bis[["Z_12"]]; Z_01 <- Case1bis[["Z_01"]]; Z_02 <- Case1bis[["Z_02"]]
@@ -332,6 +333,8 @@ logR_llh_lsjm_covDepIDM <- function(param,hazard_baseline_01, sharedtype_01,
 
     )#62
 
+
+
   }
 
   if(nbCase2 != 0){
@@ -371,6 +374,8 @@ logR_llh_lsjm_covDepIDM <- function(param,hazard_baseline_01, sharedtype_01,
                                                                                                         Bs_T0_01,  Bs_T0_02,
                                                                                                         X_base,  U_base,   long, O_T, W_T, O_GK_T, W_GK_T, O_GK_T0, W_GK_T0, O_base, W_base
     )#45
+
+
   }
 
 
@@ -430,6 +435,8 @@ logR_llh_lsjm_covDepIDM <- function(param,hazard_baseline_01, sharedtype_01,
                                                                                                                              O_base,  W_base
 
     )#65
+
+
 
   }
 

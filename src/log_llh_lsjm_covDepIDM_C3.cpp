@@ -586,17 +586,17 @@ arma::vec log_llh_lsjm_covDepIDM_C3(arma::vec sharedtype, List HB, arma::vec W_G
     log_dens_int = log_dens_int - Clogexp;
     log_dens = Clogexp + log(sum(exp(log_dens_int))) - log(S);
     //Rcout << "The value of log_dens : \n" << log_dens << "\n";
-   // double den = 0;
-   // if(left_trunc){
-   //   //Rcout << "The value of A_01_T0_i : \n" << A_01_T0_i(0) << "\n";
-   //   //Rcout << "The value of A_02_T0_i : \n" << A_02_T0_i(0) << "\n";
-   //   den = log(sum(exp(-A_01_T0_i - A_02_T0_i)))-log(S);
-   //   //Rcout << "The value of den : \n" << den << "\n";
+    double den = 0;
+    if(left_trunc){
+      //Rcout << "The value of A_01_T0_i : \n" << A_01_T0_i(0) << "\n";
+      //Rcout << "The value of A_02_T0_i : \n" << A_02_T0_i(0) << "\n";
+      den = log(sum(exp(-A_01_T0_i - A_02_T0_i)))-log(S);
+      //Rcout << "The value of den : \n" << den << "\n";
 //
-   //   log_dens = log_dens - den;
-   //   //Rcout << "The value of 3 : \n" << log_dens << "\n";
+      log_dens = log_dens - den;
+      //Rcout << "The value of 3 : \n" << log_dens << "\n";
 //
-   // }
+    }
 
     ll_glob(i_provCase3) = log_dens;
 

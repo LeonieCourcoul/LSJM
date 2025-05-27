@@ -532,11 +532,11 @@ arma::vec log_llh_lsjm_interintraIDM_C1(arma::vec sharedtype, List HB, arma::vec
     Clogexp = max(log_dens_int) - 500;
     log_dens_int = log_dens_int - Clogexp;
     log_dens = Clogexp + log(sum(exp(log_dens_int))) - log(S);
-  //  double den = 0;
-   // if(left_trunc){
-   //   den = log(sum(exp(-A_01_T0_i - A_02_T0_i)))-log(S);
-   //   log_dens = log_dens - den;
-   // }
+    double den = 0;
+    if(left_trunc){
+      den = log(sum(exp(-A_01_T0_i - A_02_T0_i)))-log(S);
+      log_dens = log_dens - den;
+    }
 
     ll_glob(i_provCase1) = log_dens;
 

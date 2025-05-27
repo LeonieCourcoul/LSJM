@@ -741,6 +741,7 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
       }
     }
 
+    binit_noCI <- round(binit_noCI, 5)
     estimation.noCI <- marqLevAlg(binit_noCI, fn = logR_llh_lsjm_interintraIDM, minimize = FALSE,
 
                                         hazard_baseline_01 = hazard_baseline_01, sharedtype_01 = sharedtype_01,

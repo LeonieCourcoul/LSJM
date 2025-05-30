@@ -297,6 +297,13 @@ lsjm_classicIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard
     binit_CI <- c(binit_CI, 0)
   }
 
+  if(is.null(Objectlsmm$result_step2)){
+    binit_CI <- c(binit_CI, Objectlsmm$result_step1$b)
+  }
+  else{
+    binit_CI <- c(binit_CI, Objectlsmm$result_step2$b)
+  }
+
   # Initialisation avec le mileu de l'intervalle
   estimation.noCI <- NULL
   if(is.null(binit) &&  ((nbCase1 + nbCase3)/(nbCase1 + nbCase1bis + nbCase2 + nbCase3) > 0.10)){#nombre de cas 1 et 3 supérieur à 10% => seuil à discuter
@@ -440,10 +447,13 @@ lsjm_classicIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard
                         "Bs_T0_01" = Bs_T0_01, "Bs_T0_02" = Bs_T0_02
       )
 
+
+
       name_ZO1 <- colnames(Z_01)
       name_ZO2 <- colnames(Z_02)
       name_Z12 <- colnames(Z_12)
     }
+
 
     Case2 <- NULL
     st_T = as.matrix(0); X_GK_T = as.matrix(0); U_GK_T = as.matrix(0); Xslope_GK_T = as.matrix(0); Uslope_GK_T = as.matrix(0);
@@ -834,6 +844,10 @@ lsjm_classicIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard
 
                    # ,"random_effects" = re_Case1, "var_random_effects" = var_re_Case1
     )
+
+    name_ZO1 <- colnames(Z_01)
+    name_ZO2 <- colnames(Z_02)
+    name_Z12 <- colnames(Z_12)
   }
 
   Case1bis <- NULL
@@ -860,7 +874,7 @@ lsjm_classicIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard
     if(left_trunc){
       list.GK_T0 <- data.GaussKronrod(data.id.Case1bis, a = 0, b = data.id.Case1bis$Time_T0, k = nb_pointsGK)
       st_T0 <- list.GK_T0$st
-      Time_T0 <- data.id.Case1$Time_T0
+      Time_T0 <- data.id.Case1bis$Time_T0
     }
     if(("value" %in% sharedtype_01) || ("value" %in% sharedtype_02) || ("value" %in% sharedtype_12)){
       list.data_T <- data.time(data.id.Case1bis, data.id.Case1bis$Time_T, formFixed, formRandom,timeVar)
@@ -948,6 +962,10 @@ lsjm_classicIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard
                       #,"random_effects" = re_Case1bis, "var_random_effects" = var_re_Case1bis
     )
 
+    name_ZO1 <- colnames(Z_01)
+    name_ZO2 <- colnames(Z_02)
+    name_Z12 <- colnames(Z_12)
+
   }
 
   Case2 <- NULL
@@ -1032,6 +1050,10 @@ lsjm_classicIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard
                    "Bs_T0_01" = Bs_T0_01, "Bs_T0_02" = Bs_T0_02
                    #, "random_effects" = re_Case2, "var_random_effects" = var_re_Case2
     )
+
+    name_ZO1 <- colnames(Z_01)
+    name_ZO2 <- colnames(Z_02)
+    name_Z12 <- colnames(Z_12)
 
   }
 
@@ -1194,6 +1216,10 @@ lsjm_classicIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard
     )
 
 
+    name_ZO1 <- colnames(Z_01)
+    name_ZO2 <- colnames(Z_02)
+    name_Z12 <- colnames(Z_12)
+
 
   }
 
@@ -1216,7 +1242,7 @@ lsjm_classicIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard
     }
   }
   if(!is.null(alpha_01)){
-    names.param <- c(names.param, paste(name_ZO1,"",sep = "_"))
+    names.param <- c(names.param, paste(name_ZO1,"01",sep = "_"))
   }
   if("random effects" %in% sharedtype_01){
     names.param <- c(names.param, paste("re",colnames(U_base),"01",sep = "_"))
@@ -1246,7 +1272,7 @@ lsjm_classicIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard
     }
   }
   if(!is.null(alpha_02)){
-    names.param <- c(names.param, paste(name_ZO2,"",sep = "_"))
+    names.param <- c(names.param, paste(name_ZO2,"02",sep = "_"))
   }
   if("random effects" %in% sharedtype_02){
     names.param <- c(names.param, paste("re",colnames(U_base),"02",sep = "_"))
@@ -1275,7 +1301,7 @@ lsjm_classicIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard
     }
   }
   if(!is.null(alpha_12)){
-    names.param <- c(names.param, paste(name_Z12,"",sep = "_"))
+    names.param <- c(names.param, paste(name_Z12,"12",sep = "_"))
   }
   if("random effects" %in% sharedtype_12){
     names.param <- c(names.param, paste("re",colnames(U_base),"12",sep = "_"))
@@ -1309,6 +1335,7 @@ lsjm_classicIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard
   Zq1 <- spacefillr::generate_sobol_owen_set(S1,  nb.e.a)
   Zq <- apply(Zq1, 2, qnorm)
   message(paste("First estimation with ", S1, " QMC draws"))
+
   estimation1 <- marqLevAlg(binit, fn = logR_llh_lsjm_classicIDM, minimize = FALSE,
                             hazard_baseline_01 = hazard_baseline_01, sharedtype_01 = sharedtype_01,
                             hazard_baseline_02 = hazard_baseline_02, sharedtype_02 = sharedtype_02,

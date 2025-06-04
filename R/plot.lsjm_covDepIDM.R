@@ -35,8 +35,10 @@ plot.lsjm_covDepIDM <- function(Objectlsjm, which = 'long.fit', Objectpredict, b
     length.obs <- by(data.long[,value.var], data.long$window, length)
     IC.inf <- mean.obs - 1.96*sd.obs/sqrt(length.obs)
     IC.sup <- mean.obs + 1.96*sd.obs/sqrt(length.obs)
-    prediction <- cbind(pred.CV, data.long$window)
-    mean.pred <- by(prediction[,1], prediction[,ncol(prediction)], mean)
+    ObjectpredictY$time.new.pred <- ObjectpredictY$time
+    data.long$time.new.pred <- data.long[,timeVar]
+    prediction <- dplyr::left_join(ObjectpredictY[,c("id","predY", "time.new.pred")], data.long[,c("id", "window", "time.new.pred")])
+    mean.pred <- by(prediction$predY, prediction$window, mean)
     obstime.mean <- by(data.long[,timeVar], data.long$window, mean)
     df <- cbind(obstime.mean, mean.obs, IC.sup, IC.inf, mean.pred)
     df <- as.data.frame(df)
@@ -113,6 +115,7 @@ plot.lsjm_covDepIDM <- function(Objectlsjm, which = 'long.fit', Objectpredict, b
   }
 
   if(which == 'survival.fit'){
+
     #Objectranef$grid.time.Cum
     Cum_01Smooth_est <- intensity(times = Objectpredict$grid.time.Cum, knots = ObjectSmoothHazard$knots01,
                                   number.knots = ObjectSmoothHazard$nknots01,
@@ -133,13 +136,13 @@ plot.lsjm_covDepIDM <- function(Objectlsjm, which = 'long.fit', Objectpredict, b
       tirage <- mvtnorm::rmvnorm(1, mean = c(ObjectSmoothHazard$theta01,ObjectSmoothHazard$theta02,ObjectSmoothHazard$theta12), sigma = V)
       Cum_01Smooth <- intensity(times = Objectpredict$grid.time.Cum, knots = ObjectSmoothHazard$knots01,
                                 number.knots = ObjectSmoothHazard$nknots01,
-                                theta = tirage[1:17]^2)
+                                theta = tirage[1:(ObjectSmoothHazard$nknots01+2)]^2)
       Cum_02Smooth <- intensity(times = Objectpredict$grid.time.Cum, knots = ObjectSmoothHazard$knots02,
                                 number.knots = ObjectSmoothHazard$nknots02,
-                                theta = tirage[18:34]^2)
+                                theta = tirage[(ObjectSmoothHazard$nknots02+3):(2*(ObjectSmoothHazard$nknots02+2))]^2)
       Cum_12Smooth <- intensity(times = Objectpredict$grid.time.Cum, knots = ObjectSmoothHazard$knots12,
                                 number.knots = ObjectSmoothHazard$nknots12,
-                                theta = tirage[35:51]^2)
+                                theta = tirage[(2*(ObjectSmoothHazard$nknots12+2)+1):(3*(ObjectSmoothHazard$nknots12+2))]^2)
 
       Cum_01.cum <- rbind(Cum_01.cum, Cum_01Smooth$cumulative.intensity)
       Cum_02.cum <- rbind(Cum_02.cum, Cum_02Smooth$cumulative.intensity)

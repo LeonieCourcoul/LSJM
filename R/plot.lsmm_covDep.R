@@ -31,8 +31,10 @@ plot.lsmm_covDep <- function(object, which = 'long.fit', predictObject = NULL, b
     length.obs <- by(data.long[,value.var], data.long$window, length)
     IC.inf <- mean.obs - 1.96*sd.obs/sqrt(length.obs)
     IC.sup <- mean.obs + 1.96*sd.obs/sqrt(length.obs)
-    prediction <- cbind(pred.CV, data.long$window)
-    mean.pred <- by(prediction[,1], prediction[,ncol(prediction)], mean)
+    predictObject$time.new.pred <- predictObject$time
+    data.long$time.new.pred <- data.long[,timeVar]
+    prediction <- dplyr::left_join(predictObject[,c("id","predY", "time.new.pred")], data.long[,c("id", "window", "time.new.pred")])
+    mean.pred <- by(prediction$predY, prediction$window, mean)
     obstime.mean <- by(data.long[,timeVar], data.long$window, mean)
     df <- cbind(obstime.mean, mean.obs, IC.sup, IC.inf, mean.pred)
     df <- as.data.frame(df)

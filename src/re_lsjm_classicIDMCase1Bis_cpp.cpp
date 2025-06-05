@@ -332,7 +332,7 @@ double re_lsjm_classicIDMCase1Bis_cpp(arma::vec sharedtype, List HB, arma::vec G
   double sigma_long;
   sigma_long = sigma_epsilon;
   for(int k=0; k<n_rows_X; k++){
-    CV = dot(beta,X_base_i.row(k)) + b_y*U_base_i.row(k).t();
+    CV = dot(beta,X_base_i.row(k)) + U_base_i.row(k)*b_y;
     f_Y_b_sigma = f_Y_b_sigma + log(1.0 / (sqrt(2.0*M_PI)*sigma_long)) - 0.5*pow((y_i(k)-CV)/sigma_long,2);
   }
 

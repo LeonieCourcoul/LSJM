@@ -133,7 +133,6 @@ double re_lsjm_classicSingle_cpp(arma::vec sharedtype, List HB, arma::vec Gomper
   }
 
   h_01_T_i = h_0_01_T_i*exp(predsurv_01)*h_01_T_i;
-
   etaBaseline_01_T_i = etaBaseline_01_T_i + predsurv_01;
   survLong_01_T_i = exp(survLong_01_T_i)*h_0_GK_01_T_i;
   arma::vec A_01_T_i;
@@ -146,9 +145,7 @@ double re_lsjm_classicSingle_cpp(arma::vec sharedtype, List HB, arma::vec Gomper
     A_01_T0_i = (exp(etaBaseline_01_T0_i)%survLong_01_T0_i*(Time_T0_i/2));
   }
 
-
   arma::vec SurvTotCase2 =  -A_01_T_i  + log(pow(h_01_T_i,delta1_i));
-
   // Rcout << "The value of v : \n" << 8 << "\n";
   arma::vec f_Y_b_sigma(1,fill::zeros);
   arma::vec CV;
@@ -156,13 +153,13 @@ double re_lsjm_classicSingle_cpp(arma::vec sharedtype, List HB, arma::vec Gomper
   double sigma_long;
   sigma_long = sigma_epsilon;
   for(int k=0; k<n_rows_X; k++){
-    CV = dot(beta,X_base_i.row(k)) + b_y*U_base_i.row(k).t();
+    CV = dot(beta,X_base_i.row(k)) + U_base_i.row(k)*b_y;
     f_Y_b_sigma = f_Y_b_sigma + log(1.0 / (sqrt(2.0*M_PI)*sigma_long)) - 0.5*pow((y_i(k)-CV)/sigma_long,2);
   }
 
 
 
-  // Rcout << "The value of v : \n" << 9 << "\n";
+ // Rcout << "The value of v : \n" << 9 << "\n";
 
   arma::vec log_dens_int;
   double Clogexp;

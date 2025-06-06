@@ -166,6 +166,8 @@ predict.lsjm_classicIDM <- function(Objectlsjm, which = "RE", Objectranef = NULL
                   "value" %in% x$control$sharedtype_02, "slope" %in% x$control$sharedtype_02,
                   "value" %in% x$control$sharedtype_12, "slope" %in% x$control$sharedtype_12,
                   "random effects" %in% x$control$sharedtype_01, "random effects" %in% x$control$sharedtype_02, "random effects" %in% x$control$sharedtype_12)
+  Gompertz <- c(Gompertz.1_01, Gompertz.2_01, Gompertz.1_02, Gompertz.2_02, Gompertz.1_12, Gompertz.2_12)
+  Weibull <- c(shape_01, shape_02, shape_12)
   HB <- list(x$control$hazard_baseline_01, x$control$hazard_baseline_02, x$control$hazard_baseline_12, x$control$left_trunc)
   W_G <- c(shape_01, shape_02, shape_12, Gompertz.1_01, Gompertz.2_01, Gompertz.1_02, Gompertz.2_02, Gompertz.1_12, Gompertz.2_12)
   alpha_y_slope <- c(alpha.current_01,alpha.current_02,alpha.current_12, alpha.slope_01,alpha.slope_02,alpha.slope_12)
@@ -458,12 +460,12 @@ predict.lsjm_classicIDM <- function(Objectlsjm, which = "RE", Objectranef = NULL
                            U_base_i <- unique(U_i)
                            y_i <- y.new[offset[id.boucleCase1]:(offset[id.boucleCase1+1]-1)]
 
-                           random.effects_i <- marqLevAlg(binit, fn = re_lsjm_covDepIDMCase1, minimize = FALSE, nb.e.a = x$control$Objectlsmm$control$nb.e.a,
+                           random.effects_i <- marqLevAlg(binit, fn = re_lsjm_classicIDMCase1, minimize = FALSE, nb.e.a = x$control$Objectlsmm$control$nb.e.a,
                                                           Sigma.re = MatCov,
-                                                          sharedtype = sharedtype, HB = HB, W_G = W_G , nb_pointsGK = x$control$nb_pointsGK,
+                                                          sharedtype = sharedtype, HB = HB, Gompertz = Gompertz, Weibull = Weibull , nb_pointsGK = x$control$nb_pointsGK,
                                                           alpha_y_slope = alpha_y_slope, alpha_b_01 = alpha_b_01, alpha_b_02 = alpha_b_02,alpha_b_12 = alpha_b_12,
                                                           alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope,
-                                                          wk = wk, rep_wk = rep_wk,
+                                                          wk = wk, rep_wk = rep_wk, sigma_epsilon = sigma_epsilon,
                                                           delta2_i = delta2_i, Z_01_i=Z_01_i, Z_02_i=Z_02_i, Z_12_i=Z_12_i,
                                                           X_T_i=X_T_i,  U_T_i=U_T_i,Xslope_T_i =Xslope_T_i ,  Uslope_T_i = Uslope_T_i,
                                                           X_GK_T_i = X_GK_T_i,  U_GK_T_i = U_GK_T_i,  Xslope_GK_T_i= Xslope_GK_T_i, Uslope_GK_T_i = Uslope_GK_T_i,
@@ -484,12 +486,12 @@ predict.lsjm_classicIDM <- function(Objectlsjm, which = "RE", Objectranef = NULL
 
                            while(random.effects_i$istop !=1){
                              binit <- mvtnorm::rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
-                             random.effects_i <- marqLevAlg(binit, fn = re_lsjm_covDepIDMCase1, minimize = FALSE, nb.e.a = x$control$Objectlsmm$control$nb.e.a,
+                             random.effects_i <- marqLevAlg(binit, fn = re_lsjm_classicIDMCase1, minimize = FALSE, nb.e.a = x$control$Objectlsmm$control$nb.e.a,
                                                             Sigma.re = MatCov,
-                                                            sharedtype = sharedtype, HB = HB, W_G = W_G , nb_pointsGK = x$control$nb_pointsGK,
+                                                            sharedtype = sharedtype, HB = HB,Gompertz = Gompertz, Weibull = Weibull , nb_pointsGK = x$control$nb_pointsGK,
                                                             alpha_y_slope = alpha_y_slope, alpha_b_01 = alpha_b_01, alpha_b_02 = alpha_b_02,alpha_b_12 = alpha_b_12,
                                                             alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope,
-                                                            wk = wk, rep_wk = rep_wk,
+                                                            wk = wk, rep_wk = rep_wk,sigma_epsilon = sigma_epsilon,
                                                             delta2_i = delta2_i, Z_01_i=Z_01_i, Z_02_i=Z_02_i, Z_12_i=Z_12_i,
                                                             X_T_i=X_T_i,  U_T_i=U_T_i,Xslope_T_i =Xslope_T_i ,  Uslope_T_i = Uslope_T_i,
                                                             X_GK_T_i = X_GK_T_i,  U_GK_T_i = U_GK_T_i,  Xslope_GK_T_i= Xslope_GK_T_i, Uslope_GK_T_i = Uslope_GK_T_i,
@@ -752,11 +754,11 @@ predict.lsjm_classicIDM <- function(Objectlsjm, which = "RE", Objectranef = NULL
                            U_base_i <- unique(U_i)
                            y_i <- y.new[offset[id.boucleCase1bis]:(offset[id.boucleCase1bis+1]-1)]
 
-                           random.effects_i <- marqLevAlg(binit, fn = re_lsjm_covDepIDMCase1Bis, minimize = FALSE,nb.e.a = x$control$Objectlsmm$control$nb.e.a,
+                           random.effects_i <- marqLevAlg(binit, fn = re_lsjm_classicIDMCase1Bis, minimize = FALSE,nb.e.a = x$control$Objectlsmm$control$nb.e.a,
                                                           Sigma.re = MatCov,
-                                                          sharedtype = sharedtype, HB = HB, W_G = W_G, nb_pointsGK = x$control$nb_pointsGK,
+                                                          sharedtype = sharedtype, HB = HB, Gompertz = Gompertz, Weibull = Weibull, nb_pointsGK = x$control$nb_pointsGK,
                                                           alpha_y_slope = alpha_y_slope,alpha_b_01 = alpha_b_01, alpha_b_02 = alpha_b_02,alpha_b_12 = alpha_b_12,
-                                                          alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope, wk = wk,
+                                                          alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope, wk = wk,sigma_epsilon = sigma_epsilon,
                                                           delta2_i = delta2_i, Z_01_i=Z_01_i, Z_02_i=Z_02_i, Z_12_i=Z_12_i,
                                                           X_T_i=X_T_i,  U_T_i=U_T_i, Xslope_T_i = Xslope_T_i,  Uslope_T_i = Uslope_T_i,
                                                           X_GK_T_i=X_GK_T_i,  U_GK_T_i=U_GK_T_i,  Xslope_GK_T_i=Xslope_GK_T_i, Uslope_GK_T_i=Uslope_GK_T_i,
@@ -776,11 +778,11 @@ predict.lsjm_classicIDM <- function(Objectlsjm, which = "RE", Objectranef = NULL
 
                            while(random.effects_i$istop !=1){
                              binit <- mvtnorm::rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
-                             random.effects_i <-  marqLevAlg(binit, fn = re_lsjm_covDepIDMCase1Bis, minimize = FALSE,nb.e.a = x$control$Objectlsmm$control$nb.e.a,
+                             random.effects_i <-  marqLevAlg(binit, fn = re_lsjm_classicIDMCase1Bis, minimize = FALSE,nb.e.a = x$control$Objectlsmm$control$nb.e.a,
                                                              Sigma.re = MatCov,
-                                                             sharedtype = sharedtype, HB = HB, W_G = W_G, nb_pointsGK = x$control$nb_pointsGK,
+                                                             sharedtype = sharedtype, HB = HB, Gompertz = Gompertz, Weibull = Weibull, nb_pointsGK = x$control$nb_pointsGK,
                                                              alpha_y_slope = alpha_y_slope, alpha_b_01 = alpha_b_01, alpha_b_02 = alpha_b_02,alpha_b_12 = alpha_b_12,
-                                                             alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope, wk = wk,
+                                                             alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope, wk = wk,sigma_epsilon = sigma_epsilon,
                                                              delta2_i = delta2_i, Z_01_i=Z_01_i, Z_02_i=Z_02_i, Z_12_i=Z_12_i,
                                                              X_T_i=X_T_i,  U_T_i=U_T_i, Xslope_T_i = Xslope_T_i,  Uslope_T_i = Uslope_T_i,
                                                              X_GK_T_i=X_GK_T_i,  U_GK_T_i=U_GK_T_i,  Xslope_GK_T_i=Xslope_GK_T_i, Uslope_GK_T_i=Uslope_GK_T_i,
@@ -991,13 +993,13 @@ predict.lsjm_classicIDM <- function(Objectlsjm, which = "RE", Objectranef = NULL
                            U_base_i <- unique(U_i)
                            y_i <- y.new[offset[id.boucleCase2]:(offset[id.boucleCase2+1]-1)]
 
-                           random.effects_i <- marqLevAlg(binit, fn = re_lsjm_covDepIDMCase2, minimize = FALSE,
+                           random.effects_i <- marqLevAlg(binit, fn = re_lsjm_classicIDMCase2, minimize = FALSE,
 
                                                           nb.e.a = x$control$Objectlsmm$control$nb.e.a, Sigma.re = MatCov,
                                                           sharedtype = sharedtype, HB = HB, Gompertz = Gompertz, Weibull = Weibull, nb_pointsGK = x$control$nb_pointsGK,
                                                           alpha_y_slope= alpha_y_slope,alpha_b_01 = alpha_b_01, alpha_b_02 = alpha_b_02,
                                                           alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope,
-                                                          wk = wk,
+                                                          wk = wk,sigma_epsilon = sigma_epsilon,
                                                           delta2_i = delta2_i, Z_01_i=Z_01_i, Z_02_i=Z_02_i,  X_T_i=X_T_i,  U_T_i=U_T_i,
                                                           Xslope_T_i = Xslope_T_i,  Uslope_T_i = Uslope_T_i,
                                                           X_GK_T_i=X_GK_T_i,  U_GK_T_i=U_GK_T_i,  Xslope_GK_T_i=Xslope_GK_T_i,
@@ -1013,13 +1015,13 @@ predict.lsjm_classicIDM <- function(Objectlsjm, which = "RE", Objectranef = NULL
 
                            while(random.effects_i$istop !=1){
                              binit <- mvtnorm::rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
-                             random.effects_i <- marqLevAlg(binit, fn = re_lsjm_covDepIDMCase2, minimize = FALSE,
+                             random.effects_i <- marqLevAlg(binit, fn = re_lsjm_classicIDMCase2, minimize = FALSE,
 
                                                             nb.e.a = x$control$Objectlsmm$control$nb.e.a, Sigma.re = MatCov,
                                                             sharedtype = sharedtype, HB = HB, Gompertz = Gompertz, Weibull = Weibull, nb_pointsGK = x$control$nb_pointsGK,
                                                             alpha_y_slope= alpha_y_slope,alpha_b_01 = alpha_b_01, alpha_b_02 = alpha_b_02,
                                                             alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope,
-                                                            wk = wk,
+                                                            wk = wk,sigma_epsilon = sigma_epsilon,
                                                             delta2_i = delta2_i, Z_01_i=Z_01_i, Z_02_i=Z_02_i,  X_T_i=X_T_i,  U_T_i=U_T_i,
                                                             Xslope_T_i = Xslope_T_i,  Uslope_T_i = Uslope_T_i,
                                                             X_GK_T_i=X_GK_T_i,  U_GK_T_i=U_GK_T_i,  Xslope_GK_T_i=Xslope_GK_T_i,
@@ -1332,12 +1334,12 @@ predict.lsjm_classicIDM <- function(Objectlsjm, which = "RE", Objectranef = NULL
                            U_base_i <- unique(U_i)
                            y_i <- y.new[offset[id.boucleCase3]:(offset[id.boucleCase3+1]-1)]
 
-                           random.effects_i <- marqLevAlg(binit, fn = re_lsjm_covDepIDMCase3, minimize = FALSE,nb.e.a = x$control$Objectlsmm$control$nb.e.a,
+                           random.effects_i <- marqLevAlg(binit, fn = re_lsjm_classicIDMCase3, minimize = FALSE,nb.e.a = x$control$Objectlsmm$control$nb.e.a,
                                                           Sigma.re = MatCov,
-                                                          sharedtype = sharedtype, HB = HB, W_G = W_G, nb_pointsGK = x$control$nb_pointsGK,
+                                                          sharedtype = sharedtype, HB = HB, Gompertz = Gompertz, Weibull = Weibull, nb_pointsGK = x$control$nb_pointsGK,
                                                           alpha_y_slope = alpha_y_slope, alpha_b_01 = alpha_b_01, alpha_b_02 = alpha_b_02,alpha_b_12 = alpha_b_12,
                                                           alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope,
-                                                          wk = wk, rep_wk = rep_wk,
+                                                          wk = wk, rep_wk = rep_wk,sigma_epsilon = sigma_epsilon,
                                                           delta2_i = delta2_i, Z_01_i=Z_01_i, Z_02_i=Z_02_i, Z_12_i=Z_12_i,
                                                           X_T_i=X_T_i,  U_T_i=U_T_i, Xslope_T_i = Xslope_T_i,  Uslope_T_i = Uslope_T_i,
                                                           X_GK_T_i = X_GK_T_i,  U_GK_T_i = U_GK_T_i,  Xslope_GK_T_i = Xslope_GK_T_i,Uslope_GK_T_i = Uslope_GK_T_i,
@@ -1358,12 +1360,12 @@ predict.lsjm_classicIDM <- function(Objectlsjm, which = "RE", Objectranef = NULL
                                                           file = "", blinding = TRUE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4, multipleTry = 100)
                            while(random.effects_i$istop !=1){
                              binit <- mvtnorm::rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
-                             random.effects_i <- marqLevAlg(binit, fn = re_lsjm_covDepIDMCase3, minimize = FALSE,nb.e.a = x$control$Objectlsmm$control$nb.e.a,
+                             random.effects_i <- marqLevAlg(binit, fn = re_lsjm_classicIDMCase3, minimize = FALSE,nb.e.a = x$control$Objectlsmm$control$nb.e.a,
                                                             Sigma.re = MatCov,
-                                                            sharedtype = sharedtype, HB = HB, G_W = G_W, nb_pointsGK = x$control$nb_pointsGK,
+                                                            sharedtype = sharedtype, HB = HB, Gompertz = Gompertz, Weibull = Weibull, nb_pointsGK = x$control$nb_pointsGK,
                                                             alpha_y_slope = alpha_y_slope,alpha_b_01 = alpha_b_01, alpha_b_02 = alpha_b_02,alpha_b_12 = alpha_b_12,
                                                             alpha_z = alpha_z,  gamma_z0 = gamma_z0,  beta = beta,  beta_slope = beta_slope,
-                                                            wk = wk, rep_wk = rep_wk,
+                                                            wk = wk, rep_wk = rep_wk,sigma_epsilon = sigma_epsilon,
                                                             delta2_i = delta2_i, Z_01_i=Z_01_i, Z_02_i=Z_02_i, Z_12_i=Z_12_i,
                                                             X_T_i=X_T_i,  U_T_i=U_T_i, Xslope_T_i = Xslope_T_i,  Uslope_T_i = Uslope_T_i,
                                                             X_GK_T_i = X_GK_T_i,  U_GK_T_i = U_GK_T_i,  Xslope_GK_T_i = Xslope_GK_T_i,Uslope_GK_T_i = Uslope_GK_T_i,

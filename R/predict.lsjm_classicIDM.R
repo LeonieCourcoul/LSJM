@@ -22,6 +22,10 @@ predict.lsjm_classicIDM <- function(Objectlsjm, which = "RE", Objectranef = NULL
     param <- x$result_step2$b
   }
 
+  Cum_risk_01 <- c()
+  Cum_risk_02 <- c()
+  Cum_risk_12 <- c()
+
   shape_01 <- 0; shape_02 <- 0; shape_12 <- 0
   Gompertz.1_01 <- 0; Gompertz.2_01 <- 0; Gompertz.1_02 <- 0; Gompertz.2_02 <- 0; Gompertz.1_12 <- 0; Gompertz.2_12 <- 0
   alpha.current_01 <- 0; alpha.current_02 <- 0; alpha.current_12 <- 0; alpha.slope_01 <- 0; alpha.slope_02 <- 0;alpha.slope_12 <- 0
@@ -1434,7 +1438,7 @@ predict.lsjm_classicIDM <- function(Objectlsjm, which = "RE", Objectranef = NULL
 
   }
 
-  if('RE' %in% which){
+  if(is.null(Objectranef) || 'RE' %in% which){
     random.effects.Predictions <- rbind(random.effects.PredictionsCase1, random.effects.PredictionsCase1bis,
                                         random.effects.PredictionsCase2, random.effects.PredictionsCase3)
     random.effects.Predictions <- as.data.frame(random.effects.Predictions)

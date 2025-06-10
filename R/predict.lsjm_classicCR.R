@@ -22,6 +22,9 @@ predict.lsjm_classicCR <- function(Objectlsmm, which = "RE", Objectranef = NULL,
   else{
     param <- x$result_step2$b
   }
+  Cum_risk_01 <- c()
+  Cum_risk_02 <- c()
+  Cum_risk_12 <- c()
 
   shape_01 <- 0; shape_02 <- 0;
   Gompertz.1_01 <- 0; Gompertz.2_01 <- 0; Gompertz.1_02 <- 0; Gompertz.2_02 <- 0;

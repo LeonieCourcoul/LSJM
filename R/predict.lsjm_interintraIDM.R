@@ -22,6 +22,10 @@ predict.lsjm_interintraIDM <- function(Objectlsmm, which = "RE", Objectranef = N
     param <- x$result_step2$b
   }
 
+  Cum_risk_01 <- NULL
+  Cum_risk_02 <- NULL
+  Cum_risk_12 <- NULL
+
   shape_01 <- 0; shape_02 <- 0; shape_12 <- 0
   Gompertz.1_01 <- 0; Gompertz.2_01 <- 0; Gompertz.1_02 <- 0; Gompertz.2_02 <- 0; Gompertz.1_12 <- 0; Gompertz.2_12 <- 0
   alpha.current_01 <- 0; alpha.current_02 <- 0; alpha.current_12 <- 0; alpha.slope_01 <- 0; alpha.slope_02 <- 0;alpha.slope_12 <- 0

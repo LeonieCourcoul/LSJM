@@ -22,6 +22,7 @@ predict.lsjm_classicSingle <- function(Objectlsjm, which = "RE", Objectranef = N
   else{
     param <- x$result_step2$b
   }
+  Cum_risk_01 <- c()
 
   shape_01 <- 0;
   Gompertz.1_01 <- 0; Gompertz.2_01 <- 0;

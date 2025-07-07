@@ -23,9 +23,9 @@ dynpred.lsjm_interintraIDM <- function(Objectlsjm,newdata,  s, horizon, IC = 95,
     pred.boot <- c()
     pred.ponct <- c()
     for(t in window){
-      pred.ponct <- c(pred.ponct,predyn_ponct_lsjm_interintraCR(Objectlsjm,  data.long.until.time.s, s, t, event))
+      pred.ponct <- c(pred.ponct,predyn_ponct_lsjm_interintraIDM(Objectlsjm,  data.long.until.time.s, s, t, event))
       if(!is.null(IC)){
-        pred.boot <- cbind(pred.boot, predyn_boot_lsjm_interintraCR(Objectlsjm, data.long.until.time.s, s, t, event, nb.draws) )
+        pred.boot <- cbind(pred.boot, predyn_boot_lsjm_interintraIDM(Objectlsjm, data.long.until.time.s, s, t, event, nb.draws) )
       }
     }
     if(!is.null(IC)){

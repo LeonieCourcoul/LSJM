@@ -4,6 +4,7 @@ log_llh_lsmm_interintra <- function(param,nb.beta, Zq,
                         correlated_re, X_base, U_base, y_new, Ind, offset, offset_ID, offset_position, len_visit)
 {
 
+
   #Manage parameter
   curseur <- 1
   ## Marker

@@ -324,6 +324,7 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
   }
 
 
+
   # Initialisation avec le mileu de l'intervalle
   estimation.noCI <- NULL
   if(is.null(binit) &&  ((nbCase1 + nbCase3)/(nbCase1 + nbCase1bis + nbCase2 + nbCase3) > 0.10)){#nombre de cas 1 et 3 supérieur à 10% => seuil à discuter

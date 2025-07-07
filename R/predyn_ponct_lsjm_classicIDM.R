@@ -1,5 +1,4 @@
-predyn_ponct_lsjm_interintraCR <- function(Objectlsjm, data.long.until.time.s, s, window, event){
-
+predyn_ponct_lsjm_classicIDM <- function(Objectlsjm, data.long.until.time.s, s, window, event){
 
   if(is.null(Objectlsjm$result_step2)){
     param <- Objectlsjm$result_step1$b
@@ -26,8 +25,8 @@ predyn_ponct_lsjm_interintraCR <- function(Objectlsjm, data.long.until.time.s, s
     curseur <- curseur + 2
   }
   if(Objectlsjm$control$hazard_baseline_01 == "Splines"){
-    gamma_01 <- param[(curseur):(curseur+Objectlsjm$control$nb.knots.splines[1]-2+1)]
-    curseur <- curseur + Objectlsjm$control$nb.knots.splines[1]-2 + 2
+    gamma_01 <- param[(curseur):(curseur+Objectlsjm$control$nb.knots.splines[1]+2+1)]
+    curseur <- curseur + Objectlsjm$control$nb.knots.splines[1]+2 + 2
   }
   ### Covariables :
   nb.alpha_01 <- Objectlsjm$control$nb.alpha[1]
@@ -36,7 +35,7 @@ predyn_ponct_lsjm_interintraCR <- function(Objectlsjm, data.long.until.time.s, s
     curseur <- curseur+nb.alpha_01
   }
   ### Association
-  if("random effects" %in% Objectlsjm$control$sharedtype_01){
+  if("random effects" %in%Objectlsjm$control$sharedtype_01){
     alpha_b_01 <- param[curseur:(curseur+Objectlsjm$control$Objectlsmm$control$nb.e.a-1)]
     curseur <- curseur + Objectlsjm$control$Objectlsmm$control$nb.e.a
   }
@@ -48,14 +47,7 @@ predyn_ponct_lsjm_interintraCR <- function(Objectlsjm, data.long.until.time.s, s
     alpha.slope_01 <- param[curseur]
     curseur <- curseur + 1
   }
-  if("variability inter" %in% Objectlsjm$control$sharedtype_01){
-    alpha.inter_01 <- param[curseur]
-    curseur <- curseur + 1
-  }
-  if("variability intra" %in% Objectlsjm$control$sharedtype_01){
-    alpha.intra_01 <- param[curseur]
-    curseur <- curseur + 1
-  }
+
 
   ## Risque 02
   if(Objectlsjm$control$hazard_baseline_02 == "Weibull"){
@@ -68,8 +60,8 @@ predyn_ponct_lsjm_interintraCR <- function(Objectlsjm, data.long.until.time.s, s
     curseur <- curseur + 2
   }
   if(Objectlsjm$control$hazard_baseline_02 == "Splines"){
-    gamma_02 <- param[(curseur):(curseur+Objectlsjm$control$nb.knots.splines[2]-2+1)]
-    curseur <- curseur + Objectlsjm$control$nb.knots.splines[2]-2+ 2
+    gamma_02 <- param[(curseur):(curseur+Objectlsjm$control$nb.knots.splines[2]+2+1)]
+    curseur <- curseur + Objectlsjm$control$nb.knots.splines[2]+2+ 2
   }
   ### Covariables :
   nb.alpha_02 <- Objectlsjm$control$nb.alpha[2]
@@ -78,7 +70,7 @@ predyn_ponct_lsjm_interintraCR <- function(Objectlsjm, data.long.until.time.s, s
     curseur <- curseur+nb.alpha_02
   }
   ### Association
-  if("random effects" %in% Objectlsjm$control$sharedtype_02){
+  if("random effects" %in%Objectlsjm$control$sharedtype_02){
     alpha_b_02 <- param[curseur:(curseur+Objectlsjm$control$Objectlsmm$control$nb.e.a-1)]
     curseur <- curseur + Objectlsjm$control$Objectlsmm$control$nb.e.a
   }
@@ -90,184 +82,63 @@ predyn_ponct_lsjm_interintraCR <- function(Objectlsjm, data.long.until.time.s, s
     alpha.slope_02 <- param[curseur]
     curseur <- curseur + 1
   }
-  if("variability inter" %in% Objectlsjm$control$sharedtype_02){
-    alpha.inter_02 <- param[curseur]
+
+  ## Risque 12
+  if(Objectlsjm$control$hazard_baseline_12 == "Weibull"){
+    shape_12 <- param[curseur]**2
     curseur <- curseur + 1
   }
-  if("variability intra" %in% Objectlsjm$control$sharedtype_02){
-    alpha.intra_02 <- param[curseur]
+  if(Objectlsjm$control$hazard_baseline_12 == "Gompertz"){
+    Gompertz.1_12 <- param[curseur]**2
+    Gompertz.2_12 <- param[curseur+1]
+    curseur <- curseur + 2
+  }
+  if(Objectlsjm$control$hazard_baseline_12 == "Splines"){
+    gamma_12 <- param[(curseur):(curseur+Objectlsjm$control$nb.knots.splines[3]+2+1)]
+    curseur <- curseur + Objectlsjm$control$nb.knots.splines[3]+2+ 2
+  }
+  ### Covariables :
+  nb.alpha_12 <- Objectlsjm$control$nb.alpha[3]
+  if(nb.alpha_12 >=1){
+    alpha_12 <-  param[(curseur):(curseur+nb.alpha_12-1)]
+    curseur <- curseur+nb.alpha_12
+  }
+  ### Association
+  if("random effects" %in%Objectlsjm$control$sharedtype_12){
+    alpha_b_12 <- param[curseur:(curseur+Objectlsjm$control$Objectlsmm$control$nb.e.a-1)]
+    curseur <- curseur + Objectlsjm$control$Objectlsmm$control$nb.e.a
+  }
+  if("value" %in% Objectlsjm$control$sharedtype_12){
+    alpha.current_12 <- param[curseur]
     curseur <- curseur + 1
   }
+  if("slope" %in% Objectlsjm$control$sharedtype_12){
+    alpha.slope_12 <- param[curseur]
+    curseur <- curseur + 1
+  }
+
 
   ## Marker
   ### Fixed effects
   beta <- param[curseur:(curseur+ Objectlsjm$control$Objectlsmm$control$nb.beta-1)]
   curseur <- curseur+Objectlsjm$control$Objectlsmm$control$nb.beta
-  if(Objectlsjm$control$Objectlsmm$control$var_inter){
-    mu.inter <- param[curseur]
-    curseur <- curseur + 1
-  }
-  else{
-    sigma.epsilon.inter <- param[curseur]
-    curseur <- curseur +1
-  }
-  if(Objectlsjm$control$Objectlsmm$control$var_intra){
-    mu.intra <- param[curseur]
-    curseur <- curseur + 1
-  }
-  else{
-    sigma.epsilon.intra <- param[curseur]
-    curseur <- curseur +1
-  }
+  sigma_epsilon <- param[curseur]
+  curseur <- curseur +1
 
-  if(Objectlsjm$control$Objectlsmm$control$var_inter && Objectlsjm$control$Objectlsmm$control$var_intra){
-    Zq1 <- spacefillr::generate_sobol_owen_set(nbQMC,  Objectlsjm$control$Objectlsmm$control$nb.e.a+2)
-    Zq <- apply(Zq1, 2, qnorm)
-  }
-  else{
-    if(Objectlsjm$control$Objectlsmm$control$var_inter || Objectlsjm$control$Objectlsmm$control$var_intra){
-      Zq1 <- spacefillr::generate_sobol_owen_set(nbQMC,  Objectlsjm$control$Objectlsmm$control$nb.e.a+1)
-      Zq <- apply(Zq1, 2, qnorm)
-    }
-    else{
-      Zq1 <- spacefillr::generate_sobol_owen_set(nbQMC,  Objectlsjm$control$Objectlsmm$control$nb.e.a)
-      Zq <- apply(Zq1, 2, qnorm)
-    }
-  }
 
-  if(Objectlsjm$control$Objectlsmm$control$var_inter && Objectlsjm$control$Objectlsmm$control$var_intra){
-    if(Objectlsjm$control$Objectlsmm$control$correlated_re){
 
-      C1 <- matrix(rep(0,(Objectlsjm$control$Objectlsmm$control$nb.e.a+2)**2),nrow=Objectlsjm$control$Objectlsmm$control$nb.e.a+2,ncol=Objectlsjm$control$Objectlsmm$control$nb.e.a+2)
-      C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
-      Cholesky <- as.matrix(C1)
-      random.effects <- Zq%*%t(Cholesky)
-      b_al <- random.effects[,1:Objectlsjm$control$Objectlsmm$control$nb.e.a]
-      b_al <- matrix(b_al, ncol = Objectlsjm$control$Objectlsmm$control$nb.e.a)
-      tau_inter <- random.effects[,(Objectlsjm$control$Objectlsmm$control$nb.e.a+1)]
-      tau_inter <- matrix(tau_inter, ncol = 1)
-      tau_intra <- random.effects[,(Objectlsjm$control$Objectlsmm$control$nb.e.a+2)]
-      tau_intra <- matrix(tau_intra, ncol = 1)
-      sigma_inter <- exp(mu.inter + tau_inter)
-      var.inter <- sigma_inter**2
-      sigma_intra <- exp(mu.intra + tau_intra)
-      var.intra <- sigma_intra**2
-    }
-    else{
-      borne1 <- curseur + choose(n = Objectlsjm$control$Objectlsmm$control$nb.e.a, k = 2) + Objectlsjm$control$Objectlsmm$control$nb.e.a - 1
-      C1 <- matrix(rep(0,(Objectlsjm$control$Objectlsmm$control$nb.e.a)**2),nrow=Objectlsjm$control$Objectlsmm$control$nb.e.a,ncol=Objectlsjm$control$Objectlsmm$control$nb.e.a)
-      C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
-      C2 <-matrix(c(param[(borne1+1)], 0,param[borne1+2], param[borne1+3]),nrow=2,ncol=2, byrow = TRUE)
-      C3 <- matrix(rep(0,2*Objectlsjm$control$Objectlsmm$control$nb.e.a), ncol = Objectlsjm$control$Objectlsmm$control$nb.e.a)
-      C4 <- matrix(rep(0,2*Objectlsjm$control$Objectlsmm$control$nb.e.a), nrow = Objectlsjm$control$Objectlsmm$control$nb.e.a)
-      Cholesky <- rbind(cbind(C1,C4),cbind(C3,C2))
-      Cholesky <- as.matrix(Cholesky)
-      random.effects <- Zq%*%t(Cholesky)
-      b_al <- random.effects[,1:Objectlsjm$control$Objectlsmm$control$nb.e.a]
-      b_al <- matrix(b_al, ncol = Objectlsjm$control$Objectlsmm$control$nb.e.a)
-      tau_inter <- random.effects[,(Objectlsjm$control$Objectlsmm$control$nb.e.a+1)]
-      tau_inter <- matrix(tau_inter, ncol = 1)
-      tau_intra <- random.effects[,(Objectlsjm$control$Objectlsmm$control$nb.e.a+2)]
-      tau_intra <- matrix(tau_intra, ncol = 1)
-      sigma_inter <- exp(mu.inter + tau_inter)
-      var.inter <- sigma_inter**2
-      sigma_intra <- exp(mu.intra + tau_intra)
-      var.intra <- sigma_intra**2
-    }
-  }
-  else{
-    if(Objectlsjm$control$Objectlsmm$control$var_inter){
-      if(Objectlsjm$control$Objectlsmm$control$correlated_re){
-        C1 <- matrix(rep(0,(Objectlsjm$control$Objectlsmm$control$nb.e.a+1)**2),nrow=Objectlsjm$control$Objectlsmm$control$nb.e.a+1,ncol=Objectlsjm$control$Objectlsmm$control$nb.e.a+1)
-        C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
-        Cholesky <- as.matrix(C1)
-        random.effects <- Zq%*%t(Cholesky)
-        b_al <- random.effects[,1:Objectlsjm$control$Objectlsmm$control$nb.e.a]
-        b_al <- matrix(b_al, ncol = Objectlsjm$control$Objectlsmm$control$nb.e.a)
-        tau_inter <- random.effects[,(Objectlsjm$control$Objectlsmm$control$nb.e.a+1)]
-        tau_inter <- matrix(tau_inter, ncol = 1)
-        sigma_inter <- exp(mu.inter + tau_inter)
-        var.inter <- sigma_inter**2
-        sigma_intra <- sigma.epsilon.intra
-        var.intra <- sigma.epsilon.intra**2
 
-      }
-      else{
-        borne1 <- curseur + choose(n = Objectlsjm$control$Objectlsmm$control$nb.e.a, k = 2) + Objectlsjm$control$Objectlsmm$control$nb.e.a - 1
-        C1 <- matrix(rep(0,(Objectlsjm$control$Objectlsmm$control$nb.e.a)**2),nrow=Objectlsjm$control$Objectlsmm$control$nb.e.a,ncol=Objectlsjm$control$Objectlsmm$control$nb.e.a)
-        C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
-        C2 <-matrix(c(param[(borne1+1)]),nrow=1,ncol=1, byrow = TRUE)
-        C3 <- matrix(rep(0,Objectlsjm$control$Objectlsmm$control$nb.e.a), ncol = 1)
-        C4 <- matrix(rep(0,Objectlsjm$control$Objectlsmm$control$nb.e.a), nrow = 1)
-        Cholesky <- rbind(cbind(C1,C3),cbind(C4,C2))
-        Cholesky <- as.matrix(Cholesky)
-        random.effects <- Zq%*%t(Cholesky)
-        b_al <- random.effects[,1:Objectlsjm$control$Objectlsmm$control$nb.e.a]
-        b_al <- matrix(b_al, ncol = Objectlsjm$control$Objectlsmm$control$nb.e.a)
-        tau_inter <- random.effects[,(Objectlsjm$control$Objectlsmm$control$nb.e.a+1)]
-        tau_inter <- matrix(tau_inter, ncol = 1)
-        sigma_inter <- exp(mu.inter + tau_inter)
-        var.inter <- sigma_inter**2
-        sigma_intra <- sigma.epsilon.intra
-        var.intra <- sigma.epsilon.intra**2
-      }
-    }
-    else{
-      if(Objectlsjm$control$Objectlsmm$control$var_intra){
-        if(Objectlsjm$control$Objectlsmm$control$correlated_re){
-          C1 <- matrix(rep(0,(Objectlsjm$control$Objectlsmm$control$nb.e.a+1)**2),nrow=Objectlsjm$control$Objectlsmm$control$nb.e.a+1,ncol=Objectlsjm$control$Objectlsmm$control$nb.e.a+1)
-          C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
-          Cholesky <- as.matrix(C1)
-          random.effects <- Zq%*%t(Cholesky)
-          b_al <- random.effects[,1:Objectlsjm$control$Objectlsmm$control$nb.e.a]
-          b_al <- matrix(b_al, ncol = Objectlsjm$control$Objectlsmm$control$nb.e.a)
-          tau_intra <- random.effects[,(Objectlsjm$control$Objectlsmm$control$nb.e.a+1)]
-          tau_intra <- matrix(tau_intra, ncol = 1)
-          sigma_intra <- exp(mu.intra + tau_intra)
-          var.intra <- sigma_intra**2
-          sigma_inter <- sigma.epsilon.inter
-          var.inter <- sigma.epsilon.inter**2
-        }
-        else{
-          borne1 <- curseur + choose(n = Objectlsjm$control$Objectlsmm$control$nb.e.a, k = 2) + Objectlsjm$control$Objectlsmm$control$nb.e.a - 1
-          C1 <- matrix(rep(0,(Objectlsjm$control$Objectlsmm$control$nb.e.a)**2),nrow=Objectlsjm$control$Objectlsmm$control$nb.e.a,ncol=Objectlsjm$control$Objectlsmm$control$nb.e.a)
-          C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
-          C2 <-matrix(c(param[(borne1+1)]),nrow=1,ncol=1, byrow = TRUE)
-          C3 <- matrix(rep(0,Objectlsjm$control$Objectlsmm$control$nb.e.a), ncol = 1)
-          C4 <- matrix(rep(0,Objectlsjm$control$Objectlsmm$control$nb.e.a), nrow = 1)
-          Cholesky <- rbind(cbind(C1,C3),cbind(C4,C2))
-          Cholesky <- as.matrix(Cholesky)
-          random.effects <- Zq%*%t(Cholesky)
-          b_al <- random.effects[,1:Objectlsjm$control$Objectlsmm$control$nb.e.a]
-          b_al <- matrix(b_al, ncol = Objectlsjm$control$Objectlsmm$control$nb.e.a)
-          tau_intra <- random.effects[,(Objectlsjm$control$Objectlsmm$control$nb.e.a+1)]
-          tau_intra <- matrix(tau_intra, ncol = 1)
-          sigma_intra <- exp(mu.intra + tau_intra)
-          var.intra <- sigma_intra**2
-          sigma_inter <- sigma.epsilon.inter
-          var.inter <- sigma.epsilon.inter**2
-        }
-      }
-    }
-    if(!Objectlsjm$control$Objectlsmm$control$var_inter && !Objectlsjm$control$Objectlsmm$control$var_intra){
-      C1 <- matrix(rep(0,(length(param)-curseur)**2),nrow=length(param)-curseur,ncol=length(param)-curseur)
-      C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
-      Cholesky <- C1
-      Cholesky <- as.matrix(Cholesky)
-      random.effects <- Zq%*%t(Cholesky)
-      b_al <- random.effects[,1:Objectlsjm$control$Objectlsmm$control$nb.e.a]
-      b_al <- matrix(b_al, ncol = Objectlsjm$control$Objectlsmm$control$nb.e.a)
-      sigma_inter <- sigma.epsilon.inter
-      var.inter <- sigma.epsilon.inter**2
-      sigma_intra <- sigma.epsilon.intra
-      var.intra <- sigma.epsilon.intra**2
-    }
+  Zq1 <- spacefillr::generate_sobol_owen_set(nbQMC,  Objectlsjm$control$Objectlsmm$control$nb.e.a)
+  Zq <- apply(Zq1, 2, qnorm)
 
-  }
-
-  sigma_long <- var.inter+var.intra
-  corr_intra_inter <- var.intra*(2*var.inter+var.intra)
-
+  borne1 <- curseur + choose(n = Objectlsjm$control$Objectlsmm$control$nb.e.a, k = 2) + Objectlsjm$control$Objectlsmm$control$nb.e.a - 1
+  C1 <- matrix(rep(0,(Objectlsjm$control$Objectlsmm$control$nb.e.a)**2),nrow=Objectlsjm$control$Objectlsmm$control$nb.e.a,ncol=Objectlsjm$control$Objectlsmm$control$nb.e.a)
+  C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
+  Cholesky <- C1
+  Cholesky <- as.matrix(Cholesky)
+  random.effects <- Zq%*%t(Cholesky)
+  b_al <- random.effects[,1:Objectlsjm$control$Objectlsmm$control$nb.e.a]
+  b_al <- matrix(b_al, ncol = Objectlsjm$control$Objectlsmm$control$nb.e.a)
 
 
   if( "slope" %in%  Objectlsjm$control$sharedtype_01 || "slope" %in%  Objectlsjm$control$sharedtype_02){
@@ -278,71 +149,22 @@ predyn_ponct_lsjm_interintraCR <- function(Objectlsjm, data.long.until.time.s, s
   data.long.until.time.s.id <- data.long.until.time.s[1,]
 
   ### Longitudinal part
-
   list.long <- data.manag.long(Objectlsjm$control$Objectlsmm$control$formGroup,Objectlsjm$control$Objectlsmm$control$formFixed, Objectlsjm$control$Objectlsmm$control$formRandom,data.long.until.time.s)
   X_base <- list.long$X
-  U_base <- list.long$U
+  U <- list.long$U
   y.new.prog <- list.long$y.new.prog
 
-  ID.visit <- data.long.until.time.s[all.vars(Objectlsjm$control$Objectlsmm$control$formGroupVisit)][,1]; offset <- list.long$offset
-  Ind <- list.long$I
 
-  offset_ID <- c()
-  len_visit <- c(0)
-  for(oo in 1:Ind){
-    ID.visit_i <- ID.visit[offset[oo]:(offset[oo+1]-1)]
-    offset_ID_i <- as.vector(c(1, 1 + cumsum(tapply(ID.visit_i, ID.visit_i, length))))
-    len_visit <- c(len_visit,length(unique(ID.visit_i)))
-    frame_offset_ID_i <- cbind(offset_ID_i, rep(oo, length(offset_ID_i)))
-    offset_ID <- rbind(offset_ID, frame_offset_ID_i)
-  }
-  offset_position <- as.vector(c(1, 1 + cumsum(tapply(offset_ID[,2], offset_ID[,2], length))))
-
-
-  f_Y_b_sigma <- rep(0, nbQMC)
-  for(idvisit in 1:len_visit[2]){
-    X_base_i_id_visit <- X_base[offset_ID_i[idvisit],]
-    U_base_i_id_visit <- U_base[offset_ID_i[idvisit],]
-    y_i_id_visit <- y.new.prog[(offset_ID_i[idvisit]):(offset_ID_i[idvisit+1]-1)]# a verifier
-    n_ij <- length(y_i_id_visit)
-
-    CV_long <- (X_base_i_id_visit%*%beta)[1,1] + b_al %*% U_base_i_id_visit
-
-    if( n_ij == 1){
-      f_Y_b_sigma <-  f_Y_b_sigma + log(1.0 / (sqrt(2.0*pi)*sigma_long)) - 0.5*((y_i_id_visit[1]-CV_long)/sigma_long)**2
-    }
-    else{
-      if(n_ij == 2){
-        f_Y_b_sigma <- f_Y_b_sigma + log(1/(((2*pi)**(n_ij/2))*sqrt(corr_intra_inter)))-(1/(2*corr_intra_inter))*(((y_i_id_visit[1]-CV_long)**2)*sigma_long-2*(var.inter*(y_i_id_visit[1]-CV_long)*(y_i_id_visit[2]-CV_long))+
-                                                                                                                    ((y_i_id_visit[2]-CV_long)**2)*sigma_long)
-      }
-      else{
-        if(n_ij==3){
-          f_Y_b_sigma <- f_Y_b_sigma + log(1/(((2*pi)**(n_ij/2))*var.intra*sqrt(3*var.inter+var.intra)))-
-            (1/(2*(var.intra**2)*(var.intra+3*var.inter)))*((corr_intra_inter*((y_i_id_visit[1]-CV_long)**2+(y_i_id_visit[2]-CV_long)**2+(y_i_id_visit[3]-CV_long)**2))-
-                                                              2*var.inter*var.intra*((y_i_id_visit[1]-CV_long)*(y_i_id_visit[2]-CV_long) + (y_i_id_visit[1]-CV_long)*(y_i_id_visit[3]-CV_long) + (y_i_id_visit[2]-CV_long)*(y_i_id_visit[3]-CV_long)))
-        }
-        else{
-          somme1 <- rep(0, nbQMC)
-          somme2 <- rep(0, nbQMC)
-
-          for(k_somme in 1:n_ij){
-            somme1 <- somme1 + (y_i_id_visit[k_somme]-CV_long)**2
-            if(k_somme != n_ij){
-              for(l_somme in (k_somme+1):n_ij){
-                somme2 <- somme2 + (y_i_id_visit[k_somme]-CV_long)*(y_i_id_visit[l_somme]-CV_long)
-              }
-            }
-          }
-          f_Y_b_sigma <- f_Y_b_sigma + log(1/(((2*pi)**(n_ij/2))*sqrt((var.intra**(n_ij-1))*(var.intra+n_ij*var.inter))))-
-            (1/(2*(var.intra**(n_ij-1))*(var.intra+n_ij*var.inter)))*(var.intra**(n_ij-2)*(var.intra+(n_ij-1)*var.inter)*somme1 - 2*var.inter*(var.intra**(n_ij-2))*somme2)
-
-        }
-      }
-
+  if(is.null(nrow(X_base))){
+    CV <- (beta%*%X_base)[1,1] + b_al%*%U
+    f_Y_b_sigma <- dnorm(x=y.new.prog, mean = CV, sd = sigma_epsilon)
+  }else{
+    f_Y_b_sigma <- rep(1,nbQMC)
+    for(k in 1:nrow(X_base)){
+      CV <- (beta%*%X_base[k,])[1,1] + b_al%*%U[k,]
+      f_Y_b_sigma <- f_Y_b_sigma*dnorm(x = y.new.prog[k], mean = CV, sd = sigma_epsilon)
     }
   }
-  f_Y_b_sigma <- exp(f_Y_b_sigma)
 
   # Survival part
 
@@ -386,21 +208,15 @@ predyn_ponct_lsjm_interintraCR <- function(Objectlsjm, data.long.until.time.s, s
 
   if(Objectlsjm$control$hazard_baseline_01 == "Exponential"){
     mfZ <- model.frame(Objectlsjm$control$formSurv_01, data = data.long.until.time.s.id)
-    mfZ2 <- model.frame(Objectlsjm$control$formSurv_01, data = Objectlsjm$control$Objectlsmm$control$data.long[!duplicated(Objectlsjm$control$Objectlsmm$control$data.long$id),])
-    mfZ <- rbind(mfZ, mfZ2)
-    Z_01 <- model.matrix(Objectlsjm$control$formSurv_01, mfZ2)[1,]
+    Z_01 <- model.matrix(Objectlsjm$control$formSurv_01, mfZ)
   }else{
     if(Objectlsjm$control$hazard_baseline_01 == "Weibull" || Objectlsjm$control$hazard_baseline_01 == "Gompertz"){
       mfZ <- model.frame(Objectlsjm$control$formSurv_01, data = data.long.until.time.s.id)
-      mfZ2 <- model.frame(Objectlsjm$control$formSurv_01, data = Objectlsjm$control$Objectlsmm$control$data.long[!duplicated(Objectlsjm$control$Objectlsmm$control$data.long$id),])
-      mfZ <- rbind(mfZ, mfZ2)
-      Z_01 <- model.matrix(Objectlsjm$control$formSurv_01, mfZ2)[1,]
+      Z_01 <- model.matrix(Objectlsjm$control$formSurv_01, mfZ)
     }else{
       if(Objectlsjm$control$hazard_baseline_01 == "Splines"){
         mfZ <- model.frame(Objectlsjm$control$formSurv_01, data = data.long.until.time.s.id)
-        mfZ2 <- model.frame(Objectlsjm$control$formSurv_01, data = Objectlsjm$control$Objectlsmm$control$data.long[!duplicated(Objectlsjm$control$Objectlsmm$control$data.long$id),])
-        mfZ <- rbind(mfZ, mfZ2)
-        Z_01 <- model.matrix(Objectlsjm$control$formSurv_01, mfZ2)[1,]
+        Z_01 <- model.matrix(Objectlsjm$control$formSurv_01, mfZ)
         Z_01 <- Z_01[,-1]
         Bs_01 <- splines::splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_01, c(t(st.1)), ord = 4L)
         Bs.den_01 <- splines::splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_01, c(t(st.den)), ord = 4L)
@@ -412,21 +228,15 @@ predyn_ponct_lsjm_interintraCR <- function(Objectlsjm, data.long.until.time.s, s
 
   if(Objectlsjm$control$hazard_baseline_02 == "Exponential"){
     mfZ <- model.frame(Objectlsjm$control$formSurv_02, data = data.long.until.time.s.id)
-    mfZ2 <- model.frame(Objectlsjm$control$formSurv_02, data = Objectlsjm$control$Objectlsmm$control$data.long[!duplicated(Objectlsjm$control$Objectlsmm$control$data.long$id),])
-    mfZ <- rbind(mfZ, mfZ2)
-    Z_02 <- model.matrix(Objectlsjm$control$formSurv_02, mfZ2)[1,]
+    Z_02 <- model.matrix(Objectlsjm$control$formSurv_02, mfZ)
   }else{
     if(Objectlsjm$control$hazard_baseline_02 == "Weibull" || Objectlsjm$control$hazard_baseline_02 == "Gompertz"){
       mfZ <- model.frame(Objectlsjm$control$formSurv_02, data = data.long.until.time.s.id)
-      mfZ2 <- model.frame(Objectlsjm$control$formSurv_02, data = Objectlsjm$control$Objectlsmm$control$data.long[!duplicated(Objectlsjm$control$Objectlsmm$control$data.long$id),])
-      mfZ <- rbind(mfZ, mfZ2)
-      Z_02 <- model.matrix(Objectlsjm$control$formSurv_02, mfZ2)[1,]
+      Z_02 <- model.matrix(Objectlsjm$control$formSurv_02, mfZ)
     }else{
       if(Objectlsjm$control$hazard_baseline_02 == "Splines"){
         mfZ <- model.frame(Objectlsjm$control$formSurv_02, data = data.long.until.time.s.id)
-        mfZ2 <- model.frame(Objectlsjm$control$formSurv_02, data = Objectlsjm$control$Objectlsmm$control$data.long[!duplicated(Objectlsjm$control$Objectlsmm$control$data.long$id),])
-        mfZ <- rbind(mfZ, mfZ2)
-        Z_02 <- model.matrix(Objectlsjm$control$formSurv_02, mfZ2)[1,]
+        Z_02 <- model.matrix(Objectlsjm$control$formSurv_02, mfZ)
         Z_02 <- Z_02[,-1]
         Bs_02 <- splines::splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_02, c(t(st.1)), ord = 4L)
         Bs.den_02 <- splines::splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_02, c(t(st.den)), ord = 4L)
@@ -466,36 +276,6 @@ predyn_ponct_lsjm_interintraCR <- function(Objectlsjm, data.long.until.time.s, s
   etaBaseline_0_s_02 <- 0; survLong_0_s_02 <- 0; etaBaseline_0_u_01 <- 0; survLong_0_u_01 <- 0;
   etaBaseline_0_u_02 <- 0; survLong_0_u_02 <- 0
 
-
-  if(c("variability inter" %in% Objectlsjm$control$sharedtype_01)){
-    if(event == 1){
-      survLong_s_t_0k <- etaBaseline_s_t_0k + c(alpha.inter_01*sigma_inter)
-    }
-    survLong_0_s_01 <- survLong_0_s_01 + c(alpha.inter_01*sigma_inter)
-    survLong_0_u_01 <- survLong_0_u_01 + c(alpha.inter_01*sigma_inter)
-  }
-  if(c("variability inter" %in% Objectlsjm$control$sharedtype_02)){
-    if(event == 2){
-      survLong_s_t_0k <- survLong_s_t_0k + c(alpha.inter_02*sigma_inter)
-    }
-    survLong_0_s_02 <- survLong_0_s_02 + c(alpha.inter_02*sigma_inter)
-    survLong_0_u_02 <- survLong_0_u_02 + c(alpha.inter_02*sigma_inter)
-  }
-
-  if(c("variability intra" %in% Objectlsjm$control$sharedtype_01)){
-    if(event == 1){
-      survLong_s_t_0k <- survLong_s_t_0k + c(alpha.intra_01*sigma_intra)
-    }
-    survLong_0_s_01 <- survLong_0_s_01 + c(alpha.intra_01*sigma_intra)
-    survLong_0_u_01 <- survLong_0_u_01 + c(alpha.intra_01*sigma_intra)
-  }
-  if(c("variability intra" %in% Objectlsjm$control$sharedtype_02)){
-    if(event == 2){
-      survLong_s_t_0k <- survLong_s_t_0k + c(alpha.intra_02*sigma_intra)
-    }
-    survLong_0_s_02 <- survLong_0_s_02 + c(alpha.intra_02*sigma_intra)
-    survLong_0_u_02 <- survLong_0_u_02 + c(alpha.intra_02*sigma_intra)
-  }
 
   if(c("random effects") %in% Objectlsjm$control$sharedtype_01){
     survLong_0_s_01 <- survLong_0_s_01 + c(b_al%*%alpha_b_01)
@@ -552,8 +332,6 @@ predyn_ponct_lsjm_interintraCR <- function(Objectlsjm, data.long.until.time.s, s
       }
     }
   }
-
-
 
   wk <- wk.1
   if(Objectlsjm$control$hazard_baseline_01 == "Exponential"){
@@ -618,7 +396,7 @@ predyn_ponct_lsjm_interintraCR <- function(Objectlsjm, data.long.until.time.s, s
       }
       else{
         if(Objectlsjm$control$hazard_baseline_02 == "Splines"){
-          mat_h0s <- matrix(gamma_01,ncol=1)
+          mat_h0s <- matrix(gamma_02,ncol=1)
           h_0.GK_0_s_02 <- t((wk*exp(Bs.den_02%*%mat_h0s)))
           h_0.GK_0_u_02 <- exp(Bs_0_u_02%*%mat_h0s)*rep(wk, length(wk))
           if(event == 2){

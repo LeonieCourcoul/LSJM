@@ -24,9 +24,9 @@ dynpred.lsjm_classicIDM <- function(Objectlsjm,newdata,  s, horizon,  IC = 95, n
     pred.boot <- c()
     pred.ponct <- c()
     for(t in window){
-      pred.ponct <- c(pred.ponct,predyn_ponct_lsjm_classicCR(Objectlsjm,  data.long.until.time.s, s, t, event))
+      pred.ponct <- c(pred.ponct,predyn_ponct_lsjm_classicIDM(Objectlsjm,  data.long.until.time.s, s, t, event))
       if(!is.null(IC)){
-        pred.boot <- cbind(pred.boot, predyn_boot_lsjm_classicCR(Objectlsjm, data.long.until.time.s, s, t, event, nb.draws) )
+        pred.boot <- cbind(pred.boot, predyn_boot_lsjm_classicIDM(Objectlsjm, data.long.until.time.s, s, t, event, nb.draws) )
       }
     }
     if(!is.null(IC)){

@@ -1935,9 +1935,9 @@ predict.lsjm_interintraIDM <- function(Objectlsmm, which = "RE", Objectranef = N
 
     cat("Cumulative risks")
     for(id_boucle in 1:nrow(data.id)){
-      Cum_risk_01i <- c()
-      Cum_risk_02i  <- c()
-      Cum_risk_12i <- c()
+      Cum_risk_01i <- c(data.id$id[id_boucle])
+      Cum_risk_02i  <- c(data.id$id[id_boucle])
+      Cum_risk_12i <- c(data.id$id[id_boucle])
       for(j in 1:length((grid.time))){
         #if(grid.time[j]>2 && id_boucle == 147){
         #  browser()

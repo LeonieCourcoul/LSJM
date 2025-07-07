@@ -1,4 +1,4 @@
-predyn_boot_lsjm_interintraCR <- function(Objectlsjm, data.long.until.time.s, s, window, event, nb.draws){
+predyn_boot_lsjm_interintraIDM <- function(Objectlsjm, data.long.until.time.s, s, window, event, nb.draws){
 
 
   if(is.null(Objectlsjm$result_step2)){
@@ -260,6 +260,49 @@ predyn_boot_lsjm_interintraCR <- function(Objectlsjm, data.long.until.time.s, s,
       alpha.intra_02 <- param[curseur]
       curseur <- curseur + 1
     }
+
+    ## Risque 12
+    if(Objectlsjm$control$hazard_baseline_12 == "Weibull"){
+      shape_12 <- param[curseur]**2
+      curseur <- curseur + 1
+    }
+    if(Objectlsjm$control$hazard_baseline_12 == "Gompertz"){
+      Gompertz.1_12 <- param[curseur]**2
+      Gompertz.2_12 <- param[curseur+1]
+      curseur <- curseur + 2
+    }
+    if(Objectlsjm$control$hazard_baseline_12 == "Splines"){
+      gamma_12 <- param[(curseur):(curseur+Objectlsjm$control$nb.knots.splines[3]-2+1)]
+      curseur <- curseur + Objectlsjm$control$nb.knots.splines[3]-2+ 2
+    }
+    ### Covariables :
+    nb.alpha_12 <- Objectlsjm$control$nb.alpha[3]
+    if(nb.alpha_12 >=1){
+      alpha_12 <-  param[(curseur):(curseur+nb.alpha_12-1)]
+      curseur <- curseur+nb.alpha_12
+    }
+    ### Association
+    if("random effects" %in% Objectlsjm$control$sharedtype_12){
+      alpha_b_12 <- param[curseur:(curseur+Objectlsjm$control$Objectlsmm$control$nb.e.a-1)]
+      curseur <- curseur + Objectlsjm$control$Objectlsmm$control$nb.e.a
+    }
+    if("value" %in% Objectlsjm$control$sharedtype_12){
+      alpha.current_12 <- param[curseur]
+      curseur <- curseur + 1
+    }
+    if("slope" %in% Objectlsjm$control$sharedtype_12){
+      alpha.slope_12 <- param[curseur]
+      curseur <- curseur + 1
+    }
+    if("variability inter" %in% Objectlsjm$control$sharedtype_12){
+      alpha.inter_12 <- param[curseur]
+      curseur <- curseur + 1
+    }
+    if("variability intra" %in% Objectlsjm$control$sharedtype_12){
+      alpha.intra_12 <- param[curseur]
+      curseur <- curseur + 1
+    }
+
 
     ## Marker
     ### Fixed effects

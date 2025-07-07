@@ -19,6 +19,7 @@ plot.lsjm_interintraIDM <- function(Objectlsjm, which = 'long.fit', Objectpredic
   ObjectpredictY <- Objectpredict$predictY
 
 
+
   if(which == 'long.fit'){
     formFixed <- Objectlsmm$control$formFixed
     timeVar <- Objectlsmm$control$timeVar
@@ -154,9 +155,38 @@ plot.lsjm_interintraIDM <- function(Objectlsjm, which = 'long.fit', Objectpredic
     Cum_02.quant <- apply(Cum_02.cum,2,quantile, probs = c(0.025,0.5,0.975))
     Cum_12.quant <- apply(Cum_12.cum,2,quantile, probs = c(0.025,0.5,0.975))
 
-    Cum_01_pred <- apply(Objectpredict$predictCum_01,2,mean)
-    Cum_02_pred <- apply(Objectpredict$predictCum_02,2,mean)
-    Cum_12_pred <- apply(Objectpredict$predictCum_12,2,mean)
+    predictCum_01 <- Objectpredict$predictCum_01
+    colnames(predictCum_01) <- c("ID", paste0("t", 1:(ncol(predictCum_01)-1)))
+    predictCum_02 <- Objectpredict$predictCum_02
+    colnames(predictCum_02) <- c("ID", paste0("t", 1:(ncol(predictCum_02)-1)))
+    predictCum_12 <- Objectpredict$predictCum_12
+    colnames(predictCum_12) <- c("ID", paste0("t", 1:(ncol(predictCum_12)-1)))
+    predictCum_01 <- as.data.frame(predictCum_01)
+    predictCum_02 <- as.data.frame(predictCum_02)
+    predictCum_12 <- as.data.frame(predictCum_12)
+    data.long <- Objectlsmm$control$data.long
+    data.id <- data.long[!duplicated(data.long$id),]
+    Time.R.var <- as.character(Objectlsjm$control$Time$Time_R[[2]])
+    Time.L.var <- as.character(Objectlsjm$control$Time$Time_L[[2]])
+    Time.T.var <- as.character(Objectlsjm$control$Time$Time_T[[2]])
+    event1.var <- as.character(Objectlsjm$control$deltas$delta1[[2]])
+    Cum_01_pred <- c()
+    Cum_02_pred <- c()
+    Cum_12_pred <- c()
+    for(i in 2:ncol(predictCum_01)){
+      id.01 <- data.id$id[which(data.id[,Time.R.var]>Objectpredict$grid.time.Cum[i])]
+      id.02 <- data.id$id[which(data.id[,Time.T.var]>Objectpredict$grid.time.Cum[i] & (data.id[,event1.var] == 0 | (data.id[,event1.var] == 1 & data.id[,Time.R.var]>Objectpredict$grid.time.Cum[i])))]
+      id.12 <- data.id$id[which(data.id[,Time.T.var]>Objectpredict$grid.time.Cum[i] & data.id[,Time.L.var]<Objectpredict$grid.time.Cum[i] & data.id[,event1.var] == 1)]
+      Cum_01_pred <- c(Cum_01_pred, mean(predictCum_01[which(predictCum_01$ID %in% id.01),i]))
+      Cum_02_pred <- c(Cum_02_pred, mean(predictCum_02[which(predictCum_02$ID %in% id.02),i]))
+      Cum_12_pred <- c(Cum_12_pred, mean(predictCum_12[which(predictCum_01$ID %in% id.12),i]))
+    }
+
+
+    #Cum_01_pred <- apply(Objectpredict$predictCum_01,2,mean)
+    #Cum_02_pred <- apply(Objectpredict$predictCum_02,2,mean)
+    #Cum_12_pred <- apply(Objectpredict$predictCum_12,2,mean)
+#
 
     data_tot <- cbind(Objectpredict$grid.time.Cum, Cum_01Smooth_est$cumulative.intensity, Cum_02Smooth_est$cumulative.intensity, Cum_12Smooth_est$cumulative.intensity,
                       Cum_01.quant[1,],Cum_01.quant[2,],Cum_01.quant[3,],

@@ -9,6 +9,7 @@ lsmm_interintra <- function(formFixed, formRandom, formGroup,
                 S1 , S2,
                 nproc , clustertype, maxiter, print.info ,
                 file, epsa, epsb, epsd, binit){
+
   X_base <- list.long$X
   X_base <- as.matrix(X_base)
   U_base <- list.long$U

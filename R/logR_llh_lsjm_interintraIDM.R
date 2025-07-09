@@ -328,7 +328,6 @@ logR_llh_lsjm_interintraIDM <- function(param,hazard_baseline_01, sharedtype_01,
     offset_ID <- Case1[["offset_ID"]]; len_visit <-  Case1[["len_visit"]]; offset_position <- Case1[["offset_position"]]
     ck = list(sk_GK = sk_GK, Time_L = Time_L, wk = wk, rep_wk = rep_wk)
 
-    browser()
     ll_glob[1:nbCase1] <- log_llh_lsjm_interintraIDM_C1(sharedtype, HB,  Gompertz,  Weibull,
                                                 nb_points_integral,  alpha_inter_intra,
                                                 alpha_y_slope, alpha_b, alpha_z,  gamma_z0,  beta, beta_slope,

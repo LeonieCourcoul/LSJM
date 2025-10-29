@@ -7,6 +7,7 @@
 #' @param object Either a lsmm object or a lsjm object
 #' @param which A vector of characters to indicate which predictions are computed. "RE" corresponds to the random effects, "Y" to the marker and "Cum" to the cumulative risk function(s) (only in the case of a lsjm object)
 #' @param data.long A dataframe which contains the longitudinal data for making predictions.
+#' @param Objectranef an object from ranef function which contains the predicted random effects for each individual. The Default is NULL and the predict functions should compute the random effects.
 #'
 #' @return A table for each type of prediction (RE/Y/Cum)
 #' \describe{
@@ -21,7 +22,8 @@
 #' threeC$age.visit65 <- (threeC$age.visit-65)/10
 #' threeC$SBP <- threeC$SBP/10
 #' threeC <- threeC
-#' threeC <- threeC %>% group_by(ID, num.visit) %>% mutate(SBPvisit = mean(SBP))
+#' threeC <- dplyr::group_by(threeC, ID, num.visit)
+#' threeC <- dplyr::mutate(threeC, SBPvisit = mean(SBP))
 #' threeC_ex1 <- threeC[!duplicated(threeC[, c("ID", "num.visit")]), c("ID", "SBPvisit", "age.visit65", "sex")]
 #'
 #' m1 <- lsmm(formFixed = SBPvisit ~ age.visit65,
@@ -42,9 +44,9 @@
 #' head(pred.m1$predictRE)
 #' head(pred.m1$predictY)
 #'
-#' l1 <- ... *to be completed*
+#' #l1 <- ... *to be completed*
 #'
-#' pred.l1 <- predict(l1, which = c("RE","Y","Cum"), data.long = threeC_ex1)
+#' #pred.l1 <- predict(l1, which = c("RE","Y","Cum"), data.long = threeC_ex1)
 #'
 #'
 #' }

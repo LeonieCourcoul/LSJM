@@ -24,11 +24,11 @@
 #' @param sharedtype_01 a vector indicating the form(s) of the dependence structure. If the longitudinal model estimated is a standard mixed model, it should be included in c("value", "slope", "random effects"). If it is a location-scale mixed model with a covariate and time-dependent variability one can add "variability" and if it a model distinguishing within from between visits variabilities one can add c("variability inter", "variability intra") if there are subject-specifics.
 #' @param sharedtype_02 a vector indicating the form(s) of the dependence structure. If the longitudinal model estimated is a standard mixed model, it should be included in c("value", "slope", "random effects"). If it is a location-scale mixed model with a covariate and time-dependent variability one can add "variability" and if it a model distinguishing within from between visits variabilities one can add c("variability inter", "variability intra") if there are subject-specifics.
 #' @param sharedtype_12 a vector indicating the form(s) of the dependence structure. If the longitudinal model estimated is a standard mixed model, it should be included in c("value", "slope", "random effects"). If it is a location-scale mixed model with a covariate and time-dependent variability one can add "variability" and if it a model distinguishing within from between visits variabilities one can add c("variability inter", "variability intra") if there are subject-specifics.
-#' @param hazardBase_01 a character providing the baseline hazard function, which is in c("Exponential", "Weibull", "Gompertz", "Splines")} of the risk function for transition 0-1
-#' @param hazardBase_02 a character providing the baseline hazard function, which is in c("Exponential", "Weibull", "Gompertz", "Splines")} of the risk function for transition 0-2
-#' @param hazardBase_12 a character providing the baseline hazard function, which is in c("Exponential", "Weibull", "Gompertz", "Splines")} of the risk function for transition 1-2
+#' @param hazardBase_01 a character providing the baseline hazard function, which is in c("Exponential", "Weibull", "Gompertz", "Splines") of the risk function for transition 0-1
+#' @param hazardBase_02 a character providing the baseline hazard function, which is in c("Exponential", "Weibull", "Gompertz", "Splines") of the risk function for transition 0-2
+#' @param hazardBase_12 a character providing the baseline hazard function, which is in c("Exponential", "Weibull", "Gompertz", "Splines") of the risk function for transition 1-2
 #' @param delta1 a one-sided formula with on the right-side the variable corresponding to the indicator of interest event (1 for subject experimenting the event and 0 for others).
-#' @param delta2 a one-sided formula with on the right-side the variable corresponding to the indicator $\delta_{1i}$ of second event (1 for subject experimenting the event and 0 for others).
+#' @param delta2 a one-sided formula with on the right-side the variable corresponding to the indicator \eqn{\delta_{1i}} of second event (1 for subject experimenting the event and 0 for others).
 #' @param Time_T a one-sided formula with on the right-side the variable corresponding to the time of event
 #' @param Time_L In case of an IDM model: a one-side formula with a variable giving the time of last time in state (0)
 #' @param Time_R In case of an IDM model: a one-side formula with a variable providing the first time time known in state (1)
@@ -44,12 +44,12 @@
 #' @param binit optional initials parameters.
 #' @param nproc An integer : the number of processors for parallel computing
 #' @param clustertype one of the supported types from \code{makeCluster} function
-#' @param maxiter
-#' @param print.info
-#' @param file
-#' @param epsa
-#' @param epsb
-#' @param epsd
+#' @param maxiter optional maximum number of iterations for the Marquardt iterative algorithm. By default, maxiter=500.
+#' @param print.info logical indicating if information about computation should be reported. Default to FALSE.
+#' @param file optional character giving the name of the file where the outputs of each iteration should be written (if print.info=TRUE).
+#' @param epsa optional threshold for the convergence criterion based on the parameter stability. By default, convB=0.0001.
+#' @param epsb optional threshold for the convergence criterion based on the log-likelihood stability. By default, convL=0.0001.
+#' @param epsd optional threshold for the convergence criterion based on the derivatives. By default, convG=0.0001.
 #'
 #' @import survival
 #' @import flexsurv

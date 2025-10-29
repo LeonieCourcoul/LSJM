@@ -1,3 +1,10 @@
+#' @importFrom stats quantile qnorm
+#' @importFrom utils head tail
+#' @importFrom survival Surv survreg coxph
+#' @importFrom flexsurv flexsurvreg
+#' @importFrom splines splineDesign
+#' @importFrom spacefillr generate_sobol_owen_set
+#' @importFrom marqLevAlg marqLevAlg
 lsjm_classicSingle <- function(Objectlsmm, Time, deltas, hazard_baseline_01,  nb.knots.splines,
                            formSurv_01,   nb_pointsGK, sharedtype_01, formSlopeFixed, formSlopeRandom,
                            index_beta_slope , index_b_slope,timeVar,
@@ -34,7 +41,7 @@ lsjm_classicSingle <- function(Objectlsmm, Time, deltas, hazard_baseline_01,  nb
   data.id$Time_T[which(data.id$Time_T == 0)] <- 1e-20
   if(hazard_baseline_01 == "Splines"){
     pp <- seq(0,1, length.out = nb.knots.splines[1]+2)
-    pp <- utils::tail(utils::head(pp,-1),-1)
+    pp <- tail(head(pp,-1),-1)
     vec.time.01 <- data.id[which(data.id$delta1==1),"Time_T"]
     kn <- quantile(vec.time.01, pp, names = FALSE)
     kn <- kn[kn<max(data.id$Time_T)]
@@ -74,8 +81,8 @@ lsjm_classicSingle <- function(Objectlsmm, Time, deltas, hazard_baseline_01,  nb
       else{
         if(hazard_baseline_01 == "Splines"){
           list.GK_T <- data.GaussKronrod(data.id, a = 0, b = data.id$Time_T, k = nb_pointsGK)
-          B <- splines::splineDesign(knots_01, data.id$Time_T, ord = 4L)
-          Bs <- splines::splineDesign(knots_01, c(t(list.GK_T$st)), ord = 4L)
+          B <- splineDesign(knots_01, data.id$Time_T, ord = 4L)
+          Bs <- splineDesign(knots_01, c(t(list.GK_T$st)), ord = 4L)
           opt_splines_01 <- optim(rep(0,ncol(B)), fn2,event = data.id$delta1,W2 = B,P = list.GK_T$P,wk = list.GK_T$wk,
                                   Time = data.id$Time_T,W2s = Bs,id.GK = list.GK_T$id.GK, method="BFGS", hessian = T)
           tmp_model <- coxph(Surv_01,
@@ -209,7 +216,7 @@ lsjm_classicSingle <- function(Objectlsmm, Time, deltas, hazard_baseline_01,  nb
     binit_CR <- c(binit_CR, Objectlsmm$result_step2$b)
   }
 
-  Zq1 <- spacefillr::generate_sobol_owen_set(S1,  nb.e.a)
+  Zq1 <- generate_sobol_owen_set(S1,  nb.e.a)
   Zq <- apply(Zq1, 2, qnorm)
 
   if(is.null(binit)){
@@ -239,7 +246,7 @@ lsjm_classicSingle <- function(Objectlsmm, Time, deltas, hazard_baseline_01,  nb
 
   if(!is.null(S2)){
     message(paste("Second estimation with ", S2, " QMC draws"))
-    Zq1 <- spacefillr::generate_sobol_owen_set(S2,  nb.e.a)
+    Zq1 <- generate_sobol_owen_set(S2,  nb.e.a)
     Zq <- apply(Zq1, 2, qnorm)
 
     estimation2 <- marqLevAlg(estimation1$b, fn = logR_llh_lsjm_classicSingle, minimize = FALSE,

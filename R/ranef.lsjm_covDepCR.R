@@ -1,6 +1,12 @@
 #' @rdname ranef
+#' @importFrom splines splineDesign
+#' @importFrom parallel detectCores makeCluster stopCluster
+#' @importFrom doParallel registerDoParallel
+#' @importFrom foreach foreach %dopar%
+#' @importFrom mvtnorm rmvnorm
+#' @importFrom marqLevAlg marqLevAlg
+#' @method ranef lsjm_covDepCR
 #' @export
-#'
 
 ranef.lsjm_covDepCR <- function(object,...){
 
@@ -378,7 +384,7 @@ ranef.lsjm_covDepCR <- function(object,...){
 
 
     while(random.effects_i$istop <1){
-      binit <- mvtnorm::rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
+      binit <- rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
       random.effects_i <- marqLevAlg(binit, fn = re_lsjm_covDepCR, minimize = FALSE,
 
                                      nb.e.a = x$control$Objectlsmm$control$nb.e.a, nb.e.a.sigma = x$control$Objectlsmm$control$nb.e.a.sigma, Sigma.re = MatCov,

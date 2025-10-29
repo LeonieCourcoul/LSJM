@@ -1,17 +1,24 @@
 #' @rdname predict
+#' @importFrom splines splineDesign
+#' @importFrom parallel detectCores makeCluster stopCluster
+#' @importFrom doParallel registerDoParallel
+#' @importFrom foreach foreach %dopar%
+#' @importFrom mvtnorm rmvnorm
+#' @importFrom marqLevAlg marqLevAlg
 #' @export
-#'
 
-predict.lsjm_covDepCR <- function(Objectlsmm, which = "RE", Objectranef = NULL, data.long = NULL){
+predict.lsjm_covDepCR <- function(object, which = "RE", Objectranef = NULL, data.long = NULL){
 
-  if(missing(Objectlsmm)) stop("The argument Objectlsmm must be specified")
-  #if(!inherits((Objectlsmm),"lsjm_covDepCR")) stop("use only \"lsjm_covDepCR\" objects")
+  Objectlsjm <- object
+
+  if(missing(Objectlsjm)) stop("The argument Objectlsjm must be specified")
+  #if(!inherits((Objectlsjm),"lsjm_covDepCR")) stop("use only \"lsjm_covDepCR\" objects")
   #if(missing(data.long)) stop("The argument data.long must be specified")
   if(!inherits((data.long),"data.frame")) stop("use only \"data.frame\" objects")
   if(missing(which)) stop("The argument which must be specified")
   if(!inherits((which),"character")) stop("The argument which must be a character object")
 
-  x <- Objectlsmm
+  x <- Objectlsjm
   if(x$result_step1$istop != 1|| (!is.null(x$result_step2) && x$result_step2$istop !=1)){
     stop("The model didn't reach convergence.")
   }
@@ -400,7 +407,7 @@ predict.lsjm_covDepCR <- function(Objectlsmm, which = "RE", Objectranef = NULL, 
                                                         file = "", blinding = FALSE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4, multipleTry = 100)
 
                          while(random.effects_i$istop >1){
-                           binit <- mvtnorm::rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
+                           binit <- rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
                            random.effects_i <- marqLevAlg(binit, fn = re_lsjm_covDepCR, minimize = FALSE,
 
                                                           nb.e.a = x$control$Objectlsmm$control$nb.e.a, nb.e.a.sigma = x$control$Objectlsmm$control$nb.e.a.sigma, Sigma.re = MatCov,
@@ -498,7 +505,7 @@ predict.lsjm_covDepCR <- function(Objectlsmm, which = "RE", Objectranef = NULL, 
                              }
                              if(x$control$hazard_baseline_01 == "Splines"){
                                st_j <- st_calc.sort.unique[j,]
-                               Bs_j <- splines::splineDesign(x$control$knots.hazard_baseline.splines_01, st_j, ord = 4L)
+                               Bs_j <- splineDesign(x$control$knots.hazard_baseline.splines_01, st_j, ord = 4L)
                                #Bs_j <- Bs[(x$control$nb_pointsGK*(j-1)+1):(x$control$nb_pointsGK*j),]
                                mat_h0s <- matrix(gamma_01,ncol=1)
                                h_0.GK_01 <- (wk*exp(Bs_j%*%mat_h0s))
@@ -529,7 +536,7 @@ predict.lsjm_covDepCR <- function(Objectlsmm, which = "RE", Objectranef = NULL, 
                              }
                              if(x$control$hazard_baseline_02 == "Splines"){
                                st_j <- st_calc.sort.unique[j,]
-                               Bs_j <- splines::splineDesign(x$control$knots.hazard_baseline.splines_02, st_j, ord = 4L)
+                               Bs_j <- splineDesign(x$control$knots.hazard_baseline.splines_02, st_j, ord = 4L)
                                #Bs_j <- Bs[(x$control$nb_pointsGK*(j-1)+1):(x$control$nb_pointsGK*j),]
                                mat_h0s <- matrix(gamma_02,ncol=1)
                                h_0.GK_02 <- (wk*exp(Bs_j%*%mat_h0s))
@@ -663,7 +670,7 @@ predict.lsjm_covDepCR <- function(Objectlsmm, which = "RE", Objectranef = NULL, 
           }
           if(x$control$hazard_baseline_01 == "Splines"){
             st_j <- st_calc.sort.unique[j,]
-            Bs_j <- splines::splineDesign(x$control$knots.hazard_baseline.splines_01, st_j, ord = 4L)
+            Bs_j <- splineDesign(x$control$knots.hazard_baseline.splines_01, st_j, ord = 4L)
             #Bs_j <- Bs[(x$control$nb_pointsGK*(j-1)+1):(x$control$nb_pointsGK*j),]
             mat_h0s <- matrix(gamma_01,ncol=1)
             h_0.GK_01 <- (wk*exp(Bs_j%*%mat_h0s))
@@ -694,7 +701,7 @@ predict.lsjm_covDepCR <- function(Objectlsmm, which = "RE", Objectranef = NULL, 
           }
           if(x$control$hazard_baseline_02 == "Splines"){
             st_j <- st_calc.sort.unique[j,]
-            Bs_j <- splines::splineDesign(x$control$knots.hazard_baseline.splines_02, st_j, ord = 4L)
+            Bs_j <- splineDesign(x$control$knots.hazard_baseline.splines_02, st_j, ord = 4L)
             #Bs_j <- Bs[(x$control$nb_pointsGK*(j-1)+1):(x$control$nb_pointsGK*j),]
             mat_h0s <- matrix(gamma_02,ncol=1)
             h_0.GK_02 <- (wk*exp(Bs_j%*%mat_h0s))

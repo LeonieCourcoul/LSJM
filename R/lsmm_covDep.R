@@ -1,3 +1,6 @@
+#' @importFrom stats quantile qnorm
+#' @importFrom spacefillr generate_sobol_owen_set
+#' @importFrom marqLevAlg marqLevAlg
 lsmm_covDep <- function(formFixed, formRandom, formGroup,
                         formFixedVar, formRandomVar,correlated_re ,
                         data.long, idVar, list.long, time.prog1,
@@ -62,7 +65,7 @@ lsmm_covDep <- function(formFixed, formRandom, formGroup,
   }
   nb.beta <- length(priorMean.beta)
 
-  Zq1 <- spacefillr::generate_sobol_owen_set(S1,  nb.e.a+nb.e.a.sigma)
+  Zq1 <- generate_sobol_owen_set(S1,  nb.e.a+nb.e.a.sigma)
   Zq <- apply(Zq1, 2, qnorm)
 
   if(!is.null(binit_initial)){
@@ -88,7 +91,7 @@ lsmm_covDep <- function(formFixed, formRandom, formGroup,
   estimation2 <- NULL
   info_conv_step2 <- NULL
   if(!is.null(S2)){
-    Zq2 <- spacefillr::generate_sobol_owen_set(S2,  nb.e.a+nb.e.a.sigma)
+    Zq2 <- generate_sobol_owen_set(S2,  nb.e.a+nb.e.a.sigma)
     Zq <- apply(Zq2, 2, qnorm)
 
 

@@ -1,6 +1,6 @@
-#' @rdname plot
-#' @import ggplot2
-#' @export
+#' @importFrom stats quantile qnorm
+#' @importFrom spacefillr generate_sobol_owen_set
+#' @importFrom marqLevAlg marqLevAlg
 #'
 
 lsmm_interintra <- function(formFixed, formRandom, formGroup,
@@ -147,16 +147,16 @@ lsmm_interintra <- function(formFixed, formRandom, formGroup,
   }
 
   if(var_inter && var_intra){
-    Zq1 <- spacefillr::generate_sobol_owen_set(S1,  nb.e.a+2)
+    Zq1 <- generate_sobol_owen_set(S1,  nb.e.a+2)
     Zq <- apply(Zq1, 2, qnorm)
   }
   else{
     if(var_inter || var_intra){
-      Zq1 <- spacefillr::generate_sobol_owen_set(S1,  nb.e.a+1)
+      Zq1 <- generate_sobol_owen_set(S1,  nb.e.a+1)
       Zq <- apply(Zq1, 2, qnorm)
     }
     else{
-      Zq1 <- spacefillr::generate_sobol_owen_set(S1,  nb.e.a)
+      Zq1 <- generate_sobol_owen_set(S1,  nb.e.a)
       Zq <- apply(Zq1, 2, qnorm)
     }
   }
@@ -186,16 +186,16 @@ lsmm_interintra <- function(formFixed, formRandom, formGroup,
   info_conv_step2 <- NULL
   if(!is.null(S2)){
     if(var_inter && var_intra){
-      Zq1 <- spacefillr::generate_sobol_owen_set(S2,  nb.e.a+2)
+      Zq1 <- generate_sobol_owen_set(S2,  nb.e.a+2)
       Zq <- apply(Zq1, 2, qnorm)
     }
     else{
       if(var_inter || var_intra){
-        Zq1 <- spacefillr::generate_sobol_owen_set(S2,  nb.e.a+1)
+        Zq1 <- generate_sobol_owen_set(S2,  nb.e.a+1)
         Zq <- apply(Zq1, 2, qnorm)
       }
       else{
-        Zq1 <- spacefillr::generate_sobol_owen_set(S2,  nb.e.a)
+        Zq1 <- generate_sobol_owen_set(S2,  nb.e.a)
         Zq <- apply(Zq1, 2, qnorm)
       }
     }

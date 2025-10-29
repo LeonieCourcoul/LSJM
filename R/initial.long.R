@@ -13,7 +13,7 @@
 #' \item{\code{priorMean.beta}}{the estimated parameters for fixed effects in the linear mixed effects model}
 #' \item{\code{sigma}}{the estimated sigma of the model}
 #' }
-#' @importFrom lcmm hlme
+#' @importFrom stats lm
 #'
 
 initial.long <- function(formFixed, formRandom, idVar, data.long1, ncX, nproc = nproc){

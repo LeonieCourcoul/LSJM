@@ -1,4 +1,4 @@
-#' Plot of a fitted model
+#' Plot methods for lsjm/lsmm objects
 #'
 #' This function produces different plots (longitudinal and survival goodness-of-fit,
 #' individual trajectory) of a fitted object of class \code{lsmm} or \code{lsjm}.
@@ -10,11 +10,15 @@
 #' For a \code{lsjm} object only, with \code{which="link"}, the function
 #' allows to assess the fit of the survival submodel. For each transition, the predicted cumulative hazard function at each event time is computed given the predicted random effects. Then the mean of the predicted cumulative hazard functions are compared with there Nelson-Aalen estimator in the case of a single event or with competing risks. For an illness-death model, the predicted cumulative hazard function for each transition is compared to an illness-death model estimated by penalized likelihood accounting for interval censoring with the \code{SmoothHazard} package
 #'
-#' @param object A \code{lsmm} or a \code{lsjm} object
+#' @param x A \code{lsmm} or a \code{lsjm} object
 #' @param which A character indicating which plot must be display,
-#' @param predictObject An object of the \code{predict} function
+#' @param Objectpredict An object of the \code{predict} function
 #' @param break.times A vector of breaking times to create windows if \code{which = 'long.fit'}
 #' @param ID.ind A vector providing the id of subjects for whom we we wish to trace the individual trajectory.
+#' @param ObjectSmoothHazard A SmoothHazard object (only for IDM survival model)
+#' @param xlim the x limits (x1, x2) of the plot. The default value, NULL, indicates that the range of the finite values to be plotted should be used.
+#' @param ylim the y limits (y1, y2) of the plot. The default value, NULL, indicates that the range of the finite values to be plotted should be used.
+#' @param ... Further arguments passed to [graphics::plot()] or other methods.
 #'
 #' @examples
 #'
@@ -84,10 +88,12 @@
 #' }
 #'
 #'
-#' @name plot
-#' @rdname plot
+#' @name plot.lsjm
+#' @rdname plot.lsjm
 #'
-#' @export
 #'
 #'
 NULL
+
+
+

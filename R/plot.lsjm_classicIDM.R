@@ -1,11 +1,16 @@
-#' @rdname plot
-#' @import ggplot2
+#' @rdname plot.lsjm
+#' @importFrom graphics plot par
+#' @importFrom dplyr left_join
+#' @importFrom ggplot2 ggplot aes geom_pointrange geom_point scale_x_continuous scale_y_continuous theme element_blank element_line element_text ggtitle coord_cartesian geom_line geom_ribbon facet_wrap scale_color_manual guide_legend guides scale_fill_manual geom_step scale_linetype_manual
+#' @importFrom survminer surv_fit ggsurvplot
+#' @importFrom survival Surv
+#' @importFrom SmoothHazard intensity
+#' @importFrom mvtnorm rmvnorm
 #' @export
-#'
-
-plot.lsjm_classicIDM <- function(Objectlsjm, which = 'long.fit', Objectpredict, break.times = NULL, ID.ind = NULL, ObjectSmoothHazard  = NULL, xlim = NULL, ylim = NULL){
+plot.lsjm_classicIDM <- function(x, which = 'long.fit', Objectpredict, break.times = NULL, ID.ind = NULL, ObjectSmoothHazard  = NULL, xlim = NULL, ylim = NULL, ...){
 
 
+  Objectlsjm <- x
   Objectlsmm <- Objectlsjm$control$Objectlsmm
   if(is.null(Objectpredict)){
     stop("Not implemented")
@@ -13,8 +18,8 @@ plot.lsjm_classicIDM <- function(Objectlsjm, which = 'long.fit', Objectpredict, 
 
   graph <- NULL
 
-  oldpar <- graphics::par(no.readonly = TRUE) # code line i
-  on.exit(graphics::par(oldpar)) # code line i + 1
+  oldpar <- par(no.readonly = TRUE) # code line i
+  on.exit(par(oldpar)) # code line i + 1
 
   ObjectpredictY <- Objectpredict$predictY
 
@@ -37,22 +42,22 @@ plot.lsjm_classicIDM <- function(Objectlsjm, which = 'long.fit', Objectpredict, 
     IC.sup <- mean.obs + 1.96*sd.obs/sqrt(length.obs)
     ObjectpredictY$time.new.pred <- ObjectpredictY$time
     data.long$time.new.pred <- data.long[,timeVar]
-    prediction <- dplyr::left_join(ObjectpredictY[,c("id","predY", "time.new.pred")], data.long[,c("id", "window", "time.new.pred")])
+    prediction <- left_join(ObjectpredictY[,c("id","predY", "time.new.pred")], data.long[,c("id", "window", "time.new.pred")])
     mean.pred <- by(prediction$predY, prediction$window, mean)
     obstime.mean <- by(data.long[,timeVar], data.long$window, mean)
     df <- cbind(obstime.mean, mean.obs, IC.sup, IC.inf, mean.pred)
     df <- as.data.frame(df)
-    k <- ggplot2::ggplot(df,  ggplot2::aes(obstime.mean, mean.obs, ymin = IC.sup, ymax = IC.inf))
-    graph.fit.long <- k +  ggplot2::geom_pointrange( ggplot2::aes(ymin = IC.sup, ymax = IC.inf), shape =1) +
-      ggplot2::geom_point(ggplot2::aes(obstime.mean, mean.pred), size = 3, shape = 17) +
-      ggplot2::scale_x_continuous(name = "Time") +
-      ggplot2::scale_y_continuous(name = "Current Value") +
-      ggplot2::theme(panel.grid.major = ggplot2::element_blank(), panel.grid.minor = ggplot2::element_blank(),
-                     panel.background = ggplot2::element_blank(), axis.line = ggplot2::element_line(colour = "black"),
-                     axis.text=ggplot2::element_text(size=15),
-                     axis.title=ggplot2::element_text(size=18),
-                     plot.title = ggplot2::element_text(size = 20, face = "bold"))+
-      ggplot2::ggtitle("Longitudinal goodness-of-fit")
+    k <- ggplot(df,  aes(obstime.mean, mean.obs, ymin = IC.sup, ymax = IC.inf))
+    graph.fit.long <- k +  geom_pointrange( aes(ymin = IC.sup, ymax = IC.inf), shape =1) +
+      geom_point(aes(obstime.mean, mean.pred), size = 3, shape = 17) +
+      scale_x_continuous(name = "Time") +
+      scale_y_continuous(name = "Current Value") +
+      theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                     panel.background = element_blank(), axis.line = element_line(colour = "black"),
+                     axis.text=element_text(size=15),
+                     axis.title=element_text(size=18),
+                     plot.title = element_text(size = 20, face = "bold"))+
+      ggtitle("Longitudinal goodness-of-fit")
     graph <- list(long.fit = graph.fit.long)
   }
 
@@ -73,26 +78,26 @@ plot.lsjm_classicIDM <- function(Objectlsjm, which = 'long.fit', Objectpredict, 
       pred.CV.id$CI.inf <- pred.CV.id$predY - 1.96*pred.CV.id$predSD
 
       #browser()
-      traj_ind <- ggplot2::ggplot() +
+      traj_ind <- ggplot() +
 
-        ggplot2::geom_line(pred.CV.id, mapping = aes(x=time, y=predY, group = id, color = 'Predicted'))+
-        ggplot2::geom_line(pred.CV.id, mapping = aes(x=time, y=CI.sup, group = id,  color = 'Predicted'),linetype = 2)+
-        ggplot2::geom_line(pred.CV.id, mapping = aes(x=time, y=CI.inf, group = id,  color = 'Predicted'),linetype = 2)+
+        geom_line(pred.CV.id, mapping = aes(x=time, y=predY, group = id, color = 'Predicted'))+
+        geom_line(pred.CV.id, mapping = aes(x=time, y=CI.sup, group = id,  color = 'Predicted'),linetype = 2)+
+        geom_line(pred.CV.id, mapping = aes(x=time, y=CI.inf, group = id,  color = 'Predicted'),linetype = 2)+
 
-        ggplot2::geom_ribbon( pred.CV.id,mapping=
+        geom_ribbon( pred.CV.id,mapping=
                                 aes(x=time,ymin=CI.inf,ymax=CI.sup), fill="#998ec3", alpha=0.3,linetype = 3)+
 
-        ggplot2::geom_point(pred.CV.id, mapping = aes(x=time, y=y, group = id,color = "Observed"),shape =17)+
+        geom_point(pred.CV.id, mapping = aes(x=time, y=y, group = id,color = "Observed"),shape =17)+
         xlab("Time") + ylab("Y") +
 
-        ggplot2::facet_wrap(~id, ncol = 3)+
-        ggplot2::scale_color_manual(name='',
+        facet_wrap(~id, ncol = 3)+
+        scale_color_manual(name='',
                                     breaks=c('Predicted', 'Observed'),
                                     values=c('Predicted'='#998ec3', 'Observed'='#000000'),
                                     guide = guide_legend(override.aes = list(
                                       linetype = c(rep("solid", 1), "blank"),
                                       shape = c(NA,  17))))+
-        ggplot2::theme(
+        theme(
           panel.background = element_blank(),
           legend.position = "bottom",
           legend.box = "vertical",
@@ -100,9 +105,9 @@ plot.lsjm_classicIDM <- function(Objectlsjm, which = 'long.fit', Objectpredict, 
           #axis.title.y = element_text(color = "black", size = 10),
           panel.grid = element_blank(),
           #legend.key = element_blank(),
-          axis.text=ggplot2::element_text(size=15),
-          axis.title=ggplot2::element_text(size=18),
-          plot.title = ggplot2::element_text(size = 20, face = "bold"),
+          axis.text=element_text(size=15),
+          axis.title=element_text(size=18),
+          plot.title = element_text(size = 20, face = "bold"),
           legend.text = element_text(color = "black", size = 14),
           axis.line = element_line(color = "black",
                                    linetype = "solid")
@@ -132,7 +137,7 @@ plot.lsjm_classicIDM <- function(Objectlsjm, which = 'long.fit', Objectpredict, 
     Cum_02.cum <- c()
     Cum_12.cum <- c()
     for(boot in 1:5000){
-      tirage <- mvtnorm::rmvnorm(1, mean = c(ObjectSmoothHazard$theta01,ObjectSmoothHazard$theta02,ObjectSmoothHazard$theta12), sigma = V)
+      tirage <- rmvnorm(1, mean = c(ObjectSmoothHazard$theta01,ObjectSmoothHazard$theta02,ObjectSmoothHazard$theta12), sigma = V)
       Cum_01Smooth <- intensity(times = Objectpredict$grid.time.Cum, knots = ObjectSmoothHazard$knots01,
                                 number.knots = ObjectSmoothHazard$nknots01,
                                 theta = tirage[1:(ObjectSmoothHazard$nknots01+2)]^2)
@@ -176,30 +181,30 @@ plot.lsjm_classicIDM <- function(Objectlsjm, which = 'long.fit', Objectpredict, 
 
 
     survB <- ggplot() +
-      ggplot2::geom_line(data = data_tot, mapping = aes(x = time, y = Cum_01_pred, color = "Cum_01_pred", linetype = "Joint Model"), linewidth = 1.5) +
-      ggplot2::geom_line(data = data_tot, mapping = aes(x = time, y = Cum_02_pred, color = "Cum_02_pred", linetype = "Joint Model"), linewidth = 1.5) +
-      ggplot2::geom_line(data = data_tot, mapping = aes(x = time, y = Cum_12_pred, color = "Cum_12_pred", linetype = "Joint Model"), linewidth = 1.5) +
-      ggplot2::geom_ribbon(data = data_tot, mapping = aes(x = time, ymin = Cum_01_2.5, ymax = Cum_01_97.5, fill = "Cum_01_pred"), alpha = 0.2) +
-      ggplot2::geom_ribbon(data = data_tot, mapping = aes(x = time, ymin = Cum_02_2.5, ymax = Cum_02_97.5, fill = "Cum_02_pred"), alpha = 0.2) +
-      ggplot2::geom_ribbon(data = data_tot, mapping = aes(x = time, ymin = Cum_12_2.5, ymax = Cum_12_97.5, fill = "Cum_12_pred"), alpha = 0.2) +
-      ggplot2::geom_line(data = data_tot, mapping = aes(x = time, y = Cum_01_est, color = "Cum_01_pred", linetype = "Smooth Hazard"), linewidth = 1.2) +
-      ggplot2::geom_line(data = data_tot, mapping = aes(x = time, y = Cum_02_est, color = "Cum_02_pred", linetype = "Smooth Hazard"), linewidth = 1.2) +
-      ggplot2::geom_line(data = data_tot, mapping = aes(x = time, y = Cum_12_est, color = "Cum_12_pred", linetype = "Smooth Hazard"), linewidth = 1.2) +
+      geom_line(data = data_tot, mapping = aes(x = time, y = Cum_01_pred, color = "Cum_01_pred", linetype = "Joint Model"), linewidth = 1.5) +
+      geom_line(data = data_tot, mapping = aes(x = time, y = Cum_02_pred, color = "Cum_02_pred", linetype = "Joint Model"), linewidth = 1.5) +
+      geom_line(data = data_tot, mapping = aes(x = time, y = Cum_12_pred, color = "Cum_12_pred", linetype = "Joint Model"), linewidth = 1.5) +
+      geom_ribbon(data = data_tot, mapping = aes(x = time, ymin = Cum_01_2.5, ymax = Cum_01_97.5, fill = "Cum_01_pred"), alpha = 0.2) +
+      geom_ribbon(data = data_tot, mapping = aes(x = time, ymin = Cum_02_2.5, ymax = Cum_02_97.5, fill = "Cum_02_pred"), alpha = 0.2) +
+      geom_ribbon(data = data_tot, mapping = aes(x = time, ymin = Cum_12_2.5, ymax = Cum_12_97.5, fill = "Cum_12_pred"), alpha = 0.2) +
+      geom_line(data = data_tot, mapping = aes(x = time, y = Cum_01_est, color = "Cum_01_pred", linetype = "Smooth Hazard"), linewidth = 1.2) +
+      geom_line(data = data_tot, mapping = aes(x = time, y = Cum_02_est, color = "Cum_02_pred", linetype = "Smooth Hazard"), linewidth = 1.2) +
+      geom_line(data = data_tot, mapping = aes(x = time, y = Cum_12_est, color = "Cum_12_pred", linetype = "Smooth Hazard"), linewidth = 1.2) +
       xlab("Age (years)") +
       ylab("Cumulative intensity functions") +
-      ggplot2::ggtitle("B")+
-      ggplot2::scale_color_manual(values = c("Cum_01_pred" = "#f1a340", "Cum_02_pred" = "#998ec3", "Cum_12_pred" = "palegreen3"
+      ggtitle("B")+
+      scale_color_manual(values = c("Cum_01_pred" = "#f1a340", "Cum_02_pred" = "#998ec3", "Cum_12_pred" = "palegreen3"
       ),
       labels = c("Cum_01_pred" = "Transition 0 -> 1",
                  "Cum_02_pred" = "Transition 0 -> 2",
                  "Cum_12_pred" = "Transition 1 -> 2")) +
-      ggplot2::scale_fill_manual(values = c("Cum_01_pred" = "#f1a340", "Cum_02_pred" = "#998ec3", "Cum_12_pred" = "palegreen3"),
+      scale_fill_manual(values = c("Cum_01_pred" = "#f1a340", "Cum_02_pred" = "#998ec3", "Cum_12_pred" = "palegreen3"),
                                  labels = c("Cum_01_pred" = "Transition 0 -> 1",
                                             "Cum_02_pred" = "Transition 0 -> 2",
                                             "Cum_12_pred" = "Transition 1 -> 2")) +
-      ggplot2::scale_linetype_manual(values = c("Joint Model" = 3, "Smooth Hazard" = 1)) +
+      scale_linetype_manual(values = c("Joint Model" = 3, "Smooth Hazard" = 1)) +
 
-      ggplot2::theme(
+      theme(
         panel.background = element_blank(),
         legend.position = "bottom",
         legend.box = "vertical",
@@ -210,7 +215,7 @@ plot.lsjm_classicIDM <- function(Objectlsjm, which = 'long.fit', Objectpredict, 
         axis.line = element_line(color = "black", linetype = "solid"),
         axis.text = element_text(size = 14, color = "black")
       ) +
-      ggplot2::guides(color = guide_legend(title = "", nrow = 1, byrow = TRUE,keywidth = 4),
+      guides(color = guide_legend(title = "", nrow = 1, byrow = TRUE,keywidth = 4),
                       fill = guide_legend(title = "",keywidth = 4),
                       linetype = guide_legend(title = "", keywidth = 4, keyheight = 1))
 

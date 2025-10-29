@@ -1,3 +1,6 @@
+#' @importFrom stats quantile qnorm
+#' @importFrom spacefillr generate_sobol_owen_set
+#' @importFrom marqLevAlg marqLevAlg
 lsmm_classic <- function(formFixed, formRandom, formGroup,
                         data.long, idVar, list.long, time.prog1,
                         S1 , S2,
@@ -31,7 +34,7 @@ lsmm_classic <- function(formFixed, formRandom, formGroup,
   nb.chol <- length(cholesky_b)
   nb.beta <- length(priorMean.beta)
 
-  Zq1 <- spacefillr::generate_sobol_owen_set(S1,  nb.e.a)
+  Zq1 <- generate_sobol_owen_set(S1,  nb.e.a)
   Zq <- apply(Zq1, 2, qnorm)
 
   if(!is.null(binit_initial)){
@@ -44,7 +47,7 @@ lsmm_classic <- function(formFixed, formRandom, formGroup,
   }
 
   message(paste("First estimation with ", S1, " QMC draws"))
-  estimation1 <- marqLevAlg::marqLevAlg(binit, fn = log_llh_lsmm_classic, minimize = FALSE,
+  estimation1 <- marqLevAlg(binit, fn = log_llh_lsmm_classic, minimize = FALSE,
                            nb.e.a = nb.e.a, nb.beta = nb.beta, S = S1,Zq = Zq, X_base = X_base, offset = offset,
                            U_base = U_base, y.new.prog = list.long$y.new, Ind = Ind,
                            nproc = nproc, clustertype = clustertype, maxiter = maxiter, print.info = print.info,
@@ -54,11 +57,11 @@ lsmm_classic <- function(formFixed, formRandom, formGroup,
   info_conv_step2 <- NULL
 
   if(!is.null(S2)){
-    Zq2 <- spacefillr::generate_sobol_owen_set(S2,  nb.e.a)
+    Zq2 <- generate_sobol_owen_set(S2,  nb.e.a)
     Zq <- apply(Zq2, 2, qnorm)
 
     message(paste("Second estimation with ", S2, " QMC draws"))
-    estimation2 <- marqLevAlg::marqLevAlg(estimation1$b, fn = log_llh_lsmm_classic, minimize = FALSE,
+    estimation2 <- marqLevAlg(estimation1$b, fn = log_llh_lsmm_classic, minimize = FALSE,
                                           nb.e.a = nb.e.a, nb.beta = nb.beta, S = S2,Zq = Zq, X_base = X_base, offset = offset,
                                           U_base = U_base, y.new.prog = list.long$y.new, Ind = Ind,
                                           nproc = nproc, clustertype = clustertype, maxiter = maxiter, print.info = print.info,

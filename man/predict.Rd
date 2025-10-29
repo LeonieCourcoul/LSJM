@@ -3,8 +3,9 @@
 %   R/predict.lsjm_classicIDM.R, R/predict.lsjm_classicSingle.R,
 %   R/predict.lsjm_covDepCR.R, R/predict.lsjm_covDepIDM.R,
 %   R/predict.lsjm_covDepSingle.R, R/predict.lsjm_interintraCR.R,
-%   R/predict.lsjm_interintraIDM.R, R/predict.lsmm_classic.R,
-%   R/predict.lsmm_covDep.R, R/predict.lsmm_interintra.R
+%   R/predict.lsjm_interintraIDM.R, R/predict.lsjm_interintraSingle.R,
+%   R/predict.lsmm_classic.R, R/predict.lsmm_covDep.R,
+%   R/predict.lsmm_interintra.R
 \name{predict}
 \alias{predict}
 \alias{predict.lsjm_classicCR}
@@ -15,26 +16,29 @@
 \alias{predict.lsjm_covDepSingle}
 \alias{predict.lsjm_interintraCR}
 \alias{predict.lsjm_interintraIDM}
+\alias{predict.lsjm_interintraSingle}
 \alias{predict.lsmm_classic}
 \alias{predict.lsmm_covDep}
 \alias{predict.lsmm_interintra}
 \title{Prediction of some quantities for each subjects}
 \usage{
-\method{predict}{lsjm_classicCR}(Objectlsmm, which = "RE", Objectranef = NULL, data.long = NULL)
+\method{predict}{lsjm_classicCR}(object, which = "RE", Objectranef = NULL, data.long = NULL)
 
-\method{predict}{lsjm_classicIDM}(Objectlsjm, which = "RE", Objectranef = NULL, data.long = NULL)
+\method{predict}{lsjm_classicIDM}(object, which = "RE", Objectranef = NULL, data.long = NULL)
 
-\method{predict}{lsjm_classicSingle}(Objectlsjm, which = "RE", Objectranef = NULL, data.long = NULL)
+\method{predict}{lsjm_classicSingle}(object, which = "RE", Objectranef = NULL, data.long = NULL)
 
-\method{predict}{lsjm_covDepCR}(Objectlsmm, which = "RE", Objectranef = NULL, data.long = NULL)
+\method{predict}{lsjm_covDepCR}(object, which = "RE", Objectranef = NULL, data.long = NULL)
 
-\method{predict}{lsjm_covDepIDM}(Objectlsmm, which = "RE", Objectranef = NULL, data.long = NULL)
+\method{predict}{lsjm_covDepIDM}(object, which = "RE", Objectranef = NULL, data.long = NULL)
 
-\method{predict}{lsjm_covDepSingle}(Objectlsmm, which = "RE", Objectranef = NULL, data.long = NULL)
+\method{predict}{lsjm_covDepSingle}(object, which = "RE", Objectranef = NULL, data.long = NULL)
 
-\method{predict}{lsjm_interintraCR}(Objectlsmm, which = "RE", Objectranef = NULL, data.long = NULL)
+\method{predict}{lsjm_interintraCR}(object, which = "RE", Objectranef = NULL, data.long = NULL)
 
-\method{predict}{lsjm_interintraIDM}(Objectlsmm, which = "RE", Objectranef = NULL, data.long = NULL)
+\method{predict}{lsjm_interintraIDM}(object, which = "RE", Objectranef = NULL, data.long = NULL)
+
+\method{predict}{lsjm_interintraSingle}(object, which = "RE", Objectranef = NULL, data.long = NULL)
 
 \method{predict}{lsmm_classic}(object, which = "RE", Objectranef = NULL, data.long = NULL)
 
@@ -43,11 +47,13 @@
 \method{predict}{lsmm_interintra}(object, which = "RE", Objectranef = NULL, data.long = NULL)
 }
 \arguments{
+\item{object}{Either a lsmm object or a lsjm object}
+
 \item{which}{A vector of characters to indicate which predictions are computed. "RE" corresponds to the random effects, "Y" to the marker and "Cum" to the cumulative risk function(s) (only in the case of a lsjm object)}
 
-\item{data.long}{A dataframe which contains the longitudinal data for making predictions.}
+\item{Objectranef}{an object from ranef function which contains the predicted random effects for each individual. The Default is NULL and the predict functions should compute the random effects.}
 
-\item{object}{Either a lsmm object or a lsjm object}
+\item{data.long}{A dataframe which contains the longitudinal data for making predictions.}
 }
 \value{
 A table for each type of prediction (RE/Y/Cum)
@@ -67,7 +73,8 @@ data(threeC)
 threeC$age.visit65 <- (threeC$age.visit-65)/10
 threeC$SBP <- threeC$SBP/10
 threeC <- threeC
-threeC <- threeC \%>\% group_by(ID, num.visit) \%>\% mutate(SBPvisit = mean(SBP))
+threeC <- dplyr::group_by(threeC, ID, num.visit)
+threeC <- dplyr::mutate(threeC, SBPvisit = mean(SBP))
 threeC_ex1 <- threeC[!duplicated(threeC[, c("ID", "num.visit")]), c("ID", "SBPvisit", "age.visit65", "sex")]
 
 m1 <- lsmm(formFixed = SBPvisit ~ age.visit65,
@@ -88,9 +95,9 @@ pred.m1 <- predict(m1, which = c("RE","Y"), data.long = threeC_ex1)
 head(pred.m1$predictRE)
 head(pred.m1$predictY)
 
-l1 <- ... *to be completed*
+#l1 <- ... *to be completed*
 
-pred.l1 <- predict(l1, which = c("RE","Y","Cum"), data.long = threeC_ex1)
+#pred.l1 <- predict(l1, which = c("RE","Y","Cum"), data.long = threeC_ex1)
 
 
 }

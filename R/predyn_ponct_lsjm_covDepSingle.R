@@ -1,3 +1,7 @@
+#' @importFrom splines splineDesign
+#' @importFrom stats model.frame model.matrix qnorm dnorm
+#' @importFrom spacefillr generate_sobol_owen_set
+
 predyn_ponct_lsjm_covDepSingle <- function(Objectlsjm, data.long.until.time.s, s, window){
 
 
@@ -62,7 +66,7 @@ predyn_ponct_lsjm_covDepSingle <- function(Objectlsjm, data.long.until.time.s, s
   curseur <- curseur+Objectlsjm$control$Objectlsmm$control$nb.omega
 
 
-  Zq1 <- spacefillr::generate_sobol_owen_set(nbQMC,  Objectlsjm$control$Objectlsmm$control$nb.e.a+Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma)
+  Zq1 <- generate_sobol_owen_set(nbQMC,  Objectlsjm$control$Objectlsmm$control$nb.e.a+Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma)
   Zq <- apply(Zq1, 2, qnorm)
 
   if(Objectlsjm$control$Objectlsmm$control$correlated_re){
@@ -184,8 +188,8 @@ predyn_ponct_lsjm_covDepSingle <- function(Objectlsjm, data.long.until.time.s, s
         mfZ <- model.frame(Objectlsjm$control$formSurv_01, data = data.long.until.time.s.id)
         Z_01 <- model.matrix(Objectlsjm$control$formSurv_01, mfZ)
         Z_01 <- Z_01[,-1]
-        Bs_01 <- splines::splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_01, c(t(st.1)), ord = 4L)
-        Bs.den_01 <- splines::splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_01, c(t(st.den)), ord = 4L)
+        Bs_01 <- splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_01, c(t(st.1)), ord = 4L)
+        Bs.den_01 <- splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_01, c(t(st.den)), ord = 4L)
       }else{
         stop("This type of base survival function is not implemented.")
       }

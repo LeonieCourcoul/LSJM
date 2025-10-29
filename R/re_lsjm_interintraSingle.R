@@ -1,3 +1,4 @@
+#' @importFrom mvtnorm dmvnorm
 re_lsjm_interintraSingle <- function(param, nb.e.a, variability_inter_visit, variability_intra_visit, Sigma.re,
                                  sharedtype, HB, Gompertz, Weibull, nb_pointsGK,
                                  alpha_y_slope, alpha_inter_intra, alpha_b_01,alpha_z,  gamma_z0,  beta,  beta_slope,  wk,
@@ -21,12 +22,12 @@ re_lsjm_interintraSingle <- function(param, nb.e.a, variability_inter_visit, var
   }
   if(variability_inter_visit && variability_intra_visit){
     tau_re <- param[,(nb.e.a+1):(nb.e.a+2)]
-    f_b_tau <- mvtnorm::dmvnorm(x = c(b_re, tau_re), mean = rep(0,length(b_re)+length(tau_re)), sigma = Sigma.re)
+    f_b_tau <- dmvnorm(x = c(b_re, tau_re), mean = rep(0,length(b_re)+length(tau_re)), sigma = Sigma.re)
   }
   else{
     if(variability_inter_visit){
       tau_re <- param[,(nb.e.a+1)]
-      f_b_tau <- mvtnorm::dmvnorm(x = c(b_re, tau_re), mean = rep(0,length(b_re)+length(tau_re)), sigma = Sigma.re)
+      f_b_tau <- dmvnorm(x = c(b_re, tau_re), mean = rep(0,length(b_re)+length(tau_re)), sigma = Sigma.re)
       sigma_inter <- exp(mu.inter + tau_re[1])
       var.inter <- sigma_inter**2
       sigma_intra <- sigma.epsilon.intra
@@ -35,14 +36,14 @@ re_lsjm_interintraSingle <- function(param, nb.e.a, variability_inter_visit, var
     else{
       if(variability_intra_visit){
         tau_re <- param[,(nb.e.a+1)]
-        f_b_tau <- mvtnorm::dmvnorm(x = c(b_re, tau_re), mean = rep(0,length(b_re)+length(tau_re)), sigma = Sigma.re)
+        f_b_tau <- dmvnorm(x = c(b_re, tau_re), mean = rep(0,length(b_re)+length(tau_re)), sigma = Sigma.re)
         sigma_inter <- sigma.epsilon.inter
         var.inter <- sigma.epsilon.inter**2
         sigma_intra <- sigma.epsilon.intra
         var.intra <- sigma.epsilon.intra**2
       }
       else{
-        f_b_tau <- mvtnorm::dmvnorm(x = c(b_re), mean = rep(0,length(b_re)), sigma = Sigma.re)
+        f_b_tau <- dmvnorm(x = c(b_re), mean = rep(0,length(b_re)), sigma = Sigma.re)
         sigma_inter <- sigma.epsilon.inter
         var.inter <- sigma.epsilon.inter**2
         sigma_intra <- sigma.epsilon.intra

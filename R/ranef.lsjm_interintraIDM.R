@@ -1,6 +1,12 @@
 #' @rdname ranef
+#' @importFrom splines splineDesign
+#' @importFrom parallel detectCores makeCluster stopCluster
+#' @importFrom doParallel registerDoParallel
+#' @importFrom foreach foreach %dopar%
+#' @importFrom mvtnorm rmvnorm
+#' @importFrom marqLevAlg marqLevAlg
+#' @method ranef lsjm_interintraIDM
 #' @export
-#'
 
 ranef.lsjm_interintraIDM <- function(object,...){
 
@@ -584,7 +590,7 @@ ranef.lsjm_interintraIDM <- function(object,...){
                                      file = "", blinding = TRUE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4, multipleTry = 100)
 
       while(random.effects_i$istop !=1){
-        binit <- mvtnorm::rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
+        binit <- rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
         random.effects_i <- marqLevAlg(binit, fn = re_lsjm_interintraIDMCase1, minimize = FALSE, nb.e.a = x$control$Objectlsmm$control$nb.e.a, variability_inter_visit = x$control$Objectlsmm$control$var_inter,
                                        variability_intra_visit = x$control$Objectlsmm$control$var_intra, Sigma.re = MatCov,
                                        sharedtype = sharedtype, HB = HB, Gompertz = Gompertz, Weibull = Weibull, nb_pointsGK = x$control$nb_pointsGK, alpha_inter_intra = alpha_inter_intra,
@@ -877,7 +883,7 @@ ranef.lsjm_interintraIDM <- function(object,...){
                                      file = "", blinding = TRUE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4, multipleTry = 100)
 
       while(random.effects_i$istop !=1){
-        binit <- mvtnorm::rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
+        binit <- rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
         random.effects_i <-  marqLevAlg(binit, fn = re_lsjm_interintraIDMCase1Bis, minimize = FALSE,nb.e.a = x$control$Objectlsmm$control$nb.e.a, variability_inter_visit = x$control$Objectlsmm$control$var_inter,
                                         variability_intra_visit = x$control$Objectlsmm$control$var_intra, Sigma.re = MatCov,
                                         sharedtype = sharedtype, HB = HB, Gompertz = Gompertz, Weibull = Weibull, nb_pointsGK = x$control$nb_pointsGK, alpha_inter_intra = alpha_inter_intra,
@@ -1114,7 +1120,7 @@ ranef.lsjm_interintraIDM <- function(object,...){
                                      file = "", blinding = TRUE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4, multipleTry = 100)
 
       while(random.effects_i$istop !=1){
-        binit <- mvtnorm::rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
+        binit <- rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
         random.effects_i <- marqLevAlg(binit, fn = re_lsjm_interintraIDMCase2, minimize = FALSE,
 
                                        nb.e.a = x$control$Objectlsmm$control$nb.e.a, variability_inter_visit = x$control$Objectlsmm$control$var_inter,
@@ -1350,7 +1356,7 @@ ranef.lsjm_interintraIDM <- function(object,...){
     st_T_i <- c(0); st_T0_i <- c(0); st_0_LT_i <- as.matrix(0);
 
     for(id.Case3_boucle in 1:nbCase3){
-      #binit <- mvtnorm::rmvnorm(1, mean = rep(0, x$control$Objectlsmm$control$nb.e.a+2), MatCov)
+      #binit <- rmvnorm(1, mean = rep(0, x$control$Objectlsmm$control$nb.e.a+2), MatCov)
       if("value" %in% x$control$sharedtype_01 || "value" %in% x$control$sharedtype_02 || "value" %in% x$control$sharedtype_12){
         X_T_i <- X_T[id.Case3_boucle,];U_T_i <- U_T[id.Case3_boucle,]
         X_GK_T_i <- as.matrix(X_GK_T[(x$control$nb_pointsGK*(id.Case3_boucle-1)+1):(x$control$nb_pointsGK*id.Case3_boucle),]);U_GK_T_i <- as.matrix(U_GK_T[(x$control$nb_pointsGK*(id.Case3_boucle-1)+1):(x$control$nb_pointsGK*id.Case3_boucle),])
@@ -1448,7 +1454,7 @@ ranef.lsjm_interintraIDM <- function(object,...){
                                      nproc = x$control$nproc, clustertype = x$control$clustertype, maxiter = x$control$maxiter, print.info = FALSE,
                                      file = "", blinding = TRUE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4, multipleTry = 100)
       while(random.effects_i$istop !=1){
-        binit <- mvtnorm::rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
+        binit <- rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
         random.effects_i <- marqLevAlg(binit, fn = re_lsjm_interintraIDMCase3, minimize = FALSE,nb.e.a = x$control$Objectlsmm$control$nb.e.a, variability_inter_visit = x$control$Objectlsmm$control$var_inter,
                                        variability_intra_visit = x$control$Objectlsmm$control$var_intra, Sigma.re = MatCov,
                                        sharedtype = sharedtype, HB = HB, Gompertz = Gompertz, Weibull = Weibull, nb_pointsGK = x$control$nb_pointsGK, alpha_inter_intra = alpha_inter_intra,

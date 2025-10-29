@@ -1,25 +1,26 @@
-#' @import ggplot2
+#' @rdname plot.lsjm
+#' @importFrom graphics plot par
+#' @importFrom dplyr left_join
+#' @importFrom ggplot2 ggplot aes geom_pointrange geom_point scale_x_continuous scale_y_continuous theme element_blank element_line element_text ggtitle coord_cartesian geom_line geom_ribbon facet_wrap scale_color_manual guide_legend guides scale_fill_manual geom_step scale_linetype_manual
 #' @export
-#'
 
+plot.lsmm_interintra <- function(x, which = 'long.fit', Objectpredict = NULL, break.times = NULL, ID.ind = NULL, ylim = NULL, xlim= NULL, ...){
 
-plot.lsmm_interintra <- function(object, which = 'long.fit', predictObject = NULL, break.times = NULL, ID.ind = NULL, ylim = NULL, xlim= NULL){
-
-  if(is.null(predictObject)){
-    stop("predictObject is missing.")
+  if(is.null(Objectpredict)){
+    stop("Objectpredict is missing.")
   }
 
   graph <- NULL
 
-  oldpar <- graphics::par(no.readonly = TRUE) # code line i
-  on.exit(graphics::par(oldpar)) # code line i + 1
+  oldpar <- par(no.readonly = TRUE) # code line i
+  on.exit(par(oldpar)) # code line i + 1
 
   if(which == 'long.fit'){
-    formFixed <- object$control$formFixed
-    timeVar <- object$control$timeVar
-    data.long <- object$control$data.long
+    formFixed <- x$control$formFixed
+    timeVar <- x$control$timeVar
+    data.long <- x$control$data.long
     value.var <- as.character(formFixed[[2]])
-    pred.CV <- predictObject$predY
+    pred.CV <- Objectpredict$predY
     if(is.null(break.times)){
       timeInterv <- range(data.long[,timeVar])
       break.times <- quantile(timeInterv,prob=seq(0,1,length.out=10))
@@ -30,25 +31,25 @@ plot.lsmm_interintra <- function(object, which = 'long.fit', predictObject = NUL
     length.obs <- by(data.long[,value.var], data.long$window, length)
     IC.inf <- mean.obs - 1.96*sd.obs/sqrt(length.obs)
     IC.sup <- mean.obs + 1.96*sd.obs/sqrt(length.obs)
-    window.pred <- cut(predictObject$time, break.times, include.lowest = T)
-    predictObject$time.new.pred <- predictObject$time
+    window.pred <- cut(Objectpredict$time, break.times, include.lowest = T)
+    Objectpredict$time.new.pred <- Objectpredict$time
     data.long$time.new.pred <- data.long[,timeVar]
-    prediction <- dplyr::left_join(predictObject[,c("id","predY", "time.new.pred")], data.long[,c("id", "window", "time.new.pred")])
+    prediction <- left_join(Objectpredict[,c("id","predY", "time.new.pred")], data.long[,c("id", "window", "time.new.pred")])
     mean.pred <- by(prediction$predY, prediction$window, mean)
     obstime.mean <- by(data.long[,timeVar], data.long$window, mean)
     df <- cbind(obstime.mean, mean.obs, IC.sup, IC.inf, mean.pred)
     df <- as.data.frame(df)
-    k <- ggplot2::ggplot(df,  ggplot2::aes(obstime.mean, mean.obs, ymin = IC.sup, ymax = IC.inf))
-    graph.fit.long <- k +  ggplot2::geom_pointrange( ggplot2::aes(ymin = IC.sup, ymax = IC.inf), shape =1)+
-      ggplot2::geom_point(ggplot2::aes(obstime.mean, mean.pred), size = 3, shape = 17) +
-      ggplot2::scale_x_continuous(name = "Time") +
-      ggplot2::scale_y_continuous(name = "Current Value") +
-      ggplot2::theme(panel.grid.major = ggplot2::element_blank(), panel.grid.minor = ggplot2::element_blank(),
-                     panel.background = ggplot2::element_blank(), axis.line = ggplot2::element_line(colour = "black"),
-                     axis.text=ggplot2::element_text(size=15),
-                     axis.title=ggplot2::element_text(size=18),
-                     plot.title = ggplot2::element_text(size = 20, face = "bold"))+
-      ggplot2::ggtitle("Longitudinal goodness-of-fit")+ggplot2::coord_cartesian(xlim = xlim,ylim = ylim, expand = TRUE)
+    k <- ggplot(df,  aes(obstime.mean, mean.obs, ymin = IC.sup, ymax = IC.inf))
+    graph.fit.long <- k +  geom_pointrange( aes(ymin = IC.sup, ymax = IC.inf), shape =1)+
+      geom_point(aes(obstime.mean, mean.pred), size = 3, shape = 17) +
+      scale_x_continuous(name = "Time") +
+      scale_y_continuous(name = "Current Value") +
+      theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                     panel.background = element_blank(), axis.line = element_line(colour = "black"),
+                     axis.text=element_text(size=15),
+                     axis.title=element_text(size=18),
+                     plot.title = element_text(size = 20, face = "bold"))+
+      ggtitle("Longitudinal goodness-of-fit")+coord_cartesian(xlim = xlim,ylim = ylim, expand = TRUE)
     graph <- list(long.fit = graph.fit.long)
   }
 
@@ -57,9 +58,9 @@ plot.lsmm_interintra <- function(object, which = 'long.fit', predictObject = NUL
       stop("You have to design some individual ID to plot the the individual trajectories.")
     }
     ID.ind <- as.vector(ID.ind)
-    pred.CV <- as.data.frame(predictObject)
-    data.long <- object$control$data.long
-    formFixed <- object$control$formFixed
+    pred.CV <- as.data.frame(Objectpredict)
+    data.long <- x$control$data.long
+    formFixed <- x$control$formFixed
     value.var <- as.character(formFixed[[2]])
     graph.traj.ind <- c()
     for(ind in ID.ind){
@@ -71,26 +72,26 @@ plot.lsmm_interintra <- function(object, which = 'long.fit', predictObject = NUL
       pred.CV.id$CI.sup <- pred.CV.id$predY + 1.96*sqrt(pred.CV.id$predSD_inter**2 + pred.CV.id$predSD_intra**2)
       pred.CV.id$CI.inf <- pred.CV.id$predY - 1.96*sqrt(pred.CV.id$predSD_inter**2 + pred.CV.id$predSD_intra**2)
 
-      traj_ind <- ggplot2::ggplot() +
+      traj_ind <- ggplot() +
 
-        ggplot2::geom_line(pred.CV.id, mapping = aes(x=time, y=predY, group = id, color = 'Predicted'))+
-        ggplot2::geom_line(pred.CV.id, mapping = aes(x=time, y=CI.sup, group = id,  color = 'Predicted'),linetype = 2)+
-        ggplot2::geom_line(pred.CV.id, mapping = aes(x=time, y=CI.inf, group = id,  color = 'Predicted'),linetype = 2)+
+        geom_line(pred.CV.id, mapping = aes(x=time, y=predY, group = id, color = 'Predicted'))+
+        geom_line(pred.CV.id, mapping = aes(x=time, y=CI.sup, group = id,  color = 'Predicted'),linetype = 2)+
+        geom_line(pred.CV.id, mapping = aes(x=time, y=CI.inf, group = id,  color = 'Predicted'),linetype = 2)+
 
-        ggplot2::geom_ribbon( pred.CV.id,mapping=
+        geom_ribbon( pred.CV.id,mapping=
                        aes(x=time,ymin=CI.inf,ymax=CI.sup), fill="#998ec3", alpha=0.3)+
 
-        ggplot2::geom_point(data.idselect, mapping = aes(x=time, y=y, group = id,color = "Observed"),shape =17)+
+        geom_point(data.idselect, mapping = aes(x=time, y=y, group = id,color = "Observed"),shape =17)+
         xlab("Time") + ylab("Y") +
 
-        ggplot2::facet_wrap(~id, ncol = 3)+
-        ggplot2::scale_color_manual(name='',
+        facet_wrap(~id, ncol = 3)+
+        scale_color_manual(name='',
                            breaks=c('Predicted', 'Observed'),
                            values=c('Predicted'='#998ec3', 'Observed'='#000000'),
                            guide = guide_legend(override.aes = list(
                              linetype = c(rep("solid", 1), "blank"),
                              shape = c(NA,  17))))+
-        ggplot2::theme(
+        theme(
           panel.background = element_blank(),
           legend.position = "bottom",
           legend.box = "vertical",
@@ -98,9 +99,9 @@ plot.lsmm_interintra <- function(object, which = 'long.fit', predictObject = NUL
           #axis.title.y = element_text(color = "black", size = 10),
           panel.grid = element_blank(),
           #legend.key = element_blank(),
-          axis.text=ggplot2::element_text(size=15),
-          axis.title=ggplot2::element_text(size=18),
-          plot.title = ggplot2::element_text(size = 20, face = "bold"),
+          axis.text=element_text(size=15),
+          axis.title=element_text(size=18),
+          plot.title = element_text(size = 20, face = "bold"),
           legend.text = element_text(color = "black", size = 14),
           axis.line = element_line(color = "black",
                                    linetype = "solid")

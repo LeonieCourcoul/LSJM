@@ -58,9 +58,15 @@ lsjm(
 
 \item{sharedtype_12}{a vector indicating the form(s) of the dependence structure. If the longitudinal model estimated is a standard mixed model, it should be included in c("value", "slope", "random effects"). If it is a location-scale mixed model with a covariate and time-dependent variability one can add "variability" and if it a model distinguishing within from between visits variabilities one can add c("variability inter", "variability intra") if there are subject-specifics.}
 
+\item{hazardBase_01}{a character providing the baseline hazard function, which is in c("Exponential", "Weibull", "Gompertz", "Splines") of the risk function for transition 0-1}
+
+\item{hazardBase_02}{a character providing the baseline hazard function, which is in c("Exponential", "Weibull", "Gompertz", "Splines") of the risk function for transition 0-2}
+
+\item{hazardBase_12}{a character providing the baseline hazard function, which is in c("Exponential", "Weibull", "Gompertz", "Splines") of the risk function for transition 1-2}
+
 \item{delta1}{a one-sided formula with on the right-side the variable corresponding to the indicator of interest event (1 for subject experimenting the event and 0 for others).}
 
-\item{delta2}{a one-sided formula with on the right-side the variable corresponding to the indicator $\delta_{1i}$ of second event (1 for subject experimenting the event and 0 for others).}
+\item{delta2}{a one-sided formula with on the right-side the variable corresponding to the indicator \eqn{\delta_{1i}} of second event (1 for subject experimenting the event and 0 for others).}
 
 \item{Time_T}{a one-sided formula with on the right-side the variable corresponding to the time of event}
 
@@ -92,7 +98,17 @@ lsjm(
 
 \item{clustertype}{one of the supported types from \code{makeCluster} function}
 
-\item{epsd}{}
+\item{maxiter}{optional maximum number of iterations for the Marquardt iterative algorithm. By default, maxiter=500.}
+
+\item{print.info}{logical indicating if information about computation should be reported. Default to FALSE.}
+
+\item{file}{optional character giving the name of the file where the outputs of each iteration should be written (if print.info=TRUE).}
+
+\item{epsa}{optional threshold for the convergence criterion based on the parameter stability. By default, convB=0.0001.}
+
+\item{epsb}{optional threshold for the convergence criterion based on the log-likelihood stability. By default, convL=0.0001.}
+
+\item{epsd}{optional threshold for the convergence criterion based on the derivatives. By default, convG=0.0001.}
 }
 \description{
 This function fits joint models in which

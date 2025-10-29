@@ -5,8 +5,7 @@ Authors@R:
     person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+License: GPL (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
@@ -14,12 +13,6 @@ LinkingTo:
     Rcpp,
     RcppArmadillo
 Imports: 
-    Rcpp, marqLevAlg, survival, flexsurv, ggplot2, lcmm
+    Rcpp, marqLevAlg, survival, flexsurv, ggplot2, splines, spacefillr, survminer, foreach, doParallel, SmoothHazard, parallel, mvtnorm, dplyr
 Depends: 
-    R (>= 3.5.0),
-    splines,
-    survival,
-    spacefillr,
-    survminer,
-    foreach,
-    doParallel
+    R (>= 3.5.0)

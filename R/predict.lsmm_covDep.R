@@ -1,6 +1,10 @@
 #' @rdname predict
+#' @importFrom parallel detectCores makeCluster stopCluster
+#' @importFrom doParallel registerDoParallel
+#' @importFrom foreach foreach %dopar%
+#' @importFrom mvtnorm rmvnorm
+#' @importFrom marqLevAlg marqLevAlg
 #' @export
-#'
 
 predict.lsmm_covDep <- function(object, which = "RE", Objectranef = NULL, data.long = NULL){
 
@@ -125,7 +129,7 @@ predict.lsmm_covDep <- function(object, which = "RE", Objectranef = NULL, data.l
                                                           epsa = 1e-4, epsb = 1e-4, epsd = 1e-4)
 
                            while (random.effects_i$istop != 1) {
-                             binit <- mvtnorm::rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
+                             binit <- rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
                              random.effects_i <- marqLevAlg(binit, fn = re_lsmm_covDep, minimize = FALSE,
                                                             nb.e.a = x$control$nb.e.a, nb.e.a.sigma = x$control$nb.e.a.sigma,
                                                             Sigma.re = MatCov, beta = beta, omega = omega,

@@ -1,3 +1,5 @@
+#' @importFrom mvtnorm dmvnorm
+
 re_lsjm_classicIDMCase1 <- function(param, nb.e.a,  Sigma.re,
                                        sharedtype, HB, Gompertz, Weibull, nb_pointsGK,
                                        alpha_y_slope, alpha_b_01, alpha_b_02, alpha_b_12, alpha_z,  gamma_z0,  beta,  beta_slope,  wk, rep_wk,
@@ -20,7 +22,7 @@ re_lsjm_classicIDMCase1 <- function(param, nb.e.a,  Sigma.re,
   if(sharedtype[2] || sharedtype[4] || sharedtype[6] ){
     b_y_slope <- as.matrix(b_re[index_b_slope], ncol = nb.e.a-1)
   }
-  f_b_tau <- mvtnorm::dmvnorm(x = c(b_re), mean = rep(0,length(b_re)), sigma = Sigma.re)
+  f_b_tau <- dmvnorm(x = c(b_re), mean = rep(0,length(b_re)), sigma = Sigma.re)
 
   log_f_Y_f_T <- re_lsjm_classicIDMCase1_cpp(sharedtype, HB, Gompertz, Weibull,
                                                 nb_pointsGK,

@@ -1,3 +1,5 @@
+#'
+#' @importFrom stats model.frame model.matrix
 data.time <- function(data.id, Time, formFixed, formRandom, timeVar){
   if (!timeVar %in% names(data.id))
     stop("\n'timeVar' does not correspond to one of the columns in formulas")

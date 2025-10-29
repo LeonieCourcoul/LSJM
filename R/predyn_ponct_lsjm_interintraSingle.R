@@ -1,3 +1,6 @@
+#' @importFrom splines splineDesign
+#' @importFrom stats model.frame model.matrix qnorm dnorm
+#' @importFrom spacefillr generate_sobol_owen_set
 predyn_ponct_lsjm_interintraSingle <- function(Objectlsjm, data.long.until.time.s, s, window){
 
 
@@ -80,16 +83,16 @@ predyn_ponct_lsjm_interintraSingle <- function(Objectlsjm, data.long.until.time.
   }
 
   if(Objectlsjm$control$Objectlsmm$control$var_inter && Objectlsjm$control$Objectlsmm$control$var_intra){
-    Zq1 <- spacefillr::generate_sobol_owen_set(nbQMC,  Objectlsjm$control$Objectlsmm$control$nb.e.a+2)
+    Zq1 <- generate_sobol_owen_set(nbQMC,  Objectlsjm$control$Objectlsmm$control$nb.e.a+2)
     Zq <- apply(Zq1, 2, qnorm)
   }
   else{
     if(Objectlsjm$control$Objectlsmm$control$var_inter || Objectlsjm$control$Objectlsmm$control$var_intra){
-      Zq1 <- spacefillr::generate_sobol_owen_set(nbQMC,  Objectlsjm$control$Objectlsmm$control$nb.e.a+1)
+      Zq1 <- generate_sobol_owen_set(nbQMC,  Objectlsjm$control$Objectlsmm$control$nb.e.a+1)
       Zq <- apply(Zq1, 2, qnorm)
     }
     else{
-      Zq1 <- spacefillr::generate_sobol_owen_set(nbQMC,  Objectlsjm$control$Objectlsmm$control$nb.e.a)
+      Zq1 <- generate_sobol_owen_set(nbQMC,  Objectlsjm$control$Objectlsmm$control$nb.e.a)
       Zq <- apply(Zq1, 2, qnorm)
     }
   }
@@ -353,8 +356,8 @@ predyn_ponct_lsjm_interintraSingle <- function(Objectlsjm, data.long.until.time.
         mfZ <- model.frame(Objectlsjm$control$formSurv_01, data = data.long.until.time.s.id)
         Z_01 <- model.matrix(Objectlsjm$control$formSurv_01, mfZ)
         Z_01 <- Z_01[,-1]
-        Bs_01 <- splines::splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_01, c(t(st.1)), ord = 4L)
-        Bs.den_01 <- splines::splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_01, c(t(st.den)), ord = 4L)
+        Bs_01 <- splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_01, c(t(st.1)), ord = 4L)
+        Bs.den_01 <- splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_01, c(t(st.den)), ord = 4L)
       }else{
         stop("This type of base survival function is not implemented.")
       }

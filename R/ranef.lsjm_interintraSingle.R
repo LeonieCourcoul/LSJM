@@ -1,11 +1,12 @@
-#' ranef : Compute the random effects of the longitudinal submodel
-#'
-#' @param object A lsmm or lsjm object
-#'
-#' @name ranef
 #' @rdname ranef
+#' @importFrom splines splineDesign
+#' @importFrom parallel detectCores makeCluster stopCluster
+#' @importFrom doParallel registerDoParallel
+#' @importFrom foreach foreach %dopar%
+#' @importFrom mvtnorm rmvnorm
+#' @importFrom marqLevAlg marqLevAlg
+#' @method ranef lsjm_interintraSingle
 #' @export
-#'
 
 ranef.lsjm_interintraSingle <- function(object,...){
 
@@ -339,7 +340,7 @@ ranef.lsjm_interintraSingle <- function(object,...){
                                    file = "", blinding = TRUE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4, multipleTry = 100)
 
     while(random.effects_i$istop !=1){
-      binit <- mvtnorm::rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
+      binit <- rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
       random.effects_i <- marqLevAlg(binit, fn = re_lsjm_interintraSingle, minimize = FALSE,
 
                                      nb.e.a = x$control$Objectlsmm$control$nb.e.a, variability_inter_visit = x$control$Objectlsmm$control$var_inter,

@@ -1,3 +1,10 @@
+#' @importFrom stats quantile qnorm
+#' @importFrom utils head tail
+#' @importFrom survival Surv survreg coxph
+#' @importFrom flexsurv flexsurvreg
+#' @importFrom splines splineDesign
+#' @importFrom spacefillr generate_sobol_owen_set
+#' @importFrom marqLevAlg marqLevAlg
 lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_baseline_02, hazard_baseline_12, nb.knots.splines,
                             formSurv_01, formSurv_02, formSurv_12, nb_pointsGK, sharedtype_01, sharedtype_02, sharedtype_12,
                            formSlopeFixed, formSlopeRandom,
@@ -54,7 +61,7 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
 
   if(hazard_baseline_01 == "Splines"){
     pp <- seq(0,1, length.out = nb.knots.splines[1]+2)
-    pp <- utils::tail(utils::head(pp,-1),-1)
+    pp <- tail(head(pp,-1),-1)
     vec.time.01 <- data.id[which(data.id$delta1==1),"Time_R"]
     kn <- quantile(vec.time.01, pp, names = FALSE)
     kn <- kn[kn<max(data.id$Time_T)]
@@ -62,7 +69,7 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
   }
   if(hazard_baseline_02 == "Splines"){
     pp <- seq(0,1, length.out =nb.knots.splines[2]+2)
-    pp <- utils::tail(utils::head(pp,-1),-1)
+    pp <- tail(head(pp,-1),-1)
     vec.time.02 <- data.id[which(data.id$delta1==0 & data.id$delta2==1),"Time_T"]
     kn <- quantile(vec.time.02, pp, names = FALSE)
     kn <- kn[kn<max(data.id$Time_T)]
@@ -70,7 +77,7 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
   }
   if(hazard_baseline_12 == "Splines"){
     pp <- seq(0,1, length.out = nb.knots.splines[3]+2)
-    pp <- utils::tail(utils::head(pp,-1),-1)
+    pp <- tail(head(pp,-1),-1)
     vec.time.12 <- data.id[which(data.id$delta1==1 & data.id$delta2==1), "Time_T"]
     kn <- quantile(vec.time.12, pp, names = FALSE)
     kn <- kn[kn<max(data.id$Time_T)]
@@ -120,8 +127,8 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
       else{
         if(hazard_baseline_01 == "Splines"){
           list.GK_T <- data.GaussKronrod(data.id, a = 0, b = data.id$Time_T, k = nb_pointsGK)
-          B <- splines::splineDesign(knots_01, data.id$Time_T, ord = 4L)
-          Bs <- splines::splineDesign(knots_01, c(t(list.GK_T$st)), ord = 4L)
+          B <- splineDesign(knots_01, data.id$Time_T, ord = 4L)
+          Bs <- splineDesign(knots_01, c(t(list.GK_T$st)), ord = 4L)
           opt_splines_01 <- optim(rep(0,ncol(B)), fn2,event = data.id$delta1,W2 = B,P = list.GK_T$P,wk = list.GK_T$wk,
                                   Time = data.id$Time_T,W2s = Bs,id.GK = list.GK_T$id.GK, method="BFGS", hessian = T)
           tmp_model <- coxph(Surv_01,
@@ -164,8 +171,8 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
       else{
         if(hazard_baseline_02 == "Splines"){
           list.GK_T <- data.GaussKronrod(data.id, a = 0, b = data.id$Time_T, k = nb_pointsGK)
-          B <- splines::splineDesign(knots_02, data.id$Time_T, ord = 4L)
-          Bs <- splines::splineDesign(knots_02, c(t(list.GK_T$st)), ord = 4L)
+          B <- splineDesign(knots_02, data.id$Time_T, ord = 4L)
+          Bs <- splineDesign(knots_02, c(t(list.GK_T$st)), ord = 4L)
           opt_splines_02 <- optim(rep(0,ncol(B)), fn2,event = data.id$delta2,W2 = B,P = list.GK_T$P,wk = list.GK_T$wk,
                                   Time = data.id$Time_T,W2s = Bs,id.GK = list.GK_T$id.GK, method="BFGS", hessian = T)
           tmp_model <- coxph(Surv_02,
@@ -205,8 +212,8 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
       else{
         if(hazard_baseline_12 == "Splines"){
           list.GK_T <- data.GaussKronrod(data.id, a = 0, b = data.id$Time_T, k = nb_pointsGK)
-          B <- splines::splineDesign(knots_12, data.id$Time_T, ord = 4L)
-          Bs <- splines::splineDesign(knots_12, c(t(list.GK_T$st)), ord = 4L)
+          B <- splineDesign(knots_12, data.id$Time_T, ord = 4L)
+          Bs <- splineDesign(knots_12, c(t(list.GK_T$st)), ord = 4L)
           opt_splines_12 <- optim(rep(0,ncol(B)), fn2,event = data.id$delta2,W2 = B,P = list.GK_T$P,wk = list.GK_T$wk,
                                   Time = data.id$Time_T,W2s = Bs,id.GK = list.GK_T$id.GK, method="BFGS", hessian = T)
           tmp_model <- coxph(Surv_12,
@@ -739,7 +746,7 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
       binit_noCI <- c(binit_noCI, Objectlsmm$result_step2$b)
     }
 
-    Zq1 <- spacefillr::generate_sobol_owen_set(S1,  nb.e.a+nb.e.a.sigma)
+    Zq1 <- generate_sobol_owen_set(S1,  nb.e.a+nb.e.a.sigma)
     Zq <- apply(Zq1, 2, qnorm)
 
     estimation.noCI <- marqLevAlg(binit_noCI, fn = logR_llh_lsjm_covDepIDM, minimize = FALSE,
@@ -1525,7 +1532,7 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
   nb.omega <- ncol(O_base)
   nb.e.a.sigma <- ncol(W_base)
 
-  Zq1 <- spacefillr::generate_sobol_owen_set(S1,  nb.e.a+nb.e.a.sigma)
+  Zq1 <- generate_sobol_owen_set(S1,  nb.e.a+nb.e.a.sigma)
   Zq <- apply(Zq1, 2, qnorm)
   message(paste("First estimation with ", S1, " QMC draws"))
   estimation1 <- marqLevAlg(binit, fn = logR_llh_lsjm_covDepIDM, minimize = FALSE,
@@ -1548,7 +1555,7 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
 
   if(!is.null(S2)){
     message(paste("Second estimation with ", S2, " QMC draws"))
-    Zq1 <- spacefillr::generate_sobol_owen_set(S2,  nb.e.a+nb.e.a.sigma)
+    Zq1 <- generate_sobol_owen_set(S2,  nb.e.a+nb.e.a.sigma)
     Zq <- apply(Zq1, 2, qnorm)
     estimation2 <- marqLevAlg(estimation1$b, fn = logR_llh_lsjm_covDepIDM, minimize = FALSE,
 

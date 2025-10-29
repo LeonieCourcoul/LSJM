@@ -1,7 +1,12 @@
 #' @rdname predict
+#' @importFrom splines splineDesign
+#' @importFrom parallel detectCores makeCluster stopCluster
+#' @importFrom doParallel registerDoParallel
+#' @importFrom foreach foreach %dopar%
+#' @importFrom mvtnorm rmvnorm
+#' @importFrom marqLevAlg marqLevAlg
 #' @export
 #'
-
 predict.lsmm_interintra <- function(object, which = "RE", Objectranef = NULL, data.long = NULL){
 
   Objectlsmm <- object
@@ -187,7 +192,7 @@ predict.lsmm_interintra <- function(object, which = "RE", Objectranef = NULL, da
                                                         file = "", blinding = FALSE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4)
 
                          while(random.effects_i$istop !=1){
-                           binit <- mvtnorm::rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
+                           binit <- rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
                            random.effects_i <- marqLevAlg(binit, fn = re_lsmm_interintra, minimize = FALSE, nb.e.a = x$control$nb.e.a, variability_inter_visit = x$control$var_inter,
                                                           variability_intra_visit = x$control$var_intra, Sigma.re = MatCov,
                                                           beta = beta,

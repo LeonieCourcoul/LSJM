@@ -1,3 +1,4 @@
+#' @importFrom mvtnorm dmvnorm
 re_lsjm_covDepSingle <- function(param, nb.e.a,  nb.e.a.sigma, Sigma.re,
                              sharedtype, HB, Gompertz, Weibull, nb_pointsGK,
                              alpha_y_slope_var, alpha_b_01, alpha_z,  gamma_z0,  beta,  beta_slope, omega,  wk,
@@ -15,7 +16,7 @@ re_lsjm_covDepSingle <- function(param, nb.e.a,  nb.e.a.sigma, Sigma.re,
 ){
 
   all_re <- matrix(param[1:(nb.e.a+nb.e.a.sigma)], nrow = 1)
-  f_b_tau <- mvtnorm::dmvnorm(x = all_re, mean = rep(0,length(all_re)), sigma = Sigma.re)
+  f_b_tau <- dmvnorm(x = all_re, mean = rep(0,length(all_re)), sigma = Sigma.re)
   b_y_slope <- as.matrix(0)
   b_re <- all_re[1:nb.e.a]
   tau_re <- all_re[(nb.e.a+1):(nb.e.a+nb.e.a.sigma)]

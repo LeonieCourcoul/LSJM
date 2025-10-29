@@ -1,3 +1,4 @@
+#' @importFrom mvtnorm dmvnorm
 re_lsmm_interintra <- function(param, nb.e.a, variability_inter_visit, variability_intra_visit, Sigma.re,
                          beta,
                          mu.inter, sigma.epsilon.inter, mu.intra,sigma.epsilon.intra,
@@ -9,7 +10,7 @@ re_lsmm_interintra <- function(param, nb.e.a, variability_inter_visit, variabili
   f_b_tau <- 1
   if(variability_inter_visit && variability_intra_visit){
     tau_re <- param[,(nb.e.a+1):(nb.e.a+2)]
-    f_b_tau <- mvtnorm::dmvnorm(x = c(b_re, tau_re), mean = rep(0,length(b_re)+length(tau_re)), sigma = Sigma.re)
+    f_b_tau <- dmvnorm(x = c(b_re, tau_re), mean = rep(0,length(b_re)+length(tau_re)), sigma = Sigma.re)
     sigma_inter <- exp(mu.inter + tau_re[1])
     var.inter <- sigma_inter**2
     sigma_intra <- exp(mu.intra + tau_re[2])
@@ -18,7 +19,7 @@ re_lsmm_interintra <- function(param, nb.e.a, variability_inter_visit, variabili
   else{
     if(variability_inter_visit){
       tau_re <- param[,(nb.e.a+1)]
-      f_b_tau <- mvtnorm::dmvnorm(x = c(b_re, tau_re), mean = rep(0,length(b_re)+length(tau_re)), sigma = Sigma.re)
+      f_b_tau <- dmvnorm(x = c(b_re, tau_re), mean = rep(0,length(b_re)+length(tau_re)), sigma = Sigma.re)
       sigma_inter <- exp(mu.inter + tau_re[1])
       var.inter <- sigma_inter**2
       sigma_intra <- sigma.epsilon.intra
@@ -27,7 +28,7 @@ re_lsmm_interintra <- function(param, nb.e.a, variability_inter_visit, variabili
     else{
       if(variability_intra_visit){
         tau_re <- param[,(nb.e.a+1)]
-        f_b_tau <- mvtnorm::dmvnorm(x = c(b_re, tau_re), mean = rep(0,length(b_re)+length(tau_re)), sigma = Sigma.re)
+        f_b_tau <- dmvnorm(x = c(b_re, tau_re), mean = rep(0,length(b_re)+length(tau_re)), sigma = Sigma.re)
         sigma_intra <- exp(mu.intra + tau_re[2])
         var.intra <- sigma_intra**2
         sigma_inter <- sigma.epsilon.inter

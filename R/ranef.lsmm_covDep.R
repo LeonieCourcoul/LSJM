@@ -1,6 +1,11 @@
 #' @rdname ranef
+#' @importFrom parallel detectCores makeCluster stopCluster
+#' @importFrom doParallel registerDoParallel
+#' @importFrom foreach foreach %dopar%
+#' @importFrom mvtnorm rmvnorm
+#' @importFrom marqLevAlg marqLevAlg
+#' @method ranef lsmm_covDep
 #' @export
-#'
 ranef.lsmm_covDep <- function(object,...){
 
   x <- object
@@ -99,7 +104,7 @@ ranef.lsmm_covDep <- function(object,...){
 
                                           # Réitérer si la convergence n'est pas atteinte
                                           while(random.effects_i$istop != 1) {
-                                            binit <- mvtnorm::rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
+                                            binit <- rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
                                             random.effects_i <- marqLevAlg(binit, fn = re_lsmm_covDep, minimize = FALSE,
                                                                            nb.e.a = x$control$nb.e.a, nb.e.a.sigma = x$control$nb.e.a.sigma,
                                                                            Sigma.re = MatCov, beta = beta, omega = omega,

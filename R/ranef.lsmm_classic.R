@@ -1,11 +1,11 @@
-#' ranef : Compute the random effects of the longitudinal submodel
-#'
-#' @param object A lsmm or lsjm object
-#'
-#' @name ranef
 #' @rdname ranef
+#' @importFrom parallel detectCores makeCluster stopCluster
+#' @importFrom doParallel registerDoParallel
+#' @importFrom foreach foreach %dopar%
+#' @importFrom mvtnorm rmvnorm
+#' @importFrom marqLevAlg marqLevAlg
+#' @method ranef lsmm_classic
 #' @export
-#'
 
 ranef.lsmm_classic <- function(object,...){
 
@@ -77,7 +77,7 @@ ranef.lsmm_classic <- function(object,...){
 
                        # Si l'optimisation n'a pas convergé, essayer à nouveau avec de nouveaux binit
                        while(random.effects_i$istop != 1) {
-                         binit <- mvtnorm::rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
+                         binit <- rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
                          random.effects_i <- marqLevAlg(binit, fn = re_lsmm_classic, minimize = FALSE,
                                                         nb.e.a = x$control$nb.e.a, Sigma.re = MatCov, beta = beta,
                                                         X_base_i = X_base_i, U_base_i = U_base_i, y_i = y_i,

@@ -1,3 +1,6 @@
+#' @importFrom splines splineDesign
+#' @importFrom stats model.frame model.matrix qnorm dnorm
+#' @importFrom spacefillr generate_sobol_owen_set
 predyn_ponct_lsjm_interintraIDM <- function(Objectlsjm, data.long.until.time.s, s, window, event){
 
 
@@ -9,6 +12,7 @@ predyn_ponct_lsjm_interintraIDM <- function(Objectlsjm, data.long.until.time.s, 
     param <- Objectlsjm$result_step2$b
     nbQMC <- Objectlsjm$control$S2
   }
+
 
   ## Param
   #Manage parameter
@@ -163,16 +167,16 @@ predyn_ponct_lsjm_interintraIDM <- function(Objectlsjm, data.long.until.time.s, 
   }
 
   if(Objectlsjm$control$Objectlsmm$control$var_inter && Objectlsjm$control$Objectlsmm$control$var_intra){
-    Zq1 <- spacefillr::generate_sobol_owen_set(nbQMC,  Objectlsjm$control$Objectlsmm$control$nb.e.a+2)
+    Zq1 <- generate_sobol_owen_set(nbQMC,  Objectlsjm$control$Objectlsmm$control$nb.e.a+2)
     Zq <- apply(Zq1, 2, qnorm)
   }
   else{
     if(Objectlsjm$control$Objectlsmm$control$var_inter || Objectlsjm$control$Objectlsmm$control$var_intra){
-      Zq1 <- spacefillr::generate_sobol_owen_set(nbQMC,  Objectlsjm$control$Objectlsmm$control$nb.e.a+1)
+      Zq1 <- generate_sobol_owen_set(nbQMC,  Objectlsjm$control$Objectlsmm$control$nb.e.a+1)
       Zq <- apply(Zq1, 2, qnorm)
     }
     else{
-      Zq1 <- spacefillr::generate_sobol_owen_set(nbQMC,  Objectlsjm$control$Objectlsmm$control$nb.e.a)
+      Zq1 <- generate_sobol_owen_set(nbQMC,  Objectlsjm$control$Objectlsmm$control$nb.e.a)
       Zq <- apply(Zq1, 2, qnorm)
     }
   }
@@ -430,22 +434,22 @@ predyn_ponct_lsjm_interintraIDM <- function(Objectlsjm, data.long.until.time.s, 
     mfZ <- model.frame(Objectlsjm$control$formSurv_01, data = data.long.until.time.s.id)
     mfZ2 <- model.frame(Objectlsjm$control$formSurv_01, data = Objectlsjm$control$Objectlsmm$control$data.long[!duplicated(Objectlsjm$control$Objectlsmm$control$data.long$id),])
     mfZ <- rbind(mfZ, mfZ2)
-    Z_01 <- model.matrix(Objectlsjm$control$formSurv_01, mfZ2)[1,]
+    Z_01 <- model.matrix(Objectlsjm$control$formSurv_01, mfZ)[1,]
   }else{
     if(Objectlsjm$control$hazard_baseline_01 == "Weibull" || Objectlsjm$control$hazard_baseline_01 == "Gompertz"){
       mfZ <- model.frame(Objectlsjm$control$formSurv_01, data = data.long.until.time.s.id)
       mfZ2 <- model.frame(Objectlsjm$control$formSurv_01, data = Objectlsjm$control$Objectlsmm$control$data.long[!duplicated(Objectlsjm$control$Objectlsmm$control$data.long$id),])
       mfZ <- rbind(mfZ, mfZ2)
-      Z_01 <- model.matrix(Objectlsjm$control$formSurv_01, mfZ2)[1,]
+      Z_01 <- model.matrix(Objectlsjm$control$formSurv_01, mfZ)[1,]
     }else{
       if(Objectlsjm$control$hazard_baseline_01 == "Splines"){
         mfZ <- model.frame(Objectlsjm$control$formSurv_01, data = data.long.until.time.s.id)
         mfZ2 <- model.frame(Objectlsjm$control$formSurv_01, data = Objectlsjm$control$Objectlsmm$control$data.long[!duplicated(Objectlsjm$control$Objectlsmm$control$data.long$id),])
         mfZ <- rbind(mfZ, mfZ2)
-        Z_01 <- model.matrix(Objectlsjm$control$formSurv_01, mfZ2)[1,]
+        Z_01 <- model.matrix(Objectlsjm$control$formSurv_01, mfZ)[1,]
         Z_01 <- Z_01[,-1]
-        Bs_01 <- splines::splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_01, c(t(st.1)), ord = 4L)
-        Bs.den_01 <- splines::splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_01, c(t(st.den)), ord = 4L)
+        Bs_01 <- splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_01, c(t(st.1)), ord = 4L)
+        Bs.den_01 <- splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_01, c(t(st.den)), ord = 4L)
       }else{
         stop("This type of base survival function is not implemented.")
       }
@@ -456,22 +460,22 @@ predyn_ponct_lsjm_interintraIDM <- function(Objectlsjm, data.long.until.time.s, 
     mfZ <- model.frame(Objectlsjm$control$formSurv_02, data = data.long.until.time.s.id)
     mfZ2 <- model.frame(Objectlsjm$control$formSurv_02, data = Objectlsjm$control$Objectlsmm$control$data.long[!duplicated(Objectlsjm$control$Objectlsmm$control$data.long$id),])
     mfZ <- rbind(mfZ, mfZ2)
-    Z_02 <- model.matrix(Objectlsjm$control$formSurv_02, mfZ2)[1,]
+    Z_02 <- model.matrix(Objectlsjm$control$formSurv_02, mfZ)[1,]
   }else{
     if(Objectlsjm$control$hazard_baseline_02 == "Weibull" || Objectlsjm$control$hazard_baseline_02 == "Gompertz"){
       mfZ <- model.frame(Objectlsjm$control$formSurv_02, data = data.long.until.time.s.id)
       mfZ2 <- model.frame(Objectlsjm$control$formSurv_02, data = Objectlsjm$control$Objectlsmm$control$data.long[!duplicated(Objectlsjm$control$Objectlsmm$control$data.long$id),])
       mfZ <- rbind(mfZ, mfZ2)
-      Z_02 <- model.matrix(Objectlsjm$control$formSurv_02, mfZ2)[1,]
+      Z_02 <- model.matrix(Objectlsjm$control$formSurv_02, mfZ)[1,]
     }else{
       if(Objectlsjm$control$hazard_baseline_02 == "Splines"){
         mfZ <- model.frame(Objectlsjm$control$formSurv_02, data = data.long.until.time.s.id)
         mfZ2 <- model.frame(Objectlsjm$control$formSurv_02, data = Objectlsjm$control$Objectlsmm$control$data.long[!duplicated(Objectlsjm$control$Objectlsmm$control$data.long$id),])
         mfZ <- rbind(mfZ, mfZ2)
-        Z_02 <- model.matrix(Objectlsjm$control$formSurv_02, mfZ2)[1,]
+        Z_02 <- model.matrix(Objectlsjm$control$formSurv_02, mfZ)[1,]
         Z_02 <- Z_02[,-1]
-        Bs_02 <- splines::splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_02, c(t(st.1)), ord = 4L)
-        Bs.den_02 <- splines::splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_02, c(t(st.den)), ord = 4L)
+        Bs_02 <- splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_02, c(t(st.1)), ord = 4L)
+        Bs.den_02 <- splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_02, c(t(st.den)), ord = 4L)
       }else{
         stop("This type of base survival function is not implemented.")
       }
@@ -730,7 +734,7 @@ predyn_ponct_lsjm_interintraIDM <- function(Objectlsjm, data.long.until.time.s, 
   numerateur <- Surv.num*f_Y_b_sigma
   denominateur <- Surv.den*f_Y_b_sigma
   pred.current <- mean(numerateur)/mean(denominateur)
-
+  #browser()
   pred.current
 
 

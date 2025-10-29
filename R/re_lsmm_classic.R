@@ -1,6 +1,7 @@
+#' @importFrom mvtnorm dmvnorm
 re_lsmm_classic <- function(param, nb.e.a, Sigma.re,beta, X_base_i, U_base_i,y_i, sigma_epsilon){
   all_re <- matrix(param[1:(nb.e.a)], nrow = 1)
-  f_b_tau <- mvtnorm::dmvnorm(x = all_re, mean = rep(0,length(all_re)), sigma = Sigma.re)
+  f_b_tau <- dmvnorm(x = all_re, mean = rep(0,length(all_re)), sigma = Sigma.re)
 
 
 

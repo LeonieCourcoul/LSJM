@@ -1,11 +1,12 @@
-#' ranef : Compute the random effects of the longitudinal submodel
-#'
-#' @param object A lsmm or lsjm object
-#'
-#' @name ranef
 #' @rdname ranef
+#' @importFrom splines splineDesign
+#' @importFrom parallel detectCores makeCluster stopCluster
+#' @importFrom doParallel registerDoParallel
+#' @importFrom foreach foreach %dopar%
+#' @importFrom mvtnorm rmvnorm
+#' @importFrom marqLevAlg marqLevAlg
+#' @method ranef lsjm_classicIDM
 #' @export
-#'
 ranef.lsjm_classicIDM <- function(object,...){
 
   x <- object
@@ -438,7 +439,7 @@ ranef.lsjm_classicIDM <- function(object,...){
                                      file = "", blinding = TRUE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4, multipleTry = 100)
 
       while(random.effects_i$istop !=1){
-        binit <- mvtnorm::rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
+        binit <- rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
         random.effects_i <- marqLevAlg(binit, fn = re_lsjm_classicIDMCase1, minimize = FALSE, nb.e.a = x$control$Objectlsmm$control$nb.e.a,
                                        Sigma.re = MatCov,
                                        sharedtype = sharedtype, HB = HB, Gompertz = Gompertz, Weibull = Weibull, nb_pointsGK = x$control$nb_pointsGK,
@@ -689,7 +690,7 @@ ranef.lsjm_classicIDM <- function(object,...){
 
       while(random.effects_i$istop !=1){
         print(id.Case1bis_boucle)
-        binit <- mvtnorm::rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
+        binit <- rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
         random.effects_i <-  marqLevAlg(binit, fn = re_lsjm_classicIDMCase1Bis, minimize = FALSE,nb.e.a = x$control$Objectlsmm$control$nb.e.a,
                                         Sigma.re = MatCov,
                                         sharedtype = sharedtype, HB = HB, Gompertz = Gompertz, Weibull = Weibull, nb_pointsGK = x$control$nb_pointsGK,
@@ -884,7 +885,7 @@ ranef.lsjm_classicIDM <- function(object,...){
                                      file = "", blinding = TRUE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4, multipleTry = 100)
 
       while(random.effects_i$istop !=1){
-        binit <- mvtnorm::rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
+        binit <- rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
         random.effects_i <- marqLevAlg(binit, fn = re_lsjm_classicIDMCase2, minimize = FALSE,
 
                                        nb.e.a = x$control$Objectlsmm$control$nb.e.a, Sigma.re = MatCov,
@@ -1175,7 +1176,7 @@ ranef.lsjm_classicIDM <- function(object,...){
                                      nproc = x$control$nproc, clustertype = x$control$clustertype, maxiter = x$control$maxiter, print.info = FALSE,
                                      file = "", blinding = TRUE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4, multipleTry = 100)
       while(random.effects_i$istop !=1){
-        binit <- mvtnorm::rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
+        binit <- rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
         random.effects_i <- marqLevAlg(binit, fn = re_lsjm_classicIDMCase3, minimize = FALSE,nb.e.a = x$control$Objectlsmm$control$nb.e.a,
                                        Sigma.re = MatCov,
                                        sharedtype = sharedtype, HB = HB, Gompertz = Gompertz, Weibull = Weibull, nb_pointsGK = x$control$nb_pointsGK,

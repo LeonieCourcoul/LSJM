@@ -19,7 +19,7 @@
 \alias{plot.lsmm_classic}
 \alias{plot.lsmm_covDep}
 \alias{plot.lsmm_interintra}
-\title{Plot methods for lsjm/lsmm objects}
+\title{plot: Plot methods for \code{lsjm} or \code{lsmm} objects}
 \usage{
 \method{plot}{lsjm_classicCR}(
   x,

@@ -2,7 +2,7 @@
 % Please edit documentation in R/lsmm.R
 \name{lsmm}
 \alias{lsmm}
-\title{lsmm : Estimation of a linear mixed model for longitudinal data with a flexible subject-specific variability.}
+\title{lsmm : Estimation of a linear mixed model for longitudinal data with flexible subject-specific variability.}
 \usage{
 lsmm(
   formFixed,
@@ -31,89 +31,99 @@ lsmm(
 )
 }
 \arguments{
-\item{formFixed}{A formula for the fixed effects of the longitudinal submodel}
+\item{formFixed}{Formula specifying the fixed effects of the longitudinal model.}
 
-\item{formRandom}{A formula for the random effects of the longitudinal submodel}
+\item{formRandom}{Formula specifying the random effects of the longitudinal model.}
 
-\item{formGroup}{A formula which indicates the group variable}
+\item{formGroup}{Formula specifying the grouping variable (typically the subject ID).}
 
-\item{timeVar}{A character which indicates the time variable}
+\item{timeVar}{Character string specifying the time variable.}
 
-\item{formVar}{A character : type of variability either 'standard' for a standard linear mixed model or 'cov-dependent' for a subject-specific and covariate-dependent covariable variability or 'inter-intra' for distinguishing inter-visit from intra-visit variability}
+\item{formVar}{Character string indicating the type of variability: \strong{"standard"} for a standard LMM,
+\strong{"cov-dependent"} for a covariate-dependent residual variance, or \strong{"inter-intra"}
+to distinguish inter- and intra-visit variability.}
 
-\item{formFixedVar}{A formula for the fixed effects of the variance predictor if formVar == 'cov-dependent'}
+\item{formFixedVar}{Formula specifying the fixed effects for the variance predictor (if \code{formVar == "cov-dependent"}).}
 
-\item{formRandomVar}{A formula for the random effects of the variance predictor if formVar == 'cov-dependent'}
+\item{formRandomVar}{Formula specifying the random effects for the variance predictor (if \code{formVar == "cov-dependent"}).}
 
-\item{random_inter}{A logical indicating if the inter-visits variability is subject-specific when formVar = 'inter-intra'}
+\item{random_inter}{Logical indicating whether the between-visit variability is subject-specific (used when \code{formVar = "inter-intra"}).}
 
-\item{random_intra}{A logical indicating if the intra-visit variability is subject-specific when formVar = 'inter-intra'}
+\item{random_intra}{Logical indicating whether the within-visit variability is subject-specific (used when \code{formVar = "inter-intra"}).}
 
-\item{formGroupVisit}{A formula which indicates the visit indicator variable  when formVar = 'inter-intra'}
+\item{formGroupVisit}{Formula specifying the visit indicator variable (used when \code{formVar = "inter-intra"}).}
 
-\item{correlated_re}{A logical indicating if the random effects of the trend are correlated to the random effects of the variability when formVar is in c('cov-dependent', 'inter-intra')}
+\item{correlated_re}{Logical indicating whether the random effects for the mean and variance submodels are correlated (used when \code{formVar} is in \code{c("cov-dependent", "inter-intra")}).}
 
-\item{data.long}{A dataframe with the longitudinal data}
+\item{data.long}{Data frame containing the longitudinal data.}
 
-\item{S1}{An integer : the number of QMC draws for the first step}
+\item{S1}{Integer specifying the number of QMC draws for the first step.}
 
-\item{S2}{An integer : the number of QMC draws for the second step}
+\item{S2}{Integer specifying the number of QMC draws for the second step.}
 
-\item{nproc}{An integer : the number of processors for parallel computing}
+\item{nproc}{Integer specifying the number of processors for parallel computing.}
 
-\item{clustertype}{one of the supported types from \code{makeCluster} function}
+\item{clustertype}{Character string indicating the cluster type supported by \code{makeCluster}.}
 
-\item{maxiter}{optional maximum number of iterations for the marqLevAlg iterative algorithm.}
+\item{maxiter}{Optional integer specifying the maximum number of iterations for the Marquardt–Levenberg algorithm (default to 100).}
 
-\item{print.info}{logical indicating if the outputs of each iteration should be written}
+\item{print.info}{Logical indicating whether iteration details should be printed (False by default).}
 
-\item{file}{optional character giving the name of the file where the outputs of each iteration should be written (if print.info=TRUE)}
+\item{file}{Optional character string giving the name of the file where iteration outputs are written (if \code{print.info = TRUE}).}
 
-\item{epsa}{optional threshold for the convergence criterion based on the parameter stability.}
+\item{epsa}{Optional numeric threshold for convergence based on parameter stability.}
 
-\item{epsb}{optional threshold for the convergence criterion based on the objective function stability.}
+\item{epsb}{Optional numeric threshold for convergence based on objective function stability.}
 
-\item{epsd}{optional threshold for the relative distance to maximum. This criterion has the nice interpretation of estimating the ratio of the approximation error over the statistical error, thus it can be used for stopping the iterative process whatever the problem.}
+\item{epsd}{Optional numeric threshold for the relative distance to the maximum. This criterion has the nice interpretation of estimating the ratio of the approximation error over the statistical error, thus it can be used for stopping the iterative process whatever the problem.}
 
-\item{binit}{optional initials parameters.}
+\item{binit}{Optional vector of initial parameters values.}
 }
 \value{
-A lsmm object which contains the following elements :
+An object of class \code{lsmm} containing:
 \describe{
-\item{\code{table.res}}{The table of results : Estimation and SE}
-\item{\code{result_step1}}{A marqLevAlg object with the results of the first step estimation.}
-\item{\code{result_step2}}{A marqLevAlg object with the results of the second step estimation.}
-\item{\code{info_conv_step1}}{Information about first step convergence (criteria and time)}
-\item{\code{info_conv_step2}}{Information about second step convergence (criteria and time)}
-\item{\code{control}}{A list of control elements}
+\item{\code{table.res}}{Table of parameter estimates and standard errors.}
+\item{\code{result_step1}}{A \code{marqLevAlg} object with first-step estimation results.}
+\item{\code{result_step2}}{A \code{marqLevAlg} object with second-step estimation results.}
+\item{\code{info_conv_step1}}{Information on first-step convergence (criteria and computation time).}
+\item{\code{info_conv_step2}}{Information on second-step convergence (criteria and computation time).}
+\item{\code{control}}{List of control parameters used during estimation.}
 
 }
 }
 \description{
-This function fits linear mixed effects models in which
-we can suppose that the variance of the residual error is subject-specific. Three differents models can be estimated (see details below).
-Parameters are estimated through a maximum likelihood method, using a Marquardt-Levenberg algorithm.
+This function fits linear mixed effects models for longitudinal data, allowing
+the residual variance to be subject-specific. Three different model types can
+be estimated (see \emph{Details}).Parameters are estimated by maximum likelihood
+using a Marquardt-Levenberg algorithm.
 }
 \details{
-The model is defined by:
+The model is defined as:
 
 \eqn{Y_{ij} = Y_{i}(t_{ij}) = \widetilde{Y}_i(t_{ij}) + \epsilon_{ij} = X_{ij}^{\top} \beta+Z_{ij}^{\top} b_{i}+\epsilon_{ij}},
 
-where \eqn{X_{ij}} and \eqn{Z_{ij}} vectors of explanatory variables for subject \eqn{i} at visit \eqn{j}, respectively associated with the fixed-effect vector \eqn{\beta} and the subject-specific random-effect vector \eqn{b_i}.
+where \eqn{X_{ij}} and \eqn{Z_{ij}} are vectors of explanatory variables for subject \eqn{i}
+at time \eqn{t_{ij}}, associated with the fixed-effect vector \eqn{\beta} and
+the subject-specific random-effect vector \eqn{b_i}, respectively.
 
-A. Standard linear mixed model:
+\strong{A. Standard linear mixed model}
 
-In this case, \eqn{b_i \sim \mathcal{N}(0,B)}, with \eqn{B} an unspecified matrix and the measurements error \eqn{\epsilon_{ij}} are independent Gaussian errors with variance \eqn{\sigma^2_{\epsilon}}.
+In this case, \eqn{b_i \sim \mathcal{N}(0,B)}, with \eqn{B} an unstructured
+covariance matrix, and the measurement errors \eqn{\epsilon_{ij}} are independent
+Gaussian errors with variance \eqn{\sigma^2_{\epsilon}}.
 
-B. Location-scale mixed model with time and/or covariate-dependent variability:
+\strong{B. Location-scale mixed model with time and/or covariate-dependent variability}
 
-In this model we assume the following specification for the residual error:
+In this model, the residual error variance can vary across subjects and over time:
+we assume the following specification for the residual error:
 
 \eqn{\epsilon_{ij} \sim \mathcal{N}(0,\sigma_i^2)} with \eqn{ \log(\sigma_i(t_{ij}))  = O_{ij}^{\top} \mu+M_{ij}^{\top} \tau_{i}}.
 
-where \eqn{O_{ij}} and \eqn{M_{ij}} vectors of explanatory variables for subject \eqn{i} at visit \eqn{j}, respectively associated with the fixed-effect vector \eqn{\mu} and the subject-specific random-effect vector \eqn{\tau_i}.
+where \eqn{O_{ij}} and \eqn{M_{ij}} are vectors of explanatory variables for subject \eqn{i}
+at visit \eqn{j}, associated with the fixed-effect vector \eqn{\mu} and
+the subject-specific random-effect vector \eqn{\tau_i}, respectively.
 
-For the random effects we assume :
+The random effects are assumed jointly Gaussian:
 
 \eqn{\quad\left(\begin{array}{c}
              b_{i} \\
@@ -126,19 +136,25 @@ For the random effects we assume :
                                                                            \Sigma_{\tau b}' & \Sigma_{\tau}
 \end{array}\right)\right)}
 
-As conventionally assumed in practice, the random effects \eqn{b_i} can be considered independent of the errors by setting \eqn{\Sigma_{\tau b} =0}.
+By convention, random effects for the mean (\eqn{b_i}) can be assumed
+independent from those for the variance (\eqn{\tau_i}) by setting \eqn{\Sigma_{\tau b} =0}.
 
-C. Location-scale mixed model distinguishing within and between visits variabilities:
+\strong{C. Location-scale mixed model distinguishing within and between visits variabilities}
 
-In some studies, multiple measurements of a marker are collected at each time point.
+In some studies, multiple measurements of the same marker are collected during each visit.
+For instance, in clinical research, two or three blood pressure readings are
+typically recorded per visit, and within-visit variability may carry information.
 
-For example, in medical research, 2 or 3 blood pressure readings are typically taken per visit,
-and intra-visit variability can be informative. To capture this, we propose an LSMM that distinguishes within- and between-visit variabilities.
+To account for this, we introduce an LSMM that distinguishes within- and
+between-visit variabilities.
 
-We introduce an additional level in longitudinal data, grouping repeated measurements by time.
-For each subject \eqn{i} \eqn{(i=1,...,N)}, \eqn{Y_{ijl}} represents the \eqn{l}-th \eqn{(l=1,...,n_{ij})} measurement at visit \eqn{j} \eqn{(j=1,...,n_i)} and time \eqn{t_{ij}}.
+We introduce an additional level in the data hierarchy, grouping repeated
+measures by visit.
 
-We then define the following LSMM to decompose individual residual variance within and between visits:
+For each subject \eqn{i} \eqn{(i=1,...,N)}, \eqn{Y_{ijl}} represents the
+\eqn{l}-th measurement \eqn{(l=1,...,n_{ij})} at visit \eqn{j} \eqn{(j=1,...,n_i)}
+and time \eqn{t_{ij}}. We then define
+
 \eqn{
 \left\{
   \begin{array}{ll}
@@ -148,9 +164,10 @@ We then define the following LSMM to decompose individual residual variance with
   \end{array}
   \right.}
 
-The parameter \eqn{\mu_\sigma} and \eqn{\mu_\kappa} are the fixed intercepts for the between-visits and within-visit variances respectively.
-
-The subject-specific random-effect \eqn{b_i} and \eqn{\tau_i = (\tau_{\sigma i},\tau_{\kappa i})^\top} are assumed to be Gaussian as presented previously.
+where \eqn{\mu_\sigma} and \eqn{\mu_\kappa} are fixed intercepts for the
+between-visits and within-visit variances, respectively. The subject-specific
+random-effect \eqn{b_i} and \eqn{\tau_i = (\tau_{\sigma i},\tau_{\kappa i})^\top}
+are assumed to be Gaussian as in model (B).
 }
 \examples{
 

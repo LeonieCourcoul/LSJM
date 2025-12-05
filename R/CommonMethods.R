@@ -10,6 +10,6 @@ dynpred <- function(object, ...) {
 }
 
 #' @export
-surv_marg <- function(object, ...) {
+surv_marg <- function(object, individual, time) {
   UseMethod("surv_marg")
 }

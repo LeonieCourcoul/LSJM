@@ -2,13 +2,13 @@
 #' @export
 #' @importFrom graphics par plot lines axis abline mtext
 
-dynpred.lsjm_covDepCR <- function(object, newdata,  s, horizon, event, IC = 95, nb.draws = 1000){
+dynpred.lsjm_covDepCR <- function(object, newdata,  s, horizon, event, CI = 95, nb.draws = 1000){
 
   Objectlsjm <- object
 
 
-  if(!is.null(IC) && (IC<=0 || IC>=100)) stop("IC must be between 0 and 100")
-  if(!is.null(IC) && (is.null(nb.draws) || nb.draws <=0)) stop("draw must be higher 1")
+  if(!is.null(CI) && (CI<=0 || CI>=100)) stop("CI must be between 0 and 100")
+  if(!is.null(CI) && (is.null(nb.draws) || nb.draws <=0)) stop("draw must be higher 1")
   if(Objectlsjm$result_step1$istop != 1|| (!is.null(Objectlsjm$result_step2) && Objectlsjm$result_step2$istop !=1)){
     stop("The model didn't reach convergence.")
   }
@@ -27,19 +27,19 @@ dynpred.lsjm_covDepCR <- function(object, newdata,  s, horizon, event, IC = 95, 
     pred.ponct <- c()
     for(t in window){
       pred.ponct <- c(pred.ponct,predyn_ponct_lsjm_covDepCR(Objectlsjm,  data.long.until.time.s, s, t, event, param = NULL))
-      if(!is.null(IC)){
+      if(!is.null(CI)){
         pred.boot <- cbind(pred.boot, predyn_boot_lsjm_covDepCR(Objectlsjm, data.long.until.time.s, s, t, event, nb.draws) )
       }
     }
     browser()
-    if(!is.null(IC)){
+    if(!is.null(CI)){
       table.pred.id <- cbind(i, times, pred.ponct, apply(pred.boot,2, function(x) quantile(x, 0.50)),
-                             apply(pred.boot,2, function(x) quantile(x, ((100-IC)/2)/100)),
-                             apply(pred.boot,2, function(x) quantile(x, 1-((100-IC)/2)/100)),
+                             apply(pred.boot,2, function(x) quantile(x, ((100-CI)/2)/100)),
+                             apply(pred.boot,2, function(x) quantile(x, 1-((100-CI)/2)/100)),
                              apply(pred.boot,2, sd)
       )
       table.pred.id <- as.data.frame(table.pred.id)
-      colnames(table.pred.id) <- c("ID","Time","Prediction","Median","ICinf","ICsup", "Empirical SD")
+      colnames(table.pred.id) <- c("ID","Time","Prediction","Median","CIinf","CIsup", "Empirical SD")
     }
     else{
       table.pred.id <- cbind(i, times, pred.ponct
@@ -51,7 +51,7 @@ dynpred.lsjm_covDepCR <- function(object, newdata,  s, horizon, event, IC = 95, 
     table.pred <- rbind(table.pred, table.pred.id)
 
     ### Graph
-    if(!is.null(IC)){
+    if(!is.null(CI)){
       oldpar <- par(no.readonly = TRUE) # code line i
       on.exit(par(oldpar)) # code line i + 1
       #browser()
@@ -59,17 +59,17 @@ dynpred.lsjm_covDepCR <- function(object, newdata,  s, horizon, event, IC = 95, 
       #print(x.axe)
       y.axe <- c(NA,data.long.until.time.s[,all.vars(Objectlsjm$control$Objectlsmm$control$formFixed)[1]], rep(NA,length(window)))
       #print(y.axe)
-      y.axe2 <- c(NA,rep(NA,length(data.long.until.time.s[,Objectlsjm$control$Objectlsmm$control$timeVar])),table.pred.id$ICinf)
+      y.axe2 <- c(NA,rep(NA,length(data.long.until.time.s[,Objectlsjm$control$Objectlsmm$control$timeVar])),table.pred.id$CIinf)
       #print(y.axe2)
       y.axe3 <- c(NA,rep(NA,length(data.long.until.time.s[,Objectlsjm$control$Objectlsmm$control$timeVar])),table.pred.id$Median)
       #print(y.axe3)
-      y.axe4 <- c(NA,rep(NA,length(data.long.until.time.s[,Objectlsjm$control$Objectlsmm$control$timeVar])),table.pred.id$ICsup)
+      y.axe4 <- c(NA,rep(NA,length(data.long.until.time.s[,Objectlsjm$control$Objectlsmm$control$timeVar])),table.pred.id$CIsup)
       y.axe5 <- c(NA,rep(NA,length(data.long.until.time.s[,Objectlsjm$control$Objectlsmm$control$timeVar])),table.pred.id$Prediction)
       plot(x = x.axe, y = y.axe,xlim = c(0,max(s+window)),
            xlab = "Time", ylab = "Marker", cex.lab = 1, col = "black",
            main = "Prediction of event", pch = 20, cex = 1, font = 1, font.lab = 1, cex.lab = 1, cex.main = 1)
       par(new = TRUE, font = 1, cex.lab = 1)
-      plot(x.axe, y.axe3, axes = FALSE,col = "black", type = "l", ylim = c(0.000001, max(table.pred.id$ICsup, na.rm = T)),ylab = "", xlab = "", lwd =2, font.lab = 1, cex.lab = 1 )
+      plot(x.axe, y.axe3, axes = FALSE,col = "black", type = "l", ylim = c(0.000001, max(table.pred.id$CIsup, na.rm = T)),ylab = "", xlab = "", lwd =2, font.lab = 1, cex.lab = 1 )
       lines(x.axe, y.axe5, col = "red", lty=1, lwd = 2)
       lines(x.axe, y.axe2, col = "black", lty=2, lwd = 2)
       lines(x.axe, y.axe4, col = "black", lty=2, lwd = 2)
@@ -81,8 +81,8 @@ dynpred.lsjm_covDepCR <- function(object, newdata,  s, horizon, event, IC = 95, 
 
   }
   table.pred <- as.data.frame(table.pred)
-  if(!is.null(IC)){
-    colnames(table.pred) <- c("ID","Time","Prediction","Median","ICinf","ICsup", "Empirical SD")
+  if(!is.null(CI)){
+    colnames(table.pred) <- c("ID","Time","Prediction","Median","CIinf","CIsup", "Empirical SD")
   }
   else{
     colnames(table.pred) <- c("ID","Time","Prediction")

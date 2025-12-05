@@ -1,4 +1,4 @@
-#' Plot methods for lsjm/lsmm objects
+#' plot: Plot methods for \code{lsjm} or \code{lsmm} objects
 #'
 #' This function produces different plots (longitudinal and survival goodness-of-fit,
 #' individual trajectory) of a fitted object of class \code{lsmm} or \code{lsjm}.

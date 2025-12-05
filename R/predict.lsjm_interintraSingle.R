@@ -11,7 +11,7 @@ predict.lsjm_interintraSingle <- function(object, which = "RE", Objectranef = NU
 
   Objectlsjm <- object
   if(missing(Objectlsjm)) stop("The argument Objectlsjm must be specified")
-  if(!inherits((Objectlsjm),"lsjm_interintraCR")) stop("use only \"lsjm_interintraCR\" objects")
+  if(!inherits((Objectlsjm),"lsjm_interintraSingle")) stop("use only \"lsjm_interintraCR\" objects")
   # if(missing(data.long)) stop("The argument data.long must be specified")
   #if(!inherits((data.long),"data.frame")) stop("use only \"data.frame\" objects")
   if(missing(which)) stop("The argument which must be specified")

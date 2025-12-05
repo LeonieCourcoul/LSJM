@@ -10,7 +10,7 @@ predict.lsjm_covDepSingle <- function(object, which = "RE", Objectranef = NULL, 
 
   Objectlsjm <- object
   if(missing(Objectlsjm)) stop("The argument Objectlsjm must be specified")
-  #if(!inherits((Objectlsjm),"lsjm_covDepCR")) stop("use only \"lsjm_covDepCR\" objects")
+  #if(!inherits((Objectlsjm),"lsjm_covDepSingle")) stop("use only \"lsjm_covDepCR\" objects")
   #if(missing(data.long)) stop("The argument data.long must be specified")
   if(!inherits((data.long),"data.frame")) stop("use only \"data.frame\" objects")
   if(missing(which)) stop("The argument which must be specified")

@@ -1,11 +1,13 @@
 #' @rdname plot.lsjm
 #' @importFrom graphics plot par
 #' @importFrom dplyr left_join ungroup
-#' @importFrom ggplot2 ggplot aes geom_pointrange geom_point scale_x_continuous scale_y_continuous theme element_blank element_line element_text ggtitle coord_cartesian geom_line geom_ribbon facet_wrap scale_color_manual guide_legend guides scale_fill_manual geom_step scale_linetype_manual
+#' @importFrom ggplot2 ggplot xlab ylab aes geom_pointrange geom_point scale_x_continuous scale_y_continuous theme element_blank element_line element_text ggtitle coord_cartesian geom_line geom_ribbon facet_wrap scale_color_manual guide_legend guides scale_fill_manual geom_step scale_linetype_manual
 #' @importFrom survminer surv_fit ggsurvplot
 #' @importFrom survival Surv
 #' @importFrom SmoothHazard intensity
 #' @importFrom mvtnorm rmvnorm
+#' @importFrom stats setNames
+#' @importFrom grid unit
 #' @export
 plot.lsjm_interintraIDM <- function(x, which = 'long.fit', Objectpredict = NULL, break.times = NULL, ID.ind = NULL, ObjectSmoothHazard = NULL, xlim = NULL, ylim = NULL, ...){
 
@@ -35,11 +37,10 @@ plot.lsjm_interintraIDM <- function(x, which = 'long.fit', Objectpredict = NULL,
       timeInterv <- range(data.long[,timeVar])
       break.times <- quantile(timeInterv,prob=seq(0,1,length.out=10))
     }
+    browser()
     data.long$window <- cut(data.long[,timeVar], break.times, include.lowest = T)
-    data.long2 <- data.long %>% group_by(ID,age.visit) %>% mutate(new.var.y.moy =  mean(.data[[value.var]])) %>% ungroup()
-    #View(data.long2[,c("ID","age.visit", "PAS","new.var.y.moy")])
-    data.long2.unique <- data.long2[!duplicated(data.long2[, c("ID", "age.visit")]), ]
-    #View(data.long2.unique[,c("ID","age.visit", "PAS","new.var.y.moy")])
+    data.long2 <- data.long %>% group_by(id,.data[[time_var]]) %>% mutate(new.var.y.moy =  mean(.data[[value.var]])) %>% ungroup()
+    data.long2.unique <- data.long2[!duplicated(data.long2[, c("ID", time_var)]), ]
     data.long <- data.long2.unique
     value.var <- "new.var.y.moy"
     data.long$new.var.y.moy <- as.numeric(data.long$new.var.y.moy)
@@ -48,7 +49,6 @@ plot.lsjm_interintraIDM <- function(x, which = 'long.fit', Objectpredict = NULL,
     length.obs <- by(data.long[[value.var]], data.long$window, length)
     IC.inf <- mean.obs - 1.96*sd.obs/sqrt(length.obs)
     IC.sup <- mean.obs + 1.96*sd.obs/sqrt(length.obs)
-    #prediction <- cbind(pred.CV, data.long$window)
     ObjectpredictY$time.new.pred <- ObjectpredictY$time
     data.long$time.new.pred <- data.long[,timeVar]
     data.long <- as.data.frame(data.long)

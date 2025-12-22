@@ -1,4 +1,4 @@
-#' @importFrom stats quantile qnorm
+#' @importFrom stats quantile qnorm as.formula optim
 #' @importFrom utils head tail
 #' @importFrom survival Surv survreg coxph
 #' @importFrom flexsurv flexsurvreg

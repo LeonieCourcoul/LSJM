@@ -1,7 +1,8 @@
 #' @rdname dynpred
 #' @export
 #' @importFrom graphics par plot lines axis abline mtext
-
+#' @importFrom stats sd
+#'
 dynpred.lsjm_covDepCR <- function(object, newdata,  s, horizon, event, CI = 95, nb.draws = 1000){
 
   Objectlsjm <- object

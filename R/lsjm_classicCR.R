@@ -1,10 +1,11 @@
-#' @importFrom stats quantile qnorm
+#' @importFrom stats quantile qnorm as.formula optim
 #' @importFrom utils head tail
 #' @importFrom survival Surv survreg coxph
 #' @importFrom flexsurv flexsurvreg
 #' @importFrom splines splineDesign
 #' @importFrom spacefillr generate_sobol_owen_set
 #' @importFrom marqLevAlg marqLevAlg
+
 lsjm_classicCR <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_baseline_02, nb.knots.splines,
                            formSurv_01, formSurv_02,  nb_pointsGK, sharedtype_01, sharedtype_02,
                            formSlopeFixed, formSlopeRandom,

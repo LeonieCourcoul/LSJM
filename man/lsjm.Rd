@@ -233,18 +233,20 @@ where the terms are defined analogously to the single-event model.
 }
 \examples{
 
-\donttest{
+\dontrun{
 
 # First, run the examples from the lsmm function (see ?lsmm).
 
-# Example 1: Illness-death model with time-dependent subject-specific variability
+# Example 1: Illness-death model with time-dependent subject-specific
+# variability
 data(threeC)
 threeC$age.visit65 <- (threeC$age.visit-65)/10
 threeC$SBP <- threeC$SBP/10
 threeC <- threeC
 threeC <- dplyr::group_by(threeC, ID, num.visit)
 threeC <- dplyr::mutate(threeC, SBPvisit = mean(SBP))
-threeC_ex1 <- threeC[!duplicated(threeC[, c("ID", "num.visit")]), c("ID", "SBPvisit", "age.visit65", "sex")]
+threeC_ex1 <- threeC[!duplicated(threeC[, c("ID", "num.visit")]),
+                                  c("ID", "SBPvisit", "age.visit65", "sex")]
 
 m1 <- lsmm(formFixed = SBPvisit ~ age.visit65,
                formRandom = ~ age.visit65,
@@ -288,7 +290,8 @@ l1 <- lsjm(m1,
 summary(l1)
 
 
-# Example 2: Competing risks model with between- and within-visit subject-specific variabilities
+# Example 2: Competing risks model with between- and within-visit
+# subject-specific variabilities
 
 m2 <- lsmm(formFixed = SBP ~ age.visit65,
                formRandom = ~ age.visit65,

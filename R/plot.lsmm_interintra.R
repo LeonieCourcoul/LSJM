@@ -1,7 +1,7 @@
 #' @rdname plot.lsjm
 #' @importFrom graphics plot par
 #' @importFrom dplyr left_join
-#' @importFrom ggplot2 ggplot aes geom_pointrange geom_point scale_x_continuous scale_y_continuous theme element_blank element_line element_text ggtitle coord_cartesian geom_line geom_ribbon facet_wrap scale_color_manual guide_legend guides scale_fill_manual geom_step scale_linetype_manual
+#' @importFrom ggplot2 ggplot xlab ylab aes geom_pointrange geom_point scale_x_continuous scale_y_continuous theme element_blank element_line element_text ggtitle coord_cartesian geom_line geom_ribbon facet_wrap scale_color_manual guide_legend guides scale_fill_manual geom_step scale_linetype_manual
 #' @export
 
 plot.lsmm_interintra <- function(x, which = 'long.fit', Objectpredict = NULL, break.times = NULL, ID.ind = NULL, ylim = NULL, xlim= NULL, ...){

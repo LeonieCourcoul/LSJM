@@ -1,3 +1,4 @@
+#' @importFrom stats pchisq
 #' @export
 
 summary.lsjm_covDepCR <- function(object,...)

@@ -171,7 +171,7 @@ are assumed to be Gaussian as in model (B).
 }
 \examples{
 
-\donttest{
+\dontrun{
 
 data(threeC)
 threeC$age.visit65 <- (threeC$age.visit-65)/10
@@ -179,9 +179,11 @@ threeC$SBP <- threeC$SBP/10
 threeC <- threeC
 threeC <- dplyr::group_by(threeC, ID, num.visit)
 threeC <- dplyr::mutate(threeC, SBPvisit = mean(SBP))
-threeC_ex1 <- threeC[!duplicated(threeC[, c("ID", "num.visit")]), c("ID", "SBPvisit", "age.visit65", "sex")]
+threeC_ex1 <- threeC[!duplicated(threeC[, c("ID", "num.visit")]),
+                                 c("ID", "SBPvisit", "age.visit65", "sex")]
 
-#First example : a standard linear mixed model (constant residual variance, in time and between subjects, case A in details)
+#First example : a standard linear mixed model (constant residual variance,
+# in time and between subjects, case A in details)
 
 m1 <- lsmm(formFixed = SBPvisit ~ age.visit65+I(age.visit65^2),
                formRandom = ~ age.visit65+I(age.visit65^2),
@@ -196,7 +198,8 @@ m1 <- lsmm(formFixed = SBPvisit ~ age.visit65+I(age.visit65^2),
 summary(m1)
 
 
-#Second example : a linear mixed model with subject-specific time-dependent and covariate-dependent variability (case B in details)
+#Second example : a linear mixed model with subject-specific time-dependent
+# and covariate-dependent variability (case B in details)
 
 #We adjust the individual residual variability on age and the sex.
 
@@ -215,7 +218,8 @@ m2 <- lsmm(formFixed = SBPvisit ~ age.visit65,
 
 summary(m2)
 
-#Third example : a linear mixed model with subject-specific inter-visits and intra-visits variabilities
+#Third example : a linear mixed model with subject-specific inter-visits and
+# intra-visits variabilities
 
 threeC_ex2 <- threeC[, c("ID", "SBP", "age.visit65", "sex", "num.visit")]
 
@@ -238,7 +242,8 @@ summary(m3)
 
 
 
-#Fourth example : a linear mixed model with subject-specific inter-visits variability and constant intra-visit variability
+#Fourth example : a linear mixed model with subject-specific inter-visits
+# variability and constant intra-visit variability
 
 m4 <- lsmm(formFixed = SBP ~ age.visit65+sex,
                formRandom = ~ age.visit65,

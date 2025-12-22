@@ -440,6 +440,8 @@ ranef.lsjm_covDepIDM <- function(object,...){
     st_T_i <- c(0); st_T0_i <- c(0)
 
     binit <- matrix(0, nrow = 1, ncol = x$control$Objectlsmm$control$nb.e.a + x$control$Objectlsmm$control$nb.e.a.sigma)
+    cl <- parallel::makeCluster(x$control$nproc)
+    doParallel::registerDoParallel(cl)
     random.effects.PredictionsCase1 <- foreach(id.Case1_boucle = 1:length(unique(data.long.Case1$id)),
                                           .combine = 'rbind', .packages = c("mvtnorm", "marqLevAlg")) %dopar% {
       delta2_i <- data.id.Case1$delta2[id.Case1_boucle]
@@ -729,6 +731,8 @@ ranef.lsjm_covDepIDM <- function(object,...){
 
     time.measures <- data.id.Case1bis[,x$control$Objectlsmm$control$timeVar]
 
+    cl <- parallel::makeCluster(x$control$nproc)
+    doParallel::registerDoParallel(cl)
     binit <- matrix(0, nrow = 1, ncol = x$control$Objectlsmm$control$nb.e.a + x$control$Objectlsmm$control$nb.e.a.sigma)
     random.effects.PredictionsCase1bis <- foreach(id.Case1bis_boucle = 1:length(unique(data.long.Case1bis$id)),
                                           .combine = 'rbind', .packages = c("mvtnorm", "marqLevAlg")) %dopar% {
@@ -991,6 +995,8 @@ ranef.lsjm_covDepIDM <- function(object,...){
         Bs_T0_02 <- splineDesign(x$controlknots.hazard_baseline.splines_02, c(t(st_T0)), ord = 4L)
       }
     }
+    cl <- parallel::makeCluster(x$control$nproc)
+    doParallel::registerDoParallel(cl)
     random.effects.PredictionsCase2 <- foreach(id.Case2_boucle = 1:length(unique(data.long.Case2$id)),
                                                   .combine = 'rbind', .packages = c("mvtnorm", "marqLevAlg")) %dopar% {
 
@@ -1309,6 +1315,8 @@ ranef.lsjm_covDepIDM <- function(object,...){
     Bs_T0_i_01<- as.matrix(0);  Bs_T0_i_02<- as.matrix(0);
     st_T_i <- c(0); st_T0_i <- c(0); st_0_LT_i <- as.matrix(0);
 
+    cl <- parallel::makeCluster(x$control$nproc)
+    doParallel::registerDoParallel(cl)
     random.effects.PredictionsCase3 <- foreach(id.Case3_boucle = 1:length(unique(data.long.Case3$id)),
                                                .combine = 'rbind', .packages = c("mvtnorm", "marqLevAlg")) %dopar% {
       #binit <- mvtnorm::rmvnorm(1, mean = rep(0, x$control$Objectlsmm$control$nb.e.a+2), MatCov)

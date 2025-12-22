@@ -1,3 +1,4 @@
+#' @importFrom stats pchisq
 #' @export
 
 summary.lsmm_classic <- function(object,...)

@@ -1,7 +1,7 @@
 #' @rdname dynpred
 #' @export
 #' @importFrom graphics par plot lines axis abline mtext
-
+#' @importFrom stats sd
 dynpred.lsjm_interintraIDM <- function(object,newdata,  s, horizon, event = NULL, CI = 95, nb.draws = 1000){
 
 

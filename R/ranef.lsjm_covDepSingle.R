@@ -119,7 +119,7 @@ ranef.lsjm_covDepSingle <- function(object,...){
 
   data.long <- x$control$data.long
 
-  random.effects.Predictions <- matrix(NA, nrow = lenght(unique(data.long$id)), ncol = x$control$Objectlsmm$control$nb.e.a+1)
+  random.effects.Predictions <- matrix(NA, nrow = length(unique(data.long$id)), ncol = x$control$Objectlsmm$control$nb.e.a+1)
   binit <- matrix(0, nrow = 1, ncol = x$control$Objectlsmm$control$nb.e.a)
 
   st_T = as.matrix(0); X_GK_T = as.matrix(0); U_GK_T = as.matrix(0); Xslope_GK_T = as.matrix(0); Uslope_GK_T = as.matrix(0);

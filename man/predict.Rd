@@ -71,7 +71,7 @@ This function computes different predicted quantities. For a \code{lsmm} object,
 For a \code{lsjm} object we could also compute cumulative hazard function for each risk transition.
 }
 \examples{
-\donttest{
+\dontrun{
 
 data(threeC)
 threeC$age.visit65 <- (threeC$age.visit-65)/10
@@ -79,7 +79,8 @@ threeC$SBP <- threeC$SBP/10
 threeC <- threeC
 threeC <- dplyr::group_by(threeC, ID, num.visit)
 threeC <- dplyr::mutate(threeC, SBPvisit = mean(SBP))
-threeC_ex1 <- threeC[!duplicated(threeC[, c("ID", "num.visit")]), c("ID", "SBPvisit", "age.visit65", "sex")]
+threeC_ex1 <- threeC[!duplicated(threeC[, c("ID", "num.visit")]), c("ID",
+                                           "SBPvisit", "age.visit65", "sex")]
 
 m1 <- lsmm(formFixed = SBPvisit ~ age.visit65,
                formRandom = ~ age.visit65,

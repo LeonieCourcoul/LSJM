@@ -39,13 +39,13 @@
 #'
 #' @examples
 #'
-#' \donttest{
+#' \dontrun{
 #'
 #' # Begin by running the examples from the lsjm function (see ?lsjm).
 #'
-#' # Example 1: prediction of the risk to be diagnosed with dementia between 85 and 95 years old
-#' # given the blood pressure measurements before 85 years old for individual "10003", with an IDM model
-#' # s = (85-65)/10
+#' # Example 1: prediction of the risk to be diagnosed with dementia between 85
+#' # and 95 years old given the blood pressure measurements before 85 years old
+#' # for individual "10003", with an IDM model s = (85-65)/10
 #'
 #' data(threeC)
 #' threeC$age.visit65 <- (threeC$age.visit-65)/10
@@ -53,7 +53,8 @@
 #' threeC <- threeC
 #' threeC <- dplyr::group_by(threeC, ID, num.visit)
 #' threeC <- dplyr::mutate(threeC, SBPvisit = mean(SBP))
-#' threeC_ex1 <- threeC[!duplicated(threeC[, c("ID", "num.visit")]), c("ID", "SBPvisit", "age.visit65", "sex")]
+#' threeC_ex1 <- threeC[!duplicated(threeC[, c("ID", "num.visit")]), c("ID",
+#'                                            "SBPvisit", "age.visit65", "sex")]
 #'
 #' m1 <- lsmm(formFixed = SBPvisit ~ age.visit65,
 #'                formRandom = ~ age.visit65,
@@ -94,8 +95,10 @@
 #'            S2 = 2000,
 #'            nproc = 10)
 #'
-#' # Example 2: prediction of the risk to be diagnosed with dementia (dynpDementia) and to die (dynpDeath) between 85 and 95 years old
-#' # given the blood pressure measurements before 85 years old for individual "10003", with a competing risk model
+#' # Example 2: prediction of the risk to be diagnosed with dementia
+#' # (dynpDementia) and to die (dynpDeath) between 85 and 95 years old
+#' # given the blood pressure measurements before 85 years old for
+#' # individual "10003", with a competing risk model
 #' ind2 <- threeC_ex2[which(threeC_ex2$ID == 10003),]
 #'
 #' m2 <- lsmm(formFixed = SBP ~ age.visit65,
@@ -131,9 +134,11 @@
 #'            S2 = 2000)
 #'
 #'
-#' dynpDementia <- dynpred(l2, ind2,  s = 2, horizon = seq(2.1,3,0.1), event = 1, nb.draws = 1000)
+#' dynpDementia <- dynpred(l2, ind2,  s = 2, horizon = seq(2.1,3,0.1),
+#'                   event = 1, nb.draws = 1000)
 #'
-#' dynpDeath <- dynpred(l2, ind2,  s = 2, horizon = seq(2.1,3,0.1), event = 2, nb.draws = 1000)
+#' dynpDeath <- dynpred(l2, ind2,  s = 2, horizon = seq(2.1,3,0.1),
+#'                   event = 2, nb.draws = 1000)
 #'}
 #'
 #'

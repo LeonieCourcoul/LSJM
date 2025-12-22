@@ -49,7 +49,7 @@ A numeric, the population-average probability of being free of any events at a g
 The population-average probability of being free of any events at a given time $t$ and covariates
 }
 \examples{
-\donttest{
+\dontrun{
 
 # Begining by estimating the examples from \code{lsmm} and \code{lsjm}, we then compute
 # the average-probability of being alive and without dementia at age 85 for a Women
@@ -60,7 +60,8 @@ threeC$SBP <- threeC$SBP/10
 threeC <- threeC
 threeC <- dplyr::group_by(threeC, ID, num.visit)
 threeC <- dplyr::mutate(threeC, SBPvisit = mean(SBP))
-threeC_ex1 <- threeC[!duplicated(threeC[, c("ID", "num.visit")]), c("ID", "SBPvisit", "age.visit65", "sex")]
+threeC_ex1 <- threeC[!duplicated(threeC[, c("ID", "num.visit")]), c("ID",
+                                            "SBPvisit", "age.visit65", "sex")]
 
 m1 <- lsmm(formFixed = SBPvisit ~ age.visit65,
                formRandom = ~ age.visit65,

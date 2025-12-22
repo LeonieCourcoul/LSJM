@@ -195,7 +195,8 @@ threeC$age.visit65 <- (threeC$age.visit-65)/10
 threeC$SBP <- threeC$SBP/10
 threeC <- threeC \%>\% group_by(ID, num.visit) \%>\% mutate(SBPvisit = mean(SBP))
 threeC$age65_CR <- NA
-threeC$age65_CR[which(threeC$dem == 1)] <- (threeC$age.last65[which(threeC$dem == 1)] +threeC$age.first65[which(threeC$dem == 1)])/2
+threeC$age65_CR[which(threeC$dem == 1)] <- (threeC$age.last65[which(threeC$dem == 1)]
+                                       +threeC$age.first65[which(threeC$dem == 1)])/2
 threeC$age65_CR[which(threeC$dem == 0)] <- threeC$age.final65[which(threeC$dem == 0)]
 threeC$demCR <- threeC$dem
 threeC$deathCR <- NA
@@ -204,7 +205,8 @@ threeC$deathCR[which(threeC$dem == 0)] <- threeC$death[which(threeC$dem == 0)]
 threeC <- threeC \%>\% group_by(ID) \%>\% filter(age.visit65 <= age65_CR)
 
 
-threeC_ex1 <- threeC[!duplicated(threeC[, c("ID", "num.visit")]), c("ID", "SBPvisit", "age.visit65", "sex","age0_65", "demCR","deathCR","age65_CR")]
+threeC_ex1 <- threeC[!duplicated(threeC[, c("ID", "num.visit")]), c("ID",
+     "SBPvisit", "age.visit65", "sex","age0_65", "demCR","deathCR","age65_CR")]
 
 
 # Estimation of a lsmm with time-dependent variability model:

@@ -1500,7 +1500,7 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
   estimation2 <- NULL
   info_conv_step2 <- NULL
 
-  if(!is.null(S2)){
+  if(!is.null(S2) & estimation1$istop == 1){
     message(paste("Second estimation with ", S2, " QMC draws"))
     if(variability_inter_visit && variability_intra_visit){
       Zq1 <- generate_sobol_owen_set(S2,  nb.e.a+2)

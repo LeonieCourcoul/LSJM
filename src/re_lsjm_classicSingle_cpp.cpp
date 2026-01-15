@@ -37,9 +37,9 @@ double re_lsjm_classicSingle_cpp(arma::vec sharedtype, List HB, arma::vec Gomper
   double shape_01 = Weibull[0];
 
   double alpha_y_01 = alpha_y_slope[0];
-  double alpha_y_02 = alpha_y_slope[1];
-  double alpha_slope_01 = alpha_y_slope[2];
-  double alpha_slope_02 = alpha_y_slope[3];
+  //double alpha_y_02 = alpha_y_slope[1];
+  double alpha_slope_01 = alpha_y_slope[1];
+  //double alpha_slope_02 = alpha_y_slope[3];
   arma::vec alpha_z_01 = alpha_z[0];
   arma::vec gamma_01 = gamma[0];
 

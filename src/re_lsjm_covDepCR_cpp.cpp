@@ -305,7 +305,7 @@ double re_lsjm_covDepCR_cpp(arma::vec sharedtype, List HB, arma::vec Gompertz, a
   Clogexp = max(log_dens_int) - 500;
   log_dens_int = log_dens_int - Clogexp;
   log_dens = Clogexp + log(sum(exp(log_dens_int)));
-  double den = 0;
+  //double den = 0;
   //if(left_trunc){
   //  den = log(sum(exp(-A_01_T0_i - A_02_T0_i)));
   //log_dens = log_dens - den;

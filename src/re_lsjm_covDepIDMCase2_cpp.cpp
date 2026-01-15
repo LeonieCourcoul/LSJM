@@ -43,13 +43,13 @@ double re_lsjm_covDepIDMCase2_cpp(arma::vec sharedtype, List HB, arma::vec W_G,
   const std::string& hazard_baseline_02 = HB[1];
   double shape_01 = W_G[0];
   double shape_02 = W_G[1];
-  double shape_12 = W_G[2];
+  //double shape_12 = W_G[2];
   double Gompertz_1_01 = W_G[3];
   double Gompertz_2_01 = W_G[4];
   double Gompertz_1_02 = W_G[5];
   double Gompertz_2_02 = W_G[6];
-  double Gompertz_1_12 = W_G[7];
-  double Gompertz_2_12 = W_G[8];
+  //double Gompertz_1_12 = W_G[7];
+  //double Gompertz_2_12 = W_G[8];
 
   double alpha_y_01 = alpha_y_slope_var[0];
   double alpha_y_02 = alpha_y_slope_var[1];

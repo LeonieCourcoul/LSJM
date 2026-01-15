@@ -214,7 +214,7 @@ arma::vec log_llh_lsjm_classicIDM_C1bis(arma::vec sharedtype, List HB, arma::vec
 
     ///// h0
     ///////// 1-2
-    double h_0_12_T_i;
+    double h_0_12_T_i=0.0;
     arma::vec h_0_GK_12_T_i;
     arma::vec h_0_GK_12_L_i;
     if(hazard_baseline_12 == "Exponential"){
@@ -271,7 +271,7 @@ arma::vec log_llh_lsjm_classicIDM_C1bis(arma::vec sharedtype, List HB, arma::vec
     A_12_L_i = (exp(etaBaseline_12_L_i)%survLong_12_L_i*(Time_L_i/2));
 
     ///////// 0-1
-    double h_0_01_L_i;
+    double h_0_01_L_i=0.0;
     arma::vec h_0_GK_01_L_i;
     arma::vec h_0_GK_01_T0_i;
     if(hazard_baseline_01 == "Exponential"){

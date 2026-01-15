@@ -269,7 +269,7 @@ arma::vec log_llh_lsjm_covDepIDM_C2(arma::vec sharedtype, List HB, arma::vec W_G
     }
 
     ///////// 0-2
-    double h_0_02_T_i;
+    double h_0_02_T_i=0.0;
     arma::vec h_0_GK_02_T_i;
     arma::vec h_0_GK_02_T0_i;
     if(hazard_baseline_02 == "Exponential"){

@@ -284,7 +284,7 @@ arma::vec log_llh_lsjm_covDepIDM_C1(arma::vec sharedtype, List HB, arma::vec W_G
     ///// h0
     double Time_T_i = Time_T(i_provCase1);
     ///////// 1-2
-    double h_0_12_T_i;
+    double h_0_12_T_i=0.0;
     arma::vec h_0_GK_12_T_i;
     arma::mat h_0_GK_12_0_LR_i;
     if(hazard_baseline_12 == "Exponential"){

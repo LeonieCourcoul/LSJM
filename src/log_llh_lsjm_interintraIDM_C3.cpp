@@ -303,7 +303,7 @@ arma::vec log_llh_lsjm_interintraIDM_C3(arma::vec sharedtype, List HB, arma::vec
     double Time_T_i = Time_T(i_provCase3);
     double Time_L_T_i = Time_L_T(i_provCase3);
     ///////// 1-2
-    double h_0_12_T_i;
+    double h_0_12_T_i=0.0;
     arma::vec h_0_GK_12_T_i;
     arma::mat h_0_GK_12_0_LT_i;
 
@@ -450,7 +450,7 @@ arma::vec log_llh_lsjm_interintraIDM_C3(arma::vec sharedtype, List HB, arma::vec
     arma::mat h_0_GK_02_0_LT_i;
     arma::vec h_0_GK_02_T0_i;
     arma::vec h_0_GK_02_T_i;
-    double h_0_02_T_i;
+    double h_0_02_T_i=0.0;
     if(hazard_baseline_02 == "Exponential"){
       h_0_02_T_i = 1;
       h_0_GK_02_T_i = wk;

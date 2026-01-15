@@ -13,6 +13,6 @@ LinkingTo:
     Rcpp,
     RcppArmadillo
 Imports: 
-    Rcpp, marqLevAlg, survival, flexsurv, ggplot2, splines, spacefillr, survminer, foreach, doParallel, SmoothHazard, parallel, mvtnorm, dplyr
+    Rcpp, marqLevAlg, survival, flexsurv, ggplot2, splines, spacefillr, survminer, foreach, doParallel, SmoothHazard, parallel, mvtnorm, dplyr, snow
 Depends: 
     R (>= 3.5.0)

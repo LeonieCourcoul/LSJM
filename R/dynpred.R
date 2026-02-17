@@ -39,7 +39,7 @@
 #'
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' # Begin by running the examples from the lsjm function (see ?lsjm).
 #'

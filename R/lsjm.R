@@ -155,7 +155,7 @@
 #'
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' # First, run the examples from the lsmm function (see ?lsmm).
 #'

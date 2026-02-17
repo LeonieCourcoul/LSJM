@@ -49,7 +49,7 @@ A numeric, the population-average probability of being free of any events at a g
 The population-average probability of being free of any events at a given time $t$ and covariates
 }
 \examples{
-\dontrun{
+\donttest{
 
 # Begining by estimating the examples from \code{lsmm} and \code{lsjm}, we then compute
 # the average-probability of being alive and without dementia at age 85 for a Women

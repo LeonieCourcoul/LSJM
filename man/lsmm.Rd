@@ -171,7 +171,7 @@ are assumed to be Gaussian as in model (B).
 }
 \examples{
 
-\dontrun{
+\donttest{
 
 data(threeC)
 threeC$age.visit65 <- (threeC$age.visit-65)/10

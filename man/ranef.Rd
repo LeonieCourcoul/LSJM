@@ -55,7 +55,7 @@ ranef: the predicted random effects for all subjects
 }
 \examples{
 
-\dontrun{
+\donttest{
 
 data(threeC)
 threeC$age.visit65 <- (threeC$age.visit-65)/10

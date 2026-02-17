@@ -189,7 +189,7 @@ allows to assess the fit of the survival submodel. For each transition, the pred
 }
 \examples{
 
-\dontrun{
+\donttest{
 data(threeC)
 threeC$age.visit65 <- (threeC$age.visit-65)/10
 threeC$SBP <- threeC$SBP/10

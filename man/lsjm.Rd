@@ -233,7 +233,7 @@ where the terms are defined analogously to the single-event model.
 }
 \examples{
 
-\dontrun{
+\donttest{
 
 # First, run the examples from the lsmm function (see ?lsmm).
 

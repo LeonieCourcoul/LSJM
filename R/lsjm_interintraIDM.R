@@ -5,6 +5,7 @@
 #' @importFrom splines splineDesign
 #' @importFrom spacefillr generate_sobol_owen_set
 #' @importFrom marqLevAlg marqLevAlg
+#' @import snow
 lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_baseline_02, hazard_baseline_12, nb.knots.splines,
                                formSurv_01, formSurv_02, formSurv_12, nb_pointsGK, sharedtype_01, sharedtype_02, sharedtype_12,
                                formSlopeFixed, formSlopeRandom,

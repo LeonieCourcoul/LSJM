@@ -5,6 +5,7 @@
 #' @importFrom splines splineDesign
 #' @importFrom spacefillr generate_sobol_owen_set
 #' @importFrom marqLevAlg marqLevAlg
+#' @import snow
 lsjm_covDepSingle <- function(Objectlsmm, Time, deltas, hazard_baseline_01,  nb.knots.splines,
                           formSurv_01,  nb_pointsGK, sharedtype_01,
                           formSlopeFixed, formSlopeRandom,

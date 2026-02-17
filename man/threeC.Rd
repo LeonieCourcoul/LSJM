@@ -5,9 +5,11 @@
 \alias{threeC}
 \title{ThreeC dataset}
 \format{
-A data frame with 5248 rows and 11 variables:
+A data frame with 5248 rows and 13 variables:
 \describe{
-\item{ID}{ID of each subject}
+\item{id}{id of each subject}
+\item{Apoe4}{indicator of the apoe4 gene}
+\item{Edu}{Educational level (0 = less than 10 years, 1 = more than 10 years)}
 \item{SBP}{systolic blood pressure in mmHg}
 \item{age.visit}{age at measurement of SBP}
 \item{age.final}{age at death or censoring (last news)}

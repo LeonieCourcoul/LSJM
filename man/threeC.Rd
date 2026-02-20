@@ -20,6 +20,11 @@ A data frame with 5248 rows and 13 variables:
 \item{dem}{indicator of dementia}
 \item{death}{indicator of death}
 \item{num.visit}{visit identifier}
+\item{age.visit65}{(age.visit-65)/10}
+\item{age.final65}{(age.final-65)/10}
+\item{age.last65}{(age.last-65)/10}
+\item{age.first65}{(age.first-65)/10}
+\item{age0_65}{(age0-65)/10}
 }
 }
 \usage{

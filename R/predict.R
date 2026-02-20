@@ -80,7 +80,7 @@
 #'
 #'
 #'
-#' @name predict.lsjm
-#' @rdname predict.lsjm
+#' @name predict
+#' @rdname predict
 #'
 NULL

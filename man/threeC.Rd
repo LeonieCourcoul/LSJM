@@ -7,7 +7,7 @@
 \format{
 A data frame with 5248 rows and 13 variables:
 \describe{
-\item{id}{id of each subject}
+\item{ID}{id of each subject}
 \item{Apoe4}{indicator of the apoe4 gene}
 \item{Edu}{Educational level (0 = less than 10 years, 1 = more than 10 years)}
 \item{SBP}{systolic blood pressure in mmHg}

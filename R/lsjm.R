@@ -168,7 +168,8 @@
 #' threeC <- dplyr::group_by(threeC, ID, num.visit)
 #' threeC <- dplyr::mutate(threeC, SBPvisit = mean(SBP))
 #' threeC_ex1 <- threeC[!duplicated(threeC[, c("ID", "num.visit")]),
-#'                                   c("ID", "SBPvisit", "age.visit65", "sex")]
+#'                                   c("ID", "SBPvisit", "age.visit65", "sex","age.first65",
+#'                                   "age.last65","age.final65","age0_65")]
 #'
 #' m1 <- lsmm(formFixed = SBPvisit ~ age.visit65,
 #'                formRandom = ~ age.visit65,

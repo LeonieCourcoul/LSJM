@@ -23,70 +23,70 @@
 #' @examples
 #'
 #' \donttest{
-#' data(threeC)
-#' threeC$age.visit65 <- (threeC$age.visit-65)/10
-#' threeC$SBP <- threeC$SBP/10
-#' threeC <- threeC %>% group_by(ID, num.visit) %>% mutate(SBPvisit = mean(SBP))
-#' threeC$age65_CR <- NA
-#' threeC$age65_CR[which(threeC$dem == 1)] <- (threeC$age.last65[which(threeC$dem == 1)]
-#'                                        +threeC$age.first65[which(threeC$dem == 1)])/2
-#' threeC$age65_CR[which(threeC$dem == 0)] <- threeC$age.final65[which(threeC$dem == 0)]
-#' threeC$demCR <- threeC$dem
-#' threeC$deathCR <- NA
-#' threeC$deathCR[which(threeC$dem == 1)] <- 0
-#' threeC$deathCR[which(threeC$dem == 0)] <- threeC$death[which(threeC$dem == 0)]
-#' threeC <- threeC %>% group_by(ID) %>% filter(age.visit65 <= age65_CR)
-#'
-#'
-#' threeC_ex1 <- threeC[!duplicated(threeC[, c("ID", "num.visit")]), c("ID",
-#'      "SBPvisit", "age.visit65", "sex","age0_65", "demCR","deathCR","age65_CR")]
-#'
-#'
-#' # Estimation of a lsmm with time-dependent variability model:
-#' m2 <- lsmm(formFixed = SBPvisit ~ age.visit65,
-#'                formRandom = ~ age.visit65,
-#'                formGroup = ~ ID,
-#'                timeVar = 'age.visit65',
-#'                data.long = threeC_ex1,
-#'                formVar = "cov-dependent",
-#'                formFixedVar = ~ age.visit65+sex,
-#'                formRandomVar = ~ age.visit65,
-#'                correlated_re = FALSE,
-#'                S1 = 500,
-#'                S2 = 1000,
-#'                nproc = 1)
-#'
-#' # Predictions:
-#' pred.m2 <- predict(m2, which = c("RE", "Y"))
-#'
-#' #Plot:
-#' plot(m2, which = "traj.fit", predictObject = pred.m2,break.times = (seq(65,95,by = 2.5)-65)/10)
-#' plot(m2, which = "traj.ind", predictObject = pred.m2,  ID.ind = c(10003,120010))
-#'
-#' # Estimation of a lsjm with time-dependent variability model and competing events:
-#' l2 <- lsjm(Objectlsmm = m2,
-#'            survival_type = 'CR',
-#'            formSurv_01 = ~ sex,
-#'            formSurv_02 = ~ sex,
-#'            sharedtype_01 = c("value", "variability"),
-#'            sharedtype_02 = c("value", "variability"),
-#'            hazardBase_01 = "Weibull",
-#'            hazardBase_02 = "Weibull",
-#'            delta1 = ~ demCR,
-#'            delta2 = ~ deathCR,
-#'            Time_T0 = ~ age0_65,
-#'            Time_T = ~ age65_CR,
-#'            nproc = 5,
-#'            S1 = 1000,
-#'            S2 = 2000)
-#'
-#' # Predictions:
-#' pred.l2 <- predict(l2, which = c("RE", "Y", "Cum"))
-#'
-#' # Plot:
-#' plot(l2, which = "traj.fit", predictObject = pred.l2,break.times = (seq(65,95,by = 2.5)-65)/10)
-#' plot(l2, which = "traj.ind", predictObject = pred.l2, ID.ind = c(10003,120010))
-#' plot(l2, which = "survival.fit", predictObject = pred.l2)
+#'# data(threeC)
+#'# threeC$age.visit65 <- (threeC$age.visit-65)/10
+#'# threeC$SBP <- threeC$SBP/10
+#'# threeC <- threeC %>% group_by(ID, num.visit) %>% mutate(SBPvisit = mean(SBP))
+#'# threeC$age65_CR <- NA
+#'# threeC$age65_CR[which(threeC$dem == 1)] <- (threeC$age.last65[which(threeC$dem == 1)]
+#'#                                        +threeC$age.first65[which(threeC$dem == 1)])/2
+#'# threeC$age65_CR[which(threeC$dem == 0)] <- threeC$age.final65[which(threeC$dem == 0)]
+#'# threeC$demCR <- threeC$dem
+#'# threeC$deathCR <- NA
+#'# threeC$deathCR[which(threeC$dem == 1)] <- 0
+#'# threeC$deathCR[which(threeC$dem == 0)] <- threeC$death[which(threeC$dem == 0)]
+#'# threeC <- threeC %>% group_by(ID) %>% filter(age.visit65 <= age65_CR)
+#'#
+#'#
+#'# threeC_ex1 <- threeC[!duplicated(threeC[, c("ID", "num.visit")]), c("ID",
+#'#      "SBPvisit", "age.visit65", "sex","age0_65", "demCR","deathCR","age65_CR")]
+#'#
+#'#
+#'# # Estimation of a lsmm with time-dependent variability model:
+#'# m2 <- lsmm(formFixed = SBPvisit ~ age.visit65,
+#'#                formRandom = ~ age.visit65,
+#'#                formGroup = ~ ID,
+#'#                timeVar = 'age.visit65',
+#'#                data.long = threeC_ex1,
+#'#                formVar = "cov-dependent",
+#'#                formFixedVar = ~ age.visit65+sex,
+#'#                formRandomVar = ~ age.visit65,
+#'#                correlated_re = FALSE,
+#'#                S1 = 500,
+#'#                S2 = 1000,
+#'#                nproc = 1)
+#'#
+#'# # Predictions:
+#'# pred.m2 <- predict(m2, which = c("RE", "Y"))
+#'#
+#'# #Plot:
+#'# plot(m2, which = "traj.fit", predictObject = pred.m2,break.times = (seq(65,95,by = 2.5)-65)/10)
+#'# plot(m2, which = "traj.ind", predictObject = pred.m2,  ID.ind = c(10003,120010))
+#'#
+#'# # Estimation of a lsjm with time-dependent variability model and competing events:
+#'# l2 <- lsjm(Objectlsmm = m2,
+#'#            survival_type = 'CR',
+#'#            formSurv_01 = ~ sex,
+#'#            formSurv_02 = ~ sex,
+#'#            sharedtype_01 = c("value", "variability"),
+#'#            sharedtype_02 = c("value", "variability"),
+#'#            hazardBase_01 = "Weibull",
+#'#            hazardBase_02 = "Weibull",
+#'#            delta1 = ~ demCR,
+#'#            delta2 = ~ deathCR,
+#'#            Time_T0 = ~ age0_65,
+#'#            Time_T = ~ age65_CR,
+#'#            nproc = 5,
+#'#            S1 = 1000,
+#'#            S2 = 2000)
+#'#
+#'# # Predictions:
+#'# pred.l2 <- predict(l2, which = c("RE", "Y", "Cum"))
+#'#
+#'# # Plot:
+#'# plot(l2, which = "traj.fit", predictObject = pred.l2,break.times = (seq(65,95,by = 2.5)-65)/10)
+#'# plot(l2, which = "traj.ind", predictObject = pred.l2, ID.ind = c(10003,120010))
+#'# plot(l2, which = "survival.fit", predictObject = pred.l2)
 #' }
 #'
 #'

@@ -20,7 +20,7 @@ plot.lsmm_interintra <- function(x, which = 'long.fit', Objectpredict = NULL, br
     timeVar <- x$control$timeVar
     data.long <- x$control$data.long
     value.var <- as.character(formFixed[[2]])
-    pred.CV <- Objectpredict$predY
+    #pred.CV <- Objectpredict$predY
     if(is.null(break.times)){
       timeInterv <- range(data.long[,timeVar])
       break.times <- quantile(timeInterv,prob=seq(0,1,length.out=10))
@@ -64,7 +64,7 @@ plot.lsmm_interintra <- function(x, which = 'long.fit', Objectpredict = NULL, br
       stop("You have to design some individual ID to plot the the individual trajectories.")
     }
     ID.ind <- as.vector(ID.ind)
-    pred.CV <- as.data.frame(Objectpredict)
+    pred.CV <- as.data.frame(ObjectpredictY)
     data.long <- x$control$data.long
     formFixed <- x$control$formFixed
     value.var <- as.character(formFixed[[2]])

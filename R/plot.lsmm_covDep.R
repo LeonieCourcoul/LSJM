@@ -15,13 +15,14 @@ plot.lsmm_covDep <- function(x, which = 'long.fit', Objectpredict = NULL, break.
   oldpar <- par(no.readonly = TRUE) # code line i
   on.exit(par(oldpar)) # code line i + 1
 
+  ObjectpredictY <- Objectpredict$predictY
 
   if(which == 'long.fit'){
     formFixed <- x$control$formFixed
     timeVar <- x$control$timeVar
     data.long <- x$control$data.long
     value.var <- as.character(formFixed[[2]])
-    pred.CV <- Objectpredict$predY
+    #pred.CV <- Objectpredict$predY
     if(is.null(break.times)){
       timeInterv <- range(data.long[,timeVar])
       break.times <- quantile(timeInterv,prob=seq(0,1,length.out=10))
@@ -32,9 +33,9 @@ plot.lsmm_covDep <- function(x, which = 'long.fit', Objectpredict = NULL, break.
     length.obs <- by(data.long[,value.var], data.long$window, length)
     IC.inf <- mean.obs - 1.96*sd.obs/sqrt(length.obs)
     IC.sup <- mean.obs + 1.96*sd.obs/sqrt(length.obs)
-    Objectpredict$time.new.pred <- Objectpredict$time
+    ObjectpredictY$time.new.pred <- ObjectpredictY$time
     data.long$time.new.pred <- data.long[,timeVar]
-    prediction <- left_join(Objectpredict[,c("id","predY", "time.new.pred")], data.long[,c("id", "window", "time.new.pred")])
+    prediction <- left_join(ObjectpredictY[,c("id","predY", "time.new.pred")], data.long[,c("id", "window", "time.new.pred")])
     mean.pred <- by(prediction$predY, prediction$window, mean)
     obstime.mean <- by(data.long[,timeVar], data.long$window, mean)
     df <- cbind(obstime.mean, mean.obs, IC.sup, IC.inf, mean.pred)
@@ -58,7 +59,7 @@ plot.lsmm_covDep <- function(x, which = 'long.fit', Objectpredict = NULL, break.
       stop("You have to design some individual ID to plot the the individual trajectories.")
     }
     ID.ind <- as.vector(ID.ind)
-    pred.CV <- as.data.frame(Objectpredict)
+    pred.CV <- as.data.frame(ObjectpredictY)
     data.long <- x$control$data.long
     formFixed <- x$control$formFixed
     value.var <- as.character(formFixed[[2]])

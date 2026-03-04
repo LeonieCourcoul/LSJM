@@ -201,12 +201,13 @@ allows to assess the fit of the survival submodel. For each transition, the pred
 # threeC$demCR <- threeC$dem
 # threeC$deathCR <- NA
 # threeC$deathCR[which(threeC$dem == 1)] <- 0
-# threeC$deathCR[which(threeC$dem == 0)] <- threeC$death[which(threeC$dem == 0)]
+# threeC$deathCR[which(threeC$dem == 0)]<-threeC$death[which(threeC$dem == 0)]
 # threeC <- threeC \%>\% group_by(ID) \%>\% filter(age.visit65 <= age65_CR)
 #
 #
 # threeC_ex1 <- threeC[!duplicated(threeC[, c("ID", "num.visit")]), c("ID",
-#      "SBPvisit", "age.visit65", "sex","age0_65", "demCR","deathCR","age65_CR")]
+#      "SBPvisit", "age.visit65", "sex","age0_65", "demCR","deathCR",
+#       "age65_CR")]
 #
 #
 # # Estimation of a lsmm with time-dependent variability model:
@@ -227,10 +228,13 @@ allows to assess the fit of the survival submodel. For each transition, the pred
 # pred.m2 <- predict(m2, which = c("RE", "Y"))
 #
 # #Plot:
-# plot(m2, which = "traj.fit", predictObject = pred.m2,break.times = (seq(65,95,by = 2.5)-65)/10)
-# plot(m2, which = "traj.ind", predictObject = pred.m2,  ID.ind = c(10003,120010))
+# plot(m2, which = "traj.fit", predictObject = pred.m2,
+#                            break.times = (seq(65,95,by = 2.5)-65)/10)
+# plot(m2, which = "traj.ind", predictObject = pred.m2,
+#                                             ID.ind = c(10003,120010))
 #
-# # Estimation of a lsjm with time-dependent variability model and competing events:
+# # Estimation of a lsjm with time-dependent variability model and
+# # competing events:
 # l2 <- lsjm(Objectlsmm = m2,
 #            survival_type = 'CR',
 #            formSurv_01 = ~ sex,
@@ -251,8 +255,10 @@ allows to assess the fit of the survival submodel. For each transition, the pred
 # pred.l2 <- predict(l2, which = c("RE", "Y", "Cum"))
 #
 # # Plot:
-# plot(l2, which = "traj.fit", predictObject = pred.l2,break.times = (seq(65,95,by = 2.5)-65)/10)
-# plot(l2, which = "traj.ind", predictObject = pred.l2, ID.ind = c(10003,120010))
+# plot(l2, which = "traj.fit", predictObject = pred.l2,
+#                          break.times = (seq(65,95,by = 2.5)-65)/10)
+# plot(l2, which = "traj.ind", predictObject = pred.l2,
+#                           ID.ind = c(10003,120010))
 # plot(l2, which = "survival.fit", predictObject = pred.l2)
 }
 

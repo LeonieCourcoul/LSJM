@@ -6,7 +6,7 @@
 #' @importFrom marqLevAlg marqLevAlg
 #' @export
 
-predict.lsmm_classic <- function(object, which = "RE", Objectranef = NULL, data.long = NULL){
+predict.lsmm_classic <- function(object, which = "RE", Objectranef = NULL, data.long = NULL, ...){
 
   Objectlsmm <- object
   if(missing(Objectlsmm)) stop("The argument Objectlsmm must be specified")

@@ -11,6 +11,8 @@
 \item{data.long}{A dataframe containing the longitudinal data for making predictions.}
 
 \item{Objectranef}{Optional \code{ranef} object containing the predicted random effects for each individual. The Default is NULL and the predict functions should compute the random effects.}
+
+\item{...}{Further arguments}
 }
 \value{
 A table for each type of prediction (RE/Y/Cum)

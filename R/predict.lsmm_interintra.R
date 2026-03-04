@@ -7,7 +7,7 @@
 #' @importFrom marqLevAlg marqLevAlg
 #' @export
 #'
-predict.lsmm_interintra <- function(object, which = "RE", Objectranef = NULL, data.long = NULL){
+predict.lsmm_interintra <- function(object, which = "RE", Objectranef = NULL, data.long = NULL, ...){
 
   Objectlsmm <- object
   if(missing(Objectlsmm)) stop("The argument Objectlsmm must be specified")

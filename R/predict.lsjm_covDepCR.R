@@ -7,7 +7,7 @@
 #' @importFrom marqLevAlg marqLevAlg
 #' @export
 
-predict.lsjm_covDepCR <- function(object, which = "RE", Objectranef = NULL, data.long = NULL){
+predict.lsjm_covDepCR <- function(object, which = "RE", Objectranef = NULL, data.long = NULL, ...){
 
   Objectlsjm <- object
 

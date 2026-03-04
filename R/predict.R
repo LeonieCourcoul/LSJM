@@ -8,6 +8,7 @@
 #' @param which A vector of characters to indicate which predictions are computed. \code{"RE"} corresponds to the random effects, \code{"Y"} to the marker and \code{"Cum"} to the cumulative risk function(s) (only in the case of a \code{lsjm} object)
 #' @param data.long A dataframe containing the longitudinal data for making predictions.
 #' @param Objectranef Optional \code{ranef} object containing the predicted random effects for each individual. The Default is NULL and the predict functions should compute the random effects.
+#' @param ... Further arguments
 #'
 #' @return A table for each type of prediction (RE/Y/Cum)
 #' \describe{

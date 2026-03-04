@@ -34,9 +34,14 @@ plot.lsjm_interintraCR <- function(x, which = 'long.fit', Objectpredict = NULL, 
       break.times <- quantile(timeInterv,prob=seq(0,1,length.out=10))
     }
     data.long$window <- cut(data.long[,timeVar], break.times, include.lowest = T)
-    mean.obs <- by(data.long[,value.var], data.long$window, mean)
-    sd.obs <- by(data.long[,value.var], data.long$window, sd)
-    length.obs <- by(data.long[,value.var], data.long$window, length)
+    data.long2 <- data.long %>% group_by(id,.data[[timeVar]]) %>% mutate(new.var.y.moy =  mean(.data[[value.var]])) %>% ungroup()
+    data.long2.unique <- data.long2[!duplicated(data.long2[, c("ID", timeVar)]), ]
+    data.long <- data.long2.unique
+    value.var <- "new.var.y.moy"
+    data.long$new.var.y.moy <- as.numeric(data.long$new.var.y.moy)
+    mean.obs <- by(data.long[[value.var]], data.long$window, mean)
+    sd.obs <- by(data.long[[value.var]], data.long$window, sd)
+    length.obs <- by(data.long[[value.var]], data.long$window, length)
     IC.inf <- mean.obs - 1.96*sd.obs/sqrt(length.obs)
     IC.sup <- mean.obs + 1.96*sd.obs/sqrt(length.obs)
     window.pred <- cut(ObjectpredictY$time, break.times, include.lowest = T)

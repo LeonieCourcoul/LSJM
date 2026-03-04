@@ -227,7 +227,7 @@ lsmm <- function(formFixed, formRandom, formGroup, timeVar,
                  random_inter = F, random_intra = F, formGroupVisit = NULL, correlated_re = F,
                  data.long,
                  S1 = 500, S2= 5000,
-                 nproc = 1, clustertype = "SOCK", maxiter = 100, print.info = FALSE,
+                 nproc = 1, clustertype = "PSOCK", maxiter = 100, print.info = FALSE,
                  file = "", epsa = 1e-04, epsb = 1e-04, epsd = 1e-04, binit = NULL){
 
   if(missing(formFixed)) stop("The argument formFixed must be specified")

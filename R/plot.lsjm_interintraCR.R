@@ -44,9 +44,9 @@ plot.lsjm_interintraCR <- function(x, which = 'long.fit', Objectpredict = NULL, 
     length.obs <- by(data.long[[value.var]], data.long$window, length)
     IC.inf <- mean.obs - 1.96*sd.obs/sqrt(length.obs)
     IC.sup <- mean.obs + 1.96*sd.obs/sqrt(length.obs)
-    window.pred <- cut(ObjectpredictY$time, break.times, include.lowest = T)
     ObjectpredictY$time.new.pred <- ObjectpredictY$time
-    data.long$time.new.pred <- data.long[,timeVar]
+    data.long$time.new.pred <- data.long[[timeVar]]
+    data.long <- as.data.frame(data.long)
     prediction <- left_join(ObjectpredictY[,c("id","predY", "time.new.pred")], data.long[,c("id", "window", "time.new.pred")])
     mean.pred <- by(prediction$predY, prediction$window, mean)
     obstime.mean <- by(data.long[,timeVar], data.long$window, mean)
@@ -58,9 +58,10 @@ plot.lsjm_interintraCR <- function(x, which = 'long.fit', Objectpredict = NULL, 
       scale_x_continuous(name = "Time") +
       scale_y_continuous(name = "Current Value") +
       theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-                     panel.background = element_blank(), axis.line = element_line(colour = "black"),
-                     axis.text=element_text(size=12),
-                     axis.title=element_text(size=14,face="bold"))+
+            panel.background = element_blank(), axis.line = element_line(colour = "black"),
+            axis.text=element_text(size=15),
+            axis.title=element_text(size=18),
+            plot.title = element_text(size = 20, face = "bold"))+
       ggtitle("Longitudinal goodness-of-fit")
     graph <- list(long.fit = graph.fit.long)
   }

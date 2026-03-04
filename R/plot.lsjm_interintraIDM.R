@@ -37,7 +37,6 @@ plot.lsjm_interintraIDM <- function(x, which = 'long.fit', Objectpredict = NULL,
       timeInterv <- range(data.long[,timeVar])
       break.times <- quantile(timeInterv,prob=seq(0,1,length.out=10))
     }
-    browser()
     data.long$window <- cut(data.long[,timeVar], break.times, include.lowest = T)
     data.long2 <- data.long %>% group_by(id,.data[[timeVar]]) %>% mutate(new.var.y.moy =  mean(.data[[value.var]])) %>% ungroup()
     data.long2.unique <- data.long2[!duplicated(data.long2[, c("id", timeVar)]), ]
@@ -67,7 +66,7 @@ plot.lsjm_interintraIDM <- function(x, which = 'long.fit', Objectpredict = NULL,
                      axis.text=element_text(size=15),
                      axis.title=element_text(size=18),
                      plot.title = element_text(size = 20, face = "bold"))+
-      ggtitle("")
+      ggtitle("Longitudinal goodness-of-fit")
     graph <- list(long.fit = graph.fit.long)
   }
 

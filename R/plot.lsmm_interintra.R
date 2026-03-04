@@ -14,7 +14,7 @@ plot.lsmm_interintra <- function(x, which = 'long.fit', Objectpredict = NULL, br
 
   oldpar <- par(no.readonly = TRUE) # code line i
   on.exit(par(oldpar)) # code line i + 1
-
+  ObjectpredictY <- Objectpredict$predictY
   if(which == 'long.fit'){
     formFixed <- x$control$formFixed
     timeVar <- x$control$timeVar

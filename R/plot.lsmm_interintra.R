@@ -26,31 +26,37 @@ plot.lsmm_interintra <- function(x, which = 'long.fit', Objectpredict = NULL, br
       break.times <- quantile(timeInterv,prob=seq(0,1,length.out=10))
     }
     data.long$window <- cut(data.long[,timeVar], break.times, include.lowest = T)
-    mean.obs <- by(data.long[,value.var], data.long$window, mean)
-    sd.obs <- by(data.long[,value.var], data.long$window, sd)
-    length.obs <- by(data.long[,value.var], data.long$window, length)
+    data.long2 <- data.long %>% group_by(id,.data[[timeVar]]) %>% mutate(new.var.y.moy =  mean(.data[[value.var]])) %>% ungroup()
+    data.long2.unique <- data.long2[!duplicated(data.long2[, c("id", timeVar)]), ]
+    data.long <- data.long2.unique
+    value.var <- "new.var.y.moy"
+    data.long$new.var.y.moy <- as.numeric(data.long$new.var.y.moy)
+    mean.obs <- by(data.long[[value.var]], data.long$window, mean)
+    sd.obs <- by(data.long[[value.var]], data.long$window, sd)
+    length.obs <- by(data.long[[value.var]], data.long$window, length)
     IC.inf <- mean.obs - 1.96*sd.obs/sqrt(length.obs)
     IC.sup <- mean.obs + 1.96*sd.obs/sqrt(length.obs)
-    window.pred <- cut(Objectpredict$time, break.times, include.lowest = T)
-    Objectpredict$time.new.pred <- Objectpredict$time
-    data.long$time.new.pred <- data.long[,timeVar]
-    prediction <- left_join(Objectpredict[,c("id","predY", "time.new.pred")], data.long[,c("id", "window", "time.new.pred")])
+    ObjectpredictY$time.new.pred <- ObjectpredictY$time
+    data.long$time.new.pred <- data.long[[timeVar]]
+    data.long <- as.data.frame(data.long)
+    prediction <- left_join(ObjectpredictY[,c("id","predY", "time.new.pred")], data.long[,c("id", "window", "time.new.pred")])
     mean.pred <- by(prediction$predY, prediction$window, mean)
     obstime.mean <- by(data.long[,timeVar], data.long$window, mean)
     df <- cbind(obstime.mean, mean.obs, IC.sup, IC.inf, mean.pred)
     df <- as.data.frame(df)
     k <- ggplot(df,  aes(obstime.mean, mean.obs, ymin = IC.sup, ymax = IC.inf))
-    graph.fit.long <- k +  geom_pointrange( aes(ymin = IC.sup, ymax = IC.inf), shape =1)+
+    graph.fit.long <- k +  geom_pointrange( aes(ymin = IC.sup, ymax = IC.inf), shape =1) +
       geom_point(aes(obstime.mean, mean.pred), size = 3, shape = 17) +
       scale_x_continuous(name = "Time") +
       scale_y_continuous(name = "Current Value") +
       theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-                     panel.background = element_blank(), axis.line = element_line(colour = "black"),
-                     axis.text=element_text(size=15),
-                     axis.title=element_text(size=18),
-                     plot.title = element_text(size = 20, face = "bold"))+
-      ggtitle("Longitudinal goodness-of-fit")+coord_cartesian(xlim = xlim,ylim = ylim, expand = TRUE)
+            panel.background = element_blank(), axis.line = element_line(colour = "black"),
+            axis.text=element_text(size=15),
+            axis.title=element_text(size=18),
+            plot.title = element_text(size = 20, face = "bold"))+
+      ggtitle("Longitudinal goodness-of-fit")
     graph <- list(long.fit = graph.fit.long)
+
   }
 
   if(which == 'traj.ind'){

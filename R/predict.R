@@ -81,7 +81,7 @@
 #'
 #'
 #'
-#' @name predict
-#' @rdname predict
+#' @name predict.lsjm
+#' @rdname predict.lsjm
 #'
 NULL

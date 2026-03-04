@@ -20,7 +20,7 @@ lsmm(
   S1 = 500,
   S2 = 5000,
   nproc = 1,
-  clustertype = "SOCK",
+  clustertype = "PSOCK",
   maxiter = 100,
   print.info = FALSE,
   file = "",

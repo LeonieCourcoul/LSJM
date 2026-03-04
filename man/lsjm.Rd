@@ -32,7 +32,7 @@ lsjm(
   S2 = 5000,
   binit = NULL,
   nproc = 1,
-  clustertype = "SOCK",
+  clustertype = "PSOCK",
   maxiter = 500,
   print.info = FALSE,
   file = NULL,

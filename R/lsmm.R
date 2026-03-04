@@ -1,4 +1,5 @@
-#' lsmm : Estimation of a linear mixed model for longitudinal data with flexible subject-specific variability.
+#' lsmm : Estimation of a linear mixed model for longitudinal data with flexible subject-specific
+#' variability.
 #'
 #' This function fits linear mixed effects models for longitudinal data, allowing
 #' the residual variance to be subject-specific. Three different model types can
@@ -12,8 +13,13 @@
 #'
 #' The model is defined as:
 #'
-#' \eqn{Y_{ij} = Y_{i}(t_{ij}) = \widetilde{Y}_i(t_{ij}) + \epsilon_{ij} = X_{ij}^{\top} \beta+Z_{ij}^{\top} b_{i}+\epsilon_{ij}},
-#'
+#' \eqn{
+#' Y_{ij} = Y_i(t_{ij})
+#' = \widetilde{Y}_i(t_{ij}) + \epsilon_{ij}
+#' = X_{ij}^{\top} \beta
+#' + Z_{ij}^{\top} b_i
+#' + \epsilon_{ij}
+#' },
 #' where \eqn{X_{ij}} and \eqn{Z_{ij}} are vectors of explanatory variables for subject \eqn{i}
 #' at time \eqn{t_{ij}}, associated with the fixed-effect vector \eqn{\beta} and
 #' the subject-specific random-effect vector \eqn{b_i}, respectively.
@@ -29,24 +35,45 @@
 #' In this model, the residual error variance can vary across subjects and over time:
 #'  we assume the following specification for the residual error:
 #'
-#' \eqn{\epsilon_{ij} \sim \mathcal{N}(0,\sigma_i^2)} with \eqn{ \log(\sigma_i(t_{ij}))  = O_{ij}^{\top} \mu+M_{ij}^{\top} \tau_{i}}.
-#'
+#' \eqn{
+#' \epsilon_{ij} \sim \mathcal{N}(0, \sigma_i^2)
+#' }
+#' with
+#' \eqn{
+#' \log(\sigma_i(t_{ij}))
+#' = O_{ij}^{\top} \mu
+#' + M_{ij}^{\top} \tau_i
+#' }.#'
 #' where \eqn{O_{ij}} and \eqn{M_{ij}} are vectors of explanatory variables for subject \eqn{i}
 #' at visit \eqn{j}, associated with the fixed-effect vector \eqn{\mu} and
 #' the subject-specific random-effect vector \eqn{\tau_i}, respectively.
 #'
 #' The random effects are assumed jointly Gaussian:
 #'
-#' \eqn{\quad\left(\begin{array}{c}
-#'              b_{i} \\
-#'              \tau_i
-#'              \end{array}\right) \sim N\left(\left(\begin{array}{c}
-#'                                                   0 \\
-#'                                                   0
-#'                                                   \end{array}\right),\left(\begin{array}{cc}
-#'                                                                            \Sigma_{b} & \Sigma_{\tau b} \\
-#'                                                                            \Sigma_{\tau b}' & \Sigma_{\tau}
-#' \end{array}\right)\right)}
+#' \eqn{
+#' \quad
+#' \left(
+#' \begin{array}{c}
+#'   b_i \\
+#'   \tau_i
+#' \end{array}
+#' \right)
+#' \sim
+#' N\left(
+#'   \left(
+#'   \begin{array}{c}
+#'     0 \\
+#'     0
+#'   \end{array}
+#'   \right),
+#'   \left(
+#'   \begin{array}{cc}
+#'     \Sigma_b & \Sigma_{\tau b} \\
+#'     \Sigma_{\tau b}' & \Sigma_{\tau}
+#'   \end{array}
+#'   \right)
+#' \right)
+#' }
 #'
 #' By convention, random effects for the mean (\eqn{b_i}) can be assumed
 #' independent from those for the variance (\eqn{\tau_i}) by setting \eqn{\Sigma_{\tau b} =0}.
@@ -70,11 +97,14 @@
 #' \eqn{
 #' \left\{
 #'   \begin{array}{ll}
-#'   Y_{ijl} =  \widetilde{Y}_i(t_{ij}) + \epsilon_{ij} + \nu_{ijl} = X_{ij}^{\top} \beta+Z_{ij}^{\top} b_{i}+\epsilon_{ij} + \nu_{ijl}, \\
-#'   \epsilon_{ij} \sim \mathcal{N}(0,\sigma_i^2) \hspace{4mm} \text{with} \hspace{3mm} \log(\sigma_i)  = \mu_\sigma + \tau_{\sigma i},\\
-#'   \nu_{ijl} \sim \mathcal{N}(0,\kappa_i^2) \hspace{3mm} \text{with} \hspace{3mm} \log(\kappa_i)  = \mu_\kappa + \tau_{\kappa i},\\
+#'   Y_{ijl} = \widetilde{Y}_i(t_{ij}) + \epsilon_{ij} + \nu_{ijl} \\
+#'   \hspace{5mm} = X_{ij}^{\top} \beta + Z_{ij}^{\top} b_i + \epsilon_{ij} + \nu_{ijl}, \\
+#'   \epsilon_{ij} \sim \mathcal{N}(0,\sigma_i^2), \quad
+#'   \text{with } \log(\sigma_i) = \mu_\sigma + \tau_{\sigma i}, \\
+#'   \nu_{ijl} \sim \mathcal{N}(0,\kappa_i^2), \quad
+#'   \text{with } \log(\kappa_i) = \mu_\kappa + \tau_{\kappa i}, \\
 #'   \end{array}
-#'   \right.}
+#' \right.}
 #'
 #' where \eqn{\mu_\sigma} and \eqn{\mu_\kappa} are fixed intercepts for the
 #' between-visits and within-visit variances, respectively. The subject-specific
@@ -88,26 +118,38 @@
 #' @param formRandom Formula specifying the random effects of the longitudinal model.
 #' @param formGroup Formula specifying the grouping variable (typically the subject ID).
 #' @param timeVar Character string specifying the time variable.
-#' @param formVar Character string indicating the type of variability: **"standard"** for a standard LMM,
-#' **"cov-dependent"** for a covariate-dependent residual variance, or **"inter-intra"**
+#' @param formVar Character string indicating the type of variability: **"standard"** for a standard
+#' LMM, **"cov-dependent"** for a covariate-dependent residual variance, or **"inter-intra"**
 #' to distinguish inter- and intra-visit variability.
-#' @param formFixedVar Formula specifying the fixed effects for the variance predictor (if \code{formVar == "cov-dependent"}).
-#' @param formRandomVar Formula specifying the random effects for the variance predictor (if \code{formVar == "cov-dependent"}).
-#' @param random_inter Logical indicating whether the between-visit variability is subject-specific (used when \code{formVar = "inter-intra"}).
-#' @param random_intra Logical indicating whether the within-visit variability is subject-specific (used when \code{formVar = "inter-intra"}).
-#' @param formGroupVisit Formula specifying the visit indicator variable (used when \code{formVar = "inter-intra"}).
-#' @param correlated_re Logical indicating whether the random effects for the mean and variance submodels are correlated (used when \code{formVar} is in \code{c("cov-dependent", "inter-intra")}).
+#' @param formFixedVar Formula specifying the fixed effects for the variance predictor
+#' (if \code{formVar == "cov-dependent"}).
+#' @param formRandomVar Formula specifying the random effects for the variance predictor
+#' (if \code{formVar == "cov-dependent"}).
+#' @param random_inter Logical indicating whether the between-visit variability is subject-specific
+#' (used when \code{formVar = "inter-intra"}).
+#' @param random_intra Logical indicating whether the within-visit variability is subject-specific
+#' (used when \code{formVar = "inter-intra"}).
+#' @param formGroupVisit Formula specifying the visit indicator variable
+#' (used when \code{formVar = "inter-intra"}).
+#' @param correlated_re Logical indicating whether the random effects for the mean and variance
+#' submodels are correlated (used when \code{formVar} is in
+#' \code{c("cov-dependent", "inter-intra")}).
 #' @param data.long Data frame containing the longitudinal data.
 #' @param S1 Integer specifying the number of QMC draws for the first step.
 #' @param S2 Integer specifying the number of QMC draws for the second step.
 #' @param nproc Integer specifying the number of processors for parallel computing.
 #' @param clustertype Character string indicating the cluster type supported by \code{makeCluster}.
-#' @param maxiter Optional integer specifying the maximum number of iterations for the Marquardt–Levenberg algorithm (default to 100).
-#' @param print.info Logical indicating whether iteration details should be printed (False by default).
-#' @param file Optional character string giving the name of the file where iteration outputs are written (if \code{print.info = TRUE}).
+#' @param maxiter Optional integer specifying the maximum number of iterations for the
+#' Marquardt–Levenberg algorithm (default to 100).
+#' @param print.info Logical indicating whether iteration details should be printed
+#' (False by default).
+#' @param file Optional character string giving the name of the file where iteration outputs are
+#' written (if \code{print.info = TRUE}).
 #' @param epsa Optional numeric threshold for convergence based on parameter stability.
 #' @param epsb Optional numeric threshold for convergence based on objective function stability.
-#' @param epsd  Optional numeric threshold for the relative distance to the maximum. This criterion has the nice interpretation of estimating the ratio of the approximation error over the statistical error, thus it can be used for stopping the iterative process whatever the problem.
+#' @param epsd  Optional numeric threshold for the relative distance to the maximum. This criterion
+#' has the nice interpretation of estimating the ratio of the approximation error over the
+#' statistical error, thus it can be used for stopping the iterative process whatever the problem.
 #' @param binit Optional vector of initial parameters values.
 #'
 #' @return An object of class \code{lsmm} containing:
@@ -115,8 +157,10 @@
 #' \item{\code{table.res}}{Table of parameter estimates and standard errors.}
 #' \item{\code{result_step1}}{A \code{marqLevAlg} object with first-step estimation results.}
 #' \item{\code{result_step2}}{A \code{marqLevAlg} object with second-step estimation results.}
-#' \item{\code{info_conv_step1}}{Information on first-step convergence (criteria and computation time).}
-#' \item{\code{info_conv_step2}}{Information on second-step convergence (criteria and computation time).}
+#' \item{\code{info_conv_step1}}{Information on first-step convergence
+#' (criteria and computation time).}
+#' \item{\code{info_conv_step2}}{Information on second-step convergence
+#' (criteria and computation time).}
 #' \item{\code{control}}{List of control parameters used during estimation.}
 #'
 #' }

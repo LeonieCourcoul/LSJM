@@ -1,4 +1,5 @@
-#' lsjm : Estimation of a location-scale joint model for longitudinal data with flexible subject-specific variability and complex survival structures
+#' lsjm : Estimation of a location-scale joint model for longitudinal data with flexible
+#' subject-specific variability and complex survival structures
 #'
 #' This function fits joint models in which the residual error variance is allowed
 #' to be subject-specific and the survival submodel may include either a single
@@ -16,7 +17,8 @@
 #'
 #' **A. A single event: proportional hazards model**
 #'
-#' In this case, we consider only a single event. Let \eqn{T_i = \min(T^*_{i1}, C_i)} denote the observed time,
+#' In this case, we consider only a single event. Let \eqn{T_i = \min(T^*_{i1}, C_i)} denote the
+#' observed time,
 #' where \eqn{T^*_{i1}} is the true event time and \eqn{C_i} the censoring time for subject \eqn{i}.
 #' Let \eqn{\delta_i \in \{0,1\}} be the event indicator.
 #' The hazard function is given by:
@@ -30,24 +32,33 @@
 #'
 #' where:
 #' * \eqn{\lambda_0(t)} is the baseline hazard function,
-#' * \eqn{W_i^{01}} is a vector of baseline covariates with associated coefficients \eqn{\gamma^{01}},
-#' * \eqn{\alpha_b^{01}} are regression coefficients for the function \eqn{g_y}, representing the association between the event risk and the mean trajectory of \eqn{Y},
-#' * \eqn{\alpha_\tau^{01}} are regression coefficients for the function \eqn{g_\tau}, representing the association between the event risk and the residual variance.
+#' * \eqn{W_i^{01}} is a vector of baseline covariates with associated coefficients
+#' \eqn{\gamma^{01}},
+#' * \eqn{\alpha_b^{01}} are regression coefficients for the function \eqn{g_y},
+#' representing the association between the event risk and the mean trajectory of \eqn{Y},
+#' * \eqn{\alpha_\tau^{01}} are regression coefficients for the function \eqn{g_\tau},
+#' representing the association between the event risk and the residual variance.
 #'
 #' The association function \eqn{g_y(b_i,t)} can be defined as:
 #' \itemize{
 #'   \item \eqn{g_y(b_i,t) = \tilde{y}_i(t)} — current value,
-#'   \item \eqn{g_y(b_i,t) = \tilde{y}'_i(t) = \frac{\partial \tilde{y}_i(t)}{\partial t}} — current slope,
+#'   \item \eqn{g_y(b_i,t) = \tilde{y}'_i(t) = \frac{\partial \tilde{y}_i(t)}{\partial t}} — current
+#'   slope,
 #'   \item \eqn{g_y(b_i,t) = (\tilde{y}_i(t), \tilde{y}'_i(t))} — both value and slope,
 #'   \item \eqn{g_y(b_i,t) = b_i} — random effects.
 #' }
 #'
-#' The association function \eqn{g_\tau(\tau_i, t)} is defined according to the longitudinal model type:
+#' The association function \eqn{g_\tau(\tau_i, t)} is defined according to the longitudinal model
+#' type:
 #' \itemize{
-#'   \item If a standard linear mixed model with homogeneous residual variance is used: \eqn{g_\tau(\tau_i, t) = 0}.
-#'   \item If a location–scale mixed model with time- or covariate-dependent variance is used: \eqn{g_\tau(\tau_i, t) = \sigma_i(t)}.
-#'   \item If both within- and between-visit variances are modelled: \eqn{g_\tau(\tau_i, t) = (\sigma_i, \kappa_i)^\top},
-#'   where \eqn{\alpha_\tau = (\alpha_\sigma, \alpha_\kappa)} correspond to between-visit and within-visit variabilities, respectively.
+#'   \item If a standard linear mixed model with homogeneous residual variance is used:
+#'   \eqn{g_\tau(\tau_i, t) = 0}.
+#'   \item If a location–scale mixed model with time- or covariate-dependent variance is used:
+#'   \eqn{g_\tau(\tau_i, t) = \sigma_i(t)}.
+#'   \item If both within- and between-visit variances are modelled:
+#'   \eqn{g_\tau(\tau_i, t) = (\sigma_i, \kappa_i)^\top},
+#'   where \eqn{\alpha_\tau = (\alpha_\sigma, \alpha_\kappa)} correspond to between-visit and
+#'   within-visit variabilities, respectively.
 #' }
 #'
 #' The baseline hazard function \eqn{\lambda_0(t)} can follow different parametric forms:
@@ -63,9 +74,11 @@
 #' **B. Competing events: cause-specific model**
 #'
 #' When multiple types of events are possible, two competing causes can be modeled.
-#' Let \eqn{T_i = \min(T^*_{i1}, T^*_{i2}, C_i)} be the observed time, where \eqn{T^*_{ik}} is the true event time for cause \eqn{k} (with \eqn{k \in \{1, 2\}}),
+#' Let \eqn{T_i = \min(T^*_{i1}, T^*_{i2}, C_i)} be the observed time, where \eqn{T^*_{ik}} is the
+#' true event time for cause \eqn{k} (with \eqn{k \in \{1, 2\}}),
 #' and \eqn{C_i} the censoring time.
-#' The event indicator is \eqn{\delta_i \in \{0, 1, 2\}}, where \eqn{\delta_i = k} if cause \eqn{k} occurred and \eqn{0} otherwise.
+#' The event indicator is \eqn{\delta_i \in \{0, 1, 2\}}, where \eqn{\delta_i = k} if cause \eqn{k}
+#' occurred and \eqn{0} otherwise.
 #' The cause-specific hazard is defined as:
 #'
 #' \deqn{
@@ -77,10 +90,12 @@
 #' \right)
 #' }
 #'
-#' The definitions of \eqn{\lambda_0^{0k}}, \eqn{W_i^{0k}}, \eqn{g_y^{0k}}, and \eqn{g_\tau^{0k}} follow the same principles as in the single-event model.
+#' The definitions of \eqn{\lambda_0^{0k}}, \eqn{W_i^{0k}}, \eqn{g_y^{0k}}, and \eqn{g_\tau^{0k}}
+#' follow the same principles as in the single-event model.
 
 #' **C. Semi-competing events: illness–death model**
-#' In this setting, transition to state (1) may be interval-censored, whereas transition to state (2) is observed exactly.
+#' In this setting, transition to state (1) may be interval-censored, whereas transition to state
+#' (2) is observed exactly.
 #' The observed event data for subject \eqn{i} are given by:
 #' \eqn{D_i = (T_{0i}, L_i, R_i, \delta_i^{(1)}, T_i, \delta_i^{(2)})^\top},
 #' where:
@@ -91,7 +106,8 @@
 #' * \eqn{\delta_i^{(1)} = \mathbb{1}_{R_i < T_i}} — indicator of transition to state (1),
 #' * \eqn{\delta_i^{(2)}} — indicator of transition to state (2).
 #'
-#' Transition intensities from state \eqn{k \in \{0,1\}} to state \eqn{l \in \{1,2\}} follow a proportional hazards model under the Markov assumption:
+#' Transition intensities from state \eqn{k \in \{0,1\}} to state \eqn{l \in \{1,2\}} follow a
+#' proportional hazards model under the Markov assumption:
 #'
 #' \deqn{
 #' \lambda_i^{kl}(t|b_i, \tau_i) =
@@ -105,41 +121,71 @@
 #' where the terms are defined analogously to the single-event model.
 #'
 #' @param Objectlsmm The result from the \code{lsmm()} function.
-#' @param survival_type Character string specifying the survival scheme: \code{"Single"}, \code{"CR"} (competing risks), or \code{"IDM"} (illness–death model).
+#' @param survival_type Character string specifying the survival scheme: \code{"Single"},
+#' \code{"CR"} (competing risks), or \code{"IDM"} (illness–death model).
 #' @param formSurv_01 One-sided formula specifying covariates for the 0–1 transition.
 #' @param formSurv_02 One-sided formula specifying covariates for the 0–2 transition.
 #' @param formSurv_12 One-sided formula specifying covariates for the 1-2 transition.
-#' @param sharedtype_01 Character vectors defining the dependence structure between the longitudinal and the survival submodel for the 0-1 transition. For standard mixed models, valid options include \code{"value"}, \code{"slope"}, and \code{"random effects"}.
-#' For location–scale mixed models, additional terms such as \code{"variability"}, \code{"variability inter"}, or \code{"variability intra"} can be included when subject-specific variances are modelled.
-#' @param sharedtype_02 Character vectors defining the dependence structure between the longitudinal and the survival submodel for the 0-2 transition. For standard mixed models, valid options include \code{"value"}, \code{"slope"}, and \code{"random effects"}.
-#' For location–scale mixed models, additional terms such as \code{"variability"}, \code{"variability inter"}, or \code{"variability intra"} can be included when subject-specific variances are modelled.
-#' @param sharedtype_12 Character vectors defining the dependence structure between the longitudinal and the survival submodel for the 1-2 transition. For standard mixed models, valid options include \code{"value"}, \code{"slope"}, and \code{"random effects"}.
-#' For location–scale mixed models, additional terms such as \code{"variability"}, \code{"variability inter"}, or \code{"variability intra"} can be included when subject-specific variances are modelled.
-#' @param hazardBase_01 Character strings specifying the baseline hazard function for transition 0-1: one of \code{"Exponential"}, \code{"Weibull"}, \code{"Gompertz"}, or \code{"Splines"}.
-#' @param hazardBase_02 Character strings specifying the baseline hazard function for transition 0-2: one of \code{"Exponential"}, \code{"Weibull"}, \code{"Gompertz"}, or \code{"Splines"}.
-#' @param hazardBase_12 Character strings specifying the baseline hazard function for transition 1-2: one of \code{"Exponential"}, \code{"Weibull"}, \code{"Gompertz"}, or \code{"Splines"}.
-#' @param delta1 One-sided formula defining the event indicator for the first event (\eqn{1} for event, \eqn{0} otherwise).
-#' @param delta2 One-sided formula defining the indicator for the second event (\eqn{1} for event, \eqn{0} otherwise).
+#' @param sharedtype_01 Character vectors defining the dependence structure between the longitudinal
+#' and the survival submodel for the 0-1 transition. For standard mixed models, valid options
+#' include \code{"value"}, \code{"slope"}, and \code{"random effects"}.
+#' For location–scale mixed models, additional terms such as \code{"variability"},
+#' \code{"variability inter"}, or \code{"variability intra"} can be included when subject-specific
+#' variances are modelled.
+#' @param sharedtype_02 Character vectors defining the dependence structure between the longitudinal
+#' and the survival submodel for the 0-2 transition. For standard mixed models, valid options
+#' include \code{"value"}, \code{"slope"}, and \code{"random effects"}.
+#' For location–scale mixed models, additional terms such as \code{"variability"},
+#' \code{"variability inter"}, or \code{"variability intra"} can be included when subject-specific
+#' variances are modelled.
+#' @param sharedtype_12 Character vectors defining the dependence structure between the longitudinal
+#' and the survival submodel for the 1-2 transition. For standard mixed models, valid options
+#' include \code{"value"}, \code{"slope"}, and \code{"random effects"}.
+#' For location–scale mixed models, additional terms such as \code{"variability"},
+#' \code{"variability inter"}, or \code{"variability intra"} can be included when subject-specific
+#' variances are modelled.
+#' @param hazardBase_01 Character strings specifying the baseline hazard function for transition 0-1
+#' one of \code{"Exponential"}, \code{"Weibull"}, \code{"Gompertz"}, or \code{"Splines"}.
+#' @param hazardBase_02 Character strings specifying the baseline hazard function for transition 0-2
+#' one of \code{"Exponential"}, \code{"Weibull"}, \code{"Gompertz"}, or \code{"Splines"}.
+#' @param hazardBase_12 Character strings specifying the baseline hazard function for transition 1-2
+#' one of \code{"Exponential"}, \code{"Weibull"}, \code{"Gompertz"}, or \code{"Splines"}.
+#' @param delta1 One-sided formula defining the event indicator for the first event (\eqn{1}
+#' for event, \eqn{0} otherwise).
+#' @param delta2 One-sided formula defining the indicator for the second event (\eqn{1} for event,
+#' \eqn{0} otherwise).
 #' @param Time_T One-sided formula specifying the event time variable.
-#' @param Time_L For IDM models, one-sided formula giving the time of the last observation in state (0).
+#' @param Time_L For IDM models, one-sided formula giving the time of the last observation in state
+#' (0).
 #' @param Time_R For IDM models, one-sided formula giving the first observed time in state (1).
 #' @param Time_T0 One-sided formula specifying the time of entry (for delayed entry).
-#' @param formSlopeFixed One-sided formula for the time derivative of the fixed effects (if "slope" is included in \code{sharedtype}).
-#' @param formSlopeRandom One-sided formula for the time derivative of the random effects (if "slope" is included in \code{sharedtype}).
-#' @param index_beta_slope Vector indicating the indices of fixed-effect parameters used in the slope association.
-#' @param index_b_slope Vector indicating the indices of random-effect parameters used in the slope association.
-#' @param nb.knots.splines Integer giving the number of internal knots for spline-based baseline hazards.
-#' @param nb_pointsGK Integer specifying the number of Gauss–Kronrod quadrature points (between 7 and 15; default is 15).
+#' @param formSlopeFixed One-sided formula for the time derivative of the fixed effects (if "slope"
+#' is included in \code{sharedtype}).
+#' @param formSlopeRandom One-sided formula for the time derivative of the random effects
+#' (if "slope" is included in \code{sharedtype}).
+#' @param index_beta_slope Vector indicating the indices of fixed-effect parameters used in the
+#' slope association.
+#' @param index_b_slope Vector indicating the indices of random-effect parameters used in the slope
+#' association.
+#' @param nb.knots.splines Integer giving the number of internal knots for spline-based baseline
+#' hazards.
+#' @param nb_pointsGK Integer specifying the number of Gauss–Kronrod quadrature points
+#' (between 7 and 15; default is 15).
 #' @param S1 Integer specifying the number of QMC draws for the first step.
 #' @param S2 Integer specifying the number of QMC draws for the second step.
 #' @param nproc Integer specifying the number of processors for parallel computing.
 #' @param clustertype Character string indicating the cluster type supported by \code{makeCluster}.
-#' @param maxiter Optional integer specifying the maximum number of iterations for the Marquardt–Levenberg algorithm (default to 100).
-#' @param print.info Logical indicating whether iteration details should be printed (False by default).
-#' @param file Optional character string giving the name of the file where iteration outputs are written (if \code{print.info = TRUE}).
+#' @param maxiter Optional integer specifying the maximum number of iterations for the
+#' Marquardt–Levenberg algorithm (default to 100).
+#' @param print.info Logical indicating whether iteration details should be printed
+#' (False by default).
+#' @param file Optional character string giving the name of the file where iteration outputs are
+#' written (if \code{print.info = TRUE}).
 #' @param epsa Optional numeric threshold for convergence based on parameter stability.
 #' @param epsb Optional numeric threshold for convergence based on objective function stability.
-#' @param epsd  Optional numeric threshold for the relative distance to the maximum. This criterion has the nice interpretation of estimating the ratio of the approximation error over the statistical error, thus it can be used for stopping the iterative process whatever the problem.
+#' @param epsd  Optional numeric threshold for the relative distance to the maximum. This criterion
+#' has the nice interpretation of estimating the ratio of the approximation error over the
+#' statistical error, thus it can be used for stopping the iterative process whatever the problem.
 #' @param binit Optional vector of initial parameters values.
 #'
 #'
@@ -148,8 +194,10 @@
 #' \item{\code{table.res}}{Table of parameter estimates and standard errors.}
 #' \item{\code{result_step1}}{A \code{marqLevAlg} object with first-step estimation results.}
 #' \item{\code{result_step2}}{A \code{marqLevAlg} object with second-step estimation results.}
-#' \item{\code{info_conv_step1}}{Information on first-step convergence (criteria and computation time).}
-#' \item{\code{info_conv_step2}}{Information on second-step convergence (criteria and computation time).}
+#' \item{\code{info_conv_step1}}{Information on first-step convergence
+#' (criteria and computation time).}
+#' \item{\code{info_conv_step2}}{Information on second-step convergence
+#' (criteria and computation time).}
 #' \item{\code{control}}{List of control parameters used during estimation.}
 #' }
 #'
@@ -168,8 +216,8 @@
 #'# threeC <- dplyr::group_by(threeC, ID, num.visit)
 #'# threeC <- dplyr::mutate(threeC, SBPvisit = mean(SBP))
 #'# threeC_ex1 <- threeC[!duplicated(threeC[, c("ID", "num.visit")]),
-#'#                                   c("ID", "SBPvisit", "age.visit65", "sex","dem","death","age.first65",
-#'#                                   "age.last65","age.final65","age0_65")]
+#'#                                   c("ID", "SBPvisit", "age.visit65", "sex","dem","death",
+#'#                                      "age.first65","age.last65","age.final65","age0_65")]
 #'#
 #'# m1 <- lsmm(formFixed = SBPvisit ~ age.visit65,
 #'#                formRandom = ~ age.visit65,

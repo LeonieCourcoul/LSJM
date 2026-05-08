@@ -1,5 +1,5 @@
 log_llh_lsmm_classic <- function(param, nb.e.a, nb.beta, S,Zq, X_base, offset, U_base, y.new.prog,Ind){
-  #browser()
+
   #Manage parameter
   curseur <- 1
   ## Marker

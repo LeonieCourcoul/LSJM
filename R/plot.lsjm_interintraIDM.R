@@ -9,13 +9,13 @@
 #' @importFrom stats setNames
 #' @importFrom grid unit
 #' @export
-plot.lsjm_interintraIDM <- function(x, which = 'long.fit', Objectpredict = NULL, break.times = NULL, ID.ind = NULL, ObjectSmoothHazard = NULL, xlim = NULL, ylim = NULL, ...){
+plot.lsjm_interintraIDM <- function(x, which = 'long.fit', Objectpredict, break.times = NULL, ID.ind = NULL, ObjectSmoothHazard = NULL, xlim = NULL, ylim = NULL, ...){
 
 
   Objectlsjm <- x
   Objectlsmm <- Objectlsjm$control$Objectlsmm
   if(is.null(Objectpredict)){
-    stop("Not implemented")
+    stop("Objectpredict is missing.")
   }
 
   graph <- NULL

@@ -1562,7 +1562,8 @@ predict.lsjm_classicIDM <- function(object, which = "RE", Objectranef = NULL, da
           h_0.GK_01 <- shape_01*(st_j**(shape_01-1))*wk    #### AJOUTER GOMPERTZ
         }
         if(x$control$hazard_baseline_01 == "Gompertz"){
-          stop("Not implemented.")    #### AJOUTER GOMPERTZ
+          st_j <- st_calc.sort.unique[j,]
+          h_0.GK_01 <- Gompertz_1_01*exp(Gompertz_2_01*st_T_i)*wk
         }
         if(x$control$hazard_baseline_01 == "Splines"){
           st_j <- st_calc.sort.unique[j,]
@@ -1593,7 +1594,8 @@ predict.lsjm_classicIDM <- function(object, which = "RE", Objectranef = NULL, da
           h_0.GK_02 <- shape_02*(st_j**(shape_02-1))*wk    #### AJOUTER GOMPERTZ
         }
         if(x$control$hazard_baseline_02 == "Gompertz"){
-          stop("Not implemented.")    #### AJOUTER GOMPERTZ
+          st_j <- st_calc.sort.unique[j,]
+          h_0.GK_02 <- Gompertz_1_02*exp(Gompertz_2_02*st_T_i)*wk
         }
         if(x$control$hazard_baseline_02 == "Splines"){
           st_j <- st_calc.sort.unique[j,]
@@ -1624,7 +1626,8 @@ predict.lsjm_classicIDM <- function(object, which = "RE", Objectranef = NULL, da
           h_0.GK_12 <- shape_12*(st_j**(shape_12-1))*wk    #### AJOUTER GOMPERTZ
         }
         if(x$control$hazard_baseline_12 == "Gompertz"){
-          stop("Not implemented.")    #### AJOUTER GOMPERTZ
+          st_j <- st_calc.sort.unique[j,]
+          h_0.GK_12 <- Gompertz_1_12*exp(Gompertz_2_12*st_T_i)*wk
         }
         if(x$control$hazard_baseline_12 == "Splines"){
           st_j <- st_calc.sort.unique[j,]

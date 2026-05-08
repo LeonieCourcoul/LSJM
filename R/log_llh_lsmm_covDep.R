@@ -5,7 +5,7 @@ log_llh_lsmm_covDep <- function(param, nb.e.a, nb.beta, S,Zq, X_base, offset, U_
   #Manage parameter
   curseur <- 1
   ## Marker
-  ### Fiexd effects
+  ### Fixed effects
   beta <- param[curseur:(curseur+nb.beta-1)]
   curseur <- curseur+nb.beta
   omega <- param[(curseur):(curseur+nb.omega-1)]

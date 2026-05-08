@@ -8,7 +8,7 @@ log_llh_lsmm_interintra <- function(param,nb.beta, Zq,
   #Manage parameter
   curseur <- 1
   ## Marker
-  ### Fiexd effects
+  ### Fixed effects
   beta <- param[curseur:(curseur+nb.beta-1)]
   curseur <- curseur+nb.beta
   if(variability_inter_visit){

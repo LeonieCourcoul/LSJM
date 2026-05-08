@@ -497,8 +497,6 @@ predyn_ponct_lsjm_covDepCR <- function(Objectlsjm, data.long.until.time.s, s, wi
   Surv.den <- exp(-A_0_s_01-A_0_s_02)
 
 
-  #browser()
-  #f_Y_b_sigma_exp <- exp(f_Y_b_sigma)
   numerateur <- Surv.num*f_Y_b_sigma
   denominateur <- Surv.den*f_Y_b_sigma
   pred.current <- mean(numerateur)/mean(denominateur)

@@ -15,7 +15,7 @@ plot.lsjm_classicCR <- function(x, which = 'long.fit', Objectpredict, break.time
 
   Objectlsmm <- Objectlsjm$control$Objectlsmm
   if(is.null(Objectpredict)){
-    stop("Not implemented")
+    stop("Objectprdict is missing")
   }
 
   graph <- NULL
@@ -203,11 +203,6 @@ plot.lsjm_classicCR <- function(x, which = 'long.fit', Objectpredict, break.time
       theme(legend.position = c(0.1, 0.8))+
       ggtitle("2nd event")
     graph[["graph.sur.2"]] <- graph.surv.2
-
-    #print(graph.surv.1)
-    #print(graph.surv.2)
-
-    #graph <- list(graph.surv.1 = graph.surv.1, graph.surv.2 = graph.surv.2)
 
   }
 

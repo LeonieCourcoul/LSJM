@@ -168,9 +168,7 @@ ranef.lsjm_classicIDM <- function(object,...){
   wk = gaussKronrod()$wk
   rep_wk = rep(gaussKronrod()$wk, length(gaussKronrod()$wk))
   sk_GK <- gaussKronrod()$sk
-  # Différencier chaque cas, pour chaque cas créer les matrices puis faire une fonction à maximiser (dedans un appel à C++ très proche des fonctions déjà existantes)
-  # => il faut appeler marqlevalg individu par individu !
-  #1. On associe chaque individu à un cas
+
   data.long <- x$control$data.long
   data.long$Case <- ifelse(data.long$delta1 == 1 & data.long$Time_R == data.long$Time_L, "Case1bis",
                            ifelse(data.long$delta1 == 1, "Case1",
@@ -279,8 +277,6 @@ ranef.lsjm_classicIDM <- function(object,...){
       Bs_L_R_12 <- splineDesign(x$control$knots_12, c(t(st_L_R)), ord = 4L)
     }
 
-    ## Pour l'intégrale (à optmiser plus tard)
-    #print("go integrale Case1")
     st_0_LR <- c()
     X_GK_0_LR <- c()
     U_GK_0_LR <- c()
@@ -1012,7 +1008,6 @@ ranef.lsjm_classicIDM <- function(object,...){
       B_GK_L_T_12 <- splineDesign(x$control$knots_12, c(t(st_L_T)), ord = 4L)
     }
 
-    ## Pour l'intégrale (à optmiser plus tard)
     st_0_LT <- c()
     if(("value" %in% x$control$sharedtype_01) || ("value" %in% x$control$sharedtype_02) || ("value" %in% x$control$sharedtype_12)){
       X_0_LT <- c()

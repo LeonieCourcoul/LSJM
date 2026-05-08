@@ -213,7 +213,7 @@ type:
 \eqn{g_\tau(\tau_i, t) = 0}.
 \item If a location–scale mixed model with time- or covariate-dependent variance is used:
 \eqn{g_\tau(\tau_i, t) = \sigma_i(t)}.
-\item If both within- and between-visit variances are modelled:
+\item If both within- and between-visit variances are modeled:
 \eqn{g_\tau(\tau_i, t) = (\sigma_i, \kappa_i)^\top},
 where \eqn{\alpha_\tau = (\alpha_\sigma, \alpha_\kappa)} correspond to between-visit and
 within-visit variabilities, respectively.

@@ -511,10 +511,11 @@ predict.lsjm_interintraSingle <- function(object, which = "RE", Objectranef = NU
                              }
                              if(x$control$hazard_baseline_01 == "Weibull"){
                                st_j <- st_calc.sort.unique[j,]
-                               h_0.GK_01 <- shape_01*(st_j**(shape_01-1))*wk    #### AJOUTER GOMPERTZ
+                               h_0.GK_01 <- shape_01*(st_j**(shape_01-1))*wk
                              }
                              if(x$control$hazard_baseline_01 == "Gompertz"){
-                               stop("Not implemented.")    #### AJOUTER GOMPERTZ
+                               st_j <- st_calc.sort.unique[j,]
+                               h_0.GK_01 <- Gompertz_1_01*exp(Gompertz_2_01*st_T_i)*wk
                              }
                              if(x$control$hazard_baseline_01 == "Splines"){
                                st_j <- st_calc.sort.unique[j,]
@@ -650,10 +651,11 @@ predict.lsjm_interintraSingle <- function(object, which = "RE", Objectranef = NU
           }
           if(x$control$hazard_baseline_01 == "Weibull"){
             st_j <- st_calc.sort.unique[j,]
-            h_0.GK_01 <- shape_01*(st_j**(shape_01-1))*wk    #### AJOUTER GOMPERTZ
+            h_0.GK_01 <- shape_01*(st_j**(shape_01-1))*wk
           }
           if(x$control$hazard_baseline_01 == "Gompertz"){
-            stop("Not implemented.")    #### AJOUTER GOMPERTZ
+            st_j <- st_calc.sort.unique[j,]
+            h_0.GK_01 <- Gompertz_1_01*exp(Gompertz_2_01*st_T_i)*wk
           }
           if(x$control$hazard_baseline_01 == "Splines"){
             st_j <- st_calc.sort.unique[j,]

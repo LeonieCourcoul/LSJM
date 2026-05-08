@@ -34,8 +34,11 @@ summary.lsjm_interintraCR <- function(object,...)
 
   if(!is.null(x$info_conv_step2)){
     if(x$info_conv_step2$conv==1) cat("    Convergence criteria satisfied")
-    if(x$info_conv_step2$conv==2) cat("    Maximum number of iteration reached without convergence")
-    if(x$info_conv_step2$conv==4) cat("    The program stopped abnormally. No results can be displayed. \n")
+    if(x$info_conv_step2$conv==2) cat("    Maximum number of iteration reached without convergence. We recommend to not interpret the following results and to try to reach convergence.")
+    if(x$info_conv_step2$conv==4){
+      cat("    The program stopped abnormally. No results can be displayed. \n")
+      stop()
+    }
   }
   cat("\n")
   cat(paste("     Number of iterations: "), "\n")

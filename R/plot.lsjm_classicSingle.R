@@ -13,7 +13,7 @@ plot.lsjm_classicSingle <- function(x, which = 'long.fit', Objectpredict, break.
   Objectlsjm <- x
   Objectlsmm <- Objectlsjm$control$Objectlsmm
   if(is.null(Objectpredict)){
-    stop("Not implemented")
+    stop("Objectpredict is missing.")
   }
 
   graph <- NULL
@@ -162,11 +162,6 @@ plot.lsjm_classicSingle <- function(x, which = 'long.fit', Objectpredict, break.
       ggtitle("1st event")
     graph <- list(graph.surv.1 = graph.surv.1)
 
-
-    #print(graph.surv.1)
-    #print(graph.surv.2)
-
-    #graph <- list(graph.surv.1 = graph.surv.1, graph.surv.2 = graph.surv.2)
 
   }
 

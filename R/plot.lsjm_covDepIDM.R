@@ -15,7 +15,7 @@ plot.lsjm_covDepIDM <- function(x, which = 'long.fit', Objectpredict, break.time
   Objectlsjm <- x
   Objectlsmm <- Objectlsjm$control$Objectlsmm
   if(is.null(Objectpredict)){
-    stop("Not implemented")
+    stop("Objectpredict is missing.")
   }
 
   graph <- NULL
@@ -79,7 +79,6 @@ plot.lsjm_covDepIDM <- function(x, which = 'long.fit', Objectpredict, break.time
       pred.CV.id$CI.sup <- pred.CV.id$predY + 1.96*pred.CV.id$predSD
       pred.CV.id$CI.inf <- pred.CV.id$predY - 1.96*pred.CV.id$predSD
 
-      #browser()
       traj_ind <- ggplot() +
 
         geom_line(pred.CV.id, mapping = aes(x=time, y=predY, group = id, color = 'Predicted'))+

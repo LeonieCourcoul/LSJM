@@ -15,7 +15,7 @@ plot.lsjm_classicIDM <- function(x, which = 'long.fit', Objectpredict, break.tim
   Objectlsjm <- x
   Objectlsmm <- Objectlsjm$control$Objectlsmm
   if(is.null(Objectpredict)){
-    stop("Not implemented")
+    stop("Objectpredict is missing.")
   }
 
   graph <- NULL

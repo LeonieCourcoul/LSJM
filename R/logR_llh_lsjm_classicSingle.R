@@ -59,7 +59,7 @@ logR_llh_lsjm_classicSingle <- function(param,hazard_baseline_01, sharedtype_01,
     curseur <- curseur + 1
   }
   ## Marker
-  ### Fiexd effects
+  ### Fixed effects
   beta <- param[curseur:(curseur+nb.beta-1)]
   curseur <- curseur+nb.beta
   sigma_epsilon <- param[curseur]
@@ -120,8 +120,6 @@ logR_llh_lsjm_classicSingle <- function(param,hazard_baseline_01, sharedtype_01,
 
   ll_glob2 <- sum(ll_glob)
   if(is.na(ll_glob2) || ll_glob2>0){
-    #print(param)
-    #print(ll_glob2)
     ll_glob2 <- -1E09
   }
   ll_glob2

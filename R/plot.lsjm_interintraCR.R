@@ -8,14 +8,11 @@
 #' @importFrom grid unit
 #' @export
 
-plot.lsjm_interintraCR <- function(x, which = 'long.fit', Objectpredict = NULL, break.times = NULL, ID.ind = NULL, xlim = NULL, ylim = NULL, ...){
+plot.lsjm_interintraCR <- function(x, which = 'long.fit', Objectpredict, break.times = NULL, ID.ind = NULL, xlim = NULL, ylim = NULL, ...){
 
 
   Objectlsjm <- x
   Objectlsmm <- Objectlsjm$control$Objectlsmm
-  #if(is.null(Objectranef)){
-  #  Objectranef <- ranef(Objectlsmm)
-  #}
   graph <- NULL
 
   oldpar <- par(no.readonly = TRUE) # code line i
@@ -208,10 +205,6 @@ plot.lsjm_interintraCR <- function(x, which = 'long.fit', Objectpredict = NULL, 
       ggtitle("2nd event")
     graph[["graph.sur.2"]] <- graph.surv.2
 
-    #print(graph.surv.1)
-    #print(graph.surv.2)
-
-    #graph <- list(graph.surv.1 = graph.surv.1, graph.surv.2 = graph.surv.2)
 
   }
 

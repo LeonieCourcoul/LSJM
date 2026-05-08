@@ -92,7 +92,7 @@
 \method{plot}{lsjm_interintraCR}(
   x,
   which = "long.fit",
-  Objectpredict = NULL,
+  Objectpredict,
   break.times = NULL,
   ID.ind = NULL,
   xlim = NULL,
@@ -103,7 +103,7 @@
 \method{plot}{lsjm_interintraIDM}(
   x,
   which = "long.fit",
-  Objectpredict = NULL,
+  Objectpredict,
   break.times = NULL,
   ID.ind = NULL,
   ObjectSmoothHazard = NULL,
@@ -115,7 +115,7 @@
 \method{plot}{lsjm_interintraSingle}(
   x,
   which = "long.fit",
-  Objectpredict = NULL,
+  Objectpredict,
   break.times = NULL,
   ID.ind = NULL,
   xlim = NULL,
@@ -126,7 +126,7 @@
 \method{plot}{lsmm_classic}(
   x,
   which = "long.fit",
-  Objectpredict = NULL,
+  Objectpredict,
   break.times = NULL,
   ID.ind = NULL,
   ylim = NULL,
@@ -137,7 +137,7 @@
 \method{plot}{lsmm_covDep}(
   x,
   which = "long.fit",
-  Objectpredict = NULL,
+  Objectpredict,
   break.times = NULL,
   ID.ind = NULL,
   ylim = NULL,
@@ -148,7 +148,7 @@
 \method{plot}{lsmm_interintra}(
   x,
   which = "long.fit",
-  Objectpredict = NULL,
+  Objectpredict,
   break.times = NULL,
   ID.ind = NULL,
   ylim = NULL,

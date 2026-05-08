@@ -13,7 +13,7 @@ plot.lsjm_covDepSingle <- function(x, which = 'long.fit', Objectpredict, break.t
   Objectlsjm <- x
   Objectlsmm <- Objectlsjm$control$Objectlsmm
   if(is.null(Objectpredict)){
-    stop("Not implemented")
+    stop("Objectpredict is missing.")
   }
 
   graph <- NULL
@@ -161,12 +161,6 @@ plot.lsjm_covDepSingle <- function(x, which = 'long.fit', Objectpredict, break.t
       theme(legend.position = c(0.1, 0.8))+
       ggtitle("1st event")
     graph <- list(graph.surv.1 = graph.surv.1)
-
-
-    #print(graph.surv.1)
-    #print(graph.surv.2)
-
-    #graph <- list(graph.surv.1 = graph.surv.1, graph.surv.2 = graph.surv.2)
 
   }
 

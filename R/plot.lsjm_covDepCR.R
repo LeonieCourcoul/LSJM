@@ -13,7 +13,7 @@ plot.lsjm_covDepCR <- function(x, which = 'long.fit', Objectpredict, break.times
   Objectlsjm <- x
   Objectlsmm <- Objectlsjm$control$Objectlsmm
   if(is.null(Objectpredict)){
-    stop("Not implemented")
+    stop("Objectpredict is missing.")
   }
 
   graph <- NULL
@@ -76,7 +76,6 @@ plot.lsjm_covDepCR <- function(x, which = 'long.fit', Objectpredict, break.times
       pred.CV.id$CI.sup <- pred.CV.id$predY + 1.96*pred.CV.id$predSD
       pred.CV.id$CI.inf <- pred.CV.id$predY - 1.96*pred.CV.id$predSD
 
-      #browser()
       traj_ind <- ggplot() +
 
         geom_line(pred.CV.id, mapping = aes(x=time, y=predY, group = id, color = 'Predicted'))+
@@ -202,10 +201,6 @@ plot.lsjm_covDepCR <- function(x, which = 'long.fit', Objectpredict, break.times
       ggtitle("2nd event")
     graph[["graph.sur.2"]] <- graph.surv.2
 
-    #print(graph.surv.1)
-    #print(graph.surv.2)
-
-    #graph <- list(graph.surv.1 = graph.surv.1, graph.surv.2 = graph.surv.2)
 
   }
 

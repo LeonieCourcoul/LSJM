@@ -26,16 +26,19 @@ summary.lsjm_classicSingle <- function(object,...)
   #ajouter le code d'appelle à la fonction
   cat("\n")
   cat("Statistical Model:", "\n")
-  cat(paste("    Number of subjects:", x$control$Ind),"\n")
-  cat(paste("    Number of observations:", nrow(x$control$data.long)),"\n")
+  cat(paste("    Number of subjects:", x$control$Objectlsmm$control$Ind),"\n")
+  cat(paste("    Number of observations:", nrow(x$control$Objectlsmm$control$data.long)),"\n")
 
   cat("\n")
   cat("Iteration process:", "\n")
 
   if(!is.null(x$info_conv_step2)){
     if(x$info_conv_step2$conv==1) cat("    Convergence criteria satisfied")
-    if(x$info_conv_step2$conv==2) cat("    Maximum number of iteration reached without convergence")
-    if(x$info_conv_step2$conv==4) cat("    The program stopped abnormally. No results can be displayed. \n")
+    if(x$info_conv_step2$conv==2) cat("    Maximum number of iteration reached without convergence. We recommend to not interpret the following results and to try to reach convergence.")
+    if(x$info_conv_step2$conv==4){
+      cat("    The program stopped abnormally. No results can be displayed. \n")
+      stop()
+    }
   }
   cat("\n")
   cat(paste("     Number of iterations: "), "\n")

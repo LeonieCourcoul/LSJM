@@ -230,8 +230,6 @@ logR_llh_lsjm_interintraSingle <- function(param,hazard_baseline_01, sharedtype_
 
   ll_glob2 <- sum(ll_glob)
   if(is.na(ll_glob2) || ll_glob2>0){
-    #print(param)
-    #print(ll_glob2)
     ll_glob2 <- -1E09
   }
   ll_glob2

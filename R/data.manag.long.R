@@ -19,7 +19,6 @@
 
 data.manag.long <- function(formGroup, formFixed, formRandom, data.long1){
   data_long <- data.long1[unique(c(all.vars(formGroup), all.vars(formFixed), all.vars(formRandom)))]
-  #y.new.prog <- data_long[all.vars(formFixed)][, 1]
   mfX <- model.frame(formFixed, data = data_long)
   y.new.prog <- mfX[,1]
   X <- model.matrix(formFixed, mfX)
@@ -28,7 +27,7 @@ data.manag.long <- function(formGroup, formFixed, formRandom, data.long1){
   id <- as.integer(data_long[all.vars(formGroup)][,1])
   offset <- as.vector(c(1, 1 + cumsum(tapply(id, id, length))))
   I <- length(unique(id))
-  if(!("id" %in% colnames(data_long))) #To have a column named "id"
+  if(!("id" %in% colnames(data_long)))
     data_long <- cbind(data_long, id = id)
 
   list.long <- list("data_long"= data_long, "y.new.prog" = y.new.prog, "X" = X, "U" = U,

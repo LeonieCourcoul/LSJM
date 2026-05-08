@@ -52,17 +52,12 @@ dynpred.lsjm_interintraIDM <- function(object,newdata,  s, horizon, event = NULL
 
     ### Graph
     if(!is.null(CI)){
-      oldpar <- par(no.readonly = TRUE) # code line i
-      on.exit(par(oldpar)) # code line i + 1
-      #browser()
+      oldpar <- par(no.readonly = TRUE)
+      on.exit(par(oldpar))
       x.axe <- c(0,data.long.until.time.s[,Objectlsjm$control$Objectlsmm$control$timeVar],times)
-      #print(x.axe)
       y.axe <- c(NA,data.long.until.time.s[,all.vars(Objectlsjm$control$Objectlsmm$control$formFixed)[1]], rep(NA,length(window)))
-      #print(y.axe)
       y.axe2 <- c(NA,rep(NA,length(data.long.until.time.s[,Objectlsjm$control$Objectlsmm$control$timeVar])),table.pred.id$CIinf)
-      #print(y.axe2)
       y.axe3 <- c(NA,rep(NA,length(data.long.until.time.s[,Objectlsjm$control$Objectlsmm$control$timeVar])),table.pred.id$Median)
-      #print(y.axe3)
       y.axe4 <- c(NA,rep(NA,length(data.long.until.time.s[,Objectlsjm$control$Objectlsmm$control$timeVar])),table.pred.id$CIsup)
       y.axe5 <- c(NA,rep(NA,length(data.long.until.time.s[,Objectlsjm$control$Objectlsmm$control$timeVar])),table.pred.id$Prediction)
       plot(x = x.axe, y = y.axe,xlim = c(0,max(s+window)),

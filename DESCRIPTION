@@ -13,8 +13,8 @@ Description: Estimation of mixed models including a subject-specific variance
     allows a flexible dependence structure between competing events and the 
     longitudinal marker. Estimation is performed in a frequentist framework 
     using the Marquardt-Levenberg algorithm. Methods are described in 
-    Courcoul et al. (2025) <doi:10.1002/sim.70244> and Courcoul et al. (2025) 
-    <arXiv:2408.06769>.
+    Courcoul et al. (2025) <doi:10.1002/sim.70244> and in Courcoul et al. (2026) 
+    <doi:10.1002/bimj.70123>.
 License: GPL (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

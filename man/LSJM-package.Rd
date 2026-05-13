@@ -6,7 +6,7 @@
 \alias{LSJM-package}
 \title{LSJM: Estimate Location-Scale Joint Models}
 \description{
-Estimation of mixed models including a subject-specific variance that can be time- and covariate-dependent or defined for within- and between-visit variability. In the joint modeling framework, the package handles left truncation, interval censoring, and multistate models, and allows a flexible dependence structure between competing events and the longitudinal marker. Estimation is performed in a frequentist framework using the Marquardt-Levenberg algorithm. Methods are described in Courcoul et al. (2025) \doi{10.1002/sim.70244} and Courcoul et al. (2025) \href{https://arxiv.org/abs/2408.06769}{arXiv:2408.06769}.
+Estimation of mixed models including a subject-specific variance that can be time- and covariate-dependent or defined for within- and between-visit variability. In the joint modeling framework, the package handles left truncation, interval censoring, and multistate models, and allows a flexible dependence structure between competing events and the longitudinal marker. Estimation is performed in a frequentist framework using the Marquardt-Levenberg algorithm. Methods are described in Courcoul et al. (2025) \doi{10.1002/sim.70244} and in Courcoul et al. (2026) \doi{10.1002/bimj.70123}.
 }
 \author{
 \strong{Maintainer}: Léonie Courcoul \email{courcoul.leonie498@gmail.com}

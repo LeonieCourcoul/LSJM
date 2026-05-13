@@ -1,4 +1,4 @@
-#' @rdname predict
+#' @rdname predict.lsjm
 #' @importFrom parallel detectCores makeCluster stopCluster
 #' @importFrom doParallel registerDoParallel
 #' @importFrom foreach foreach %dopar%

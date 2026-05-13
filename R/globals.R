@@ -25,6 +25,8 @@ utils::globalVariables(c(
   "Gompert.2_02", "Gompert.2_02.se", "Gompert.2_02.name",
   "Gompert.1_12", "Gompert.1_12.se", "Gompert.1_12.name",
   "Gompert.2_12", "Gompert.2_12.se", "Gompert.2_12.name",
+  "Gompertz_1_01", "Gompertz_2_01", "Gompertz_1_02",
+  "Gompertz_2_02", "Gompertz_1_12","Gompertz_2_12",
 
   ## Longitudinal / association parameters
   "alpha_b", "alpha_b_01", "alpha_b_02",

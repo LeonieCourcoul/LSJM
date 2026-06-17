@@ -90,7 +90,7 @@ predict.lsjm_classicSingle <- function(object, which = "RE", Objectranef = NULL,
 
   borne1 <- curseur + choose(n = x$control$Objectlsmm$control$nb.e.a, k = 2) + x$control$Objectlsmm$control$nb.e.a - 1
   C1 <- matrix(rep(0,(x$control$Objectlsmm$control$nb.e.a)**2),nrow=x$control$Objectlsmm$control$nb.e.a,ncol=x$control$Objectlsmm$control$nb.e.a)
-  C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
+  C1[lower.tri(C1, diag=TRUE)] <- param[curseur:borne1]
   Cholesky <- C1
   Cholesky <- as.matrix(Cholesky)
 
@@ -219,9 +219,6 @@ predict.lsjm_classicSingle <- function(object, which = "RE", Objectranef = NULL,
                        .multicombine = TRUE,
                        .packages = c("mvtnorm", "marqLevAlg")) %dopar% {
 #
-                        # for(id.boucle in 1:length(unique(data.long$id))){
-                        #   print(id.boucle)
-                         #  browser()
 
                          if("value" %in% x$control$sharedtype_01 ){
                            X_T_i <- X_T[id.boucle,];U_T_i <- U_T[id.boucle,]

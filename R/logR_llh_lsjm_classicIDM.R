@@ -144,7 +144,7 @@ logR_llh_lsjm_classicIDM <- function(param,hazard_baseline_01, sharedtype_01,
   sigma_epsilon <- param[curseur]
   curseur <- curseur +1
   C1 <- matrix(rep(0,(nb.e.a)**2),nrow=nb.e.a,ncol=nb.e.a)
-  C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
+  C1[lower.tri(C1, diag=TRUE)] <- param[curseur:length(param)]
   MatCov <- C1
   MatCov <- as.matrix(MatCov)
   random.effects <- Zq%*%t(MatCov)

@@ -30,7 +30,7 @@ plot.lsjm_interintraCR <- function(x, which = 'long.fit', Objectpredict, break.t
       timeInterv <- range(data.long[,timeVar])
       break.times <- quantile(timeInterv,prob=seq(0,1,length.out=10))
     }
-    data.long$window <- cut(data.long[,timeVar], break.times, include.lowest = T)
+    data.long$window <- cut(data.long[,timeVar], break.times, include.lowest = TRUE)
     data.long2 <- data.long %>% group_by(id,.data[[timeVar]]) %>% mutate(new.var.y.moy =  mean(.data[[value.var]])) %>% ungroup()
     data.long2.unique <- data.long2[!duplicated(data.long2[, c("id", timeVar)]), ]
     data.long <- data.long2.unique

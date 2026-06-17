@@ -86,7 +86,6 @@ re_lsjm_interintraIDMCase1Bis <- function(param, nb.e.a, variability_inter_visit
   log_f_Y_f_T <- log_f_Y_f_T + log(f_b_tau)
 
   if(is.na(log_f_Y_f_T)){
-    print(param)
     log_f_Y_f_T <- -1E09
   }
   log_f_Y_f_T

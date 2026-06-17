@@ -65,7 +65,7 @@ dynpred.lsjm_covDepCR <- function(object, newdata,  s, horizon, event, CI = 95, 
            xlab = "Time", ylab = "Marker", cex.lab = 1, col = "black",
            main = "Prediction of event", pch = 20, cex = 1, font = 1, font.lab = 1, cex.lab = 1, cex.main = 1)
       par(new = TRUE, font = 1, cex.lab = 1)
-      plot(x.axe, y.axe3, axes = FALSE,col = "black", type = "l", ylim = c(0.000001, max(table.pred.id$CIsup, na.rm = T)),ylab = "", xlab = "", lwd =2, font.lab = 1, cex.lab = 1 )
+      plot(x.axe, y.axe3, axes = FALSE,col = "black", type = "l", ylim = c(0.000001, max(table.pred.id$CIsup, na.rm = TRUE)),ylab = "", xlab = "", lwd =2, font.lab = 1, cex.lab = 1 )
       lines(x.axe, y.axe5, col = "red", lty=1, lwd = 2)
       lines(x.axe, y.axe2, col = "black", lty=2, lwd = 2)
       lines(x.axe, y.axe4, col = "black", lty=2, lwd = 2)

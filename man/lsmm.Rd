@@ -13,10 +13,10 @@ lsmm(
   formVar = "standard",
   formFixedVar = NULL,
   formRandomVar = NULL,
-  random_inter = F,
-  random_intra = F,
+  random_inter = FALSE,
+  random_intra = FALSE,
   formGroupVisit = NULL,
-  correlated_re = F,
+  correlated_re = FALSE,
   data.long,
   S1 = 500,
   S2 = 5000,
@@ -220,7 +220,6 @@ are assumed to be Gaussian as in model (B).
 data(threeC)
 threeC$age.visit65 <- (threeC$age.visit-65)/10
 threeC$SBP <- threeC$SBP/10
-threeC <- threeC
 threeC <- dplyr::group_by(threeC, ID, num.visit)
 threeC <- dplyr::mutate(threeC, SBPvisit = mean(SBP))
 threeC_ex1 <- threeC[!duplicated(threeC[, c("ID", "num.visit")]),

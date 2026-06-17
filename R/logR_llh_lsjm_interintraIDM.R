@@ -193,13 +193,13 @@ logR_llh_lsjm_interintraIDM <- function(param,hazard_baseline_01, sharedtype_01,
     if(correlated_re){
 
       C1 <- matrix(rep(0,(nb.e.a+2)**2),nrow=nb.e.a+2,ncol=nb.e.a+2)
-      C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
+      C1[lower.tri(C1, diag=TRUE)] <- param[curseur:length(param)]
       Cholesky <- C1
     }
     else{
       borne1 <- curseur + choose(n = nb.e.a, k = 2) + nb.e.a - 1
       C1 <- matrix(rep(0,(nb.e.a)**2),nrow=nb.e.a,ncol=nb.e.a)
-      C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
+      C1[lower.tri(C1, diag=TRUE)] <- param[curseur:borne1]
       C2 <-matrix(c(param[(borne1+1)], 0,param[borne1+2], param[borne1+3]),nrow=2,ncol=2, byrow = TRUE)
       C3 <- matrix(rep(0,2*nb.e.a), ncol = nb.e.a)
       C4 <- matrix(rep(0,2*nb.e.a), nrow = nb.e.a)
@@ -211,13 +211,13 @@ logR_llh_lsjm_interintraIDM <- function(param,hazard_baseline_01, sharedtype_01,
     if(variability_inter_visit){
       if(correlated_re){
         C1 <- matrix(rep(0,(nb.e.a+1)**2),nrow=nb.e.a+1,ncol=nb.e.a+1)
-        C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
+        C1[lower.tri(C1, diag=TRUE)] <- param[curseur:length(param)]
         Cholesky <- C1
       }
       else{
         borne1 <- curseur + choose(n = nb.e.a, k = 2) + nb.e.a - 1
         C1 <- matrix(rep(0,(nb.e.a)**2),nrow=nb.e.a,ncol=nb.e.a)
-        C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
+        C1[lower.tri(C1, diag=TRUE)] <- param[curseur:borne1]
         C2 <-matrix(c(param[(borne1+1)]),nrow=1,ncol=1, byrow = TRUE)
         C3 <- matrix(rep(0,nb.e.a), ncol = 1)
         C4 <- matrix(rep(0,nb.e.a), nrow = 1)
@@ -229,13 +229,13 @@ logR_llh_lsjm_interintraIDM <- function(param,hazard_baseline_01, sharedtype_01,
       if(variability_intra_visit){
         if(correlated_re){
           C1 <- matrix(rep(0,(nb.e.a+1)**2),nrow=nb.e.a+1,ncol=nb.e.a+1)
-          C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
+          C1[lower.tri(C1, diag=TRUE)] <- param[curseur:length(param)]
           Cholesky <- C1
         }
         else{
           borne1 <- curseur + choose(n = nb.e.a, k = 2) + nb.e.a - 1
           C1 <- matrix(rep(0,(nb.e.a)**2),nrow=nb.e.a,ncol=nb.e.a)
-          C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
+          C1[lower.tri(C1, diag=TRUE)] <- param[curseur:borne1]
           C2 <-matrix(c(param[(borne1+1)]),nrow=1,ncol=1, byrow = TRUE)
           C3 <- matrix(rep(0,nb.e.a), ncol = 1)
           C4 <- matrix(rep(0,nb.e.a), nrow = 1)
@@ -246,7 +246,7 @@ logR_llh_lsjm_interintraIDM <- function(param,hazard_baseline_01, sharedtype_01,
     }
     if(!variability_inter_visit && !variability_intra_visit){
       C1 <- matrix(rep(0,(length(param)-curseur)**2),nrow=length(param)-curseur,ncol=length(param)-curseur)
-      C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
+      C1[lower.tri(C1, diag=TRUE)] <- param[curseur:length(param)]
       Cholesky <- C1
     }
 

@@ -31,17 +31,17 @@ ranef.lsmm_covDep <- function(object,...){
   curseur <- curseur+x$control$nb.omega
   if(x$control$correlated_re){
     C1 <- matrix(rep(0,(x$control$nb.e.a+x$control$nb.e.a.sigma)**2),nrow=x$control$nb.e.a+x$control$nb.e.a.sigma,ncol=x$control$nb.e.a+x$control$nb.e.a.sigma)
-    C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
+    C1[lower.tri(C1, diag=TRUE)] <- param[curseur:length(param)]
     Cholesky <- C1
     Cholesky <- as.matrix(Cholesky)
   }
   else{
     borne1 <- curseur + choose(n = x$control$nb.e.a, k = 2) + x$control$nb.e.a - 1
     C1 <- matrix(rep(0,(x$control$nb.e.a)**2),nrow=x$control$nb.e.a,ncol=x$control$nb.e.a)
-    C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
+    C1[lower.tri(C1, diag=TRUE)] <- param[curseur:borne1]
     borne3 <- borne1 + choose(n = x$control$nb.e.a.sigma, k = 2) + x$control$nb.e.a.sigma
     C3 <- matrix(rep(0,(x$control$nb.e.a.sigma)**2),nrow=x$control$nb.e.a.sigma,ncol=x$control$nb.e.a.sigma)
-    C3[lower.tri(C3, diag=T)] <- param[(borne1+1):borne3]
+    C3[lower.tri(C3, diag=TRUE)] <- param[(borne1+1):borne3]
     C2 <- matrix(0, ncol = x$control$nb.e.a.sigma, nrow = x$control$nb.e.a)
 
     C4 <- matrix(0, ncol = x$control$nb.e.a, nrow = x$control$nb.e.a.sigma)

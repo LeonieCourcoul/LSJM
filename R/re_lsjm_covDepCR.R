@@ -52,9 +52,7 @@ re_lsjm_covDepCR <- function(param, nb.e.a,  nb.e.a.sigma, Sigma.re,
 
 
 
-  #print(log_f_Y_f_T)
   if(is.na(log_f_Y_f_T)||is.infinite(log_f_Y_f_T)){
-    #print(param)
     log_f_Y_f_T <- -1E09
   }
   log_f_Y_f_T

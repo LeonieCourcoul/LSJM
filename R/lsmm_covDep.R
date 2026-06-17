@@ -28,7 +28,7 @@ lsmm_covDep <- function(formFixed, formRandom, formGroup,
   sigma_epsilon <- list.init.long$sigma
   mu.log.sigma <- log(sigma_epsilon)
   cov_mat <- diag(nb.e.a)
-  cholesky_b <- cov_mat[lower.tri(cov_mat, diag = T)]
+  cholesky_b <- cov_mat[lower.tri(cov_mat, diag = TRUE)]
   #cholesky_b <- list.init.long$long_model$cholesky
   priorMean.beta <- list.init.long$priorMean.beta
   names_param <- c()
@@ -108,30 +108,30 @@ lsmm_covDep <- function(formFixed, formRandom, formGroup,
 
 
     var_trans <- matrix(rep(0,length(binit)**2),nrow=length(binit),ncol=length(binit))
-    var_trans[upper.tri(var_trans, diag=T)] <- estimation2$v
+    var_trans[upper.tri(var_trans, diag=TRUE)] <- estimation2$v
     sd.param <- sqrt(diag(var_trans))
     param_est <-  estimation2$b
     #Delta-method
     if(correlated_re){
       curseur <- length(estimation2$b) - nb.chol + 1
       C1 <- matrix(rep(0,(nb.e.a+nb.e.a.sigma)**2),nrow=nb.e.a+nb.e.a.sigma,ncol=nb.e.a+nb.e.a.sigma)
-      C1[lower.tri(C1, diag=T)] <- estimation2$b[curseur:length(estimation2$b)]
+      C1[lower.tri(C1, diag=TRUE)] <- estimation2$b[curseur:length(estimation2$b)]
       C1 <- as.matrix(C1)
       Index.C1 <- matrix(rep(0,(nb.e.a+nb.e.a.sigma)**2),nrow=nb.e.a+nb.e.a.sigma,ncol=nb.e.a+nb.e.a.sigma)
-      Index.C1[lower.tri(Index.C1, diag=T)] <- 1:(choose(nb.e.a+nb.e.a.sigma,2)+nb.e.a+nb.e.a.sigma)
+      Index.C1[lower.tri(Index.C1, diag=TRUE)] <- 1:(choose(nb.e.a+nb.e.a.sigma,2)+nb.e.a+nb.e.a.sigma)
       Index.C1 <- as.matrix(Index.C1)
 
       MatCov <- C1%*%t(C1)
       param_est <- c(param_est,unique(c(t(MatCov))))
       vec_name1 <-  c(paste(colnames(U_base),"_Location",sep = "_"),paste(colnames(W_base),"_Scale",sep = "_"))
       mat_name1 <- outer(vec_name1,vec_name1, paste, sep = "*cov*")
-      names_param <- c(names_param, c(mat_name1[lower.tri(mat_name1, diag= T)]))
+      names_param <- c(names_param, c(mat_name1[lower.tri(mat_name1, diag= TRUE)]))
 
       #for(i in 1:length(unique(c(t(MatCov))))){
       #  names_param <- c(names_param, paste("cov", i, sep = "_"))
       #}
       var_trans <- matrix(rep(0,length(estimation2$b)**2),nrow=length(estimation2$b),ncol=length(estimation2$b))
-      var_trans[upper.tri(var_trans, diag=T)] <- estimation2$v
+      var_trans[upper.tri(var_trans, diag=TRUE)] <- estimation2$v
       trig.cov <- var_trans[curseur:length(estimation2$b),curseur:length(estimation2$b)]
       trig.cov <- trig.cov+t(trig.cov)
       diag(trig.cov) <- diag(trig.cov)/2
@@ -160,18 +160,18 @@ lsmm_covDep <- function(formFixed, formRandom, formGroup,
       curseur <- length(estimation2$b) - nb.chol + 1
       borne1 <- curseur + choose(n = nb.e.a, k = 2) + nb.e.a - 1
       C1 <- matrix(rep(0,(nb.e.a)**2),nrow=nb.e.a,ncol=nb.e.a)
-      C1[lower.tri(C1, diag=T)] <- estimation2$b[curseur:borne1]
+      C1[lower.tri(C1, diag=TRUE)] <- estimation2$b[curseur:borne1]
       C1 <- as.matrix(C1)
       Index.C1 <- matrix(rep(0,(nb.e.a)**2),nrow=nb.e.a,ncol=nb.e.a)
-      Index.C1[lower.tri(Index.C1, diag=T)] <- 1:(choose(nb.e.a,2)+nb.e.a)
+      Index.C1[lower.tri(Index.C1, diag=TRUE)] <- 1:(choose(nb.e.a,2)+nb.e.a)
       Index.C1 <- as.matrix(Index.C1)
       borne3 <- borne1 + choose(n = nb.e.a.sigma, k = 2) + nb.e.a.sigma
       C3 <- matrix(rep(0,(nb.e.a.sigma)**2),nrow=nb.e.a.sigma,ncol=nb.e.a.sigma)
-      C3[lower.tri(C3, diag=T)] <- estimation2$b[(borne1+1):borne3]
+      C3[lower.tri(C3, diag=TRUE)] <- estimation2$b[(borne1+1):borne3]
       C3 <- as.matrix(C3)
 
       Index.C3 <- matrix(rep(0,(nb.e.a.sigma)**2),nrow=nb.e.a.sigma,ncol=nb.e.a.sigma)
-      Index.C3[lower.tri(Index.C3, diag=T)] <- 1:(choose(nb.e.a.sigma,2)+nb.e.a.sigma)
+      Index.C3[lower.tri(Index.C3, diag=TRUE)] <- 1:(choose(nb.e.a.sigma,2)+nb.e.a.sigma)
       Index.C3 <- as.matrix(Index.C3)
 
       MatCovb <- C1%*%t(C1)
@@ -181,8 +181,8 @@ lsmm_covDep <- function(formFixed, formRandom, formGroup,
       mat_name1 <- outer(vec_name1,vec_name1, paste, sep = "*cov*")
       vec_name2 <-  paste(colnames(W_base),"Scale",sep = "_")
       mat_name2 <- outer(vec_name2,vec_name2, paste, sep = "*cov*")
-      names_param <- c(names_param, c(mat_name1[upper.tri(mat_name1, diag= T)]))
-      names_param <- c(names_param, c(mat_name2[upper.tri(mat_name2, diag= T)]))
+      names_param <- c(names_param, c(mat_name1[upper.tri(mat_name1, diag= TRUE)]))
+      names_param <- c(names_param, c(mat_name2[upper.tri(mat_name2, diag= TRUE)]))
 
 
       #for(i in 1:length(unique(c(t(MatCovb))))){
@@ -192,7 +192,7 @@ lsmm_covDep <- function(formFixed, formRandom, formGroup,
       #  names_param <- c(names_param, paste("covSig", i, sep = "_"))
       #}
       var_trans <- matrix(rep(0,length(estimation2$b)**2),nrow=length(estimation2$b),ncol=length(estimation2$b))
-      var_trans[upper.tri(var_trans, diag=T)] <- estimation2$v
+      var_trans[upper.tri(var_trans, diag=TRUE)] <- estimation2$v
       trig.cov <- var_trans[curseur:borne1,curseur:borne1]
       trig.cov <- trig.cov+t(trig.cov)
       diag(trig.cov) <- diag(trig.cov)/2
@@ -247,7 +247,7 @@ lsmm_covDep <- function(formFixed, formRandom, formGroup,
   }
   else{
     var_trans <- matrix(rep(0,length(binit)**2),nrow=length(binit),ncol=length(binit))
-    var_trans[upper.tri(var_trans, diag=T)] <- estimation1$v
+    var_trans[upper.tri(var_trans, diag=TRUE)] <- estimation1$v
     sd.param <- sqrt(diag(var_trans))
     param_est <-  estimation1$b
 
@@ -255,20 +255,20 @@ lsmm_covDep <- function(formFixed, formRandom, formGroup,
     if(correlated_re){
       curseur <- length(estimation1$b) - nb.chol + 1
       C1 <- matrix(rep(0,(nb.e.a+nb.e.a.sigma)**2),nrow=nb.e.a+nb.e.a.sigma,ncol=nb.e.a+nb.e.a.sigma)
-      C1[lower.tri(C1, diag=T)] <- estimation1$b[curseur:length(estimation1$b)]
+      C1[lower.tri(C1, diag=TRUE)] <- estimation1$b[curseur:length(estimation1$b)]
       C1 <- as.matrix(C1)
       Index.C1 <- matrix(rep(0,(nb.e.a+nb.e.a.sigma)**2),nrow=nb.e.a+nb.e.a.sigma,ncol=nb.e.a+nb.e.a.sigma)
-      Index.C1[lower.tri(Index.C1, diag=T)] <- 1:(choose(nb.e.a+nb.e.a.sigma,2)+nb.e.a+nb.e.a.sigma)
+      Index.C1[lower.tri(Index.C1, diag=TRUE)] <- 1:(choose(nb.e.a+nb.e.a.sigma,2)+nb.e.a+nb.e.a.sigma)
       Index.C1 <- as.matrix(Index.C1)
 
       MatCov <- C1%*%t(C1)
       param_est <- c(param_est,unique(c(t(MatCov))))
       vec_name1 <-  c(paste(colnames(U_base),"_Location",sep = "_"),paste(colnames(W_base),"_Scale",sep = "_"))
       mat_name1 <- outer(vec_name1,vec_name1, paste, sep = "*cov*")
-      names_param <- c(names_param, c(mat_name1[lower.tri(mat_name1, diag= T)]))
+      names_param <- c(names_param, c(mat_name1[lower.tri(mat_name1, diag= TRUE)]))
 
       var_trans <- matrix(rep(0,length(estimation1$b)**2),nrow=length(estimation1$b),ncol=length(estimation1$b))
-      var_trans[upper.tri(var_trans, diag=T)] <- estimation1$v
+      var_trans[upper.tri(var_trans, diag=TRUE)] <- estimation1$v
       trig.cov <- var_trans[curseur:length(estimation1$b),curseur:length(estimation1$b)]
       trig.cov <- trig.cov+t(trig.cov)
       diag(trig.cov) <- diag(trig.cov)/2
@@ -297,18 +297,18 @@ lsmm_covDep <- function(formFixed, formRandom, formGroup,
       curseur <- length(estimation1$b) - nb.chol + 1
       borne1 <- curseur + choose(n = nb.e.a, k = 2) + nb.e.a - 1
       C1 <- matrix(rep(0,(nb.e.a)**2),nrow=nb.e.a,ncol=nb.e.a)
-      C1[lower.tri(C1, diag=T)] <- estimation1$b[curseur:borne1]
+      C1[lower.tri(C1, diag=TRUE)] <- estimation1$b[curseur:borne1]
       C1 <- as.matrix(C1)
       Index.C1 <- matrix(rep(0,(nb.e.a)**2),nrow=nb.e.a,ncol=nb.e.a)
-      Index.C1[lower.tri(Index.C1, diag=T)] <- 1:(choose(nb.e.a,2)+nb.e.a)
+      Index.C1[lower.tri(Index.C1, diag=TRUE)] <- 1:(choose(nb.e.a,2)+nb.e.a)
       Index.C1 <- as.matrix(Index.C1)
       borne3 <- borne1 + choose(n = nb.e.a.sigma, k = 2) + nb.e.a.sigma
       C3 <- matrix(rep(0,(nb.e.a.sigma)**2),nrow=nb.e.a.sigma,ncol=nb.e.a.sigma)
-      C3[lower.tri(C3, diag=T)] <- estimation1$b[(borne1+1):borne3]
+      C3[lower.tri(C3, diag=TRUE)] <- estimation1$b[(borne1+1):borne3]
       C3 <- as.matrix(C3)
 
       Index.C3 <- matrix(rep(0,(nb.e.a.sigma)**2),nrow=nb.e.a.sigma,ncol=nb.e.a.sigma)
-      Index.C3[lower.tri(Index.C3, diag=T)] <- 1:(choose(nb.e.a.sigma,2)+nb.e.a.sigma)
+      Index.C3[lower.tri(Index.C3, diag=TRUE)] <- 1:(choose(nb.e.a.sigma,2)+nb.e.a.sigma)
       Index.C3 <- as.matrix(Index.C3)
 
       MatCovb <- C1%*%t(C1)
@@ -318,12 +318,12 @@ lsmm_covDep <- function(formFixed, formRandom, formGroup,
       mat_name1 <- outer(vec_name1,vec_name1, paste, sep = "*cov*")
       vec_name2 <-  paste(colnames(W_base),"Scale",sep = "_")
       mat_name2 <- outer(vec_name2,vec_name2, paste, sep = "*cov*")
-      names_param <- c(names_param, c(mat_name1[upper.tri(mat_name1, diag= T)]))
-      names_param <- c(names_param, c(mat_name2[upper.tri(mat_name2, diag= T)]))
+      names_param <- c(names_param, c(mat_name1[upper.tri(mat_name1, diag= TRUE)]))
+      names_param <- c(names_param, c(mat_name2[upper.tri(mat_name2, diag= TRUE)]))
 
 
       var_trans <- matrix(rep(0,length(estimation1$b)**2),nrow=length(estimation1$b),ncol=length(estimation1$b))
-      var_trans[upper.tri(var_trans, diag=T)] <- estimation1$v
+      var_trans[upper.tri(var_trans, diag=TRUE)] <- estimation1$v
       trig.cov <- var_trans[curseur:borne1,curseur:borne1]
       trig.cov <- trig.cov+t(trig.cov)
       diag(trig.cov) <- diag(trig.cov)/2

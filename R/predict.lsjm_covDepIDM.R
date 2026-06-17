@@ -180,17 +180,17 @@ predict.lsjm_covDepIDM <- function(object, which = "RE", Objectranef = NULL, dat
   curseur <- curseur+x$control$Objectlsmm$control$nb.omega
   if(x$control$Objectlsmm$control$correlated_re){
     C1 <- matrix(rep(0,(x$control$Objectlsmm$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma)**2),nrow=x$control$Objectlsmm$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma,ncol=x$control$Objectlsmm$control$nb.e.a+x$control$Objectlsmm$control$nb.e.a.sigma)
-    C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
+    C1[lower.tri(C1, diag=TRUE)] <- param[curseur:length(param)]
     Cholesky <- C1
     Cholesky <- as.matrix(Cholesky)
   }
   else{
     borne1 <- curseur + choose(n = x$control$Objectlsmm$control$nb.e.a, k = 2) + x$control$Objectlsmm$control$nb.e.a - 1
     C1 <- matrix(rep(0,(x$control$Objectlsmm$control$nb.e.a)**2),nrow=x$control$Objectlsmm$control$nb.e.a,ncol=x$control$Objectlsmm$control$nb.e.a)
-    C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
+    C1[lower.tri(C1, diag=TRUE)] <- param[curseur:borne1]
     borne3 <- borne1 + choose(n = x$control$Objectlsmm$control$nb.e.a.sigma, k = 2) + x$control$Objectlsmm$control$nb.e.a.sigma
     C3 <- matrix(rep(0,(x$control$Objectlsmm$control$nb.e.a.sigma)**2),nrow=x$control$Objectlsmm$control$nb.e.a.sigma,ncol=x$control$Objectlsmm$control$nb.e.a.sigma)
-    C3[lower.tri(C3, diag=T)] <- param[(borne1+1):borne3]
+    C3[lower.tri(C3, diag=TRUE)] <- param[(borne1+1):borne3]
     C2 <- matrix(0, ncol = x$control$Objectlsmm$control$nb.e.a.sigma, nrow = x$control$Objectlsmm$control$nb.e.a)
 
     C4 <- matrix(0, ncol = x$control$Objectlsmm$control$nb.e.a, nrow = x$control$Objectlsmm$control$nb.e.a.sigma)
@@ -372,8 +372,6 @@ predict.lsjm_covDepIDM <- function(object, which = "RE", Objectranef = NULL, dat
       Bs_L_R_12 <- splineDesign(x$control$knots.hazard_baseline.splines_12, c(t(st_L_R)), ord = 4L)
     }
 
-    ## Pour l'intégrale (à optmiser plus tard)
-    #print("go integrale Case1")
     st_0_LR <- c()
     X_GK_0_LR <- c()
     U_GK_0_LR <- c()
@@ -464,8 +462,7 @@ predict.lsjm_covDepIDM <- function(object, which = "RE", Objectranef = NULL, dat
                          },
                          .multicombine = TRUE,
                          .packages = c("mvtnorm", "marqLevAlg")) %dopar% {
-     #for(id.boucleCase1 in 1:length(unique(data.long.Case1$id))){
-      #  print(id.boucleCase1)
+
                            delta2_i <- data.id.Case1$delta2[id.boucleCase1]
                            Z_01_i <- Z_01[id.boucleCase1,]
                            Z_02_i <- Z_02[id.boucleCase1,]
@@ -1446,7 +1443,6 @@ predict.lsjm_covDepIDM <- function(object, which = "RE", Objectranef = NULL, dat
     }
 
     for(id.integrale in 1:nbCase3){
-      # print(id.integrale)
       data.id.integrale <- data.id.Case3[id.integrale,]
       st_L_T_i <- st_L_T[id.integrale,]
       for(st.integrale in st_L_T_i){
@@ -1727,7 +1723,6 @@ predict.lsjm_covDepIDM <- function(object, which = "RE", Objectranef = NULL, dat
     pred_haz_12 <- 0
     data.id <- x$control$Objectlsmm$control$data.long[!duplicated(x$control$Objectlsmm$control$data.long$id),]
     grid.time <- seq(min(data.id[,x$control$Objectlsmm$control$timeVar]), max(data.id[,x$control$Objectlsmm$control$timeVar]), by = (max(data.id[,x$control$Objectlsmm$control$timeVar])-min(data.id[,x$control$Objectlsmm$control$timeVar]))/100)
-   # print(grid.time)
     data.GaussKronrod.sort.unique <- data.GaussKronrod(data.id = data.id, a = 0,b = grid.time, k = x$control$nb_pointsGK)
     st_calc.sort.unique <- data.GaussKronrod.sort.unique$st
     P.sort.unique <- data.GaussKronrod.sort.unique$P
@@ -1771,7 +1766,7 @@ predict.lsjm_covDepIDM <- function(object, which = "RE", Objectranef = NULL, dat
       #  }
     }
 
-    cat("Cumulative risks")
+    message("Cumulative risks")
     for(id_boucle in 1:nrow(data.id)){
       Cum_risk_01i <- c()
       Cum_risk_02i  <- c()

@@ -1,10 +1,10 @@
-#' @rdname surv_marg
+#' @rdname survmarg
 #' @importFrom splines splineDesign
 #' @importFrom spacefillr generate_sobol_owen_set
 #' @importFrom stats model.frame model.matrix
 #' @export
 
-surv_marg.lsjm_interintraIDM <- function(object, individual, time){
+survmarg.lsjm_interintraIDM <- function(object, individual, time){
 
   if(is.null(object$result_step2)){
     param <- object$result_step1$b
@@ -185,7 +185,7 @@ surv_marg.lsjm_interintraIDM <- function(object, individual, time){
     if(object$control$Objectlsmm$control$correlated_re){
 
       C1 <- matrix(rep(0,(object$control$Objectlsmm$control$nb.e.a+2)**2),nrow=object$control$Objectlsmm$control$nb.e.a+2,ncol=object$control$Objectlsmm$control$nb.e.a+2)
-      C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
+      C1[lower.tri(C1, diag=TRUE)] <- param[curseur:length(param)]
       Cholesky <- as.matrix(C1)
       random.effects <- Zq%*%t(Cholesky)
       b_al <- random.effects[,1:object$control$Objectlsmm$control$nb.e.a]
@@ -202,7 +202,7 @@ surv_marg.lsjm_interintraIDM <- function(object, individual, time){
     else{
       borne1 <- curseur + choose(n = object$control$Objectlsmm$control$nb.e.a, k = 2) + object$control$Objectlsmm$control$nb.e.a - 1
       C1 <- matrix(rep(0,(object$control$Objectlsmm$control$nb.e.a)**2),nrow=object$control$Objectlsmm$control$nb.e.a,ncol=object$control$Objectlsmm$control$nb.e.a)
-      C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
+      C1[lower.tri(C1, diag=TRUE)] <- param[curseur:borne1]
       C2 <-matrix(c(param[(borne1+1)], 0,param[borne1+2], param[borne1+3]),nrow=2,ncol=2, byrow = TRUE)
       C3 <- matrix(rep(0,2*object$control$Objectlsmm$control$nb.e.a), ncol = object$control$Objectlsmm$control$nb.e.a)
       C4 <- matrix(rep(0,2*object$control$Objectlsmm$control$nb.e.a), nrow = object$control$Objectlsmm$control$nb.e.a)
@@ -225,7 +225,7 @@ surv_marg.lsjm_interintraIDM <- function(object, individual, time){
     if(object$control$Objectlsmm$control$var_inter){
       if(object$control$Objectlsmm$control$correlated_re){
         C1 <- matrix(rep(0,(object$control$Objectlsmm$control$nb.e.a+1)**2),nrow=object$control$Objectlsmm$control$nb.e.a+1,ncol=object$control$Objectlsmm$control$nb.e.a+1)
-        C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
+        C1[lower.tri(C1, diag=TRUE)] <- param[curseur:length(param)]
         Cholesky <- as.matrix(C1)
         random.effects <- Zq%*%t(Cholesky)
         b_al <- random.effects[,1:object$control$Objectlsmm$control$nb.e.a]
@@ -241,7 +241,7 @@ surv_marg.lsjm_interintraIDM <- function(object, individual, time){
       else{
         borne1 <- curseur + choose(n = object$control$Objectlsmm$control$nb.e.a, k = 2) + object$control$Objectlsmm$control$nb.e.a - 1
         C1 <- matrix(rep(0,(object$control$Objectlsmm$control$nb.e.a)**2),nrow=object$control$Objectlsmm$control$nb.e.a,ncol=object$control$Objectlsmm$control$nb.e.a)
-        C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
+        C1[lower.tri(C1, diag=TRUE)] <- param[curseur:borne1]
         C2 <-matrix(c(param[(borne1+1)]),nrow=1,ncol=1, byrow = TRUE)
         C3 <- matrix(rep(0,object$control$Objectlsmm$control$nb.e.a), ncol = 1)
         C4 <- matrix(rep(0,object$control$Objectlsmm$control$nb.e.a), nrow = 1)
@@ -262,7 +262,7 @@ surv_marg.lsjm_interintraIDM <- function(object, individual, time){
       if(object$control$Objectlsmm$control$var_intra){
         if(object$control$Objectlsmm$control$correlated_re){
           C1 <- matrix(rep(0,(object$control$Objectlsmm$control$nb.e.a+1)**2),nrow=object$control$Objectlsmm$control$nb.e.a+1,ncol=object$control$Objectlsmm$control$nb.e.a+1)
-          C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
+          C1[lower.tri(C1, diag=TRUE)] <- param[curseur:length(param)]
           Cholesky <- as.matrix(C1)
           random.effects <- Zq%*%t(Cholesky)
           b_al <- random.effects[,1:object$control$Objectlsmm$control$nb.e.a]
@@ -277,7 +277,7 @@ surv_marg.lsjm_interintraIDM <- function(object, individual, time){
         else{
           borne1 <- curseur + choose(n = object$control$Objectlsmm$control$nb.e.a, k = 2) + object$control$Objectlsmm$control$nb.e.a - 1
           C1 <- matrix(rep(0,(object$control$Objectlsmm$control$nb.e.a)**2),nrow=object$control$Objectlsmm$control$nb.e.a,ncol=object$control$Objectlsmm$control$nb.e.a)
-          C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
+          C1[lower.tri(C1, diag=TRUE)] <- param[curseur:borne1]
           C2 <-matrix(c(param[(borne1+1)]),nrow=1,ncol=1, byrow = TRUE)
           C3 <- matrix(rep(0,object$control$Objectlsmm$control$nb.e.a), ncol = 1)
           C4 <- matrix(rep(0,object$control$Objectlsmm$control$nb.e.a), nrow = 1)
@@ -297,7 +297,7 @@ surv_marg.lsjm_interintraIDM <- function(object, individual, time){
     }
     if(!object$control$Objectlsmm$control$var_inter && !object$control$Objectlsmm$control$var_intra){
       C1 <- matrix(rep(0,(length(param)-curseur)**2),nrow=length(param)-curseur,ncol=length(param)-curseur)
-      C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
+      C1[lower.tri(C1, diag=TRUE)] <- param[curseur:length(param)]
       Cholesky <- C1
       Cholesky <- as.matrix(Cholesky)
       random.effects <- Zq%*%t(Cholesky)
@@ -437,7 +437,7 @@ surv_marg.lsjm_interintraIDM <- function(object, individual, time){
 
 
   if((c("value") %in% object$control$sharedtype_01 )|| (c("value") %in% object$control$sharedtype_02)){
-    current.GK.den <- matrix(rep(beta%*%t(Xs.den),nbQMC),nrow=nbQMC,byrow = T) + b_al%*%t(Us.den)
+    current.GK.den <- matrix(rep(beta%*%t(Xs.den),nbQMC),nrow=nbQMC,byrow =TRUE) + b_al%*%t(Us.den)
     if(c("value") %in% object$control$sharedtype_01){
       survLong_0_s_01 <- survLong_0_s_01 + alpha.current_01*current.GK.den
     }
@@ -447,7 +447,7 @@ surv_marg.lsjm_interintraIDM <- function(object, individual, time){
   }
 
   if((c("slope") %in% object$control$sharedtype_01 )|| (c("slope") %in% object$control$sharedtype_02)){
-    slope.GK.den <- matrix(rep(beta_slope%*%t(Xs.slope.den),nbQMC),nrow=nbQMC,byrow = T) + b_al_slope%*%t(Us.slope.den)
+    slope.GK.den <- matrix(rep(beta_slope%*%t(Xs.slope.den),nbQMC),nrow=nbQMC,byrow =TRUE) + b_al_slope%*%t(Us.slope.den)
     if(c("slope") %in% object$control$sharedtype_01){
       survLong_0_s_01 <- survLong_0_s_01 + alpha.slope_01*slope.GK.den
     }

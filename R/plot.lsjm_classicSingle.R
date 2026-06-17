@@ -32,7 +32,7 @@ plot.lsjm_classicSingle <- function(x, which = 'long.fit', Objectpredict, break.
       timeInterv <- range(data.long[,timeVar])
       break.times <- quantile(timeInterv,prob=seq(0,1,length.out=10))
     }
-    data.long$window <- cut(data.long[,timeVar], break.times, include.lowest = T)
+    data.long$window <- cut(data.long[,timeVar], break.times, include.lowest = TRUE)
     mean.obs <- by(data.long[,value.var], data.long$window, mean)
     sd.obs <- by(data.long[,value.var], data.long$window, sd)
     length.obs <- by(data.long[,value.var], data.long$window, length)

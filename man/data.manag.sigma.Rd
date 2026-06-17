@@ -15,6 +15,13 @@ data.manag.sigma(formGroup, formFixed, formRandom, data.long1)
 
 \item{data.long1}{A dataframe with the longitudinal data}
 }
+\value{
+A list with the following components :
+\describe{
+\item{\code{X}}{a matrix with the fixed effects}
+\item{\code{U}}{a matrix with the random effects}
+}
+}
 \description{
 Management of data for residual part
 }

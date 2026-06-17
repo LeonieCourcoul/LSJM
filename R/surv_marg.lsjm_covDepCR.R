@@ -1,10 +1,10 @@
-#' @rdname surv_marg
+#' @rdname survmarg
 #' @importFrom splines splineDesign
 #' @importFrom spacefillr generate_sobol_owen_set
 #' @importFrom stats model.frame model.matrix
 #' @export
 
-surv_marg.lsjm_covDepCR <- function(object, individual, time){
+survmarg.lsjm_covDepCR <- function(object, individual, time){
 
   if(is.null(object$result_step2)){
     param <- object$result_step1$b
@@ -109,7 +109,7 @@ surv_marg.lsjm_covDepCR <- function(object, individual, time){
 
   if(Objectlsjm$control$Objectlsmm$control$correlated_re){
     C1 <- matrix(rep(0,(Objectlsjm$control$Objectlsmm$control$nb.e.a+Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma)**2),nrow=Objectlsjm$control$Objectlsmm$control$nb.e.a+Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma,ncol=Objectlsjm$control$Objectlsmm$control$nb.e.a+Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma)
-    C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
+    C1[lower.tri(C1, diag=TRUE)] <- param[curseur:length(param)]
     Cholesky <- C1
     Cholesky <- as.matrix(Cholesky)
     random.effects <- Zq%*%t(Cholesky)
@@ -121,10 +121,10 @@ surv_marg.lsjm_covDepCR <- function(object, individual, time){
   else{
     borne1 <- curseur + choose(n = Objectlsjm$control$Objectlsmm$control$nb.e.a, k = 2) + Objectlsjm$control$Objectlsmm$control$nb.e.a - 1
     C1 <- matrix(rep(0,(Objectlsjm$control$Objectlsmm$control$nb.e.a)**2),nrow=Objectlsjm$control$Objectlsmm$control$nb.e.a,ncol=Objectlsjm$control$Objectlsmm$control$nb.e.a)
-    C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
+    C1[lower.tri(C1, diag=TRUE)] <- param[curseur:borne1]
     borne3 <- borne1 + choose(n = Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma, k = 2) + Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma
     C3 <- matrix(rep(0,(Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma)**2),nrow=Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma,ncol=Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma)
-    C3[lower.tri(C3, diag=T)] <- param[(borne1+1):borne3]
+    C3[lower.tri(C3, diag=TRUE)] <- param[(borne1+1):borne3]
     MatCovb <- as.matrix(C1)
     MatCovSig <- as.matrix(C3)
     b_al <- Zq[,1:Objectlsjm$control$Objectlsmm$control$nb.e.a]%*%t(MatCovb)
@@ -252,7 +252,7 @@ surv_marg.lsjm_covDepCR <- function(object, individual, time){
 
 
   if((c("value") %in% object$control$sharedtype_01 )|| (c("value") %in% object$control$sharedtype_02)){
-    current.GK.den <- matrix(rep(beta%*%t(Xs.den),nbQMC),nrow=nbQMC,byrow = T) + b_al%*%t(Us.den)
+    current.GK.den <- matrix(rep(beta%*%t(Xs.den),nbQMC),nrow=nbQMC,byrow =TRUE) + b_al%*%t(Us.den)
     if(c("value") %in% object$control$sharedtype_01){
       survLong_0_s_01 <- survLong_0_s_01 + alpha.current_01*current.GK.den
     }
@@ -262,7 +262,7 @@ surv_marg.lsjm_covDepCR <- function(object, individual, time){
   }
 
   if((c("slope") %in% object$control$sharedtype_01 )|| (c("slope") %in% object$control$sharedtype_02)){
-    slope.GK.den <- matrix(rep(beta_slope%*%t(Xs.slope.den),nbQMC),nrow=nbQMC,byrow = T) + b_al_slope%*%t(Us.slope.den)
+    slope.GK.den <- matrix(rep(beta_slope%*%t(Xs.slope.den),nbQMC),nrow=nbQMC,byrow =TRUE) + b_al_slope%*%t(Us.slope.den)
     if(c("slope") %in% object$control$sharedtype_01){
       survLong_0_s_01 <- survLong_0_s_01 + alpha.slope_01*slope.GK.den
     }
@@ -273,7 +273,7 @@ surv_marg.lsjm_covDepCR <- function(object, individual, time){
 
 
   if((c("variability") %in% Objectlsjm$control$sharedtype_01 )|| (c("variability") %in% Objectlsjm$control$sharedtype_02)){
-    var.GK.den <- matrix(rep(omega%*%t(Os.den),nbQMC),nrow=nbQMC,byrow = T) + b_om%*%t(Ws.den)
+    var.GK.den <- matrix(rep(omega%*%t(Os.den),nbQMC),nrow=nbQMC,byrow =TRUE) + b_om%*%t(Ws.den)
     if(c("variability") %in% Objectlsjm$control$sharedtype_01){
       survLong_0_s_01 <- survLong_0_s_01 + alpha.var_01*exp(var.GK.den)
     }

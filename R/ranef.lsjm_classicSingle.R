@@ -80,7 +80,7 @@ ranef.lsjm_classicSingle <- function(object,...){
 
   borne1 <- curseur + choose(n = x$control$Objectlsmm$control$nb.e.a, k = 2) + x$control$Objectlsmm$control$nb.e.a - 1
   C1 <- matrix(rep(0,(x$control$Objectlsmm$control$nb.e.a)**2),nrow=x$control$Objectlsmm$control$nb.e.a,ncol=x$control$Objectlsmm$control$nb.e.a)
-  C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
+  C1[lower.tri(C1, diag=TRUE)] <- param[curseur:borne1]
   Cholesky <- C1
   Cholesky <- as.matrix(Cholesky)
 

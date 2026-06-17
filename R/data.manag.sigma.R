@@ -5,6 +5,11 @@
 #' @param formRandom A formula which indicates the random effects for the longitudinal submodel
 #' @param data.long1 A dataframe with the longitudinal data
 #'
+#' @return A list with the following components :
+#' \describe{
+#' \item{\code{X}}{a matrix with the fixed effects}
+#' \item{\code{U}}{a matrix with the random effects}
+#' }
 #' @importFrom stats model.frame model.matrix
 
 data.manag.sigma <- function(formGroup, formFixed, formRandom, data.long1){

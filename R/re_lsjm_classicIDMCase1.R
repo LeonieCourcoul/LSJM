@@ -45,7 +45,6 @@ re_lsjm_classicIDMCase1 <- function(param, nb.e.a,  Sigma.re,
 
   log_f_Y_f_T <- log_f_Y_f_T + log(f_b_tau)
   if(is.na(log_f_Y_f_T)){
-    print(param)
     log_f_Y_f_T <- -1E09
   }
 

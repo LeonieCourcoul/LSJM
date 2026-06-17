@@ -12,7 +12,6 @@ re_lsmm_classic <- function(param, nb.e.a, Sigma.re,beta, X_base_i, U_base_i,y_i
   log_f_Y_f_T <- log_f_Y_f_T + log(f_b_tau)
 
   if(is.na(log_f_Y_f_T)){
-    print(param)
     log_f_Y_f_T <- -1E09
   }
   log_f_Y_f_T

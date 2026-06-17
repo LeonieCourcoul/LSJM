@@ -12,7 +12,7 @@ log_llh_lsmm_covDep <- function(param, nb.e.a, nb.beta, S,Zq, X_base, offset, U_
   curseur <- curseur+nb.omega
   if(correlated_re){
     C1 <- matrix(rep(0,(nb.e.a+nb.e.a.sigma)**2),nrow=nb.e.a+nb.e.a.sigma,ncol=nb.e.a+nb.e.a.sigma)
-    C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
+    C1[lower.tri(C1, diag=TRUE)] <- param[curseur:length(param)]
     MatCov <- C1
     MatCov <- as.matrix(MatCov)
     random.effects <- Zq%*%t(MatCov)
@@ -24,10 +24,10 @@ log_llh_lsmm_covDep <- function(param, nb.e.a, nb.beta, S,Zq, X_base, offset, U_
   else{
     borne1 <- curseur + choose(n = nb.e.a, k = 2) + nb.e.a - 1
     C1 <- matrix(rep(0,(nb.e.a)**2),nrow=nb.e.a,ncol=nb.e.a)
-    C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
+    C1[lower.tri(C1, diag=TRUE)] <- param[curseur:borne1]
     borne3 <- borne1 + choose(n = nb.e.a.sigma, k = 2) + nb.e.a.sigma
     C3 <- matrix(rep(0,(nb.e.a.sigma)**2),nrow=nb.e.a.sigma,ncol=nb.e.a.sigma)
-    C3[lower.tri(C3, diag=T)] <- param[(borne1+1):borne3]
+    C3[lower.tri(C3, diag=TRUE)] <- param[(borne1+1):borne3]
     MatCovb <- as.matrix(C1)
     MatCovSig <- as.matrix(C3)
     b_al <- Zq[,1:nb.e.a]%*%t(MatCovb)

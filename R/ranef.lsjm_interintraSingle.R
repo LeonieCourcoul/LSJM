@@ -106,13 +106,13 @@ ranef.lsjm_interintraSingle <- function(object,...){
     if(x$control$Objectlsmm$control$correlated_re){
 
       C1 <- matrix(rep(0,(x$control$Objectlsmm$control$nb.e.a+2)**2),nrow=x$control$Objectlsmm$control$nb.e.a+2,ncol=x$control$Objectlsmm$control$nb.e.a+2)
-      C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
+      C1[lower.tri(C1, diag=TRUE)] <- param[curseur:length(param)]
       Cholesky <- C1
     }
     else{
       borne1 <- curseur + choose(n = x$control$Objectlsmm$control$nb.e.a, k = 2) + x$control$Objectlsmm$control$nb.e.a - 1
       C1 <- matrix(rep(0,(x$control$Objectlsmm$control$nb.e.a)**2),nrow=x$control$Objectlsmm$control$nb.e.a,ncol=x$control$Objectlsmm$control$nb.e.a)
-      C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
+      C1[lower.tri(C1, diag=TRUE)] <- param[curseur:borne1]
       C2 <-matrix(c(param[(borne1+1)], 0,param[borne1+2], param[borne1+3]),nrow=2,ncol=2, byrow = TRUE)
       C3 <- matrix(rep(0,2*x$control$Objectlsmm$control$nb.e.a), ncol = x$control$Objectlsmm$control$nb.e.a)
       C4 <- matrix(rep(0,2*x$control$Objectlsmm$control$nb.e.a), nrow = x$control$Objectlsmm$control$nb.e.a)
@@ -124,13 +124,13 @@ ranef.lsjm_interintraSingle <- function(object,...){
     if(x$control$Objectlsmm$control$var_inter){
       if(x$control$Objectlsmm$control$correlated_re){
         C1 <- matrix(rep(0,(x$control$Objectlsmm$control$nb.e.a+1)**2),nrow=x$control$Objectlsmm$control$nb.e.a+1,ncol=x$control$Objectlsmm$control$nb.e.a+1)
-        C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
+        C1[lower.tri(C1, diag=TRUE)] <- param[curseur:length(param)]
         Cholesky <- C1
       }
       else{
         borne1 <- curseur + choose(n = x$control$Objectlsmm$control$nb.e.a, k = 2) + x$control$Objectlsmm$control$nb.e.a - 1
         C1 <- matrix(rep(0,(x$control$Objectlsmm$control$nb.e.a)**2),nrow=x$control$Objectlsmm$control$nb.e.a,ncol=x$control$Objectlsmm$control$nb.e.a)
-        C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
+        C1[lower.tri(C1, diag=TRUE)] <- param[curseur:borne1]
         C2 <-matrix(c(param[(borne1+1)]),nrow=1,ncol=1, byrow = TRUE)
         C3 <- matrix(rep(0,x$control$Objectlsmm$control$nb.e.a), ncol = 1)
         C4 <- matrix(rep(0,x$control$Objectlsmm$control$nb.e.a), nrow = 1)
@@ -142,13 +142,13 @@ ranef.lsjm_interintraSingle <- function(object,...){
       if(x$control$Objectlsmm$control$var_intra){
         if(x$control$Objectlsmm$control$correlated_re){
           C1 <- matrix(rep(0,(x$control$Objectlsmm$control$nb.e.a+1)**2),nrow=x$control$Objectlsmm$control$nb.e.a+1,ncol=x$control$Objectlsmm$control$nb.e.a+1)
-          C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
+          C1[lower.tri(C1, diag=TRUE)] <- param[curseur:length(param)]
           Cholesky <- C1
         }
         else{
           borne1 <- curseur + choose(n = x$control$Objectlsmm$control$nb.e.a, k = 2) + x$control$Objectlsmm$control$nb.e.a - 1
           C1 <- matrix(rep(0,(x$control$Objectlsmm$control$nb.e.a)**2),nrow=x$control$Objectlsmm$control$nb.e.a,ncol=x$control$Objectlsmm$control$nb.e.a)
-          C1[lower.tri(C1, diag=T)] <- param[curseur:borne1]
+          C1[lower.tri(C1, diag=TRUE)] <- param[curseur:borne1]
           C2 <-matrix(c(param[(borne1+1)]),nrow=1,ncol=1, byrow = TRUE)
           C3 <- matrix(rep(0,x$control$Objectlsmm$control$nb.e.a), ncol = 1)
           C4 <- matrix(rep(0,x$control$Objectlsmm$control$nb.e.a), nrow = 1)
@@ -159,7 +159,7 @@ ranef.lsjm_interintraSingle <- function(object,...){
     }
     if(!x$control$Objectlsmm$control$var_inter && !x$control$Objectlsmm$control$var_intra){
       C1 <- matrix(rep(0,(length(param)-curseur)**2),nrow=length(param)-curseur,ncol=length(param)-curseur)
-      C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
+      C1[lower.tri(C1, diag=TRUE)] <- param[curseur:length(param)]
       Cholesky <- C1
     }
 

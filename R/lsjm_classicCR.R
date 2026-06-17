@@ -102,7 +102,7 @@ lsjm_classicCR <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
           B <- splineDesign(knots_01, data.id$Time_T, ord = 4L)
           Bs <- splineDesign(knots_01, c(t(list.GK_T$st)), ord = 4L)
           opt_splines_01 <- optim(rep(0,ncol(B)), fn2,event = data.id$delta1,W2 = B,P = list.GK_T$P,wk = list.GK_T$wk,
-                                  Time = data.id$Time_T,W2s = Bs,id.GK = list.GK_T$id.GK, method="BFGS", hessian = T)
+                                  Time = data.id$Time_T,W2s = Bs,id.GK = list.GK_T$id.GK, method="BFGS", hessian = TRUE)
           tmp_model <- coxph(Surv_01,
                              data = data.id,
                              x = TRUE)
@@ -146,7 +146,7 @@ lsjm_classicCR <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
           B <- splineDesign(knots_02, data.id$Time_T, ord = 4L)
           Bs <- splineDesign(knots_02, c(t(list.GK_T$st)), ord = 4L)
           opt_splines_02 <- optim(rep(0,ncol(B)), fn2,event = data.id$delta2,W2 = B,P = list.GK_T$P,wk = list.GK_T$wk,
-                                  Time = data.id$Time_T,W2s = Bs,id.GK = list.GK_T$id.GK, method="BFGS", hessian = T)
+                                  Time = data.id$Time_T,W2s = Bs,id.GK = list.GK_T$id.GK, method="BFGS", hessian = TRUE)
           tmp_model <- coxph(Surv_02,
                              data = data.id,
                              x = TRUE)
@@ -373,7 +373,7 @@ lsjm_classicCR <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
                               file = file, blinding = FALSE, epsa = 10000000, epsb = 10000000, epsd = 0.99999)
 
     var_trans <- matrix(rep(0,length(binit)**2),nrow=length(binit),ncol=length(binit))
-    var_trans[upper.tri(var_trans, diag=T)] <- estimation2$v
+    var_trans[upper.tri(var_trans, diag=TRUE)] <- estimation2$v
     sd.param <- sqrt(diag(var_trans))
     param_est <-  estimation2$b
 
@@ -382,18 +382,18 @@ lsjm_classicCR <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
     #Delta-method
     curseur <- length(estimation2$b) - nb.chol + 1
     C1 <- matrix(rep(0,(nb.e.a)**2),nrow=nb.e.a,ncol=nb.e.a)
-    C1[lower.tri(C1, diag=T)] <- estimation2$b[curseur:length(estimation2$b)]
+    C1[lower.tri(C1, diag=TRUE)] <- estimation2$b[curseur:length(estimation2$b)]
     C1 <- as.matrix(C1)
 
     Index.C1 <- matrix(rep(0,(nb.e.a)**2),nrow=nb.e.a,ncol=nb.e.a)
-    Index.C1[lower.tri(Index.C1, diag=T)] <- 1:(choose(nb.e.a,2)+nb.e.a)
+    Index.C1[lower.tri(Index.C1, diag=TRUE)] <- 1:(choose(nb.e.a,2)+nb.e.a)
     Index.C1 <- as.matrix(Index.C1)
 
     MatCov <- C1%*%t(C1)
     param_est <- c(param_est,unique(c(t(MatCov))))
 
     var_trans <- matrix(rep(0,length(estimation2$b)**2),nrow=length(estimation2$b),ncol=length(estimation2$b))
-    var_trans[upper.tri(var_trans, diag=T)] <- estimation2$v
+    var_trans[upper.tri(var_trans, diag=TRUE)] <- estimation2$v
     trig.cov <- var_trans[curseur:length(estimation2$b),curseur:length(estimation2$b)]
     trig.cov <- trig.cov+t(trig.cov)
     diag(trig.cov) <- diag(trig.cov)/2
@@ -422,7 +422,7 @@ lsjm_classicCR <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
   }
   else{
     var_trans <- matrix(rep(0,length(binit)**2),nrow=length(binit),ncol=length(binit))
-    var_trans[upper.tri(var_trans, diag=T)] <- estimation1$v
+    var_trans[upper.tri(var_trans, diag=TRUE)] <- estimation1$v
     sd.param <- sqrt(diag(var_trans))
     param_est <-  estimation1$b
 
@@ -431,18 +431,18 @@ lsjm_classicCR <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
     #Delta-method
     curseur <- length(estimation1$b) - nb.chol + 1
     C1 <- matrix(rep(0,(nb.e.a)**2),nrow=nb.e.a,ncol=nb.e.a)
-    C1[lower.tri(C1, diag=T)] <- estimation1$b[curseur:length(estimation1$b)]
+    C1[lower.tri(C1, diag=TRUE)] <- estimation1$b[curseur:length(estimation1$b)]
     C1 <- as.matrix(C1)
 
     Index.C1 <- matrix(rep(0,(nb.e.a)**2),nrow=nb.e.a,ncol=nb.e.a)
-    Index.C1[lower.tri(Index.C1, diag=T)] <- 1:(choose(nb.e.a,2)+nb.e.a)
+    Index.C1[lower.tri(Index.C1, diag=TRUE)] <- 1:(choose(nb.e.a,2)+nb.e.a)
     Index.C1 <- as.matrix(Index.C1)
 
     MatCov <- C1%*%t(C1)
     param_est <- c(param_est,unique(c(t(MatCov))))
 
     var_trans <- matrix(rep(0,length(estimation1$b)**2),nrow=length(estimation1$b),ncol=length(estimation1$b))
-    var_trans[upper.tri(var_trans, diag=T)] <- estimation1$v
+    var_trans[upper.tri(var_trans, diag=TRUE)] <- estimation1$v
     trig.cov <- var_trans[curseur:length(estimation1$b),curseur:length(estimation1$b)]
     trig.cov <- trig.cov+t(trig.cov)
     diag(trig.cov) <- diag(trig.cov)/2

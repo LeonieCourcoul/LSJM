@@ -38,7 +38,7 @@ predict.lsmm_classic <- function(object, which = "RE", Objectranef = NULL, data.
   sigma_epsilon <- param[curseur]
   curseur <- curseur +1
   C1 <- matrix(rep(0,(x$control$nb.e.a)**2),nrow=x$control$nb.e.a,ncol=x$control$nb.e.a)
-  C1[lower.tri(C1, diag=T)] <- param[curseur:length(param)]
+  C1[lower.tri(C1, diag=TRUE)] <- param[curseur:length(param)]
   Cholesky <- C1
   Cholesky <- as.matrix(Cholesky)
 

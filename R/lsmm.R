@@ -174,7 +174,6 @@
 #' data(threeC)
 #' threeC$age.visit65 <- (threeC$age.visit-65)/10
 #' threeC$SBP <- threeC$SBP/10
-#' threeC <- threeC
 #' threeC <- dplyr::group_by(threeC, ID, num.visit)
 #' threeC <- dplyr::mutate(threeC, SBPvisit = mean(SBP))
 #' threeC_ex1 <- threeC[!duplicated(threeC[, c("ID", "num.visit")]),
@@ -268,7 +267,7 @@
 #'
 lsmm <- function(formFixed, formRandom, formGroup, timeVar,
                  formVar = "standard", formFixedVar = NULL, formRandomVar = NULL,
-                 random_inter = F, random_intra = F, formGroupVisit = NULL, correlated_re = F,
+                 random_inter = FALSE, random_intra = FALSE, formGroupVisit = NULL, correlated_re = FALSE,
                  data.long,
                  S1 = 500, S2= 5000,
                  nproc = 1, clustertype = "PSOCK", maxiter = 100, print.info = FALSE,

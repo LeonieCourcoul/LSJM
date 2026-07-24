@@ -82,7 +82,46 @@
 #'
 #' @examples
 #'
-#' \dontrun{
+#' data <- data.frame(
+#'          ID = rep(1:100, each = 3),
+#'          time = rep(1:3, 100),
+#'          y = rnorm(300),
+#'          event = rep(rbinom(100,1,0.5), each = 3),
+#'          time_event = rep(runif(100), each = 3)
+#'          )
+#'
+#'
+#' m0 <- lsmm(
+#'    formFixed = y ~ time,
+#'    formRandom = ~ time,
+#'    formGroup = ~ ID,
+#'    formVar = "standard",
+#'    timeVar = "time",
+#'    data.long = data,
+#'    S1 = 5,
+#'    S2 = 5,
+#'    nproc = 1
+#'    )
+#'
+#'  fit <- lsjm(
+#'       Objectlsmm = m0,
+#'       survival_type = "Single",
+#'       formSurv_01 = ~ 1,
+#'       sharedtype_01 = "value",
+#'       hazardBase_01 = "Weibull",
+#'       delta1 = ~ event,
+#'       Time_T = ~ time_event,
+#'       S1 = 100,
+#'       S2 = 100,
+#'       nproc = 1
+#'       )
+#'
+#'  ind1 <- data[which(data$ID == 1),]
+#'  dynpEvent <- dynpred(fit, ind1,  s = 2, horizon = seq(2.1,3,0.1),
+#'                   event = 1, nb.draws = 100)
+#'
+#'
+#' \donttest{
 #' library(dplyr)
 #'
 #' # Begin by running the examples from the lsjm function (see ?lsjm).

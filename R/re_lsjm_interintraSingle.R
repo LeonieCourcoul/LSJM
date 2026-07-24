@@ -15,6 +15,7 @@ re_lsjm_interintraSingle <- function(param, nb.e.a, variability_inter_visit, var
 
 ){
 
+
   b_re <- matrix(param[1:nb.e.a], nrow = 1)
   b_y_slope <- as.matrix(0)
   if(sharedtype[2]){
@@ -23,6 +24,10 @@ re_lsjm_interintraSingle <- function(param, nb.e.a, variability_inter_visit, var
   if(variability_inter_visit && variability_intra_visit){
     tau_re <- param[,(nb.e.a+1):(nb.e.a+2)]
     f_b_tau <- dmvnorm(x = c(b_re, tau_re), mean = rep(0,length(b_re)+length(tau_re)), sigma = Sigma.re)
+    sigma_inter <- exp(mu.inter + tau_re[1])
+    var.inter <- sigma_inter**2
+    sigma_intra <- exp(mu.intra + tau_re[2])
+    var.intra <- sigma_intra**2
   }
   else{
     if(variability_inter_visit){

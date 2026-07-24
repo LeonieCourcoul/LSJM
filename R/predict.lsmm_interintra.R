@@ -121,6 +121,14 @@ predict.lsmm_interintra <- function(object, which = "RE", Objectranef = NULL, da
   if(is.null(data.long)){
     data.long <- x$control$data.long
   }
+  data.long <- as.data.frame(data.long)
+  id <- as.integer(data.long[all.vars(x$control$formGroup)][,1])
+  if(!("id" %in% colnames(data.long))){
+    data.long <- cbind(data.long, id = id)
+  }
+  else{
+    data.long$id <- as.integer(data.long$id)
+  }
   if(x$control$var_inter && x$control$var_intra){
     random.effects.Predictions <- matrix(NA, nrow = length(unique(data.long$id)), ncol = x$control$nb.e.a+2+1)
     binit <- matrix(0, nrow = 1, ncol = x$control$nb.e.a+2)

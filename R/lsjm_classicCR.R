@@ -40,7 +40,10 @@ lsjm_classicCR <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
   knots_02 <- NULL
 
   ## Survival initialisation
-  message("Survival initialisation")
+  if(print.info){
+    message("Survival initialisation")
+  }
+
   data.id <- data.long[!duplicated(data.long$id),]
   data.id <- as.data.frame(data.id)
   data.id$Time_T[which(data.id$Time_T == 0)] <- 1e-20
@@ -203,12 +206,12 @@ lsjm_classicCR <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
 
   list.surv <- data.manag.surv(formGroup, formSurv_01, data.long)
   Z_01 <- list.surv$Z
-  if(hazard_baseline_01 == "Gompertz"){Z_01 <- as.matrix(Z_01[,-1])}
+  if(hazard_baseline_01 == "Gompertz"){Z_01 <- as.matrix(Z_01[,-1,  drop = FALSE])}
   list.surv <- data.manag.surv(formGroup, formSurv_02, data.long)
   Z_02 <- list.surv$Z
-  if(hazard_baseline_02 == "Gompertz"){Z_02 <- as.matrix(Z_02[,-1])}
+  if(hazard_baseline_02 == "Gompertz"){Z_02 <- as.matrix(Z_02[,-1,  drop = FALSE])}
   if(hazard_baseline_01 == "Splines"){
-    Z_01 <- as.matrix(Z_01[,-1])
+    Z_01 <- as.matrix(Z_01[,-1,  drop = FALSE])
     B_T_01 <- splineDesign(knots_01, data.id$Time_T, ord = 4L)
     Bs_T_01 <- splineDesign(knots_01, c(t(st_T)), ord = 4L)
     if(left_trunc){
@@ -216,7 +219,7 @@ lsjm_classicCR <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
     }
   }
   if(hazard_baseline_02 == "Splines"){
-    Z_02 <- as.matrix(Z_02[,-1])
+    Z_02 <- as.matrix(Z_02[,-1,  drop = FALSE])
     B_T_02 <- splineDesign(knots_02, data.id$Time_T, ord = 4L)
     Bs_T_02 <- splineDesign(knots_02, c(t(st_T)), ord = 4L)
     if(left_trunc){
@@ -334,7 +337,10 @@ lsjm_classicCR <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
     }
   }
 
-  message(paste("First estimation with ", S1, " QMC draws"))
+  if(print.info){
+    message(paste("First estimation with ", S1, " QMC draws"))
+  }
+
 
   estimation1 <- marqLevAlg(binit, fn = logR_llh_lsjm_classicCR, minimize = FALSE,
 
@@ -353,7 +359,10 @@ lsjm_classicCR <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
   info_conv_step2 <- NULL
 
   if(!is.null(S2)){
-    message(paste("Second estimation with ", S2, " QMC draws"))
+    if(print.info){
+      message(paste("Second estimation with ", S2, " QMC draws"))
+    }
+
     Zq1 <- generate_sobol_owen_set(S2,  nb.e.a)
     Zq <- apply(Zq1, 2, qnorm)
 

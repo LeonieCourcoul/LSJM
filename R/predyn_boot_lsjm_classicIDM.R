@@ -80,11 +80,14 @@ predyn_boot_lsjm_classicIDM <- function(Objectlsjm, data.long.until.time.s, s, w
     if(Objectlsjm$control$hazard_baseline_01 == "Weibull" || Objectlsjm$control$hazard_baseline_01 == "Gompertz"){
       mfZ <- model.frame(Objectlsjm$control$formSurv_01, data = data.long.until.time.s.id)
       Z_01 <- model.matrix(Objectlsjm$control$formSurv_01, mfZ)
+      if(Objectlsjm$control$hazard_baseline_01 == "Gompertz"){
+        Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])
+      }
     }else{
       if(Objectlsjm$control$hazard_baseline_01 == "Splines"){
         mfZ <- model.frame(Objectlsjm$control$formSurv_01, data = data.long.until.time.s.id)
         Z_01 <- model.matrix(Objectlsjm$control$formSurv_01, mfZ)
-        Z_01 <- Z_01[,-1]
+        Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])
         Bs_01 <- splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_01, c(t(st.1)), ord = 4L)
         Bs.den_01 <- splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_01, c(t(st.den)), ord = 4L)
       }else{
@@ -100,11 +103,14 @@ predyn_boot_lsjm_classicIDM <- function(Objectlsjm, data.long.until.time.s, s, w
     if(Objectlsjm$control$hazard_baseline_02 == "Weibull" || Objectlsjm$control$hazard_baseline_02 == "Gompertz"){
       mfZ <- model.frame(Objectlsjm$control$formSurv_02, data = data.long.until.time.s.id)
       Z_02 <- model.matrix(Objectlsjm$control$formSurv_02, mfZ)
+      if(Objectlsjm$control$hazard_baseline_02 == "Gompertz"){
+        Z_02 <- as.matrix(Z_02[,-1, drop = FALSE])
+      }
     }else{
       if(Objectlsjm$control$hazard_baseline_02 == "Splines"){
         mfZ <- model.frame(Objectlsjm$control$formSurv_02, data = data.long.until.time.s.id)
         Z_02 <- model.matrix(Objectlsjm$control$formSurv_02, mfZ)
-        Z_02 <- Z_02[,-1]
+        Z_02 <- as.matrix(Z_02[,-1, drop = FALSE])
         Bs_02 <- splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_02, c(t(st.1)), ord = 4L)
         Bs.den_02 <- splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_02, c(t(st.den)), ord = 4L)
       }else{

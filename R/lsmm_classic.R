@@ -46,7 +46,10 @@ lsmm_classic <- function(formFixed, formRandom, formGroup,
     }
   }
 
-  message(paste("First estimation with ", S1, " QMC draws"))
+  if(print.info){
+    message(paste("First estimation with ", S1, " QMC draws"))
+  }
+
   estimation1 <- marqLevAlg(binit, fn = log_llh_lsmm_classic, minimize = FALSE,
                            nb.e.a = nb.e.a, nb.beta = nb.beta, S = S1,Zq = Zq, X_base = X_base, offset = offset,
                            U_base = U_base, y.new.prog = list.long$y.new, Ind = Ind,
@@ -60,7 +63,10 @@ lsmm_classic <- function(formFixed, formRandom, formGroup,
     Zq2 <- generate_sobol_owen_set(S2,  nb.e.a)
     Zq <- apply(Zq2, 2, qnorm)
 
-    message(paste("Second estimation with ", S2, " QMC draws"))
+    if(print.info){
+      message(paste("Second estimation with ", S2, " QMC draws"))
+    }
+
     estimation2 <- marqLevAlg(estimation1$b, fn = log_llh_lsmm_classic, minimize = FALSE,
                                           nb.e.a = nb.e.a, nb.beta = nb.beta, S = S2,Zq = Zq, X_base = X_base, offset = offset,
                                           U_base = U_base, y.new.prog = list.long$y.new, Ind = Ind,

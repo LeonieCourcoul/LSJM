@@ -222,9 +222,7 @@ plot.lsjm_covDepIDM <- function(x, which = 'long.fit', Objectpredict, break.time
              linetype = guide_legend(title = "", keywidth = 4, keyheight = 1))
 
 
-    print(survB)
-
-    graph <- survB
+    graph <- list(survB = survB)
 
   }
 

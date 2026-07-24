@@ -291,7 +291,7 @@ summary.lsjm_covDepCR <- function(object,...)
   cat("Survival models:")
   cat("\n")
   cat("    Transition 0-1:")
-  e1_var_tab <- NULL
+  e1_share_var_tab <- NULL
   e1_share_random_tab <- NULL
   e1_share_current_tab <- NULL
   e1_share_slope_tab <- NULL
@@ -423,7 +423,7 @@ summary.lsjm_covDepCR <- function(object,...)
   cat("\n")
 
   cat("    Transition 0-2:")
-  e2_var_tab <- NULL
+  e2_share_var_tab <- NULL
   e2_share_random_tab <- NULL
   e2_share_current_tab <- NULL
   e2_share_slope_tab <- NULL

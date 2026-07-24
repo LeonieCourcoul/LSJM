@@ -52,7 +52,10 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
   nbCase1 <- length(id.Case1); nbCase1bis <- length(id.Case1bis); nbCase2 <- length(id.Case2); nbCase3 <- length(id.Case3)
 
   ## Survival initialisation
-  message("Survival initialisation")
+  if(print.info){
+    message("Survival initialisation")
+  }
+
 
   data.id <- data.long[!duplicated(data.long$id),]
   data.id <- as.data.frame(data.id)
@@ -440,15 +443,15 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
 
       list.surv <- data.manag.surv(formGroup, formSurv_01, data.long.Case1bis)
       Z_01 <- list.surv$Z
-      if(hazard_baseline_01 == "Gompertz"){Z_01 <- as.matrix(Z_01[,-1])}
+      if(hazard_baseline_01 == "Gompertz"){Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])}
       list.surv <- data.manag.surv(formGroup, formSurv_02, data.long.Case1bis)
       Z_02 <- list.surv$Z
-      if(hazard_baseline_02 == "Gompertz"){Z_02 <- as.matrix(Z_02[,-1])}
+      if(hazard_baseline_02 == "Gompertz"){Z_02 <- as.matrix(Z_02[,-1, drop = FALSE])}
       list.surv <- data.manag.surv(formGroup, formSurv_12, data.long.Case1bis)
       Z_12 <- list.surv$Z
-      if(hazard_baseline_12 == "Gompertz"){Z_12 <- as.matrix(Z_12[,-1])}
+      if(hazard_baseline_12 == "Gompertz"){Z_12 <- as.matrix(Z_12[,-1, drop = FALSE])}
       if(hazard_baseline_01 == "Splines"){
-        Z_01 <- as.matrix(Z_01[,-1])
+        Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])
         B_T_01 <- splineDesign(knots_01, data.id.Case1bis$Time_T, ord = 4L)
         B_L_01 <- splineDesign(knots_01, data.id.Case1bis$Time_L_initnoCI, ord = 4L)
         Bs_T_01 <- splineDesign(knots_01, c(t(st_T)), ord = 4L)
@@ -458,7 +461,7 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
         }
       }
       if(hazard_baseline_02 == "Splines"){
-        Z_02 <- as.matrix(Z_02[,-1])
+        Z_02 <- as.matrix(Z_02[,-1, drop = FALSE])
         B_T_02 <- splineDesign(knots_02, data.id.Case1bis$Time_T, ord = 4L)
         B_L_02 <- splineDesign(knots_02, data.id.Case1bis$Time_L_initnoCI, ord = 4L)
         Bs_T_02 <- splineDesign(knots_02, c(t(st_T)), ord = 4L)
@@ -468,7 +471,7 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
         }
       }
       if(hazard_baseline_12 == "Splines"){
-        Z_12 <- as.matrix(Z_12[,-1])
+        Z_12 <- as.matrix(Z_12[,-1, drop = FALSE])
         B_T_12 <- splineDesign(knots_12, data.id.Case1bis$Time_T, ord = 4L)
         B_L_12 <- splineDesign(knots_12, data.id.Case1bis$Time_L_initnoCI, ord = 4L)
         Bs_T_12 <- splineDesign(knots_12, c(t(st_T)), ord = 4L)
@@ -554,12 +557,12 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
 
       list.surv <- data.manag.surv(formGroup, formSurv_01, data.long.Case2)
       Z_01 <- list.surv$Z
-      if(hazard_baseline_01 == "Gompertz"){Z_01 <- as.matrix(Z_01[,-1])}
+      if(hazard_baseline_01 == "Gompertz"){Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])}
       list.surv <- data.manag.surv(formGroup, formSurv_02, data.long.Case2)
       Z_02 <- list.surv$Z
-      if(hazard_baseline_02 == "Gompertz"){Z_02 <- as.matrix(Z_02[,-1])}
+      if(hazard_baseline_02 == "Gompertz"){Z_02 <- as.matrix(Z_02[,-1, drop = FALSE])}
       if(hazard_baseline_01 == "Splines"){
-        Z_01 <- as.matrix(Z_01[,-1])
+        Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])
         B_T_01 <- splineDesign(knots_01, data.id.Case2$Time_T, ord = 4L)
         Bs_T_01 <- splineDesign(knots_01, c(t(st_T)), ord = 4L)
         if(left_trunc){
@@ -567,7 +570,7 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
         }
       }
       if(hazard_baseline_02 == "Splines"){
-        Z_02 <- as.matrix(Z_02[,-1])
+        Z_02 <- as.matrix(Z_02[,-1, drop = FALSE])
         B_T_02 <- splineDesign(knots_02, data.id.Case2$Time_T, ord = 4L)
         Bs_T_02 <- splineDesign(knots_02, c(t(st_T)), ord = 4L)
         if(left_trunc){
@@ -772,7 +775,6 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
   }
 
 
-  message("First estimation")
   Case1 <- NULL
   st_T = as.matrix(0); X_GK_T = as.matrix(0); U_GK_T = as.matrix(0); Xslope_GK_T = as.matrix(0); Uslope_GK_T = as.matrix(0)
   X_T = as.matrix(0); U_T = as.matrix(0); Xslope_T = as.matrix(0); Uslope_T = as.matrix(0);
@@ -844,15 +846,15 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
     }
     list.surv <- data.manag.surv(formGroup, formSurv_01, data.long.Case1)
     Z_01 <- list.surv$Z
-    if(hazard_baseline_01 == "Gompertz"){Z_01 <- as.matrix(Z_01[,-1])}
+    if(hazard_baseline_01 == "Gompertz"){Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])}
     list.surv <- data.manag.surv(formGroup, formSurv_02, data.long.Case1)
     Z_02 <- list.surv$Z
-    if(hazard_baseline_02 == "Gompertz"){Z_02 <- as.matrix(Z_02[,-1])}
+    if(hazard_baseline_02 == "Gompertz"){Z_02 <- as.matrix(Z_02[,-1, drop = FALSE])}
     list.surv <- data.manag.surv(formGroup, formSurv_12, data.long.Case1)
     Z_12 <- list.surv$Z
-    if(hazard_baseline_12 == "Gompertz"){Z_12 <- as.matrix(Z_12[,-1])}
+    if(hazard_baseline_12 == "Gompertz"){Z_12 <- as.matrix(Z_12[,-1, drop = FALSE])}
     if(hazard_baseline_01 == "Splines"){
-      Z_01 <- as.matrix(Z_01[,-1])
+      Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])
       B_T_01 <- splineDesign(knots_01, data.id.Case1$Time_T, ord = 4L)
       Bs_T_01 <- splineDesign(knots_01, c(t(st_T)), ord = 4L)
       Bs_L_R_01 <- splineDesign(knots_01, c(t(st_L_R)), ord = 4L)
@@ -861,7 +863,7 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
       }
     }
     if(hazard_baseline_02 == "Splines"){
-      Z_02 <- as.matrix(Z_02[,-1])
+      Z_02 <- as.matrix(Z_02[,-1, drop = FALSE])
       B_T_02 <- splineDesign(knots_02, data.id.Case1$Time_T, ord = 4L)
       Bs_T_02 <- splineDesign(knots_02, c(t(st_T)), ord = 4L)
       Bs_L_R_02 <- splineDesign(knots_02, c(t(st_L_R)), ord = 4L)
@@ -870,13 +872,12 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
       }
     }
     if(hazard_baseline_12 == "Splines"){
-      Z_12 <- as.matrix(Z_12[,-1])
+      Z_12 <- as.matrix(Z_12[,-1, drop = FALSE])
       B_T_12 <- splineDesign(knots_12, data.id.Case1$Time_T, ord = 4L)
       Bs_T_12 <- splineDesign(knots_12, c(t(st_T)), ord = 4L)
       Bs_L_R_12 <- splineDesign(knots_12, c(t(st_L_R)), ord = 4L)
     }
     ## Pour l'intégrale (à optmiser plus tard)
-    print("go integrale Case1")
     st_0_LR <- c()
     X_0_LR <- c()
     U_0_LR <- c()
@@ -1018,15 +1019,15 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
 
     list.surv <- data.manag.surv(formGroup, formSurv_01, data.long.Case1bis)
     Z_01 <- list.surv$Z
-    if(hazard_baseline_01 == "Gompertz"){Z_01 <- as.matrix(Z_01[,-1])}
+    if(hazard_baseline_01 == "Gompertz"){Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])}
     list.surv <- data.manag.surv(formGroup, formSurv_02, data.long.Case1bis)
     Z_02 <- list.surv$Z
-    if(hazard_baseline_02 == "Gompertz"){Z_02 <- as.matrix(Z_02[,-1])}
+    if(hazard_baseline_02 == "Gompertz"){Z_02 <- as.matrix(Z_02[,-1, drop = FALSE])}
     list.surv <- data.manag.surv(formGroup, formSurv_12, data.long.Case1bis)
     Z_12 <- list.surv$Z
-    if(hazard_baseline_12 == "Gompertz"){Z_12 <- as.matrix(Z_12[,-1])}
+    if(hazard_baseline_12 == "Gompertz"){Z_12 <- as.matrix(Z_12[,-1, drop = FALSE])}
     if(hazard_baseline_01 == "Splines"){
-      Z_01 <- as.matrix(Z_01[,-1])
+      Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])
       B_T_01 <- splineDesign(knots_01, data.id.Case1bis$Time_T, ord = 4L)
       B_L_01 <- splineDesign(knots_01, data.id.Case1bis$Time_L, ord = 4L)
       Bs_T_01 <- splineDesign(knots_01, c(t(st_T)), ord = 4L)
@@ -1036,7 +1037,7 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
       }
     }
     if(hazard_baseline_02 == "Splines"){
-      Z_02 <- as.matrix(Z_02[,-1])
+      Z_02 <- as.matrix(Z_02[,-1, drop = FALSE])
       B_T_02 <- splineDesign(knots_02, data.id.Case1bis$Time_T, ord = 4L)
       B_L_02 <- splineDesign(knots_02, data.id.Case1bis$Time_L, ord = 4L)
       Bs_T_02 <- splineDesign(knots_02, c(t(st_T)), ord = 4L)
@@ -1046,7 +1047,7 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
       }
     }
     if(hazard_baseline_12 == "Splines"){
-      Z_12 <- as.matrix(Z_12[,-1])
+      Z_12 <- as.matrix(Z_12[,-1, drop = FALSE])
       B_T_12 <- splineDesign(knots_12, data.id.Case1bis$Time_T, ord = 4L)
       B_L_12 <- splineDesign(knots_12, data.id.Case1bis$Time_L, ord = 4L)
       Bs_T_12 <- splineDesign(knots_12, c(t(st_T)), ord = 4L)
@@ -1130,12 +1131,12 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
 
     list.surv <- data.manag.surv(formGroup, formSurv_01, data.long.Case2)
     Z_01 <- list.surv$Z
-    if(hazard_baseline_01 == "Gompertz"){Z_01 <- as.matrix(Z_01[,-1])}
+    if(hazard_baseline_01 == "Gompertz"){Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])}
     list.surv <- data.manag.surv(formGroup, formSurv_02, data.long.Case2)
     Z_02 <- list.surv$Z
-    if(hazard_baseline_02 == "Gompertz"){Z_02 <- as.matrix(Z_02[,-1])}
+    if(hazard_baseline_02 == "Gompertz"){Z_02 <- as.matrix(Z_02[,-1, drop = FALSE])}
     if(hazard_baseline_01 == "Splines"){
-      Z_01 <- as.matrix(Z_01[,-1])
+      Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])
       B_T_01 <- splineDesign(knots_01, data.id.Case2$Time_T, ord = 4L)
       Bs_T_01 <- splineDesign(knots_01, c(t(st_T)), ord = 4L)
       if(left_trunc){
@@ -1143,7 +1144,7 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
       }
     }
     if(hazard_baseline_02 == "Splines"){
-      Z_02 <- as.matrix(Z_02[,-1])
+      Z_02 <- as.matrix(Z_02[,-1, drop = FALSE])
       B_T_02 <- splineDesign(knots_02, data.id.Case2$Time_T, ord = 4L)
       Bs_T_02 <- splineDesign(knots_02, c(t(st_T)), ord = 4L)
       if(left_trunc){
@@ -1234,15 +1235,15 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
 
     list.surv <- data.manag.surv(formGroup, formSurv_01, data.long.Case3)
     Z_01 <- list.surv$Z
-    if(hazard_baseline_01 == "Gompertz"){Z_01 <- as.matrix(Z_01[,-1])}
+    if(hazard_baseline_01 == "Gompertz"){Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])}
     list.surv <- data.manag.surv(formGroup, formSurv_02, data.long.Case3)
     Z_02 <- list.surv$Z
-    if(hazard_baseline_02 == "Gompertz"){Z_02 <- as.matrix(Z_02[,-1])}
+    if(hazard_baseline_02 == "Gompertz"){Z_02 <- as.matrix(Z_02[,-1, drop = FALSE])}
     list.surv <- data.manag.surv(formGroup, formSurv_12, data.long.Case3)
     Z_12 <- list.surv$Z
-    if(hazard_baseline_12 == "Gompertz"){Z_12 <- as.matrix(Z_12[,-1])}
+    if(hazard_baseline_12 == "Gompertz"){Z_12 <- as.matrix(Z_12[,-1, drop = FALSE])}
     if(hazard_baseline_01 == "Splines"){
-      Z_01 <- as.matrix(Z_01[,-1])
+      Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])
       B_T_01 <- splineDesign(knots_01, data.id.Case3$Time_T, ord = 4L)
       Bs_T_01 <- splineDesign(knots_01, c(t(st_T)), ord = 4L)
       B_GK_L_T_01 <- splineDesign(knots_01, c(t(st_L_T)), ord = 4L)
@@ -1251,7 +1252,7 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
       }
     }
     if(hazard_baseline_02 == "Splines"){
-      Z_02 <- as.matrix(Z_02[,-1])
+      Z_02 <- as.matrix(Z_02[,-1, drop = FALSE])
       B_T_02 <- splineDesign(knots_02, data.id.Case3$Time_T, ord = 4L)
       Bs_T_02 <- splineDesign(knots_02, c(t(st_T)), ord = 4L)
       B_GK_L_T_02 <- splineDesign(knots_02, c(t(st_L_T)), ord = 4L)
@@ -1260,14 +1261,13 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
       }
     }
     if(hazard_baseline_12 == "Splines"){
-      Z_12 <- as.matrix(Z_12[,-1])
+      Z_12 <- as.matrix(Z_12[,-1, drop = FALSE])
       B_T_12 <- splineDesign(knots_12, data.id.Case3$Time_T, ord = 4L)
       Bs_T_12 <- splineDesign(knots_12, c(t(st_T)), ord = 4L)
       B_GK_L_T_12 <- splineDesign(knots_12, c(t(st_L_T)), ord = 4L)
     }
 
     ## Pour l'intégrale (à optmiser plus tard)
-    print("go integrale Case3")
     st_0_LT <- c()
     if(("value" %in% sharedtype_01) || ("value" %in% sharedtype_02) || ("value" %in% sharedtype_12)){
       X_0_LT <- c()
@@ -1480,7 +1480,10 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
       Zq <- apply(Zq1, 2, qnorm)
     }
   }
-  message(paste("First estimation with ", S1, " QMC draws"))
+  if(print.info){
+    message(paste("First estimation with ", S1, " QMC draws"))
+  }
+
   estimation1 <- marqLevAlg(binit, fn = logR_llh_lsjm_interintraIDM, minimize = FALSE,
                                  hazard_baseline_01 = hazard_baseline_01, sharedtype_01 = sharedtype_01,
                                  hazard_baseline_02 = hazard_baseline_02, sharedtype_02 = sharedtype_02,
@@ -1502,7 +1505,10 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
   info_conv_step2 <- NULL
 
   if(!is.null(S2) & estimation1$istop == 1){
-    message(paste("Second estimation with ", S2, " QMC draws"))
+    if(print.info){
+      message(paste("Second estimation with ", S2, " QMC draws"))
+    }
+
     if(variability_inter_visit && variability_intra_visit){
       Zq1 <- generate_sobol_owen_set(S2,  nb.e.a+2)
       Zq <- apply(Zq1, 2, qnorm)

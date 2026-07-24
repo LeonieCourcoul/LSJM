@@ -36,7 +36,10 @@ lsjm_interintraSingle <- function(Objectlsmm, Time, deltas, hazard_baseline_01, 
   knots_01 <- NULL
 
   ## Survival initialisation
-  message("Survival initialisation")
+  if(print.info){
+    message("Survival initialisation")
+  }
+
   data.id <- data.long[!duplicated(data.long$id),]
   data.id <- as.data.frame(data.id)
   data.id$Time_T[which(data.id$Time_T == 0)] <- 1e-20
@@ -157,9 +160,9 @@ lsjm_interintraSingle <- function(Objectlsmm, Time, deltas, hazard_baseline_01, 
 
   list.surv <- data.manag.surv(formGroup, formSurv_01, data.long)
   Z_01 <- list.surv$Z
-  if(hazard_baseline_01 == "Gompertz"){Z_01 <- as.matrix(Z_01[,-1])}
+  if(hazard_baseline_01 == "Gompertz"){Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])}
   if(hazard_baseline_01 == "Splines"){
-    Z_01 <- as.matrix(Z_01[,-1])
+    Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])
     B_T_01 <- splineDesign(knots_01, data.id$Time_T, ord = 4L)
     Bs_T_01 <- splineDesign(knots_01, c(t(st_T)), ord = 4L)
     if(left_trunc){
@@ -258,7 +261,10 @@ lsjm_interintraSingle <- function(Objectlsmm, Time, deltas, hazard_baseline_01, 
     }
   }
 
-  message(paste("First estimation with ", S1, " QMC draws"))
+  if(print.info){
+    message(paste("First estimation with ", S1, " QMC draws"))
+  }
+
 
   estimation1 <- marqLevAlg(binit, fn = logR_llh_lsjm_interintraSingle, minimize = FALSE,
 
@@ -277,7 +283,10 @@ lsjm_interintraSingle <- function(Objectlsmm, Time, deltas, hazard_baseline_01, 
   info_conv_step2 <- NULL
 
   if(!is.null(S2)){
-    message(paste("Second estimation with ", S2, " QMC draws"))
+    if(print.info){
+      message(paste("Second estimation with ", S2, " QMC draws"))
+    }
+
     if(variability_inter_visit && variability_intra_visit){
       Zq1 <- generate_sobol_owen_set(S2,  nb.e.a+2)
       Zq <- apply(Zq1, 2, qnorm)

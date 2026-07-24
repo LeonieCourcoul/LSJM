@@ -183,11 +183,14 @@ predyn_ponct_lsjm_covDepSingle <- function(Objectlsjm, data.long.until.time.s, s
     if(Objectlsjm$control$hazard_baseline_01 == "Weibull" || Objectlsjm$control$hazard_baseline_01 == "Gompertz"){
       mfZ <- model.frame(Objectlsjm$control$formSurv_01, data = data.long.until.time.s.id)
       Z_01 <- model.matrix(Objectlsjm$control$formSurv_01, mfZ)
+      if(Objectlsjm$control$hazard_baseline_01 == "Gompertz"){
+        Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])
+      }
     }else{
       if(Objectlsjm$control$hazard_baseline_01 == "Splines"){
         mfZ <- model.frame(Objectlsjm$control$formSurv_01, data = data.long.until.time.s.id)
         Z_01 <- model.matrix(Objectlsjm$control$formSurv_01, mfZ)
-        Z_01 <- Z_01[,-1]
+        Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])
         Bs_01 <- splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_01, c(t(st.1)), ord = 4L)
         Bs.den_01 <- splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_01, c(t(st.den)), ord = 4L)
       }else{
@@ -242,9 +245,9 @@ predyn_ponct_lsjm_covDepSingle <- function(Objectlsjm, data.long.until.time.s, s
 
 
   if((c("value") %in% Objectlsjm$control$sharedtype_01 )){
-    current.GK <- matrix(rep(beta%*%t(Xs),nbQMC),nrow=nbQMC,byrow = T) + b_al%*%t(Us)
-    current.GK.den <- matrix(rep(beta%*%t(Xs.den),nbQMC),nrow=nbQMC,byrow = T) + b_al%*%t(Us.den)
-    current.GK.0_u <- matrix(rep(beta%*%t(X_0_u),nbQMC),nrow=nbQMC,byrow = T) + b_al%*%t(U_0_u)
+    current.GK <- matrix(rep(beta%*%t(Xs),nbQMC),nrow=nbQMC,byrow = TRUE) + b_al%*%t(Us)
+    current.GK.den <- matrix(rep(beta%*%t(Xs.den),nbQMC),nrow=nbQMC,byrow = TRUE) + b_al%*%t(Us.den)
+    current.GK.0_u <- matrix(rep(beta%*%t(X_0_u),nbQMC),nrow=nbQMC,byrow = TRUE) + b_al%*%t(U_0_u)
       survLong_0_s_01 <- survLong_0_s_01 + alpha.current_01*current.GK.den
       survLong_0_u_01 <- survLong_0_u_01 + alpha.current_01*current.GK.0_u
         survLong_s_t_0k <- survLong_s_t_0k + alpha.current_01*current.GK
@@ -252,18 +255,18 @@ predyn_ponct_lsjm_covDepSingle <- function(Objectlsjm, data.long.until.time.s, s
   }
 
   if((c("slope") %in% Objectlsjm$control$sharedtype_01 )){
-    slope.GK <- matrix(rep(beta_slope%*%t(Xs.slope),nbQMC),nrow=nbQMC,byrow = T) + b_al_slope%*%t(Us.slope)
-    slope.GK.den <- matrix(rep(beta_slope%*%t(Xs.slope.den),nbQMC),nrow=nbQMC,byrow = T) + b_al_slope%*%t(Us.slope.den)
-    slope.GK.0_u <- matrix(rep(beta_slope%*%t(Xslope_0_u),nbQMC),nrow=nbQMC,byrow = T) + b_al_slope%*%t(Uslope_0_u)
+    slope.GK <- matrix(rep(beta_slope%*%t(Xs.slope),nbQMC),nrow=nbQMC,byrow = TRUE) + b_al_slope%*%t(Us.slope)
+    slope.GK.den <- matrix(rep(beta_slope%*%t(Xs.slope.den),nbQMC),nrow=nbQMC,byrow = TRUE) + b_al_slope%*%t(Us.slope.den)
+    slope.GK.0_u <- matrix(rep(beta_slope%*%t(Xslope_0_u),nbQMC),nrow=nbQMC,byrow = TRUE) + b_al_slope%*%t(Uslope_0_u)
       survLong_0_s_01 <- survLong_0_s_01 + alpha.slope_01*slope.GK.den
       survLong_0_u_01 <- survLong_0_u_01 + alpha.slope_01*slope.GK.0_u
         survLong_s_t_0k <- survLong_s_t_0k + alpha.slope_01*slope.GK
   }
 
   if((c("variability") %in% Objectlsjm$control$sharedtype_01 )){
-    var.GK <- matrix(rep(omega%*%t(Os),nbQMC),nrow=nbQMC,byrow = T) + b_om%*%t(Ws)
-    var.GK.den <- matrix(rep(omega%*%t(Os.den),nbQMC),nrow=nbQMC,byrow = T) + b_om%*%t(Ws.den)
-    var.GK.0_u <- matrix(rep(omega%*%t(O_0_u),nbQMC),nrow=nbQMC,byrow = T) + b_om%*%t(W_0_u)
+    var.GK <- matrix(rep(omega%*%t(Os),nbQMC),nrow=nbQMC,byrow = TRUE) + b_om%*%t(Ws)
+    var.GK.den <- matrix(rep(omega%*%t(Os.den),nbQMC),nrow=nbQMC,byrow = TRUE) + b_om%*%t(Ws.den)
+    var.GK.0_u <- matrix(rep(omega%*%t(O_0_u),nbQMC),nrow=nbQMC,byrow = TRUE) + b_om%*%t(W_0_u)
       survLong_0_s_01 <- survLong_0_s_01 + alpha.var_01*exp(var.GK.den)
       survLong_0_u_01 <- survLong_0_u_01 + alpha.var_01*exp(var.GK.0_u)
         survLong_s_t_0k <- survLong_s_t_0k + alpha.var_01*exp(var.GK)
@@ -278,13 +281,13 @@ predyn_ponct_lsjm_covDepSingle <- function(Objectlsjm, data.long.until.time.s, s
   else{
     if(Objectlsjm$control$hazard_baseline_01 == "Weibull"){
       h_0.GK_0_s_01 <- shape_01*(st.den**(shape_01-1))*wk
-      h_0.GK_0_u_01 <- shape_01*(st_0_u**(shape_01-1))*matrix(rep(wk.1, length(wk)), ncol = 15, byrow = T)
+      h_0.GK_0_u_01 <- shape_01*(st_0_u**(shape_01-1))*matrix(rep(wk.1, length(wk)), ncol = 15, byrow = TRUE)
         h_0.GK_s_t_0k <- shape_01*(st.1**(shape_01-1))*wk
     }
     else{
       if(Objectlsjm$control$hazard_baseline_01 == "Gompertz"){
         h_0.GK_0_s_01 <- Gompertz.1_01*exp(Gompertz.2_01*st.den)*wk
-        h_0.GK_0_u_01 <- Gompertz.1_01*exp(Gompertz.2_01*st_0_u)*matrix(rep(wk.1, length(wk)), ncol = 15, byrow = T)
+        h_0.GK_0_u_01 <- Gompertz.1_01*exp(Gompertz.2_01*st_0_u)*matrix(rep(wk.1, length(wk)), ncol = 15, byrow = TRUE)
           h_0.GK_s_t_0k <- Gompertz.1_01*exp(Gompertz.2_01*st.1)*wk
       }
       else{
@@ -323,14 +326,14 @@ predyn_ponct_lsjm_covDepSingle <- function(Objectlsjm, data.long.until.time.s, s
   A_0_s_01 <- exp(etaBaseline_0_s_01)*P.den*survLong_0_s_01
 
 
-  survLong_0_u_01 <- exp(survLong_0_u_01)*matrix(rep(c(t(h_0.GK_0_u_01)),each = nbQMC), nrow = nbQMC, byrow = F)
+  survLong_0_u_01 <- exp(survLong_0_u_01)*matrix(rep(c(t(h_0.GK_0_u_01)),each = nbQMC), nrow = nbQMC, byrow = FALSE)
 
 
   survLong_red1 <- c()
   for(nb.col in 1:Objectlsjm$control$nb_pointsGK){
     survLong_red1 <- cbind(survLong_red1, rowSums(survLong_0_u_01[,(Objectlsjm$control$nb_pointsGK*(nb.col-1)+1):(Objectlsjm$control$nb_pointsGK*nb.col)]))
   }
-  A1_comp <- 0.5*matrix(rep(st.1, nbQMC), nrow = nbQMC, byrow = T)*exp(etaBaseline_0_u_01)*survLong_red1
+  A1_comp <- 0.5*matrix(rep(st.1, nbQMC), nrow = nbQMC, byrow = TRUE)*exp(etaBaseline_0_u_01)*survLong_red1
 
   Surv.num <- P.1*rowSums(h_0k*exp(-A1_comp ))
   Surv.den <- exp(-A_0_s_01)

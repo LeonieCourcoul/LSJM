@@ -215,7 +215,7 @@ logR_llh_lsjm_interintraSingle <- function(param,hazard_baseline_01, sharedtype_
 
   ll_glob <- log_llh_lsjm_interintraSingle(sharedtype,  HB,  Gompertz,  Weibull,
                                        nb_points_integral,  alpha_inter_intra,
-                                       alpha_y_slope, alpha_b,  alpha_z,  gamma_z0,  beta,  beta_slope,
+                                       alpha_y_slope, t(alpha_b_01),  alpha_z,  gamma_z0,  beta,  beta_slope,
                                        b_y,  b_y_slope,  wk,  sigma_inter_intra,
                                        delta1,  Z_01,  X_T,  U_T,
                                        Xslope_T,  Uslope_T,  X_GK_T,  U_GK_T,  Xslope_GK_T,

@@ -80,11 +80,14 @@ predyn_boot_lsjm_classicSingle <- function(Objectlsjm, data.long.until.time.s, s
     if(Objectlsjm$control$hazard_baseline_01 == "Weibull" || Objectlsjm$control$hazard_baseline_01 == "Gompertz"){
       mfZ <- model.frame(Objectlsjm$control$formSurv_01, data = data.long.until.time.s.id)
       Z_01 <- model.matrix(Objectlsjm$control$formSurv_01, mfZ)
+      if(Objectlsjm$control$hazard_baseline_01 == "Gompertz"){
+        Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])
+      }
     }else{
       if(Objectlsjm$control$hazard_baseline_01 == "Splines"){
         mfZ <- model.frame(Objectlsjm$control$formSurv_01, data = data.long.until.time.s.id)
         Z_01 <- model.matrix(Objectlsjm$control$formSurv_01, mfZ)
-        Z_01 <- Z_01[,-1]
+        Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])
         Bs_01 <- splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_01, c(t(st.1)), ord = 4L)
         Bs.den_01 <- splineDesign(Objectlsjm$control$knots.hazard_baseline.splines_01, c(t(st.den)), ord = 4L)
       }else{
@@ -120,10 +123,10 @@ predyn_boot_lsjm_classicSingle <- function(Objectlsjm, data.long.until.time.s, s
 
   for(l in 1:nb.draws){
     if(is.null(Objectlsjm$result_step2)){
-      param <- Objectlsjm$result_step1$b
+      param_mean <- Objectlsjm$result_step1$b
     }
     else{
-      param <- Objectlsjm$result_step2$b
+      param_mean <- Objectlsjm$result_step2$b
     }
     param <- rmvnorm(1, mean = param_mean, sigma = Hess2)
     ## Param

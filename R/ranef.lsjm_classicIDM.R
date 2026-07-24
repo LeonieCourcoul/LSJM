@@ -182,7 +182,6 @@ ranef.lsjm_classicIDM <- function(object,...){
   binit <- matrix(0, nrow = 1, ncol = x$control$Objectlsmm$control$nb.e.a)
 
   #2. Cas 1
-  message("Case1")
   Case1 <- NULL
   st_T = as.matrix(0); X_GK_T = as.matrix(0); U_GK_T = as.matrix(0); Xslope_GK_T = as.matrix(0); Uslope_GK_T = as.matrix(0)
   X_T = as.matrix(0); U_T = as.matrix(0); Xslope_T = as.matrix(0); Uslope_T = as.matrix(0);
@@ -245,36 +244,36 @@ ranef.lsjm_classicIDM <- function(object,...){
     }
     list.surv <- data.manag.surv(x$control$Objectlsmm$control$formGroup, x$control$formSurv_01, data.long.Case1)
     Z_01 <- list.surv$Z
-    if(x$control$hazard_baseline_01 == "Gompertz"){Z_01 <- as.matrix(Z_01[,-1])}
+    if(x$control$hazard_baseline_01 == "Gompertz"){Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])}
     list.surv <- data.manag.surv(x$control$Objectlsmm$control$formGroup, x$control$formSurv_02, data.long.Case1)
     Z_02 <- list.surv$Z
-    if(x$control$hazard_baseline_02 == "Gompertz"){Z_02 <- as.matrix(Z_02[,-1])}
+    if(x$control$hazard_baseline_02 == "Gompertz"){Z_02 <- as.matrix(Z_02[,-1, drop = FALSE])}
     list.surv <- data.manag.surv(x$control$Objectlsmm$control$formGroup, x$control$formSurv_12, data.long.Case1)
     Z_12 <- list.surv$Z
-    if(x$control$hazard_baseline_12 == "Gompertz"){Z_12 <- as.matrix(Z_12[,-1])}
+    if(x$control$hazard_baseline_12 == "Gompertz"){Z_12 <- as.matrix(Z_12[,-1, drop = FALSE])}
     if(x$control$hazard_baseline_01 == "Splines"){
-      Z_01 <- as.matrix(Z_01[,-1])
-      B_T_01 <- splineDesign(x$control$knots_01, data.id.Case1$Time_T, ord = 4L)
-      Bs_T_01 <- splineDesign(x$control$knots_01, c(t(st_T)), ord = 4L)
-      Bs_L_R_01 <- splineDesign(x$control$knots_01, c(t(st_L_R)), ord = 4L)
+      Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])
+      B_T_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, data.id.Case1$Time_T, ord = 4L)
+      Bs_T_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, c(t(st_T)), ord = 4L)
+      Bs_L_R_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, c(t(st_L_R)), ord = 4L)
       if(x$control$left_trunc){
-        Bs_T0_01 <- splineDesign(x$control$knots_01, c(t(st_T0)), ord = 4L)
+        Bs_T0_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, c(t(st_T0)), ord = 4L)
       }
     }
     if(x$control$hazard_baseline_02 == "Splines"){
-      Z_02 <- as.matrix(Z_02[,-1])
-      B_T_02 <- splineDesign(x$control$knots_02, data.id.Case1$Time_T, ord = 4L)
-      Bs_T_02 <- splineDesign(x$control$knots_02, c(t(st_T)), ord = 4L)
-      Bs_L_R_02 <- splineDesign(x$control$knots_02, c(t(st_L_R)), ord = 4L)
+      Z_02 <- as.matrix(Z_02[,-1, drop = FALSE])
+      B_T_02 <- splineDesign(x$control$knots.hazard_baseline.splines_02, data.id.Case1$Time_T, ord = 4L)
+      Bs_T_02 <- splineDesign(x$control$knots.hazard_baseline.splines_02, c(t(st_T)), ord = 4L)
+      Bs_L_R_02 <- splineDesign(x$control$knots.hazard_baseline.splines_02, c(t(st_L_R)), ord = 4L)
       if(x$control$left_trunc){
-        Bs_T0_02 <- splineDesign(x$control$knots_02, c(t(st_T0)), ord = 4L)
+        Bs_T0_02 <- splineDesign(x$control$knots.hazard_baseline.splines_02, c(t(st_T0)), ord = 4L)
       }
     }
     if(x$control$hazard_baseline_12 == "Splines"){
-      Z_12 <- as.matrix(Z_12[,-1])
-      B_T_12 <- splineDesign(x$control$knots_12, data.id.Case1$Time_T, ord = 4L)
-      Bs_T_12 <- splineDesign(x$control$knots_12, c(t(st_T)), ord = 4L)
-      Bs_L_R_12 <- splineDesign(x$control$knots_12, c(t(st_L_R)), ord = 4L)
+      Z_12 <- as.matrix(Z_12[,-1, drop = FALSE])
+      B_T_12 <- splineDesign(x$control$knots.hazard_baseline.splines_12, data.id.Case1$Time_T, ord = 4L)
+      Bs_T_12 <- splineDesign(x$control$knots.hazard_baseline.splines_12, c(t(st_T)), ord = 4L)
+      Bs_L_R_12 <- splineDesign(x$control$knots.hazard_baseline.splines_12, c(t(st_L_R)), ord = 4L)
     }
 
     st_0_LR <- c()
@@ -316,13 +315,13 @@ ranef.lsjm_classicIDM <- function(object,...){
           Xslope_GK_0_LR <- rbind(Xslope_GK_0_LR,Xslope_0_stLR_i); Uslope_GK_0_LR <- rbind(Uslope_GK_0_LR,Uslope_0_stLR_i)
         }
         if(x$control$hazard_baseline_01 == "Splines"){
-          Bs_0_LR_01 <- rbind(Bs_0_LR_01,splineDesign(x$control$knots_01, c(t(st_0_stLR_i)), ord = 4L))
+          Bs_0_LR_01 <- rbind(Bs_0_LR_01,splineDesign(x$control$knots.hazard_baseline.splines_01, c(t(st_0_stLR_i)), ord = 4L))
         }
         if(x$control$hazard_baseline_02 == "Splines"){
-          Bs_0_LR_02 <- rbind(Bs_0_LR_02,splineDesign(x$control$knots_02, c(t(st_0_stLR_i)), ord = 4L))
+          Bs_0_LR_02 <- rbind(Bs_0_LR_02,splineDesign(x$control$knots.hazard_baseline.splines_02, c(t(st_0_stLR_i)), ord = 4L))
         }
         if(x$control$hazard_baseline_12 == "Splines"){
-          Bs_0_LR_12 <- rbind(Bs_0_LR_12,splineDesign(x$control$knots_12, c(t(st_0_stLR_i)), ord = 4L))
+          Bs_0_LR_12 <- rbind(Bs_0_LR_12,splineDesign(x$control$knots.hazard_baseline.splines_12, c(t(st_0_stLR_i)), ord = 4L))
         }
       }
 
@@ -537,39 +536,39 @@ ranef.lsjm_classicIDM <- function(object,...){
 
     list.surv <- data.manag.surv(x$control$Objectlsmm$control$formGroup, x$control$formSurv_01, data.long.Case1bis)
     Z_01 <- list.surv$Z
-    if(x$control$hazard_baseline_01 == "Gompertz"){Z_01 <- as.matrix(Z_01[,-1])}
+    if(x$control$hazard_baseline_01 == "Gompertz"){Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])}
     list.surv <- data.manag.surv(x$control$Objectlsmm$control$formGroup, x$control$formSurv_02, data.long.Case1bis)
     Z_02 <- list.surv$Z
-    if(x$control$hazard_baseline_02 == "Gompertz"){Z_02 <- as.matrix(Z_02[,-1])}
+    if(x$control$hazard_baseline_02 == "Gompertz"){Z_02 <- as.matrix(Z_02[,-1, drop = FALSE])}
     list.surv <- data.manag.surv(x$control$Objectlsmm$control$formGroup, x$control$formSurv_12, data.long.Case1bis)
     Z_12 <- list.surv$Z
-    if(x$control$hazard_baseline_12 == "Gompertz"){Z_12 <- as.matrix(Z_12[,-1])}
+    if(x$control$hazard_baseline_12 == "Gompertz"){Z_12 <- as.matrix(Z_12[,-1, drop = FALSE])}
     if(x$control$hazard_baseline_01 == "Splines"){
-      Z_01 <- as.matrix(Z_01[,-1])
-      B_T_01 <- splineDesign(x$control$knots_01, data.id.Case1bis$Time_T, ord = 4L)
-      B_L_01 <- splineDesign(x$control$knots_01, data.id.Case1bis$Time_L, ord = 4L)
-      Bs_T_01 <- splineDesign(x$control$knots_01, c(t(st_T)), ord = 4L)
-      Bs_L_01 <- splineDesign(x$control$knots_01, c(t(st_L)), ord = 4L)
+      Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])
+      B_T_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, data.id.Case1bis$Time_T, ord = 4L)
+      B_L_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, data.id.Case1bis$Time_L, ord = 4L)
+      Bs_T_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, c(t(st_T)), ord = 4L)
+      Bs_L_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, c(t(st_L)), ord = 4L)
       if(x$control$left_trunc){
-        Bs_T0_01 <- splineDesign(x$control$knots_01, c(t(st_T0)), ord = 4L)
+        Bs_T0_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, c(t(st_T0)), ord = 4L)
       }
     }
     if(x$control$hazard_baseline_02 == "Splines"){
-      Z_02 <- as.matrix(Z_02[,-1])
-      B_T_02 <- splineDesign(x$control$knots_02, data.id.Case1bis$Time_T, ord = 4L)
-      B_L_02 <- splineDesign(x$control$knots_02, data.id.Case1bis$Time_L, ord = 4L)
-      Bs_T_02 <- splineDesign(x$control$knots_02, c(t(st_T)), ord = 4L)
-      Bs_L_02 <- splineDesign(x$control$knots_02, c(t(st_L)), ord = 4L)
+      Z_02 <- as.matrix(Z_02[,-1, drop = FALSE])
+      B_T_02 <- splineDesign(x$control$knots.hazard_baseline.splines_02, data.id.Case1bis$Time_T, ord = 4L)
+      B_L_02 <- splineDesign(x$control$knots.hazard_baseline.splines_02, data.id.Case1bis$Time_L, ord = 4L)
+      Bs_T_02 <- splineDesign(x$control$knots.hazard_baseline.splines_02, c(t(st_T)), ord = 4L)
+      Bs_L_02 <- splineDesign(x$control$knots.hazard_baseline.splines_02, c(t(st_L)), ord = 4L)
       if(x$control$left_trunc){
-        Bs_T0_02 <- splineDesign(x$control$knots_02, c(t(st_T0)), ord = 4L)
+        Bs_T0_02 <- splineDesign(x$control$knots.hazard_baseline.splines_02, c(t(st_T0)), ord = 4L)
       }
     }
     if(x$control$hazard_baseline_12 == "Splines"){
-      Z_12 <- as.matrix(Z_12[,-1])
-      B_T_12 <- splineDesign(x$control$knots_12, data.id.Case1bis$Time_T, ord = 4L)
-      B_L_12 <- splineDesign(x$control$knots_12, data.id.Case1bis$Time_L, ord = 4L)
-      Bs_T_12 <- splineDesign(x$control$knots_12, c(t(st_T)), ord = 4L)
-      Bs_L_12 <- splineDesign(x$control$knots_12, c(t(st_L)), ord = 4L)
+      Z_12 <- as.matrix(Z_12[,-1, drop = FALSE])
+      B_T_12 <- splineDesign(x$control$knots.hazard_baseline.splines_12, data.id.Case1bis$Time_T, ord = 4L)
+      B_L_12 <- splineDesign(x$control$knots.hazard_baseline.splines_12, data.id.Case1bis$Time_L, ord = 4L)
+      Bs_T_12 <- splineDesign(x$control$knots.hazard_baseline.splines_12, c(t(st_T)), ord = 4L)
+      Bs_L_12 <- splineDesign(x$control$knots.hazard_baseline.splines_12, c(t(st_L)), ord = 4L)
     }
 
 
@@ -685,7 +684,6 @@ ranef.lsjm_classicIDM <- function(object,...){
                                      file = "", blinding = TRUE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4, multipleTry = 100)
 
       while(random.effects_i$istop !=1){
-        print(id.Case1bis_boucle)
         binit <- rmvnorm(1, mean = rep(0, ncol(MatCov)), MatCov)
         random.effects_i <-  marqLevAlg(binit, fn = re_lsjm_classicIDMCase1Bis, minimize = FALSE,nb.e.a = x$control$Objectlsmm$control$nb.e.a,
                                         Sigma.re = MatCov,
@@ -724,7 +722,6 @@ ranef.lsjm_classicIDM <- function(object,...){
 
   #4. Cas 2
 
-  message("Case2")
   Case2 <- NULL
   st_T = as.matrix(0); X_GK_T = as.matrix(0); U_GK_T = as.matrix(0); Xslope_GK_T = as.matrix(0); Uslope_GK_T = as.matrix(0);
   X_T = as.matrix(0); U_T = as.matrix(0); Xslope_T = as.matrix(0); Uslope_T = as.matrix(0);
@@ -787,24 +784,24 @@ ranef.lsjm_classicIDM <- function(object,...){
 
     list.surv <- data.manag.surv(x$control$Objectlsmm$control$formGroup, x$control$formSurv_01, data.long.Case2)
     Z_01 <- list.surv$Z
-    if(x$control$hazard_baseline_01 == "Gompertz"){Z_01 <- as.matrix(Z_01[,-1])}
+    if(x$control$hazard_baseline_01 == "Gompertz"){Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])}
     list.surv <- data.manag.surv(x$control$Objectlsmm$control$formGroup, x$control$formSurv_02, data.long.Case2)
     Z_02 <- list.surv$Z
-    if(x$control$hazard_baseline_02 == "Gompertz"){Z_02 <- as.matrix(Z_02[,-1])}
+    if(x$control$hazard_baseline_02 == "Gompertz"){Z_02 <- as.matrix(Z_02[,-1, drop = FALSE])}
     if(x$control$hazard_baseline_01 == "Splines"){
-      Z_01 <- as.matrix(Z_01[,-1])
-      B_T_01 <- splineDesign(x$control$knots_01, data.id.Case2$Time_T, ord = 4L)
-      Bs_T_01 <- splineDesign(x$control$knots_01, c(t(st_T)), ord = 4L)
+      Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])
+      B_T_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, data.id.Case2$Time_T, ord = 4L)
+      Bs_T_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, c(t(st_T)), ord = 4L)
       if(x$control$left_trunc){
-        Bs_T0_01 <- splineDesign(x$control$knots_01, c(t(st_T0)), ord = 4L)
+        Bs_T0_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, c(t(st_T0)), ord = 4L)
       }
     }
     if(x$control$hazard_baseline_02 == "Splines"){
-      Z_02 <- as.matrix(Z_02[,-1])
-      B_T_02 <- splineDesign(x$control$knots_02, data.id.Case2$Time_T, ord = 4L)
-      Bs_T_02 <- splineDesign(x$control$knots_02, c(t(st_T)), ord = 4L)
+      Z_02 <- as.matrix(Z_02[,-1, drop = FALSE])
+      B_T_02 <- splineDesign(x$control$knots.hazard_baseline.splines_02, data.id.Case2$Time_T, ord = 4L)
+      Bs_T_02 <- splineDesign(x$control$knots.hazard_baseline.splines_02, c(t(st_T)), ord = 4L)
       if(x$control$left_trunc){
-        Bs_T0_02 <- splineDesign(x$control$knots_02, c(t(st_T0)), ord = 4L)
+        Bs_T0_02 <- splineDesign(x$control$knots.hazard_baseline.splines_02, c(t(st_T0)), ord = 4L)
       }
     }
     for(id.Case2_boucle in 1:nbCase2){
@@ -915,7 +912,6 @@ ranef.lsjm_classicIDM <- function(object,...){
 
   #5. Cas 3
 
-  message("Case3")
   Case3 <- NULL
   st_T = as.matrix(0); X_GK_T = as.matrix(0); U_GK_T = as.matrix(0); Xslope_GK_T = as.matrix(0); Uslope_GK_T = as.matrix(0);
   X_T = as.matrix(0); U_T = as.matrix(0); Xslope_T = as.matrix(0); Uslope_T = as.matrix(0); B_T_01 = as.matrix(0); B_T_02 = as.matrix(0); B_T_12 = as.matrix(0);
@@ -976,36 +972,36 @@ ranef.lsjm_classicIDM <- function(object,...){
 
     list.surv <- data.manag.surv(x$control$Objectlsmm$control$formGroup, x$control$formSurv_01, data.long.Case3)
     Z_01 <- list.surv$Z
-    if(x$control$hazard_baseline_01 == "Gompertz"){Z_01 <- as.matrix(Z_01[,-1])}
+    if(x$control$hazard_baseline_01 == "Gompertz"){Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])}
     list.surv <- data.manag.surv(x$control$Objectlsmm$control$formGroup, x$control$formSurv_02, data.long.Case3)
     Z_02 <- list.surv$Z
-    if(x$control$hazard_baseline_02 == "Gompertz"){Z_02 <- as.matrix(Z_02[,-1])}
+    if(x$control$hazard_baseline_02 == "Gompertz"){Z_02 <- as.matrix(Z_02[,-1, drop = FALSE])}
     list.surv <- data.manag.surv(x$control$Objectlsmm$control$formGroup, x$control$formSurv_12, data.long.Case3)
     Z_12 <- list.surv$Z
-    if(x$control$hazard_baseline_12 == "Gompertz"){Z_12 <- as.matrix(Z_12[,-1])}
+    if(x$control$hazard_baseline_12 == "Gompertz"){Z_12 <- as.matrix(Z_12[,-1, drop = FALSE])}
     if(x$control$hazard_baseline_01 == "Splines"){
-      Z_01 <- as.matrix(Z_01[,-1])
-      B_T_01 <- splineDesign(x$control$knots_01, data.id.Case3$Time_T, ord = 4L)
-      Bs_T_01 <- splineDesign(x$control$knots_01, c(t(st_T)), ord = 4L)
-      B_GK_L_T_01 <- splineDesign(x$control$knots_01, c(t(st_L_T)), ord = 4L)
+      Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])
+      B_T_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, data.id.Case3$Time_T, ord = 4L)
+      Bs_T_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, c(t(st_T)), ord = 4L)
+      B_GK_L_T_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, c(t(st_L_T)), ord = 4L)
       if(x$control$left_trunc){
-        Bs_T0_01 <- splineDesign(x$control$knots_01, c(t(st_T0)), ord = 4L)
+        Bs_T0_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, c(t(st_T0)), ord = 4L)
       }
     }
     if(x$control$hazard_baseline_02 == "Splines"){
-      Z_02 <- as.matrix(Z_02[,-1])
-      B_T_02 <- splineDesign(x$control$knots_02, data.id.Case3$Time_T, ord = 4L)
-      Bs_T_02 <- splineDesign(x$control$knots_02, c(t(st_T)), ord = 4L)
-      B_GK_L_T_02 <- splineDesign(x$control$knots_02, c(t(st_L_T)), ord = 4L)
+      Z_02 <- as.matrix(Z_02[,-1, drop = FALSE])
+      B_T_02 <- splineDesign(x$control$knots.hazard_baseline.splines_02, data.id.Case3$Time_T, ord = 4L)
+      Bs_T_02 <- splineDesign(x$control$knots.hazard_baseline.splines_02, c(t(st_T)), ord = 4L)
+      B_GK_L_T_02 <- splineDesign(x$control$knots.hazard_baseline.splines_02, c(t(st_L_T)), ord = 4L)
       if(x$control$left_trunc){
-        Bs_T0_02 <- splineDesign(x$control$knots_02, c(t(st_T0)), ord = 4L)
+        Bs_T0_02 <- splineDesign(x$control$knots.hazard_baseline.splines_02, c(t(st_T0)), ord = 4L)
       }
     }
     if(x$control$hazard_baseline_12 == "Splines"){
-      Z_12 <- as.matrix(Z_12[,-1])
-      B_T_12 <- splineDesign(x$control$knots_12, data.id.Case3$Time_T, ord = 4L)
-      Bs_T_12 <- splineDesign(x$control$knots_12, c(t(st_T)), ord = 4L)
-      B_GK_L_T_12 <- splineDesign(x$control$knots_12, c(t(st_L_T)), ord = 4L)
+      Z_12 <- as.matrix(Z_12[,-1, drop = FALSE])
+      B_T_12 <- splineDesign(x$control$knots.hazard_baseline.splines_12, data.id.Case3$Time_T, ord = 4L)
+      Bs_T_12 <- splineDesign(x$control$knots.hazard_baseline.splines_12, c(t(st_T)), ord = 4L)
+      B_GK_L_T_12 <- splineDesign(x$control$knots.hazard_baseline.splines_12, c(t(st_L_T)), ord = 4L)
     }
 
     st_0_LT <- c()
@@ -1047,13 +1043,13 @@ ranef.lsjm_classicIDM <- function(object,...){
           Xslope_0_LT <- rbind(Xslope_0_LT,Xslope_0_stLT_i); Uslope_0_LT <- rbind(Uslope_0_LT,Uslope_0_stLT_i)
         }
         if(x$control$hazard_baseline_01 == "Splines"){
-          Bs_0_LT_01 <- rbind(Bs_0_LT_01,splineDesign(x$control$knots_01, c(t(st_0_stLT_i)), ord = 4L))
+          Bs_0_LT_01 <- rbind(Bs_0_LT_01,splineDesign(x$control$knots.hazard_baseline.splines_01, c(t(st_0_stLT_i)), ord = 4L))
         }
         if(x$control$hazard_baseline_02 == "Splines"){
-          Bs_0_LT_02 <- rbind(Bs_0_LT_02,splineDesign(x$control$knots_02, c(t(st_0_stLT_i)), ord = 4L))
+          Bs_0_LT_02 <- rbind(Bs_0_LT_02,splineDesign(x$control$knots.hazard_baseline.splines_02, c(t(st_0_stLT_i)), ord = 4L))
         }
         if(x$control$hazard_baseline_12 == "Splines"){
-          Bs_0_LT_12 <- rbind(Bs_0_LT_12,splineDesign(x$control$knots_12, c(t(st_0_stLT_i)), ord = 4L))
+          Bs_0_LT_12 <- rbind(Bs_0_LT_12,splineDesign(x$control$knots.hazard_baseline.splines_12, c(t(st_0_stLT_i)), ord = 4L))
         }
       }
 

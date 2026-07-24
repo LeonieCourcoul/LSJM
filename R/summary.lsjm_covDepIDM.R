@@ -619,6 +619,7 @@ summary.lsjm_covDepIDM <- function(object,...)
   e12_share_current_tab <- NULL
   e12_share_slope_tab <- NULL
   e12_alpha_tab <- NULL
+  e12_share_var_tab <- NULL
   e12_names_tab <- c()
 
   if(c("random effects") %in% x$control$sharedtype_12){

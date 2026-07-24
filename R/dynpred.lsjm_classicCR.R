@@ -1,6 +1,6 @@
 #' @rdname dynpred
 #' @export
-#' @importFrom graphics par plot lines axis abline mtext
+#' @importFrom graphics par plot lines axis abline mtext plot.new
 #' @importFrom stats sd
 
 dynpred.lsjm_classicCR <- function(object,newdata,  s, horizon, event, CI = 95, nb.draws = 1000){
@@ -52,6 +52,7 @@ dynpred.lsjm_classicCR <- function(object,newdata,  s, horizon, event, CI = 95, 
     if(!is.null(CI)){
       oldpar <- par(no.readonly = TRUE)
       on.exit(par(oldpar))
+      plot.new()
       x.axe <- c(0,data.long.until.time.s[,Objectlsjm$control$Objectlsmm$control$timeVar],times)
       y.axe <- c(NA,data.long.until.time.s[,all.vars(Objectlsjm$control$Objectlsmm$control$formFixed)[1]], rep(NA,length(window)))
       y.axe2 <- c(NA,rep(NA,length(data.long.until.time.s[,Objectlsjm$control$Objectlsmm$control$timeVar])),table.pred.id$CIinf)

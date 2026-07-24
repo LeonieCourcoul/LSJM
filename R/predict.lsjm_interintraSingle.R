@@ -55,8 +55,8 @@ predict.lsjm_interintraSingle <- function(object, which = "RE", Objectranef = NU
     curseur <- curseur + 2
   }
   if(x$control$hazard_baseline_01 == "Splines"){
-    gamma_01 <- param[(curseur):(curseur+x$control$nb.knots.splines[1]-2+1)]
-    curseur <- curseur + x$control$nb.knots.splines[1]-2 + 2
+    gamma_01 <- param[(curseur):(curseur+x$control$nb.knots.splines[1]+2+1)]
+    curseur <- curseur + x$control$nb.knots.splines[1]+2 + 2
   }
   ### Covariables :
   nb.alpha_01 <- x$control$nb.alpha[1]
@@ -191,6 +191,14 @@ predict.lsjm_interintraSingle <- function(object, which = "RE", Objectranef = NU
   if(is.null(data.long)){
     data.long <- x$control$Objectlsmm$control$data.long
   }
+  data.long <- as.data.frame(data.long)
+  id <- as.integer(data.long[all.vars(x$control$Objectlsmm$control$formGroup)][,1])
+  if(!("id" %in% colnames(data.long))){
+    data.long <- cbind(data.long, id = id)
+  }
+  else{
+    data.long$id <- as.integer(data.long$id)
+  }
 
   Time_T <- x$control$Time[["Time_T"]]
   data.long$Time_T <- data.long[all.vars(Time_T)][,1]
@@ -248,7 +256,7 @@ predict.lsjm_interintraSingle <- function(object, which = "RE", Objectranef = NU
   offset_ID <- c()
   len_visit <- c(0)
   Ind <- nrow(data.id)
-  for(oo in 1:length(Ind)){
+  for(oo in 1:Ind){
     ID.visit_i <- ID.visit[offset[oo]:(offset[oo+1]-1)]
     offset_ID_i <- as.vector(c(1, 1 + cumsum(tapply(ID.visit_i, ID.visit_i, length))))
     len_visit <- c(len_visit,length(unique(ID.visit_i)))
@@ -295,13 +303,13 @@ predict.lsjm_interintraSingle <- function(object, which = "RE", Objectranef = NU
 
   list.surv <- data.manag.surv(x$control$Objectlsmm$control$formGroup, x$control$formSurv_01, data.long)
   Z_01 <- list.surv$Z
-  if(x$control$hazard_baseline_01 == "Gompertz"){Z_01 <- as.matrix(Z_01[,-1])}
+  if(x$control$hazard_baseline_01 == "Gompertz"){Z_01 <- as.matrix(Z_01[,-1,  drop = FALSE])}
   if(x$control$hazard_baseline_01 == "Splines"){
-    Z_01 <- as.matrix(Z_01[,-1])
-    B_T_01 <- splineDesign(x$control$knots_01, data.id$Time_T, ord = 4L)
-    Bs_T_01 <- splineDesign(x$control$knots_01, c(t(st_T)), ord = 4L)
+    Z_01 <- as.matrix(Z_01[,-1,  drop = FALSE])
+    B_T_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, data.id$Time_T, ord = 4L)
+    Bs_T_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, c(t(st_T)), ord = 4L)
     if(x$control$left_trunc){
-      Bs_T0_01 <- splineDesign(x$control$knots_01, c(t(st_T0)), ord = 4L)
+      Bs_T0_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, c(t(st_T0)), ord = 4L)
     }
   }
 
@@ -328,17 +336,23 @@ predict.lsjm_interintraSingle <- function(object, which = "RE", Objectranef = NU
                        .packages = c("mvtnorm", "marqLevAlg")) %dopar% {
 
                          if("value" %in% x$control$sharedtype_01){
-                           X_T_i <- X_T[id.boucle,];U_T_i <- U_T[id.boucle,]
-                           X_GK_T_i <- as.matrix(X_GK_T[(x$control$nb_pointsGK*(id.boucle-1)+1):(x$control$nb_pointsGK*id.boucle),]);U_GK_T_i <- as.matrix(U_GK_T[(x$control$nb_pointsGK*(id.boucle-1)+1):(x$control$nb_pointsGK*id.boucle),])
+                           X_T_i <- X_T[id.boucle,];
+                           U_T_i <- U_T[id.boucle,];
+                           X_GK_T_i <- as.matrix(X_GK_T[(x$control$nb_pointsGK*(id.boucle-1)+1):(x$control$nb_pointsGK*id.boucle),]);
+                           U_GK_T_i <- as.matrix(U_GK_T[(x$control$nb_pointsGK*(id.boucle-1)+1):(x$control$nb_pointsGK*id.boucle),])
                            if(x$control$left_trunc){
-                             X_GK_T0_i <- as.matrix(X_GK_T0[(x$control$nb_pointsGK*(id.boucle-1)+1):(x$control$nb_pointsGK*id.boucle),]);U_GK_T0_i <- as.matrix(U_GK_T0[(x$control$nb_pointsGK*(id.boucle-1)+1):(x$control$nb_pointsGK*id.boucle),])
+                             X_GK_T0_i <- as.matrix(X_GK_T0[(x$control$nb_pointsGK*(id.boucle-1)+1):(x$control$nb_pointsGK*id.boucle),]);
+                             U_GK_T0_i <- as.matrix(U_GK_T0[(x$control$nb_pointsGK*(id.boucle-1)+1):(x$control$nb_pointsGK*id.boucle),])
                            }
                          }
                          if("slope" %in% x$control$sharedtype_01){
-                           Xslope_T_i <- Xslope_T[id.boucle,];Uslope_T_i <- Uslope_T[id.boucle,]
-                           Xslope_GK_T_i <- as.matrix(Xslope_GK_T[(x$control$nb_pointsGK*(id.boucle-1)+1):(x$control$nb_pointsGK*id.boucle),]);Uslope_GK_T_i <- as.matrix(Uslope_GK_T[(x$control$nb_pointsGK*(id.boucle-1)+1):(x$control$nb_pointsGK*id.boucle),])
+                           Xslope_T_i <- Xslope_T[id.boucle,];
+                           Uslope_T_i <- Uslope_T[id.boucle,];
+                           Xslope_GK_T_i <- as.matrix(Xslope_GK_T[(x$control$nb_pointsGK*(id.boucle-1)+1):(x$control$nb_pointsGK*id.boucle),]);
+                           Uslope_GK_T_i <- as.matrix(Uslope_GK_T[(x$control$nb_pointsGK*(id.boucle-1)+1):(x$control$nb_pointsGK*id.boucle),])
                            if(x$control$left_trunc){
-                             Xslope_GK_T0_i <- as.matrix(Xslope_GK_T0[(x$control$nb_pointsGK*(id.boucle-1)+1):(x$control$nb_pointsGK*id.boucle),]);Uslope_GK_T0_i <- as.matrix(Uslope_GK_T0[(x$control$nb_pointsGK*(id.boucle-1)+1):(x$control$nb_pointsGK*id.boucle),])
+                             Xslope_GK_T0_i <- as.matrix(Xslope_GK_T0[(x$control$nb_pointsGK*(id.boucle-1)+1):(x$control$nb_pointsGK*id.boucle),]);
+                             Uslope_GK_T0_i <- as.matrix(Uslope_GK_T0[(x$control$nb_pointsGK*(id.boucle-1)+1):(x$control$nb_pointsGK*id.boucle),])
                            }
                          }
 
@@ -418,11 +432,11 @@ predict.lsjm_interintraSingle <- function(object, which = "RE", Objectranef = NU
                                                           X_base_i=X_base_i,  U_base_i=U_base_i,   y_i=y_i, offset_ID_i = offset_ID_i, index_b_slope = x$control$index_b_slope,
                                                           nproc = 1, clustertype = x$control$clustertype, maxiter = x$control$maxiter, print.info = FALSE,
                                                           file = "", blinding = TRUE, epsa = 1e-4, epsb = 1e-4, epsd = 1e-4, multipleTry = 100)
-                           if(x$control$var_inter && x$control$var_intra){
+                           if(x$control$Objectlsmm$control$var_inter && x$control$Objectlsmm$control$var_intra){
                              binit <-matrix(0, nrow = 1, ncol = x$control$Objectlsmm$control$nb.e.a+2)
                            }
                            else{
-                             if(x$control$var_inter || x$control$var_intra){
+                             if(x$control$Objectlsmm$control$var_inter || x$control$Objectlsmm$control$var_intra){
                                binit <-matrix(0, nrow = 1, ncol = x$control$Objectlsmm$control$nb.e.a+1)
                              }
                              else{

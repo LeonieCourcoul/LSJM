@@ -43,7 +43,45 @@
 #'
 #' @examples
 #'
-#' \dontrun{
+#' data <- data.frame(
+#'          ID = rep(1:5, each = 3),
+#'          time = rep(1:3, 5),
+#'          y = rnorm(15),
+#'          event = rep(rbinom(5,1,0.5), each = 3),
+#'          time_event = rep(runif(5), each = 3)
+#'          )
+#'
+#'
+#' m0 <- lsmm(
+#'    formFixed = y ~ time,
+#'    formRandom = ~ time,
+#'    formGroup = ~ ID,
+#'    formVar = "standard",
+#'    timeVar = "time",
+#'    data.long = data,
+#'    S1 = 5,
+#'    S2 = 5,
+#'    nproc = 1
+#'    )
+#'
+#' pred.m0 <- predict(m0, which = c("RE","Y"), data.long = data)
+#'
+#' plot(m0,
+#'      which = "long.fit",
+#'      Objectpredict = pred.m0,
+#'      break.times = c(0,1,2,3))
+#'
+#' plot(m0,
+#'      which = "traj.ind",
+#'      Objectpredict = pred.m0,
+#'      ID.ind = c(1,2))
+#'
+#'
+#'
+#'
+#'
+#'
+#' \donttest{
 #'
 #' library(dplyr)
 #' data(threeC)
@@ -84,7 +122,7 @@
 #' pred.m2 <- predict(m2, which = c("RE", "Y"))
 #'
 #' #Plot:
-#' plot(m2, which = "traj.fit", Objectpredict = pred.m2,
+#' plot(m2, which = "long.fit", Objectpredict = pred.m2,
 #'                            break.times = (seq(65,95,by = 2.5)-65)/10)
 #' plot(m2, which = "traj.ind", Objectpredict = pred.m2,
 #'                                             ID.ind = c(3,120))
@@ -111,7 +149,7 @@
 #' pred.l2 <- predict(l2, which = c("RE", "Y", "Cum"))
 #'
 #' # Plot:
-#' plot(l2, which = "traj.fit", Objectpredict = pred.l2,
+#' plot(l2, which = "long.fit", Objectpredict = pred.l2,
 #'                          break.times = (seq(65,95,by = 2.5)-65)/10)
 #' plot(l2, which = "traj.ind", Objectpredict = pred.l2,
 #'                           ID.ind = c(3,120))

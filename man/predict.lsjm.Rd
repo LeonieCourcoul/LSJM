@@ -81,7 +81,32 @@ For a \code{lsjm} object we could also compute cumulative hazard function for ea
 transition.
 }
 \examples{
-\dontrun{
+
+data <- data.frame(
+         ID = rep(1:5, each = 3),
+         time = rep(1:3, 5),
+         y = rnorm(15),
+         event = rep(rbinom(5,1,0.5), each = 3),
+         time_event = rep(runif(5), each = 3)
+         )
+
+
+m0 <- lsmm(
+   formFixed = y ~ time,
+   formRandom = ~ time,
+   formGroup = ~ ID,
+   formVar = "standard",
+   timeVar = "time",
+   data.long = data,
+   S1 = 5,
+   S2 = 5,
+   nproc = 1
+   )
+
+pred.m0 <- predict(m0, which = c("RE","Y"), data.long = data)
+
+
+\donttest{
 library(dplyr)
 
 data(threeC)

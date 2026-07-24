@@ -1,6 +1,6 @@
 #' @rdname dynpred
 #' @export
-#' @importFrom graphics par plot lines axis abline mtext
+#' @importFrom graphics par plot lines axis abline mtext plot.new
 #' @importFrom stats sd
 #'
 dynpred.lsjm_covDepCR <- function(object, newdata,  s, horizon, event, CI = 95, nb.draws = 1000){
@@ -32,7 +32,6 @@ dynpred.lsjm_covDepCR <- function(object, newdata,  s, horizon, event, CI = 95, 
         pred.boot <- cbind(pred.boot, predyn_boot_lsjm_covDepCR(Objectlsjm, data.long.until.time.s, s, t, event, nb.draws) )
       }
     }
-    browser()
     if(!is.null(CI)){
       table.pred.id <- cbind(i, times, pred.ponct, apply(pred.boot,2, function(x) quantile(x, 0.50)),
                              apply(pred.boot,2, function(x) quantile(x, ((100-CI)/2)/100)),
@@ -55,6 +54,7 @@ dynpred.lsjm_covDepCR <- function(object, newdata,  s, horizon, event, CI = 95, 
     if(!is.null(CI)){
       oldpar <- par(no.readonly = TRUE)
       on.exit(par(oldpar))
+      plot.new()
       x.axe <- c(0,data.long.until.time.s[,Objectlsjm$control$Objectlsmm$control$timeVar],times)
       y.axe <- c(NA,data.long.until.time.s[,all.vars(Objectlsjm$control$Objectlsmm$control$formFixed)[1]], rep(NA,length(window)))
       y.axe2 <- c(NA,rep(NA,length(data.long.until.time.s[,Objectlsjm$control$Objectlsmm$control$timeVar])),table.pred.id$CIinf)

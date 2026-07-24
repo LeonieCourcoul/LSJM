@@ -269,9 +269,7 @@ plot.lsjm_interintraIDM <- function(x, which = 'long.fit', Objectpredict, break.
                       linetype = guide_legend(title = "", keywidth = 4, keyheight = 1))
 
 
-    print(survB)
-
-    graph <- survB
+    graph <- list(survB = survB)
 
   }
 

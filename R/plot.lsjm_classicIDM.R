@@ -222,9 +222,8 @@ plot.lsjm_classicIDM <- function(x, which = 'long.fit', Objectpredict, break.tim
                       linetype = guide_legend(title = "", keywidth = 4, keyheight = 1))
 
 
-    print(survB)
+    graph <- list(survB = survB)
 
-    graph <- survB
 
   }
 

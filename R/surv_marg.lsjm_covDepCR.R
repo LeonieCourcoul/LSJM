@@ -19,78 +19,78 @@ survmarg.lsjm_covDepCR <- function(object, individual, time){
   curseur <- 1
   ## Risque 01
   ### Hazard baseline
-  if(Objectlsjm$control$hazard_baseline_01 == "Weibull"){
+  if(object$control$hazard_baseline_01 == "Weibull"){
     shape_01 <- param[curseur]**2
     curseur <- curseur + 1
   }
 
-  if(Objectlsjm$control$hazard_baseline_01 == "Gompertz"){
+  if(object$control$hazard_baseline_01 == "Gompertz"){
     Gompertz.1_01 <- param[curseur]**2
     Gompertz.2_01 <- param[curseur+1]
     curseur <- curseur + 2
   }
-  if(Objectlsjm$control$hazard_baseline_01 == "Splines"){
-    gamma_01 <- param[(curseur):(curseur+Objectlsjm$control$nb.knots.splines[1]+2+1)]
-    curseur <- curseur + Objectlsjm$control$nb.knots.splines[1]+2 + 2
+  if(object$control$hazard_baseline_01 == "Splines"){
+    gamma_01 <- param[(curseur):(curseur+object$control$nb.knots.splines[1]+2+1)]
+    curseur <- curseur + object$control$nb.knots.splines[1]+2 + 2
   }
   ### Covariables :
-  nb.alpha_01 <- Objectlsjm$control$nb.alpha[1]
+  nb.alpha_01 <- object$control$nb.alpha[1]
   if(nb.alpha_01 >=1){
     alpha_01 <-  param[(curseur):(curseur+nb.alpha_01-1)]
     curseur <- curseur+nb.alpha_01
   }
   ### Association
-  if("random effects" %in% Objectlsjm$control$sharedtype_01){
-    alpha_b_01 <- param[curseur:(curseur+Objectlsjm$control$Objectlsmm$control$nb.e.a-1)]
-    curseur <- curseur + Objectlsjm$control$Objectlsmm$control$nb.e.a
+  if("random effects" %in% object$control$sharedtype_01){
+    alpha_b_01 <- param[curseur:(curseur+object$control$Objectlsmm$control$nb.e.a-1)]
+    curseur <- curseur + object$control$Objectlsmm$control$nb.e.a
   }
-  if("value" %in% Objectlsjm$control$sharedtype_01){
+  if("value" %in% object$control$sharedtype_01){
     alpha.current_01 <-  param[curseur]
     curseur <- curseur + 1
   }
-  if("slope" %in% Objectlsjm$control$sharedtype_01){
+  if("slope" %in% object$control$sharedtype_01){
     alpha.slope_01 <- param[curseur]
     curseur <- curseur + 1
   }
-  if("variability" %in% Objectlsjm$control$sharedtype_01){
+  if("variability" %in% object$control$sharedtype_01){
     alpha.var_01 <- param[curseur]
     curseur <- curseur + 1
   }
 
   ## Risque 02
-  if(Objectlsjm$control$hazard_baseline_02 == "Weibull"){
+  if(object$control$hazard_baseline_02 == "Weibull"){
     shape_02 <- param[curseur]**2
     curseur <- curseur + 1
   }
-  if(Objectlsjm$control$hazard_baseline_02 == "Gompertz"){
+  if(object$control$hazard_baseline_02 == "Gompertz"){
     Gompertz.1_02 <- param[curseur]**2
     Gompertz.2_02 <- param[curseur+1]
     curseur <- curseur + 2
   }
-  if(Objectlsjm$control$hazard_baseline_02 == "Splines"){
-    gamma_02 <- param[(curseur):(curseur+Objectlsjm$control$nb.knots.splines[2]+2+1)]
-    curseur <- curseur + Objectlsjm$control$nb.knots.splines[2]+2+ 2
+  if(object$control$hazard_baseline_02 == "Splines"){
+    gamma_02 <- param[(curseur):(curseur+object$control$nb.knots.splines[2]+2+1)]
+    curseur <- curseur + object$control$nb.knots.splines[2]+2+ 2
   }
   ### Covariables :
-  nb.alpha_02 <- Objectlsjm$control$nb.alpha[2]
+  nb.alpha_02 <- object$control$nb.alpha[2]
   if(nb.alpha_02 >=1){
     alpha_02 <-  param[(curseur):(curseur+nb.alpha_02-1)]
     curseur <- curseur+nb.alpha_02
   }
   ### Association
-  if("random effects" %in% Objectlsjm$control$sharedtype_02){
-    alpha_b_02 <- param[curseur:(curseur+Objectlsjm$control$Objectlsmm$control$nb.e.a-1)]
-    curseur <- curseur + Objectlsjm$control$Objectlsmm$control$nb.e.a
+  if("random effects" %in% object$control$sharedtype_02){
+    alpha_b_02 <- param[curseur:(curseur+object$control$Objectlsmm$control$nb.e.a-1)]
+    curseur <- curseur + object$control$Objectlsmm$control$nb.e.a
   }
-  if("value" %in% Objectlsjm$control$sharedtype_02){
+  if("value" %in% object$control$sharedtype_02){
     alpha.current_02 <- param[curseur]
     curseur <- curseur + 1
   }
-  if("slope" %in% Objectlsjm$control$sharedtype_02){
+  if("slope" %in% object$control$sharedtype_02){
     alpha.slope_02 <- param[curseur]
     curseur <- curseur + 1
   }
-  if("variability" %in% Objectlsjm$control$sharedtype_02){
+  if("variability" %in% object$control$sharedtype_02){
     alpha.var_02 <- param[curseur]
     curseur <- curseur + 1
   }
@@ -98,39 +98,39 @@ survmarg.lsjm_covDepCR <- function(object, individual, time){
 
   ## Marker
   ### Fixed effects
-  beta <- param[curseur:(curseur+ Objectlsjm$control$Objectlsmm$control$nb.beta-1)]
-  curseur <- curseur+Objectlsjm$control$Objectlsmm$control$nb.beta
-  omega <- param[(curseur):(curseur+Objectlsjm$control$Objectlsmm$control$nb.omega-1)]
-  curseur <- curseur+Objectlsjm$control$Objectlsmm$control$nb.omega
+  beta <- param[curseur:(curseur+ object$control$Objectlsmm$control$nb.beta-1)]
+  curseur <- curseur+object$control$Objectlsmm$control$nb.beta
+  omega <- param[(curseur):(curseur+object$control$Objectlsmm$control$nb.omega-1)]
+  curseur <- curseur+object$control$Objectlsmm$control$nb.omega
 
 
-  Zq1 <- generate_sobol_owen_set(nbQMC,  Objectlsjm$control$Objectlsmm$control$nb.e.a+Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma)
+  Zq1 <- generate_sobol_owen_set(nbQMC,  object$control$Objectlsmm$control$nb.e.a+object$control$Objectlsmm$control$nb.e.a.sigma)
   Zq <- apply(Zq1, 2, qnorm)
 
-  if(Objectlsjm$control$Objectlsmm$control$correlated_re){
-    C1 <- matrix(rep(0,(Objectlsjm$control$Objectlsmm$control$nb.e.a+Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma)**2),nrow=Objectlsjm$control$Objectlsmm$control$nb.e.a+Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma,ncol=Objectlsjm$control$Objectlsmm$control$nb.e.a+Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma)
+  if(object$control$Objectlsmm$control$correlated_re){
+    C1 <- matrix(rep(0,(object$control$Objectlsmm$control$nb.e.a+object$control$Objectlsmm$control$nb.e.a.sigma)**2),nrow=object$control$Objectlsmm$control$nb.e.a+object$control$Objectlsmm$control$nb.e.a.sigma,ncol=object$control$Objectlsmm$control$nb.e.a+object$control$Objectlsmm$control$nb.e.a.sigma)
     C1[lower.tri(C1, diag=TRUE)] <- param[curseur:length(param)]
     Cholesky <- C1
     Cholesky <- as.matrix(Cholesky)
     random.effects <- Zq%*%t(Cholesky)
-    b_al <- random.effects[,1:Objectlsjm$control$Objectlsmm$control$nb.e.a]
-    b_al <- matrix(b_al, ncol = Objectlsjm$control$Objectlsmm$control$nb.e.a)
-    b_om <- random.effects[,(Objectlsjm$control$Objectlsmm$control$nb.e.a+1):(Objectlsjm$control$Objectlsmm$control$nb.e.a+Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma)]
-    b_om <- matrix(b_om, ncol = Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma)
+    b_al <- random.effects[,1:object$control$Objectlsmm$control$nb.e.a]
+    b_al <- matrix(b_al, ncol = object$control$Objectlsmm$control$nb.e.a)
+    b_om <- random.effects[,(object$control$Objectlsmm$control$nb.e.a+1):(object$control$Objectlsmm$control$nb.e.a+object$control$Objectlsmm$control$nb.e.a.sigma)]
+    b_om <- matrix(b_om, ncol = object$control$Objectlsmm$control$nb.e.a.sigma)
   }
   else{
-    borne1 <- curseur + choose(n = Objectlsjm$control$Objectlsmm$control$nb.e.a, k = 2) + Objectlsjm$control$Objectlsmm$control$nb.e.a - 1
-    C1 <- matrix(rep(0,(Objectlsjm$control$Objectlsmm$control$nb.e.a)**2),nrow=Objectlsjm$control$Objectlsmm$control$nb.e.a,ncol=Objectlsjm$control$Objectlsmm$control$nb.e.a)
+    borne1 <- curseur + choose(n = object$control$Objectlsmm$control$nb.e.a, k = 2) + object$control$Objectlsmm$control$nb.e.a - 1
+    C1 <- matrix(rep(0,(object$control$Objectlsmm$control$nb.e.a)**2),nrow=object$control$Objectlsmm$control$nb.e.a,ncol=object$control$Objectlsmm$control$nb.e.a)
     C1[lower.tri(C1, diag=TRUE)] <- param[curseur:borne1]
-    borne3 <- borne1 + choose(n = Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma, k = 2) + Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma
-    C3 <- matrix(rep(0,(Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma)**2),nrow=Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma,ncol=Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma)
+    borne3 <- borne1 + choose(n = object$control$Objectlsmm$control$nb.e.a.sigma, k = 2) + object$control$Objectlsmm$control$nb.e.a.sigma
+    C3 <- matrix(rep(0,(object$control$Objectlsmm$control$nb.e.a.sigma)**2),nrow=object$control$Objectlsmm$control$nb.e.a.sigma,ncol=object$control$Objectlsmm$control$nb.e.a.sigma)
     C3[lower.tri(C3, diag=TRUE)] <- param[(borne1+1):borne3]
     MatCovb <- as.matrix(C1)
     MatCovSig <- as.matrix(C3)
-    b_al <- Zq[,1:Objectlsjm$control$Objectlsmm$control$nb.e.a]%*%t(MatCovb)
-    b_al <- matrix(b_al, ncol = Objectlsjm$control$Objectlsmm$control$nb.e.a)
-    b_om <- Zq[,(Objectlsjm$control$Objectlsmm$control$nb.e.a+1):(Objectlsjm$control$Objectlsmm$control$nb.e.a+Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma)]%*%t(MatCovSig)
-    b_om <- matrix(b_om, ncol = Objectlsjm$control$Objectlsmm$control$nb.e.a.sigma)
+    b_al <- Zq[,1:object$control$Objectlsmm$control$nb.e.a]%*%t(MatCovb)
+    b_al <- matrix(b_al, ncol = object$control$Objectlsmm$control$nb.e.a)
+    b_om <- Zq[,(object$control$Objectlsmm$control$nb.e.a+1):(object$control$Objectlsmm$control$nb.e.a+object$control$Objectlsmm$control$nb.e.a.sigma)]%*%t(MatCovSig)
+    b_om <- matrix(b_om, ncol = object$control$Objectlsmm$control$nb.e.a.sigma)
   }
 
 
@@ -172,14 +172,14 @@ survmarg.lsjm_covDepCR <- function(object, individual, time){
 
   }
 
-  if("variability" %in% Objectlsjm$control$sharedtype_01 ||"variability" %in% Objectlsjm$control$sharedtype_02){
+  if("variability" %in% object$control$sharedtype_01 ||"variability" %in% object$control$sharedtype_02){
     list.data.GK.current <-  data.time(data.id.1, c(t(st.1)),
-                                       Objectlsjm$control$Objectlsmm$control$formFixedVar, Objectlsjm$control$Objectlsmm$control$formRandomVar,Objectlsjm$control$Objectlsmm$control$timeVar)
+                                       object$control$Objectlsmm$control$formFixedVar, object$control$Objectlsmm$control$formRandomVar,object$control$Objectlsmm$control$timeVar)
     Os <- list.data.GK.current$Xtime
     Ws <- list.data.GK.current$Utime
 
     list.data.GK.current.den <-  data.time(data.id.den, c(t(st.den)),
-                                           Objectlsjm$control$Objectlsmm$control$formFixedVar, Objectlsjm$control$Objectlsmm$control$formRandomVar,Objectlsjm$control$Objectlsmm$control$timeVar)
+                                           object$control$Objectlsmm$control$formFixedVar, object$control$Objectlsmm$control$formRandomVar,object$control$Objectlsmm$control$timeVar)
     Os.den <- list.data.GK.current.den$Xtime
     Ws.den <- list.data.GK.current.den$Utime
 
@@ -189,20 +189,20 @@ survmarg.lsjm_covDepCR <- function(object, individual, time){
     mfZ <- model.frame(object$control$formSurv_01, data = individual)
     mfZ2 <- model.frame(object$control$formSurv_01, data = object$control$Objectlsmm$control$data.long[!duplicated(object$control$Objectlsmm$control$data.long$id),])
     mfZ <- rbind(mfZ, mfZ2)
-    Z_01 <- model.matrix(object$control$formSurv_01, mfZ)[1,]
+    Z_01 <- model.matrix(object$control$formSurv_01, mfZ)#[1,]
   }else{
     if(object$control$hazard_baseline_01 == "Weibull" || object$control$hazard_baseline_01 == "Gompertz"){
 
       mfZ <- model.frame(object$control$formSurv_01, data = individual)
       mfZ2 <- model.frame(object$control$formSurv_01, data = object$control$Objectlsmm$control$data.long[!duplicated(object$control$Objectlsmm$control$data.long$id),])
       mfZ <- rbind(mfZ, mfZ2)
-      Z_01 <- model.matrix(object$control$formSurv_01, mfZ)[1,]
+      Z_01 <- model.matrix(object$control$formSurv_01, mfZ)#[1,]
     }else{
       if(object$control$hazard_baseline_01 == "Splines"){
         mfZ <- model.frame(object$control$formSurv_01, data = individual)
         mfZ2 <- model.frame(object$control$formSurv_01, data = object$control$Objectlsmm$control$data.long[!duplicated(object$control$Objectlsmm$control$data.long$id),])
         mfZ <- rbind(mfZ, mfZ2)
-        Z_01 <- model.matrix(object$control$formSurv_01, mfZ)[1,]
+        Z_01 <- model.matrix(object$control$formSurv_01, mfZ)#[1,]
         Z_01 <- Z_01[,-1]
         Bs_01 <- splineDesign(object$control$knots.hazard_baseline.splines_01, c(t(st.1)), ord = 4L)
         Bs.den_01 <- splineDesign(object$control$knots.hazard_baseline.splines_01, c(t(st.den)), ord = 4L)
@@ -216,19 +216,19 @@ survmarg.lsjm_covDepCR <- function(object, individual, time){
     mfZ <- model.frame(object$control$formSurv_02, data = individual)
     mfZ2 <- model.frame(object$control$formSurv_02, data = object$control$Objectlsmm$control$data.long[!duplicated(object$control$Objectlsmm$control$data.long$id),])
     mfZ <- rbind(mfZ, mfZ2)
-    Z_02 <- model.matrix(object$control$formSurv_02, mfZ)[1,]
+    Z_02 <- model.matrix(object$control$formSurv_02, mfZ)#[1,]
   }else{
     if(object$control$hazard_baseline_02 == "Weibull" || object$control$hazard_baseline_02 == "Gompertz"){
       mfZ <- model.frame(object$control$formSurv_02, data = individual)
       mfZ2 <- model.frame(object$control$formSurv_02, data = object$control$Objectlsmm$control$data.long[!duplicated(object$control$Objectlsmm$control$data.long$id),])
       mfZ <- rbind(mfZ, mfZ2)
-      Z_02 <- model.matrix(object$control$formSurv_02, mfZ)[1,]
+      Z_02 <- model.matrix(object$control$formSurv_02, mfZ)#[1,]
     }else{
       if(object$control$hazard_baseline_02 == "Splines"){
         mfZ <- model.frame(object$control$formSurv_02, data = individual)
         mfZ2 <- model.frame(object$control$formSurv_02, data = object$control$Objectlsmm$control$data.long[!duplicated(object$control$Objectlsmm$control$data.long$id),])
         mfZ <- rbind(mfZ, mfZ2)
-        Z_02 <- model.matrix(object$control$formSurv_02, mfZ)[1,]
+        Z_02 <- model.matrix(object$control$formSurv_02, mfZ)#[1,]
         Z_02 <- Z_02[,-1]
         Bs_02 <- splineDesign(object$control$knots.hazard_baseline.splines_02, c(t(st.1)), ord = 4L)
         Bs.den_02 <- splineDesign(object$control$knots.hazard_baseline.splines_02, c(t(st.den)), ord = 4L)
@@ -272,12 +272,12 @@ survmarg.lsjm_covDepCR <- function(object, individual, time){
   }
 
 
-  if((c("variability") %in% Objectlsjm$control$sharedtype_01 )|| (c("variability") %in% Objectlsjm$control$sharedtype_02)){
+  if((c("variability") %in% object$control$sharedtype_01 )|| (c("variability") %in% object$control$sharedtype_02)){
     var.GK.den <- matrix(rep(omega%*%t(Os.den),nbQMC),nrow=nbQMC,byrow =TRUE) + b_om%*%t(Ws.den)
-    if(c("variability") %in% Objectlsjm$control$sharedtype_01){
+    if(c("variability") %in% object$control$sharedtype_01){
       survLong_0_s_01 <- survLong_0_s_01 + alpha.var_01*exp(var.GK.den)
     }
-    if(c("variability") %in% Objectlsjm$control$sharedtype_02){
+    if(c("variability") %in% object$control$sharedtype_02){
       survLong_0_s_02 <- survLong_0_s_02 + alpha.var_02*exp(var.GK.den)
     }
   }

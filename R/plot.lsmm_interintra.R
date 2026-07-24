@@ -71,7 +71,7 @@ plot.lsmm_interintra <- function(x, which = 'long.fit', Objectpredict, break.tim
     graph.traj.ind <- c()
     for(ind in ID.ind){
       pred.CV.id <- pred.CV[which(pred.CV$id == ind),]
-      data.idselect <- cbind(data.long$id[which(data.long$id == ind)],data.long[which(data.long$id == ind), object$control$timeVar],data.long[which(data.long$id == ind), value.var])
+      data.idselect <- cbind(data.long$id[which(data.long$id == ind)],data.long[which(data.long$id == ind), x$control$timeVar],data.long[which(data.long$id == ind), value.var])
       data.idselect <- as.data.frame(data.idselect)
       colnames(data.idselect) <- c("id","time", "y")
       #pred.CV.id$y <- data.long[which(data.long$id == ind), value.var]

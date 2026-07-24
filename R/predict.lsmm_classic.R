@@ -27,7 +27,9 @@ predict.lsmm_classic <- function(object, which = "RE", Objectranef = NULL, data.
   else{
     param <- x$result_step2$b
   }
-
+  if(is.null(data.long)){
+    data.long <- x$control$data.long
+  }
   #x$control$nproc <- 1
   #Manage parameter
   curseur <- 1
@@ -45,6 +47,14 @@ predict.lsmm_classic <- function(object, which = "RE", Objectranef = NULL, data.
   MatCov <- Cholesky%*%t(Cholesky)
   if(is.null(data.long)){
     data.long <- x$control$data.long
+  }
+  data.long <- as.data.frame(data.long)
+  id <- as.integer(data.long[all.vars(x$control$formGroup)][,1])
+  if(!("id" %in% colnames(data.long))){
+    data.long <- cbind(data.long, id = id)
+  }
+  else{
+    data.long$id <- as.integer(data.long$id)
   }
 
   random.effects.Predictions <- matrix(NA, nrow = length(unique(data.long$id)), ncol = x$control$nb.e.a+1)

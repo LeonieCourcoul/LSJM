@@ -170,7 +170,11 @@ lsmm_interintra <- function(formFixed, formRandom, formGroup,
     }
   }
 
-  message(paste("First estimation with ", S1, " QMC draws"))
+  if(print.info){
+    message(paste("First estimation with ", S1, " QMC draws"))
+  }
+
+
   estimation1 <- marqLevAlg(binit, fn = log_llh_lsmm_interintra, minimize = FALSE,
                            nb.beta = nb.beta, Zq=Zq,
                            nb.e.a = nb.e.a, S = S1,
@@ -201,8 +205,11 @@ lsmm_interintra <- function(formFixed, formRandom, formGroup,
     }
 
 
+    if(print.info){
+      message(paste("Second estimation with ", S2, " QMC draws"))
+    }
 
-    message(paste("Second estimation with ", S2, " QMC draws"))
+
     estimation2 <- marqLevAlg(estimation1$b, fn = log_llh_lsmm_interintra, minimize = FALSE,
                               nb.beta = nb.beta, Zq=Zq,
                               nb.e.a = nb.e.a, S = S2,
@@ -447,8 +454,8 @@ lsmm_interintra <- function(formFixed, formRandom, formGroup,
       }
       else{
         if(var_inter || var_intra){
-          param_est <- c(param_est, estimation1$b[(borne1+1)]*estimation1$b[(borne1+1)])
-          sd.param <- sqrt(var_trans[(borne1+1),(borne1+1)]*(2*estimation1$b[(borne1+1)]*estimation1$b[(borne1+1)])**2)
+          param_est <- c(param_est, estimation2$b[(borne1+1)]*estimation2$b[(borne1+1)])
+          sd.param <- sqrt(var_trans[(borne1+1),(borne1+1)]*(2*estimation2$b[(borne1+1)]*estimation2$b[(borne1+1)])**2)
         }
       }
 

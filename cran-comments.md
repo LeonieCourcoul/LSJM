@@ -1,6 +1,6 @@
 ## R CMD check results
 
-0 errors | 0 warnings | 2 notes
+0 errors | 0 warnings | 1 note
 
 ## CRAN resubmission fixes
 
@@ -13,7 +13,6 @@ This resubmission addresses all issues raised by CRAN.
 - Improved all Rd examples:
   - Removed commented-out code lines.
   - Ensured that all examples are syntactically valid and reproducible.
-  - Due to computational cost of the models, all examples are wrapped in `\dontrun{}` as they are not intended to be executed during R CMD check (>5 seconds).
 
 - Replaced direct console output using `print()`/`cat()` in internal and exported functions with `message()` or `warning()`.
 

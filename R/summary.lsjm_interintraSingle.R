@@ -132,12 +132,12 @@ summary.lsjm_interintraSingle <- function(object,...)
 
 
   ## Effets fixes trend :
-  beta <- param[curseur:(curseur+x$control$nb.beta-1)]
-  beta.se <- param.se[curseur:(curseur+x$control$nb.beta-1)]
-  beta.name <- param.names[curseur:(curseur+x$control$nb.beta-1)]
-  curseur <- curseur+x$control$nb.beta
+  beta <- param[curseur:(curseur+x$control$Objectlsmm$control$nb.beta-1)]
+  beta.se <- param.se[curseur:(curseur+x$control$Objectlsmm$control$nb.beta-1)]
+  beta.name <- param.names[curseur:(curseur+x$control$Objectlsmm$control$nb.beta-1)]
+  curseur <- curseur+x$control$Objectlsmm$control$nb.beta
   ## Var inter/intra
-  if(x$control$var_inter){
+  if(x$control$Objectlsmm$control$var_inter){
     mu.inter <- param[curseur]
     mu.inter.se <- param.se[curseur]
     mu.inter.name <- param.names[curseur]
@@ -149,7 +149,7 @@ summary.lsjm_interintraSingle <- function(object,...)
     sigma.epsilon.inter.name <- param.names[curseur]
     curseur <- curseur +1
   }
-  if(x$control$var_intra){
+  if(x$control$Objectlsmm$control$var_intra){
     mu.intra <- param[curseur]
     mu.intra.se <- param.se[curseur]
     mu.intra.name <- param.names[curseur]
@@ -319,7 +319,7 @@ summary.lsjm_interintraSingle <- function(object,...)
     cat("\n")
   }
 
-  if(!x$control$var_intra){
+  if(!x$control$Objectlsmm$control$var_intra){
     cat("     Residual standard error for constant intra-visit variability:")
     var_intra <- matrix(nrow = length(1), ncol = 4)
     var_intra[,1] <- sigma.epsilon.intra
@@ -337,7 +337,7 @@ summary.lsjm_interintraSingle <- function(object,...)
   }
 
 
-  if(x$control$var_inter && x$control$var_intra){
+  if(x$control$Objectlsmm$control$var_inter && x$control$Objectlsmm$control$var_intra){
     cat("     Fixed intercept of the scale part(inter/intra variabilities):")
     var_inter <- matrix(nrow = length(1), ncol = 4)
     var_inter[,1] <- mu.inter
@@ -362,7 +362,7 @@ summary.lsjm_interintraSingle <- function(object,...)
     cat("\n")
   }
   else{
-    if(x$control$var_inter){
+    if(x$control$Objectlsmm$control$var_inter){
       cat("     Fixed intercept of the scale part (inter variability):")
       var_inter <- matrix(nrow = length(1), ncol = 4)
       var_inter[,1] <- mu.inter
@@ -378,7 +378,7 @@ summary.lsjm_interintraSingle <- function(object,...)
       print(var_inter)
       cat("\n")
     }
-    if(x$control$var_intra){
+    if(x$control$Objectlsmm$control$var_intra){
       cat("     Fixed intercept of the scale part (inter variability):")
       var_intra <- matrix(nrow = length(1), ncol = 4)
       var_intra[,1] <- mu.intra
@@ -402,7 +402,7 @@ summary.lsjm_interintraSingle <- function(object,...)
 
   cat("\n")
 
-  if(x$control$correlated_re){
+  if(x$control$Objectlsmm$control$correlated_re){
     cat("     Covariance matrix of the random effects:")
     cat("\n")
     Cov <- MatCov%*%t(MatCov)
@@ -420,7 +420,7 @@ summary.lsjm_interintraSingle <- function(object,...)
     print(Covb)
     cat("\n")
 
-    if(x$control$var_inter || x$control$var_intra){
+    if(x$control$Objectlsmm$control$var_inter || x$control$Objectlsmm$control$var_intra){
       cat("     Covariance matrix of the random effects of the variance:")
       cat("\n")
       CovSig <- MatCovSig%*%t(MatCovSig)
@@ -547,6 +547,7 @@ summary.lsjm_interintraSingle <- function(object,...)
   e1_surv_tab <- as.data.frame(e1_surv_tab)
   e1_surv_tab <- round(e1_surv_tab, 4)
   e1_surv_tab$Pvalue <- ifelse(e1_surv_tab$Pvalue < 0.001, "<0.001", round(e1_surv_tab$Pvalue,3))
+  e1_bas_tab <- as.data.frame(e1_bas_tab)
   e1_bas_tab <- round(e1_bas_tab, 4)
   e1_bas_tab$Pvalue <- ifelse(e1_bas_tab$Pvalue < 0.001, "<0.001", round(e1_bas_tab$Pvalue,3))
 

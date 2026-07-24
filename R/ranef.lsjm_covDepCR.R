@@ -263,12 +263,12 @@ ranef.lsjm_covDepCR <- function(object,...){
 
   list.surv <- data.manag.surv(x$control$Objectlsmm$control$formGroup, x$control$formSurv_01, data.long)
   Z_01 <- list.surv$Z
-  if(x$control$hazard_baseline_01 == "Gompertz"){Z_01 <- as.matrix(Z_01[,-1])}
+  if(x$control$hazard_baseline_01 == "Gompertz"){Z_01 <- as.matrix(Z_01[,-1,  drop = FALSE])}
   list.surv <- data.manag.surv(x$control$Objectlsmm$control$formGroup, x$control$formSurv_02, data.long)
   Z_02 <- list.surv$Z
-  if(x$control$hazard_baseline_02 == "Gompertz"){Z_02 <- as.matrix(Z_02[,-1])}
+  if(x$control$hazard_baseline_02 == "Gompertz"){Z_02 <- as.matrix(Z_02[,-1,  drop = FALSE])}
   if(x$control$hazard_baseline_01 == "Splines"){
-    Z_01 <- as.matrix(Z_01[,-1])
+    Z_01 <- as.matrix(Z_01[,-1,  drop = FALSE])
     B_T_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, data.id$Time_T, ord = 4L)
     Bs_T_01 <- splineDesign(x$control$knots.hazard_baseline.splines_01, c(t(st_T)), ord = 4L)
     if(x$control$left_trunc){
@@ -276,7 +276,7 @@ ranef.lsjm_covDepCR <- function(object,...){
     }
   }
   if(x$control$hazard_baseline_02 == "Splines"){
-    Z_02 <- as.matrix(Z_02[,-1])
+    Z_02 <- as.matrix(Z_02[,-1,  drop = FALSE])
     B_T_02 <- splineDesign(x$control$knots.hazard_baseline.splines_02, data.id$Time_T, ord = 4L)
     Bs_T_02 <- splineDesign(x$control$knots.hazard_baseline.splines_02, c(t(st_T)), ord = 4L)
     if(x$control$left_trunc){

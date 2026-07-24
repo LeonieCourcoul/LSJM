@@ -126,6 +126,7 @@ from the equation above;
 }
 \examples{
 
+set.seed(123)
 data <- data.frame(
          ID = rep(1:100, each = 3),
          time = rep(1:3, 100),
@@ -155,8 +156,8 @@ m0 <- lsmm(
       hazardBase_01 = "Weibull",
       delta1 = ~ event,
       Time_T = ~ time_event,
-      S1 = 100,
-      S2 = 100,
+      S1 = 10,
+      S2 = 10,
       nproc = 1
       )
 

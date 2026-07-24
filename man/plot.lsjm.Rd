@@ -211,6 +211,8 @@ penalized likelihood accounting for interval censoring with the \code{SmoothHaza
 }
 \examples{
 
+set.seed(123)
+
 data <- data.frame(
          ID = rep(1:5, each = 3),
          time = rep(1:3, 5),

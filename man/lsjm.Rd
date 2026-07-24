@@ -281,6 +281,8 @@ where the terms are defined analogously to the single-event model.
 }
 \examples{
 
+set.seed(123)
+
 data <- data.frame(
          ID = rep(1:100, each = 3),
          time = rep(1:3, 100),

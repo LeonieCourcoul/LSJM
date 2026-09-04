@@ -189,21 +189,22 @@ survmarg.lsjm_covDepCR <- function(object, individual, time){
     mfZ <- model.frame(object$control$formSurv_01, data = individual)
     mfZ2 <- model.frame(object$control$formSurv_01, data = object$control$Objectlsmm$control$data.long[!duplicated(object$control$Objectlsmm$control$data.long$id),])
     mfZ <- rbind(mfZ, mfZ2)
-    Z_01 <- model.matrix(object$control$formSurv_01, mfZ)#[1,]
+    Z_01 <- model.matrix(object$control$formSurv_01, mfZ)[1,]
   }else{
     if(object$control$hazard_baseline_01 == "Weibull" || object$control$hazard_baseline_01 == "Gompertz"){
 
       mfZ <- model.frame(object$control$formSurv_01, data = individual)
       mfZ2 <- model.frame(object$control$formSurv_01, data = object$control$Objectlsmm$control$data.long[!duplicated(object$control$Objectlsmm$control$data.long$id),])
       mfZ <- rbind(mfZ, mfZ2)
-      Z_01 <- model.matrix(object$control$formSurv_01, mfZ)#[1,]
+      Z_01 <- model.matrix(object$control$formSurv_01, mfZ)[1,]
     }else{
       if(object$control$hazard_baseline_01 == "Splines"){
         mfZ <- model.frame(object$control$formSurv_01, data = individual)
         mfZ2 <- model.frame(object$control$formSurv_01, data = object$control$Objectlsmm$control$data.long[!duplicated(object$control$Objectlsmm$control$data.long$id),])
         mfZ <- rbind(mfZ, mfZ2)
-        Z_01 <- model.matrix(object$control$formSurv_01, mfZ)#[1,]
         Z_01 <- Z_01[,-1]
+        Z_01 <- model.matrix(object$control$formSurv_01, mfZ)[1,]
+
         Bs_01 <- splineDesign(object$control$knots.hazard_baseline.splines_01, c(t(st.1)), ord = 4L)
         Bs.den_01 <- splineDesign(object$control$knots.hazard_baseline.splines_01, c(t(st.den)), ord = 4L)
       }else{
@@ -216,20 +217,21 @@ survmarg.lsjm_covDepCR <- function(object, individual, time){
     mfZ <- model.frame(object$control$formSurv_02, data = individual)
     mfZ2 <- model.frame(object$control$formSurv_02, data = object$control$Objectlsmm$control$data.long[!duplicated(object$control$Objectlsmm$control$data.long$id),])
     mfZ <- rbind(mfZ, mfZ2)
-    Z_02 <- model.matrix(object$control$formSurv_02, mfZ)#[1,]
+    Z_02 <- model.matrix(object$control$formSurv_02, mfZ)[1,]
   }else{
     if(object$control$hazard_baseline_02 == "Weibull" || object$control$hazard_baseline_02 == "Gompertz"){
       mfZ <- model.frame(object$control$formSurv_02, data = individual)
       mfZ2 <- model.frame(object$control$formSurv_02, data = object$control$Objectlsmm$control$data.long[!duplicated(object$control$Objectlsmm$control$data.long$id),])
       mfZ <- rbind(mfZ, mfZ2)
-      Z_02 <- model.matrix(object$control$formSurv_02, mfZ)#[1,]
+      Z_02 <- model.matrix(object$control$formSurv_02, mfZ)[1,]
     }else{
       if(object$control$hazard_baseline_02 == "Splines"){
         mfZ <- model.frame(object$control$formSurv_02, data = individual)
         mfZ2 <- model.frame(object$control$formSurv_02, data = object$control$Objectlsmm$control$data.long[!duplicated(object$control$Objectlsmm$control$data.long$id),])
         mfZ <- rbind(mfZ, mfZ2)
-        Z_02 <- model.matrix(object$control$formSurv_02, mfZ)#[1,]
         Z_02 <- Z_02[,-1]
+        Z_02 <- model.matrix(object$control$formSurv_02, mfZ)[1,]
+
         Bs_02 <- splineDesign(object$control$knots.hazard_baseline.splines_02, c(t(st.1)), ord = 4L)
         Bs.den_02 <- splineDesign(object$control$knots.hazard_baseline.splines_02, c(t(st.den)), ord = 4L)
       }else{

@@ -2,18 +2,8 @@
 
 0 errors | 0 warnings | 1 note
 
-## CRAN resubmission fixes
+## Changes
 
-This resubmission addresses all issues raised by CRAN.
+* Fixed an issue in `survmarg()`.
 
-- Replaced all occurrences of `T` and `F` with `TRUE` and `FALSE` in the code and documentation.
-
-- Added missing `\value{}` sections in the documentation of exported functions, including `plot.lsjm` and `ranef`, with a detailed description of returned objects and their structure.
-
-- Improved all Rd examples:
-  - Removed commented-out code lines.
-  - Ensured that all examples are syntactically valid and reproducible.
-
-- Replaced direct console output using `print()`/`cat()` in internal and exported functions with `message()` or `warning()`.
-
-No changes were made to the statistical methodology or model definitions; all modifications are related to code quality, documentation, and CRAN compliance.
+No changes were made to the statistical methodology or model definitions.

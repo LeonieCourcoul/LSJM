@@ -116,26 +116,26 @@ survmarg.lsjm_classicSingle <- function(object, individual, time){
 
   #
 
-
   if(object$control$hazard_baseline_01 == "Exponential"){
     mfZ <- model.frame(object$control$formSurv_01, data = individual)
     mfZ2 <- model.frame(object$control$formSurv_01, data = object$control$Objectlsmm$control$data.long[!duplicated(object$control$Objectlsmm$control$data.long$id),])
     mfZ <- rbind(mfZ, mfZ2)
-    Z_01 <- model.matrix(object$control$formSurv_01, mfZ)#[1,]
+    Z_01 <- model.matrix(object$control$formSurv_01, mfZ)[1,]
   }else{
     if(object$control$hazard_baseline_01 == "Weibull" || object$control$hazard_baseline_01 == "Gompertz"){
 
       mfZ <- model.frame(object$control$formSurv_01, data = individual)
       mfZ2 <- model.frame(object$control$formSurv_01, data = object$control$Objectlsmm$control$data.long[!duplicated(object$control$Objectlsmm$control$data.long$id),])
       mfZ <- rbind(mfZ, mfZ2)
-      Z_01 <- model.matrix(object$control$formSurv_01, mfZ)#[1,]
+      Z_01 <- model.matrix(object$control$formSurv_01, mfZ)[1,]
     }else{
       if(object$control$hazard_baseline_01 == "Splines"){
         mfZ <- model.frame(object$control$formSurv_01, data = individual)
         mfZ2 <- model.frame(object$control$formSurv_01, data = object$control$Objectlsmm$control$data.long[!duplicated(object$control$Objectlsmm$control$data.long$id),])
         mfZ <- rbind(mfZ, mfZ2)
-        Z_01 <- model.matrix(object$control$formSurv_01, mfZ)#[1,]
         Z_01 <- Z_01[,-1]
+        Z_01 <- model.matrix(object$control$formSurv_01, mfZ)[1,]
+
         Bs_01 <- splineDesign(object$control$knots.hazard_baseline.splines_01, c(t(st.1)), ord = 4L)
         Bs.den_01 <- splineDesign(object$control$knots.hazard_baseline.splines_01, c(t(st.den)), ord = 4L)
       }else{

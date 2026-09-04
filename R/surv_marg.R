@@ -9,15 +9,19 @@
 #'
 #' @examples
 #'
-#' set.seed(123)
+#' set.seed(456)
 #'
 #' data <- data.frame(
-#'          ID = rep(1:100, each = 3),
-#'          time = rep(1:3, 100),
-#'          y = rnorm(300),
-#'          event = rep(rbinom(100,1,0.5), each = 3),
-#'          time_event = rep(runif(100), each = 3)
-#'          )
+#'   ID = rep(1:100, each = 3),
+#'   time = rep(0:2, 100),
+#'   y = rnorm(300),
+#'   event = rep(rbinom(100, 1, 0.5), each = 3),
+#'   time_event = rep(runif(100, min = 0, max = 5), each = 3),
+#'   covariate = rep(rbinom(100, size = 1, prob = 0.5), each = 3)
+#' )
+#'
+#' # Keep only the observed time before time_event
+#' data <- subset(data, time < time_event)
 #'
 #'
 #' m0 <- lsmm(
@@ -35,14 +39,16 @@
 #'  fit <- lsjm(
 #'       Objectlsmm = m0,
 #'       survival_type = "Single",
-#'       formSurv_01 = ~ 1,
+#'       formSurv_01 = ~ covariate,
 #'       sharedtype_01 = "value",
 #'       hazardBase_01 = "Weibull",
 #'       delta1 = ~ event,
 #'       Time_T = ~ time_event,
 #'       S1 = 100,
 #'       S2 = 100,
-#'       nproc = 1
+#'       nproc = 1,
+#'       binit = c(1.44498682, -4.10877891, 0.23741874, -10.11422733, 0.06706379,
+#'                 -0.05305361, 0.94307564, 0.34785575, -0.08949800, 0.00814575)
 #'       )
 #'
 #' individual <- data[1, ]
@@ -103,7 +109,7 @@
 #'            S2 = 2000,
 #'            nproc = 10)
 #'
-#' individual <- threeC_ex1[1, c("Sex")]
+#' individual <- threeC_ex1[1,]
 #' survmarg(l1, individual, time = 2)
 #'
 #'

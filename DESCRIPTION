@@ -1,6 +1,6 @@
 Package: LSJM
 Title: Estimate Location-Scale Joint Models
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: 
     c(person("Léonie", "Courcoul", email ="courcoul.leonie498@gmail.com", role = c("aut", "cre")),
     person("Antoine", "Barbieri", ,email = "antoine.barbieri@u-bordeaux.fr", role = c("aut")),

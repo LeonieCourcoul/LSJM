@@ -136,7 +136,7 @@ survmarg.lsjm_covDepSingle <- function(object, individual, time){
   }
 
   if("variability" %in% object$control$sharedtype_01){
-    list.data.GK.current <-  data.time(data.id.1, c(t(st.1)),
+    list.data.GK.current <-  data.time(data.id.den, c(t(st.1)),
                                        object$control$Objectlsmm$control$formFixedVar, object$control$Objectlsmm$control$formRandomVar,object$control$Objectlsmm$control$timeVar)
     Os <- list.data.GK.current$Xtime
     Ws <- list.data.GK.current$Utime
@@ -152,21 +152,22 @@ survmarg.lsjm_covDepSingle <- function(object, individual, time){
     mfZ <- model.frame(object$control$formSurv_01, data = individual)
     mfZ2 <- model.frame(object$control$formSurv_01, data = object$control$Objectlsmm$control$data.long[!duplicated(object$control$Objectlsmm$control$data.long$id),])
     mfZ <- rbind(mfZ, mfZ2)
-    Z_01 <- model.matrix(object$control$formSurv_01, mfZ)#[1,]
+    Z_01 <- model.matrix(object$control$formSurv_01, mfZ)[1,]
   }else{
     if(object$control$hazard_baseline_01 == "Weibull" || object$control$hazard_baseline_01 == "Gompertz"){
 
       mfZ <- model.frame(object$control$formSurv_01, data = individual)
       mfZ2 <- model.frame(object$control$formSurv_01, data = object$control$Objectlsmm$control$data.long[!duplicated(object$control$Objectlsmm$control$data.long$id),])
       mfZ <- rbind(mfZ, mfZ2)
-      Z_01 <- model.matrix(object$control$formSurv_01, mfZ)#[1,]
+      Z_01 <- model.matrix(object$control$formSurv_01, mfZ)[1,]
     }else{
       if(object$control$hazard_baseline_01 == "Splines"){
         mfZ <- model.frame(object$control$formSurv_01, data = individual)
         mfZ2 <- model.frame(object$control$formSurv_01, data = object$control$Objectlsmm$control$data.long[!duplicated(object$control$Objectlsmm$control$data.long$id),])
         mfZ <- rbind(mfZ, mfZ2)
-        Z_01 <- model.matrix(object$control$formSurv_01, mfZ)#[1,]
         Z_01 <- Z_01[,-1]
+        Z_01 <- model.matrix(object$control$formSurv_01, mfZ)[1,]
+
         Bs_01 <- splineDesign(object$control$knots.hazard_baseline.splines_01, c(t(st.1)), ord = 4L)
         Bs.den_01 <- splineDesign(object$control$knots.hazard_baseline.splines_01, c(t(st.den)), ord = 4L)
       }else{

@@ -104,7 +104,7 @@
 #'            nb.knots.splines = c(0,0,1),
 #'            S1 = 1000,
 #'            S2 = 2000,
-#'            nproc = 10)
+#'            nproc = 1)
 #'
 #' pred.m1 <- predict(m1, which = c("RE","Y"), data.long = threeC_ex1)
 #'

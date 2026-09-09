@@ -203,6 +203,8 @@ threeC_ex2 <- threeC_ex2[,c("ID","SBP","age.visit65","num.visit","age0_65",
 
 ind2 <- threeC_ex2[which(threeC_ex2$ID == 3),]
 
+ind2 <- as.data.frame(ind2)
+
 m2 <- lsmm(formFixed = SBP ~ age.visit65,
                formRandom = ~ age.visit65,
                formGroup = ~ ID,

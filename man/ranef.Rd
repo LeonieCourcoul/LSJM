@@ -132,7 +132,7 @@ l1 <- lsjm(m1,
            nb.knots.splines = c(0,0,1),
            S1 = 1000,
            S2 = 2000,
-           nproc = 10)
+           nproc = 1)
 
 r1 <- ranef(m1)
 r1.1 <- ranef(l1)

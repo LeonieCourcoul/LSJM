@@ -148,7 +148,7 @@ l1 <- lsjm(m1,
            nb.knots.splines = c(0,0,1),
            S1 = 1000,
            S2 = 2000,
-           nproc = 10)
+           nproc = 1)
 
 individual <- threeC_ex1[1,]
 survmarg(l1, individual, time = 2)

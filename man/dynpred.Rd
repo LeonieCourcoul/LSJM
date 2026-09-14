@@ -166,7 +166,7 @@ m0 <- lsmm(
                   event = 1, nb.draws = 100)
 
 
-\donttest{
+\dontrun{
 library(dplyr)
 
 # Begin by running the examples from the lsjm function (see ?lsjm).
@@ -233,7 +233,7 @@ l2 <- lsjm(Objectlsmm = m2,
            delta2 = ~ deathCR,
            Time_T0 = ~ age0_65,
            Time_T = ~ age65_CR,
-           nproc = 1,
+           nproc = 5,
            S1 = 1000,
            S2 = 2000)
 

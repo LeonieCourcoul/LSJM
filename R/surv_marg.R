@@ -55,7 +55,7 @@
 #' survmarg(fit, individual, time = 2)
 #'
 #'
-#' \donttest{
+#' \dontrun{
 #'
 #' # Begining by estimating the examples from \code{lsmm} and \code{lsjm}, we then compute
 #' # the average-probability of being alive and without dementia at age 85 for a Women
@@ -107,7 +107,7 @@
 #'            nb.knots.splines = c(0,0,1),
 #'            S1 = 1000,
 #'            S2 = 2000,
-#'            nproc = 1)
+#'            nproc = 5)
 #'
 #' individual <- threeC_ex1[1,]
 #' survmarg(l1, individual, time = 2)

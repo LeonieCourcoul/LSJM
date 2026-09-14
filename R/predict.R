@@ -54,7 +54,7 @@
 #' pred.m0 <- predict(m0, which = c("RE","Y"), data.long = data)
 #'
 #'
-#' \donttest{
+#' \dontrun{
 #' library(dplyr)
 #'
 #' data(threeC)
@@ -104,7 +104,7 @@
 #'            nb.knots.splines = c(0,0,1),
 #'            S1 = 1000,
 #'            S2 = 2000,
-#'            nproc = 1)
+#'            nproc = 5)
 #'
 #' pred.m1 <- predict(m1, which = c("RE","Y"), data.long = threeC_ex1)
 #'

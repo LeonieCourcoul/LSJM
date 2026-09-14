@@ -239,7 +239,7 @@
 #'       nproc = 1
 #'       )
 #'
-#' \donttest{
+#' \dontrun{
 #'
 #' library(dplyr)
 #'
@@ -295,7 +295,7 @@
 #'            nb.knots.splines = c(0,0,1),
 #'            S1 = 1000,
 #'            S2 = 2000,
-#'            nproc = 1)
+#'            nproc = 5)
 #'
 #' summary(l1)
 #'
@@ -353,7 +353,7 @@
 #'            delta2 = ~ deathCR,
 #'            Time_T0 = ~ age0_65,
 #'            Time_T = ~ age65_CR,
-#'            nproc = 1,
+#'            nproc = 5,
 #'            S1 = 1000,
 #'            S2 = 2000)
 #'

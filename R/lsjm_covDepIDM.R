@@ -13,6 +13,7 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
                             S1, S2, binit, nproc , clustertype, maxiter,
                            print.info, file , epsa , epsb , epsd){
 
+
   time.prog1 <- Sys.time()
 
   data.long <- as.data.frame(Objectlsmm$control$data.long)
@@ -860,14 +861,24 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
     }
     list.surv <- data.manag.surv(formGroup, formSurv_01, data.long.Case1)
     Z_01 <- list.surv$Z
-    if(hazard_baseline_01 == "Gompertz"){Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])}
+    name_ZO1 <- colnames(Z_01)
+    if(hazard_baseline_01 == "Gompertz"){
+      name_ZO1 <- colnames(Z_01)[-1]
+      Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])}
     list.surv <- data.manag.surv(formGroup, formSurv_02, data.long.Case1)
     Z_02 <- list.surv$Z
-    if(hazard_baseline_02 == "Gompertz"){Z_02 <- as.matrix(Z_02[,-1, drop = FALSE])}
+    name_ZO2 <- colnames(Z_02)
+    if(hazard_baseline_02 == "Gompertz"){
+      name_ZO2 <- colnames(Z_02)[-1]
+      Z_02 <- as.matrix(Z_02[,-1, drop = FALSE])}
     list.surv <- data.manag.surv(formGroup, formSurv_12, data.long.Case1)
     Z_12 <- list.surv$Z
-    if(hazard_baseline_12 == "Gompertz"){Z_12 <- as.matrix(Z_12[,-1, drop = FALSE])}
+    name_Z12 <- colnames(Z_12)
+    if(hazard_baseline_12 == "Gompertz"){
+      name_Z12 <- colnames(Z_12)[-1]
+      Z_12 <- as.matrix(Z_12[,-1, drop = FALSE])}
     if(hazard_baseline_01 == "Splines"){
+      name_ZO1 <- colnames(Z_01)[-1]
       Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])
       B_T_01 <- splineDesign(knots_01, data.id.Case1$Time_T, ord = 4L)
       Bs_T_01 <- splineDesign(knots_01, c(t(st_T)), ord = 4L)
@@ -877,6 +888,7 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
       }
     }
     if(hazard_baseline_02 == "Splines"){
+      name_ZO2 <- colnames(Z_02)[-1]
       Z_02 <- as.matrix(Z_02[,-1, drop = FALSE])
       B_T_02 <- splineDesign(knots_02, data.id.Case1$Time_T, ord = 4L)
       Bs_T_02 <- splineDesign(knots_02, c(t(st_T)), ord = 4L)
@@ -886,6 +898,7 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
       }
     }
     if(hazard_baseline_12 == "Splines"){
+      name_Z12 <- colnames(Z_12)[-1]
       Z_12 <- as.matrix(Z_12[,-1, drop = FALSE])
       B_T_12 <- splineDesign(knots_12, data.id.Case1$Time_T, ord = 4L)
       Bs_T_12 <- splineDesign(knots_12, c(t(st_T)), ord = 4L)
@@ -1302,36 +1315,48 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
 
     list.surv <- data.manag.surv(formGroup, formSurv_01, data.long.Case3)
     Z_01 <- list.surv$Z
-    if(hazard_baseline_01 == "Gompertz"){Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])}
+    name_ZO1 <- colnames(Z_01)
+    if(hazard_baseline_01 == "Gompertz"){
+      name_ZO1 <- colnames(Z_01)[-1]
+      Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])}
     list.surv <- data.manag.surv(formGroup, formSurv_02, data.long.Case3)
     Z_02 <- list.surv$Z
-    if(hazard_baseline_02 == "Gompertz"){Z_02 <- as.matrix(Z_02[,-1, drop = FALSE])}
+    name_ZO2 <- colnames(Z_02)
+    if(hazard_baseline_02 == "Gompertz"){
+      name_ZO2 <- colnames(Z_02)[-1]
+      Z_02 <- as.matrix(Z_02[,-1, drop = FALSE])}
     list.surv <- data.manag.surv(formGroup, formSurv_12, data.long.Case3)
     Z_12 <- list.surv$Z
-    if(hazard_baseline_12 == "Gompertz"){Z_12 <- as.matrix(Z_12[,-1, drop = FALSE])}
+    name_Z12 <- colnames(Z_12)
+    if(hazard_baseline_12 == "Gompertz"){
+      name_Z12 <- colnames(Z_12)[-1]
+      Z_12 <- as.matrix(Z_12[,-1, drop = FALSE])}
     if(hazard_baseline_01 == "Splines"){
+      name_ZO1 <- colnames(Z_01)[-1]
       Z_01 <- as.matrix(Z_01[,-1, drop = FALSE])
       B_T_01 <- splineDesign(knots_01, data.id.Case3$Time_T, ord = 4L)
       Bs_T_01 <- splineDesign(knots_01, c(t(st_T)), ord = 4L)
-      B_GK_L_T_01 <- splineDesign(knots_01, c(t(st_L_T)), ord = 4L)
+      Bs_L_R_01 <- splineDesign(knots_01, c(t(st_L_R)), ord = 4L)
       if(left_trunc){
         Bs_T0_01 <- splineDesign(knots_01, c(t(st_T0)), ord = 4L)
       }
     }
     if(hazard_baseline_02 == "Splines"){
+      name_ZO2 <- colnames(Z_02)[-1]
       Z_02 <- as.matrix(Z_02[,-1, drop = FALSE])
       B_T_02 <- splineDesign(knots_02, data.id.Case3$Time_T, ord = 4L)
       Bs_T_02 <- splineDesign(knots_02, c(t(st_T)), ord = 4L)
-      B_GK_L_T_02 <- splineDesign(knots_02, c(t(st_L_T)), ord = 4L)
+      Bs_L_R_02 <- splineDesign(knots_02, c(t(st_L_R)), ord = 4L)
       if(left_trunc){
         Bs_T0_02 <- splineDesign(knots_02, c(t(st_T0)), ord = 4L)
       }
     }
     if(hazard_baseline_12 == "Splines"){
+      name_Z12 <- colnames(Z_12)[-1]
       Z_12 <- as.matrix(Z_12[,-1, drop = FALSE])
       B_T_12 <- splineDesign(knots_12, data.id.Case3$Time_T, ord = 4L)
       Bs_T_12 <- splineDesign(knots_12, c(t(st_T)), ord = 4L)
-      B_GK_L_T_12 <- splineDesign(knots_12, c(t(st_L_T)), ord = 4L)
+      Bs_L_R_12 <- splineDesign(knots_12, c(t(st_L_R)), ord = 4L)
     }
 
     ## Pour l'intégrale (à optmiser plus tard)
@@ -1513,6 +1538,12 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
     names.param <- c(names.param, 'variability 12')
   }
 
+  if(is.null(Objectlsmm$result_step2)){
+    binit_CI <- c(binit_CI, Objectlsmm$result_step1$b)
+  }
+  else{
+    binit_CI <- c(binit_CI, Objectlsmm$result_step2$b)
+  }
 
   if(is.null(binit)){
     if(is.null(estimation.noCI)){

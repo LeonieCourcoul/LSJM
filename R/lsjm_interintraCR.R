@@ -903,7 +903,7 @@ lsjm_interintraCR <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haza
                                   epsd = epsd
                  ))
 
-  class(result) <- c("lsjm_interintraCR")
+  class(result) <- c("lsjm_interintraCR", "lsjm", "lsmm")
   return(result)
 
 }

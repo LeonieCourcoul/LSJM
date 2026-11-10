@@ -523,7 +523,7 @@ lsjm_classicCR <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
                                   epsd = epsd
                  ))
 
-  class(result) <- c("lsjm_classicCR")
+  class(result) <- c("lsjm_classicCR", "lsjm", "lsmm")
   return(result)
 
 }

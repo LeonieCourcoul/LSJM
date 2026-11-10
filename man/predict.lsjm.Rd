@@ -20,7 +20,7 @@
 \alias{predict.lsmm_classic}
 \alias{predict.lsmm_covDep}
 \alias{predict.lsmm_interintra}
-\title{predict: Prediction of some quantities for each subjects}
+\title{Prediction of Some Quantities for each Subjects}
 \usage{
 \method{predict}{lsjm_classicCR}(object, which = "RE", Objectranef = NULL, data.long = NULL, ...)
 

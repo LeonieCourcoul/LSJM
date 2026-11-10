@@ -2,8 +2,8 @@
 % Please edit documentation in R/lsjm.R
 \name{lsjm}
 \alias{lsjm}
-\title{lsjm : Estimation of a location-scale joint model for longitudinal data with flexible
-subject-specific variability and complex survival structures}
+\title{Estimation of a Location-Scale Joint Model for Longitudinal Data with Flexible
+Subject-Specific Variability and Complex Survival Structures}
 \usage{
 lsjm(
   Objectlsmm,

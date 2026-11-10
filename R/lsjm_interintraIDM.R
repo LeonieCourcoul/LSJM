@@ -2039,7 +2039,7 @@ lsjm_interintraIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, haz
                                   epsd = epsd
                  ))
 
-  class(result) <- c("lsjm_interintraIDM")
+  class(result) <- c("lsjm_interintraIDM", "lsjm", "lsmm")
   return(result)
 
 

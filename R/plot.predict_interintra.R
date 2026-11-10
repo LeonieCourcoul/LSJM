@@ -4,21 +4,19 @@
 #' @importFrom ggplot2 ggplot xlab ylab aes geom_pointrange geom_point scale_x_continuous scale_y_continuous theme element_blank element_line element_text ggtitle coord_cartesian geom_line geom_ribbon facet_wrap scale_color_manual guide_legend guides scale_fill_manual geom_step scale_linetype_manual
 #' @export
 
-plot.lsmm_interintra <- function(x, which = 'long.fit', Objectpredict, break.times = NULL, ID.ind = NULL, ylim = NULL, xlim= NULL, ...){
+plot.predict_interintra <- function(x, which = 'long.fit',  break.times = NULL, ID.ind = NULL, ylim = NULL, xlim= NULL, ...){
 
-  if(is.null(Objectpredict)){
-    stop("Objectpredict is missing.")
-  }
+  Objectlsmm <- x$fit
 
   graph <- NULL
 
   oldpar <- par(no.readonly = TRUE) # code line i
   on.exit(par(oldpar)) # code line i + 1
-  ObjectpredictY <- Objectpredict$predictY
+  ObjectpredictY <- x$predictY
   if(which == 'long.fit'){
-    formFixed <- x$control$formFixed
-    timeVar <- x$control$timeVar
-    data.long <- x$control$data.long
+    formFixed <- Objectlsmm$control$formFixed
+    timeVar <- Objectlsmm$control$timeVar
+    data.long <- Objectlsmm$control$data.long
     value.var <- as.character(formFixed[[2]])
     #pred.CV <- Objectpredict$predY
     if(is.null(break.times)){
@@ -65,13 +63,13 @@ plot.lsmm_interintra <- function(x, which = 'long.fit', Objectpredict, break.tim
     }
     ID.ind <- as.vector(ID.ind)
     pred.CV <- as.data.frame(ObjectpredictY)
-    data.long <- x$control$data.long
-    formFixed <- x$control$formFixed
+    data.long <- Objectlsmm$control$data.long
+    formFixed <- Objectlsmm$control$formFixed
     value.var <- as.character(formFixed[[2]])
     graph.traj.ind <- c()
     for(ind in ID.ind){
       pred.CV.id <- pred.CV[which(pred.CV$id == ind),]
-      data.idselect <- cbind(data.long$id[which(data.long$id == ind)],data.long[which(data.long$id == ind), x$control$timeVar],data.long[which(data.long$id == ind), value.var])
+      data.idselect <- cbind(data.long$id[which(data.long$id == ind)],data.long[which(data.long$id == ind), Objectlsmm$control$timeVar],data.long[which(data.long$id == ind), value.var])
       data.idselect <- as.data.frame(data.idselect)
       colnames(data.idselect) <- c("id","time", "y")
       #pred.CV.id$y <- data.long[which(data.long$id == ind), value.var]

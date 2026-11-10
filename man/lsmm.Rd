@@ -2,8 +2,8 @@
 % Please edit documentation in R/lsmm.R
 \name{lsmm}
 \alias{lsmm}
-\title{lsmm : Estimation of a linear mixed model for longitudinal data with flexible subject-specific
-variability.}
+\title{Estimation of a Linear Mixed Model for Longitudinal Data with Flexible Subject-Specific
+Variability.}
 \usage{
 lsmm(
   formFixed,

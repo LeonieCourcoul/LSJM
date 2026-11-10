@@ -4,25 +4,22 @@
 #' @importFrom ggplot2 ggplot xlab ylab aes geom_pointrange geom_point scale_x_continuous scale_y_continuous theme element_blank element_line element_text ggtitle coord_cartesian geom_line geom_ribbon facet_wrap scale_color_manual guide_legend guides scale_fill_manual geom_step scale_linetype_manual
 #' @export
 
-plot.lsmm_covDep <- function(x, which = 'long.fit', Objectpredict, break.times = NULL, ID.ind = NULL, ylim = NULL, xlim = NULL, ...){
+plot.predict_classic <- function(x, which = 'long.fit', break.times = NULL, ID.ind = NULL, ylim = NULL, xlim = NULL, ...){
 
-  if(is.null(Objectpredict)){
-    stop("Objectpredict is missing.")
-  }
+
+  Objectlsmm <- x$fit
 
   graph <- NULL
 
   oldpar <- par(no.readonly = TRUE) # code line i
   on.exit(par(oldpar)) # code line i + 1
-
-  ObjectpredictY <- Objectpredict$predictY
+  ObjectpredictY <- x$predictY
 
   if(which == 'long.fit'){
-    formFixed <- x$control$formFixed
-    timeVar <- x$control$timeVar
-    data.long <- x$control$data.long
+    formFixed <- Objectlsmm$control$formFixed
+    timeVar <- Objectlsmm$control$timeVar
+    data.long <- Objectlsmm$control$data.long
     value.var <- as.character(formFixed[[2]])
-    #pred.CV <- Objectpredict$predY
     if(is.null(break.times)){
       timeInterv <- range(data.long[,timeVar])
       break.times <- quantile(timeInterv,prob=seq(0,1,length.out=10))
@@ -40,6 +37,8 @@ plot.lsmm_covDep <- function(x, which = 'long.fit', Objectpredict, break.times =
     obstime.mean <- by(data.long[,timeVar], data.long$window, mean)
     df <- cbind(obstime.mean, mean.obs, IC.sup, IC.inf, mean.pred)
     df <- as.data.frame(df)
+    oldpar <- par(no.readonly = TRUE) # code line i
+    on.exit(par(oldpar)) # code line i + 1
     k <- ggplot(df,  aes(obstime.mean, mean.obs, ymin = IC.sup, ymax = IC.inf))
     graph.fit.long <- k +  geom_pointrange( aes(ymin = IC.sup, ymax = IC.inf), shape =1)+
       geom_point(aes(obstime.mean, mean.pred), size = 3, shape = 17) +
@@ -60,25 +59,24 @@ plot.lsmm_covDep <- function(x, which = 'long.fit', Objectpredict, break.times =
     }
     ID.ind <- as.vector(ID.ind)
     pred.CV <- as.data.frame(ObjectpredictY)
-    data.long <- x$control$data.long
-    formFixed <- x$control$formFixed
+    data.long <- Objectlsmm$control$data.long
+    formFixed <- Objectlsmm$control$formFixed
     value.var <- as.character(formFixed[[2]])
-    graph.traj.ind <- c()
+    graph <- list()
     for(ind in ID.ind){
       pred.CV.id <- pred.CV[which(pred.CV$id == ind),]
       pred.CV.id$y <- data.long[which(data.long$id == ind), value.var]
       pred.CV.id$CI.sup <- pred.CV.id$predY + 1.96*pred.CV.id$predSD
       pred.CV.id$CI.inf <- pred.CV.id$predY - 1.96*pred.CV.id$predSD
 
-      #browser()
       traj_ind <- ggplot() +
 
         geom_line(pred.CV.id, mapping = aes(x=time, y=predY, group = id, color = 'Predicted'))+
-        geom_line(pred.CV.id, mapping = aes(x=time, y=CI.sup, group = id,  color = 'Predicted'),linetype = 2)+
-        geom_line(pred.CV.id, mapping = aes(x=time, y=CI.inf, group = id,  color = 'Predicted'),linetype = 2)+
+        geom_line(pred.CV.id, mapping = aes(x=time, y=CI.sup, group = id,  color = 'Predicted'), linetype = 2)+
+        geom_line(pred.CV.id, mapping = aes(x=time, y=CI.inf, group = id,  color = 'Predicted'), linetype = 2)+
 
         geom_ribbon( pred.CV.id,mapping=
-                       aes(x=time,ymin=CI.inf,ymax=CI.sup), fill="#998ec3", alpha=0.3,linetype = 3)+
+                       aes(x=time,ymin=CI.inf,ymax=CI.sup), fill="#998ec3", alpha=0.3)+
 
         geom_point(pred.CV.id, mapping = aes(x=time, y=y, group = id,color = "Observed"),shape =17)+
         xlab("Time") + ylab("Y") +
@@ -110,8 +108,8 @@ plot.lsmm_covDep <- function(x, which = 'long.fit', Objectpredict, break.times =
       graph[[paste("traj.ind",ind, sep = "_")]] <- traj_ind
     }
 
-  }
 
+  }
 
   graph
 

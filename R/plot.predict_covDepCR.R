@@ -1,17 +1,16 @@
 #' @rdname plot.lsjm
 #' @importFrom graphics plot par
 #' @importFrom dplyr left_join
-#' @importFrom ggplot2 ggplot xlab ylab aes geom_pointrange geom_point scale_x_continuous scale_y_continuous theme element_blank element_line element_text ggtitle coord_cartesian geom_line geom_ribbon facet_wrap scale_color_manual guide_legend guides scale_fill_manual geom_step scale_linetype_manual
+#' @importFrom ggplot2 ggplot xlab ylab  aes geom_pointrange geom_point scale_x_continuous scale_y_continuous theme element_blank element_line element_text ggtitle coord_cartesian geom_line geom_ribbon facet_wrap scale_color_manual guide_legend guides scale_fill_manual geom_step scale_linetype_manual
 #' @importFrom survminer surv_fit ggsurvplot
 #' @importFrom survival Surv
 #' @importFrom stats setNames
 #' @importFrom grid unit
 #' @export
+plot.predict_covDepCR <- function(x, which = 'long.fit', break.times = NULL, ID.ind = NULL, xlim = NULL, ylim = NULL, ...){
 
-plot.lsjm_interintraSingle <- function(x, which = 'long.fit', Objectpredict, break.times = NULL, ID.ind = NULL, xlim = NULL, ylim = NULL, ...){
 
-
-  Objectlsjm <- x
+  Objectlsjm <- x$fit
   Objectlsmm <- Objectlsjm$control$Objectlsmm
 
   graph <- NULL
@@ -19,8 +18,7 @@ plot.lsjm_interintraSingle <- function(x, which = 'long.fit', Objectpredict, bre
   oldpar <- par(no.readonly = TRUE) # code line i
   on.exit(par(oldpar)) # code line i + 1
 
-  ObjectpredictY <- Objectpredict$predictY
-
+  ObjectpredictY <- x$predictY
   if(which == 'long.fit'){
     formFixed <- Objectlsmm$control$formFixed
     timeVar <- Objectlsmm$control$timeVar
@@ -32,37 +30,32 @@ plot.lsjm_interintraSingle <- function(x, which = 'long.fit', Objectpredict, bre
       break.times <- quantile(timeInterv,prob=seq(0,1,length.out=10))
     }
     data.long$window <- cut(data.long[,timeVar], break.times, include.lowest = TRUE)
-    data.long2 <- data.long %>% group_by(id,.data[[timeVar]]) %>% mutate(new.var.y.moy =  mean(.data[[value.var]])) %>% ungroup()
-    data.long2.unique <- data.long2[!duplicated(data.long2[, c("id", timeVar)]), ]
-    data.long <- data.long2.unique
-    value.var <- "new.var.y.moy"
-    data.long$new.var.y.moy <- as.numeric(data.long$new.var.y.moy)
-    mean.obs <- by(data.long[[value.var]], data.long$window, mean)
-    sd.obs <- by(data.long[[value.var]], data.long$window, sd)
-    length.obs <- by(data.long[[value.var]], data.long$window, length)
+    mean.obs <- by(data.long[,value.var], data.long$window, mean)
+    sd.obs <- by(data.long[,value.var], data.long$window, sd)
+    length.obs <- by(data.long[,value.var], data.long$window, length)
     IC.inf <- mean.obs - 1.96*sd.obs/sqrt(length.obs)
     IC.sup <- mean.obs + 1.96*sd.obs/sqrt(length.obs)
     ObjectpredictY$time.new.pred <- ObjectpredictY$time
-    data.long$time.new.pred <- data.long[[timeVar]]
-    data.long <- as.data.frame(data.long)
+    data.long$time.new.pred <- data.long[,timeVar]
     prediction <- left_join(ObjectpredictY[,c("id","predY", "time.new.pred")], data.long[,c("id", "window", "time.new.pred")])
     mean.pred <- by(prediction$predY, prediction$window, mean)
     obstime.mean <- by(data.long[,timeVar], data.long$window, mean)
     df <- cbind(obstime.mean, mean.obs, IC.sup, IC.inf, mean.pred)
     df <- as.data.frame(df)
     k <- ggplot(df,  aes(obstime.mean, mean.obs, ymin = IC.sup, ymax = IC.inf))
-    graph.fit.long <- k +  geom_pointrange( aes(ymin = IC.sup, ymax = IC.inf), shape =1) +
+    graph.fit.long <- k +  geom_pointrange( aes(ymin = IC.sup, ymax = IC.inf), shape =1)+
       geom_point(aes(obstime.mean, mean.pred), size = 3, shape = 17) +
       scale_x_continuous(name = "Time") +
       scale_y_continuous(name = "Current Value") +
       theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-            panel.background = element_blank(), axis.line = element_line(colour = "black"),
-            axis.text=element_text(size=15),
-            axis.title=element_text(size=18),
-            plot.title = element_text(size = 20, face = "bold"))+
-      ggtitle("Longitudinal goodness-of-fit")
+                     panel.background = element_blank(), axis.line = element_line(colour = "black"),
+                     axis.text=element_text(size=15),
+                     axis.title=element_text(size=18),
+                     plot.title = element_text(size = 20, face = "bold"))+
+      ggtitle("Longitudinal goodness-of-fit")+coord_cartesian(xlim = xlim,ylim = ylim, expand = TRUE)
     graph <- list(long.fit = graph.fit.long)
   }
+
 
   if(which == 'traj.ind'){
     if(is.null(ID.ind)){
@@ -76,12 +69,9 @@ plot.lsjm_interintraSingle <- function(x, which = 'long.fit', Objectpredict, bre
     graph.traj.ind <- c()
     for(ind in ID.ind){
       pred.CV.id <- pred.CV[which(pred.CV$id == ind),]
-      data.idselect <- cbind(data.long$id[which(data.long$id == ind)],data.long[which(data.long$id == ind), Objectlsmm$control$timeVar],data.long[which(data.long$id == ind), value.var])
-      data.idselect <- as.data.frame(data.idselect)
-      colnames(data.idselect) <- c("id","time", "y")
-      #pred.CV.id$y <- data.long[which(data.long$id == ind), value.var]
-      pred.CV.id$CI.sup <- pred.CV.id$predY + 1.96*sqrt(pred.CV.id$predSD_inter**2 + pred.CV.id$predSD_intra**2)
-      pred.CV.id$CI.inf <- pred.CV.id$predY - 1.96*sqrt(pred.CV.id$predSD_inter**2 + pred.CV.id$predSD_intra**2)
+      pred.CV.id$y <- data.long[which(data.long$id == ind), value.var]
+      pred.CV.id$CI.sup <- pred.CV.id$predY + 1.96*pred.CV.id$predSD
+      pred.CV.id$CI.inf <- pred.CV.id$predY - 1.96*pred.CV.id$predSD
 
       traj_ind <- ggplot() +
 
@@ -90,9 +80,9 @@ plot.lsjm_interintraSingle <- function(x, which = 'long.fit', Objectpredict, bre
         geom_line(pred.CV.id, mapping = aes(x=time, y=CI.inf, group = id,  color = 'Predicted'),linetype = 2)+
 
         geom_ribbon( pred.CV.id,mapping=
-                                aes(x=time,ymin=CI.inf,ymax=CI.sup), fill="#998ec3", alpha=0.3)+
+                                aes(x=time,ymin=CI.inf,ymax=CI.sup), fill="#998ec3", alpha=0.3,linetype = 3)+
 
-        geom_point(data.idselect, mapping = aes(x=time, y=y, group = id,color = "Observed"),shape =17)+
+        geom_point(pred.CV.id, mapping = aes(x=time, y=y, group = id,color = "Observed"),shape =17)+
         xlab("Time") + ylab("Y") +
 
         facet_wrap(~id, ncol = 3)+
@@ -106,14 +96,17 @@ plot.lsjm_interintraSingle <- function(x, which = 'long.fit', Objectpredict, bre
           panel.background = element_blank(),
           legend.position = "bottom",
           legend.box = "vertical",
-          axis.title.x = element_text(color = "black", size = 13),
-          axis.title.y = element_text(color = "black", size = 13),
+          #axis.title.x = element_text(color = "black", size = 10),
+          #axis.title.y = element_text(color = "black", size = 10),
           panel.grid = element_blank(),
           #legend.key = element_blank(),
-          legend.text = element_text(color = "black", size = 13),
+          axis.text=element_text(size=15),
+          axis.title=element_text(size=18),
+          plot.title = element_text(size = 20, face = "bold"),
+          legend.text = element_text(color = "black", size = 14),
           axis.line = element_line(color = "black",
-                                   linetype = "solid"),
-          axis.text = element_text(size = 13, color = "black")
+                                   linetype = "solid")
+          #axis.text = element_text(size = 10, color = "black")
         )+coord_cartesian(xlim = xlim,ylim = ylim, expand = TRUE)
 
       graph[[paste("traj.ind",ind, sep = "_")]] <- traj_ind
@@ -121,13 +114,12 @@ plot.lsjm_interintraSingle <- function(x, which = 'long.fit', Objectpredict, bre
 
   }
 
-
   if(which == 'survival.fit'){
     data.long <- Objectlsmm$control$data.long
     data.id <- data.long[!duplicated(data.long$id),]
     data.id$e1.new <- data.id[,all.vars(Objectlsjm$control$deltas[["delta1"]])]
     C1.sort <- data.id[order(data.id[,all.vars(Objectlsjm$control$Time[["Time_T"]])]),]
-    Cum.pred1 <- apply(Objectpredict$predictCum_01, 2, mean)
+    Cum.pred1 <- apply(x$predictCum_01, 2, mean)
     Cum.pred1 <- cbind(Cum.pred1, unique(sort(data.id[,all.vars(Objectlsjm$control$Time[["Time_T"]])])))
     Cum.pred1 <- as.data.frame(Cum.pred1)
     Cum.pred1.sort <- Cum.pred1[order(Cum.pred1[,2]),]
@@ -141,30 +133,62 @@ plot.lsjm_interintraSingle <- function(x, which = 'long.fit', Objectpredict, bre
     C1.sort$delta1sort <- C1.sort[all.vars(delta1sort)][,1]
     Surv.fit1 <- surv_fit(Surv(Time_Tsort, delta1sort) ~ 1, data = C1.sort)
     surv_plot <- ggsurvplot(Surv.fit1, data = C1.sort, fun = "cumhaz",
-                                       conf.int = TRUE, legend.title = "",
-                                       legend.labs = c("Survival Curve"),
-                                       xlab = "Time", palette = "#B2BABB", ylim = ylim)
-    surv_plot <- surv_plot$plot
-    color_mapping <- c("#B2BABB","#E74C3C")
-    graph.surv.1<-surv_plot +
-      geom_step(aes(timeFormSurv, pred, color = "Nelson-Aalen"),
-                         data = Cum.pred1.sort,
-                         linetype = "3313",
-                         size = 1) +
+                            conf.int = TRUE, legend.title = "",
+                            legend.labs = "Nelson-Aalen",
+                            xlab = "Time", palette = "#B2BABB", ylim = ylim)$plot
+
+    graph.surv.1 <- surv_plot +
       geom_step(aes(timeFormSurv, pred, color = "Prediction"),
-                         data = Cum.pred1.sort,
-                         linetype = "3313",
-                         size = 1)+
+                data = Cum.pred1.sort, linetype = "3313", linewidth = 1) +
       scale_color_manual(name = "",
-                                  values = setNames(color_mapping, c("Nelson-Aalen", "Prediction"))) +
-      guides(color = guide_legend(title = "", override.aes = list(linetype = "solid", size = 2)))+
-      theme(
-        legend.key.size = unit(3, "lines"),  # Ajuster la taille de la clé dans la légende
-        legend.text = element_text(size = 10)  # Ajuster la taille du texte dans la légende
-      ) +
-      theme(legend.position = c(0.1, 0.8))+
+                         values = c("Nelson-Aalen" = "#B2BABB",
+                                    "Prediction"   = "#E74C3C")) +
+      guides(color = guide_legend(
+        title = "",
+        override.aes = list(linetype = c("solid", "3313"), linewidth = 1.5)
+      )) +
+      theme(legend.key.size = unit(3, "lines"),
+            legend.text = element_text(size = 10)) +
       ggtitle("1st event")
     graph <- list(graph.surv.1 = graph.surv.1)
+
+    data.id$e2.new <- data.id[,all.vars(Objectlsjm$control$deltas[["delta2"]])]
+    C2.sort <-  data.id[order(data.id[,all.vars(Objectlsjm$control$Time[["Time_T"]])]),]
+    Cum.pred2 <- apply(x$predictCum_02, 2, mean)
+    Cum.pred2 <- cbind(Cum.pred2, unique(sort(data.id[,all.vars(Objectlsjm$control$Time[["Time_T"]])])))
+    Cum.pred2 <- as.data.frame(Cum.pred2)
+    Cum.pred2.sort <- Cum.pred2[order(Cum.pred2[,2]),]
+    colnames(Cum.pred2.sort) <- c("pred","timeFormSurv")
+    timeFormSurv <- Cum.pred2.sort$timeFormSurv
+    pred <- Cum.pred2.sort$pred
+    Time_Tsort <- Objectlsjm$control$Time[["Time_T"]]
+    delta2sort <- Objectlsjm$control$deltas[["delta2"]]
+    C2.sort$Time_Tsort <- C2.sort[all.vars(Time_Tsort)][,1]
+    C2.sort$delta2sort <- C2.sort[all.vars(delta2sort)][,1]
+    Surv.fit2 <- surv_fit(Surv(Time_Tsort, delta2sort) ~ 1, data = C2.sort)
+    Surv.fit2 <- surv_fit(Surv(Time_Tsort, delta2sort) ~ 1, data = C2.sort)
+
+    surv_plot <- ggsurvplot(Surv.fit2, data = C2.sort, fun = "cumhaz",
+                            conf.int = TRUE, legend.title = "",
+                            legend.labs = "Nelson-Aalen",
+                            xlab = "Time", palette = "#B2BABB", ylim = ylim)$plot
+
+    graph.surv.2 <- surv_plot +
+      geom_step(aes(timeFormSurv, pred, color = "Prediction"),
+                data = Cum.pred2.sort, linetype = "3313", linewidth = 1) +
+      scale_color_manual(name = "",
+                         values = c("Nelson-Aalen" = "#B2BABB",
+                                    "Prediction"   = "#E74C3C")) +
+      guides(color = guide_legend(
+        title = "",
+        override.aes = list(linetype = c("solid", "3313"), linewidth = 1.5)
+      )) +
+      theme(legend.key.size = unit(3, "lines"),
+            legend.text = element_text(size = 10)) +
+      ggtitle("2nd event")
+
+
+    graph[["graph.surv.2"]] <- graph.surv.2
 
 
   }

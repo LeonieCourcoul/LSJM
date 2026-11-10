@@ -877,8 +877,9 @@ predict.lsjm_interintraCR <- function(object, which = "RE", Objectranef = NULL, 
   }
 
 
-  resultat <- list(predictRE = random.effects.Predictions, predictY = cv.Pred, predictCum_01 = Cum_risk01, predictCum_02 = Cum_risk02)
-  class(resultat) <- c("predict.lsjm_interintraCR")
+  resultat <- list(predictRE = random.effects.Predictions, predictY = cv.Pred,
+                   predictCum_01 = Cum_risk01, predictCum_02 = Cum_risk02, fit = object)
+  class(resultat) <- c("predict_interintraCR")
   resultat
 
 

@@ -176,8 +176,8 @@ predict.lsmm_classic <- function(object, which = "RE", Objectranef = NULL, data.
 
 
 
-  resultat <- list(predictRE = random.effects.Predictions, predictY = cv.Pred)
-  class(resultat) <- c("predict.lsmm_classic")
+  resultat <- list(predictRE = random.effects.Predictions, predictY = cv.Pred, fit = object)
+  class(resultat) <- c("predict_classic")
   resultat
 
 

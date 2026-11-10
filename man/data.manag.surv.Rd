@@ -2,7 +2,7 @@
 % Please edit documentation in R/data.manag.surv.R
 \name{data.manag.surv}
 \alias{data.manag.surv}
-\title{Management of survival data}
+\title{Management of Survival Data}
 \usage{
 data.manag.surv(formGroup, formSurv, data.long1)
 }
@@ -14,5 +14,5 @@ data.manag.surv(formGroup, formSurv, data.long1)
 \item{data.long1}{A dataframe with the longitudinal data}
 }
 \description{
-Management of survival data
+Management of Survival Data
 }

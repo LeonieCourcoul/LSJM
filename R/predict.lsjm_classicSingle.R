@@ -534,8 +534,9 @@ predict.lsjm_classicSingle <- function(object, which = "RE", Objectranef = NULL,
 
 
 
-  resultat <- list(predictRE = random.effects.Predictions, predictY = cv.Pred, predictCum_01 = Cum_risk01)
-  class(resultat) <- c("predict.lsjm_classicSingle")
+  resultat <- list(predictRE = random.effects.Predictions, predictY = cv.Pred,
+                   predictCum_01 = Cum_risk01, fit = object)
+  class(resultat) <- c("predict_classicSingle")
   resultat
 
 

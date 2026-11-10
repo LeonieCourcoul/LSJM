@@ -2,32 +2,24 @@
 #' @importFrom graphics plot par
 #' @importFrom dplyr left_join
 #' @importFrom ggplot2 ggplot xlab ylab aes geom_pointrange geom_point scale_x_continuous scale_y_continuous theme element_blank element_line element_text ggtitle coord_cartesian geom_line geom_ribbon facet_wrap scale_color_manual guide_legend guides scale_fill_manual geom_step scale_linetype_manual
-#' @importFrom survminer surv_fit ggsurvplot
-#' @importFrom survival Surv
-#' @importFrom stats setNames
-#' @importFrom grid unit
 #' @export
-plot.lsjm_classicSingle <- function(x, which = 'long.fit', Objectpredict, break.times = NULL, ID.ind = NULL, xlim = NULL, ylim = NULL, ...){
 
+plot.predict_covDep <- function(x, which = 'long.fit',  break.times = NULL, ID.ind = NULL, ylim = NULL, xlim = NULL, ...){
 
-  Objectlsjm <- x
-  Objectlsmm <- Objectlsjm$control$Objectlsmm
-  if(is.null(Objectpredict)){
-    stop("Objectpredict is missing.")
-  }
+  Objectlsmm <- x$fit
 
   graph <- NULL
 
   oldpar <- par(no.readonly = TRUE) # code line i
   on.exit(par(oldpar)) # code line i + 1
 
-  ObjectpredictY <- Objectpredict$predictY
+  ObjectpredictY <- x$predictY
+
   if(which == 'long.fit'){
     formFixed <- Objectlsmm$control$formFixed
     timeVar <- Objectlsmm$control$timeVar
     data.long <- Objectlsmm$control$data.long
     value.var <- as.character(formFixed[[2]])
-    pred.CV <- ObjectpredictY$predY
     if(is.null(break.times)){
       timeInterv <- range(data.long[,timeVar])
       break.times <- quantile(timeInterv,prob=seq(0,1,length.out=10))
@@ -59,7 +51,6 @@ plot.lsjm_classicSingle <- function(x, which = 'long.fit', Objectpredict, break.
     graph <- list(long.fit = graph.fit.long)
   }
 
-
   if(which == 'traj.ind'){
     if(is.null(ID.ind)){
       stop("You have to design some individual ID to plot the the individual trajectories.")
@@ -84,18 +75,18 @@ plot.lsjm_classicSingle <- function(x, which = 'long.fit', Objectpredict, break.
         geom_line(pred.CV.id, mapping = aes(x=time, y=CI.inf, group = id,  color = 'Predicted'),linetype = 2)+
 
         geom_ribbon( pred.CV.id,mapping=
-                                aes(x=time,ymin=CI.inf,ymax=CI.sup), fill="#998ec3", alpha=0.3,linetype = 3)+
+                       aes(x=time,ymin=CI.inf,ymax=CI.sup), fill="#998ec3", alpha=0.3,linetype = 3)+
 
         geom_point(pred.CV.id, mapping = aes(x=time, y=y, group = id,color = "Observed"),shape =17)+
         xlab("Time") + ylab("Y") +
 
         facet_wrap(~id, ncol = 3)+
         scale_color_manual(name='',
-                                    breaks=c('Predicted', 'Observed'),
-                                    values=c('Predicted'='#998ec3', 'Observed'='#000000'),
-                                    guide = guide_legend(override.aes = list(
-                                      linetype = c(rep("solid", 1), "blank"),
-                                      shape = c(NA,  17))))+
+                           breaks=c('Predicted', 'Observed'),
+                           values=c('Predicted'='#998ec3', 'Observed'='#000000'),
+                           guide = guide_legend(override.aes = list(
+                             linetype = c(rep("solid", 1), "blank"),
+                             shape = c(NA,  17))))+
         theme(
           panel.background = element_blank(),
           legend.position = "bottom",
@@ -115,53 +106,6 @@ plot.lsjm_classicSingle <- function(x, which = 'long.fit', Objectpredict, break.
 
       graph[[paste("traj.ind",ind, sep = "_")]] <- traj_ind
     }
-
-  }
-
-  if(which == 'survival.fit'){
-    data.long <- Objectlsmm$control$data.long
-    data.id <- data.long[!duplicated(data.long$id),]
-    data.id$e1.new <- data.id[,all.vars(Objectlsjm$control$deltas[["delta1"]])]
-    C1.sort <- data.id[order(data.id[,all.vars(Objectlsjm$control$Time[["Time_T"]])]),]
-    Cum.pred1 <- apply(Objectpredict$predictCum_01, 2, mean)
-    Cum.pred1 <- cbind(Cum.pred1, unique(sort(data.id[,all.vars(Objectlsjm$control$Time[["Time_T"]])])))
-    Cum.pred1 <- as.data.frame(Cum.pred1)
-    Cum.pred1.sort <- Cum.pred1[order(Cum.pred1[,2]),]
-    colnames(Cum.pred1.sort) <- c("pred","timeFormSurv")
-    timeFormSurv <- Cum.pred1.sort$timeFormSurv
-    pred <- Cum.pred1.sort$pred
-    #arrange(Cum.pred1, V2)
-    Time_Tsort <- Objectlsjm$control$Time[["Time_T"]]
-    delta1sort <- Objectlsjm$control$deltas[["delta1"]]
-    C1.sort$Time_Tsort <- C1.sort[all.vars(Time_Tsort)][,1]
-    C1.sort$delta1sort <- C1.sort[all.vars(delta1sort)][,1]
-    Surv.fit1 <- surv_fit(Surv(Time_Tsort, delta1sort) ~ 1, data = C1.sort)
-    surv_plot <- ggsurvplot(Surv.fit1, data = C1.sort, fun = "cumhaz",
-                                       conf.int = TRUE, legend.title = "",
-                                       legend.labs = c("Survival Curve"),
-                                       xlab = "Time", palette = "#B2BABB", ylim = ylim)
-    surv_plot <- surv_plot$plot
-    color_mapping <- c("#B2BABB","#E74C3C")
-    graph.surv.1<-surv_plot +
-      geom_step(aes(timeFormSurv, pred, color = "Nelson-Aalen"),
-                         data = Cum.pred1.sort,
-                         linetype = "3313",
-                         size = 1) +
-      geom_step(aes(timeFormSurv, pred, color = "Prediction"),
-                         data = Cum.pred1.sort,
-                         linetype = "3313",
-                         size = 1)+
-      scale_color_manual(name = "",
-                                  values = setNames(color_mapping, c("Nelson-Aalen", "Prediction"))) +
-      guides(color = guide_legend(title = "", override.aes = list(linetype = "solid", size = 2)))+
-      theme(
-        legend.key.size = unit(3, "lines"),  # Ajuster la taille de la clé dans la légende
-        legend.text = element_text(size = 10)  # Ajuster la taille du texte dans la légende
-      ) +
-      theme(legend.position = c(0.1, 0.8))+
-      ggtitle("1st event")
-    graph <- list(graph.surv.1 = graph.surv.1)
-
 
   }
 

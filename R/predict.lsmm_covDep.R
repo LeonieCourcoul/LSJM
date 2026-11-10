@@ -222,8 +222,8 @@ predict.lsmm_covDep <- function(object, which = "RE", Objectranef = NULL, data.l
   }
 
 
-  resultat <- list(predictRE = random.effects.Predictions, predictY = cv.Pred)
-  class(resultat) <- c("predict.lsmm_covDep")
+  resultat <- list(predictRE = random.effects.Predictions, predictY = cv.Pred, fit = object)
+  class(resultat) <- c("predict_covDep")
   resultat
 
 

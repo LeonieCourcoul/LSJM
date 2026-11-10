@@ -1570,7 +1570,7 @@ lsjm_classicIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard
                                   epsd = epsd
                  ))
 
-  class(result) <- c("lsjm_classicIDM")
+  class(result) <- c("lsjm_classicIDM", "lsjm", "lsmm")
   return(result)
 
 

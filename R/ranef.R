@@ -1,4 +1,4 @@
-#' ranef: the predicted random effects for all subjects
+#' Predict Random Effects for all Subjects
 #'
 #' @param object Either a lsmm object or a lsjm object
 #' @param ... Further arguments

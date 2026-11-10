@@ -767,7 +767,7 @@ lsmm_interintra <- function(formFixed, formRandom, formGroup,
                                   epsd = epsd
                  ))
 
-  class(result) <- c("lsmm_interintra")
+  class(result) <- c("lsmm_interintra", "lsmm")
   return(result)
 }
 

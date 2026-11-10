@@ -2,7 +2,7 @@
 % Please edit documentation in R/data.manag.sigma.R
 \name{data.manag.sigma}
 \alias{data.manag.sigma}
-\title{Management of data for residual part}
+\title{Management of Data for Residual Part}
 \usage{
 data.manag.sigma(formGroup, formFixed, formRandom, data.long1)
 }
@@ -23,5 +23,5 @@ A list with the following components :
 }
 }
 \description{
-Management of data for residual part
+Management of Data for Residual Part
 }

@@ -1,4 +1,4 @@
-#' Management of survival data
+#' Management of Survival Data
 #'
 #' @param formGroup A formula which indicates the group variable
 #' @param formSurv A formula which indicates the survival submodel

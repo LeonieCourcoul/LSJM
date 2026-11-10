@@ -6,24 +6,19 @@
 #' @importFrom survival Surv
 #' @importFrom stats setNames
 #' @importFrom grid unit
-#'
 #' @export
-plot.lsjm_classicCR <- function(x, which = 'long.fit', Objectpredict, break.times = NULL, ID.ind = NULL, xlim = NULL, ylim = NULL, ...){
+plot.predict_covDepSingle <- function(x, which = 'long.fit',  break.times = NULL, ID.ind = NULL, xlim = NULL, ylim = NULL, ...){
 
 
-  Objectlsjm <- x
-
+  Objectlsjm <- x$fit
   Objectlsmm <- Objectlsjm$control$Objectlsmm
-  if(is.null(Objectpredict)){
-    stop("Objectprdict is missing")
-  }
 
   graph <- NULL
 
   oldpar <- par(no.readonly = TRUE) # code line i
   on.exit(par(oldpar)) # code line i + 1
 
-  ObjectpredictY <- Objectpredict$predictY
+  ObjectpredictY <- x$predictY
   if(which == 'long.fit'){
     formFixed <- Objectlsmm$control$formFixed
     timeVar <- Objectlsmm$control$timeVar
@@ -42,7 +37,7 @@ plot.lsjm_classicCR <- function(x, which = 'long.fit', Objectpredict, break.time
     IC.sup <- mean.obs + 1.96*sd.obs/sqrt(length.obs)
     ObjectpredictY$time.new.pred <- ObjectpredictY$time
     data.long$time.new.pred <- data.long[,timeVar]
-    prediction <- left_join(ObjectpredictY[,c("id","predY", "time.new.pred")], data.long[,c("id", "window", "time.new.pred")])
+    prediction <-left_join(ObjectpredictY[,c("id","predY", "time.new.pred")], data.long[,c("id", "window", "time.new.pred")])
     mean.pred <- by(prediction$predY, prediction$window, mean)
     obstime.mean <- by(data.long[,timeVar], data.long$window, mean)
     df <- cbind(obstime.mean, mean.obs, IC.sup, IC.inf, mean.pred)
@@ -125,7 +120,7 @@ plot.lsjm_classicCR <- function(x, which = 'long.fit', Objectpredict, break.time
     data.id <- data.long[!duplicated(data.long$id),]
     data.id$e1.new <- data.id[,all.vars(Objectlsjm$control$deltas[["delta1"]])]
     C1.sort <- data.id[order(data.id[,all.vars(Objectlsjm$control$Time[["Time_T"]])]),]
-    Cum.pred1 <- apply(Objectpredict$predictCum_01, 2, mean)
+    Cum.pred1 <- apply(x$predictCum_01, 2, mean)
     Cum.pred1 <- cbind(Cum.pred1, unique(sort(data.id[,all.vars(Objectlsjm$control$Time[["Time_T"]])])))
     Cum.pred1 <- as.data.frame(Cum.pred1)
     Cum.pred1.sort <- Cum.pred1[order(Cum.pred1[,2]),]
@@ -139,70 +134,24 @@ plot.lsjm_classicCR <- function(x, which = 'long.fit', Objectpredict, break.time
     C1.sort$delta1sort <- C1.sort[all.vars(delta1sort)][,1]
     Surv.fit1 <- surv_fit(Surv(Time_Tsort, delta1sort) ~ 1, data = C1.sort)
     surv_plot <- ggsurvplot(Surv.fit1, data = C1.sort, fun = "cumhaz",
-                                       conf.int = TRUE, legend.title = "",
-                                       legend.labs = c("Survival Curve"),
-                                       xlab = "Time", palette = "#B2BABB", ylim = ylim)
-    surv_plot <- surv_plot$plot
-    color_mapping <- c("#B2BABB","#E74C3C")
-    graph.surv.1<-surv_plot +
-      geom_step(aes(timeFormSurv, pred, color = "Nelson-Aalen"),
-                         data = Cum.pred1.sort,
-                         linetype = "3313",
-                         size = 1) +
+                            conf.int = TRUE, legend.title = "",
+                            legend.labs = "Nelson-Aalen",
+                            xlab = "Time", palette = "#B2BABB", ylim = ylim)$plot
+
+    graph.surv.1 <- surv_plot +
       geom_step(aes(timeFormSurv, pred, color = "Prediction"),
-                         data = Cum.pred1.sort,
-                         linetype = "3313",
-                         size = 1)+
+                data = Cum.pred1.sort, linetype = "3313", linewidth = 1) +
       scale_color_manual(name = "",
-                                  values = setNames(color_mapping, c("Nelson-Aalen", "Prediction"))) +
-      guides(color = guide_legend(title = "", override.aes = list(linetype = "solid", size = 2)))+
-      theme(
-        legend.key.size = unit(3, "lines"),  # Ajuster la taille de la clé dans la légende
-        legend.text = element_text(size = 10)  # Ajuster la taille du texte dans la légende
-      ) +
-      theme(legend.position = c(0.1, 0.8))+
+                         values = c("Nelson-Aalen" = "#B2BABB",
+                                    "Prediction"   = "#E74C3C")) +
+      guides(color = guide_legend(
+        title = "",
+        override.aes = list(linetype = c("solid", "3313"), linewidth = 1.5)
+      )) +
+      theme(legend.key.size = unit(3, "lines"),
+            legend.text = element_text(size = 10)) +
       ggtitle("1st event")
     graph <- list(graph.surv.1 = graph.surv.1)
-
-    data.id$e2.new <- data.id[,all.vars(Objectlsjm$control$deltas[["delta2"]])]
-    C2.sort <-  data.id[order(data.id[,all.vars(Objectlsjm$control$Time[["Time_T"]])]),]
-    Cum.pred2 <- apply(Objectpredict$predictCum_02, 2, mean)
-    Cum.pred2 <- cbind(Cum.pred2, unique(sort(data.id[,all.vars(Objectlsjm$control$Time[["Time_T"]])])))
-    Cum.pred2 <- as.data.frame(Cum.pred2)
-    Cum.pred2.sort <- Cum.pred2[order(Cum.pred2[,2]),]
-    colnames(Cum.pred2.sort) <- c("pred","timeFormSurv")
-    timeFormSurv <- Cum.pred2.sort$timeFormSurv
-    pred <- Cum.pred2.sort$pred
-    Time_Tsort <- Objectlsjm$control$Time[["Time_T"]]
-    delta2sort <- Objectlsjm$control$deltas[["delta2"]]
-    C2.sort$Time_Tsort <- C2.sort[all.vars(Time_Tsort)][,1]
-    C2.sort$delta2sort <- C2.sort[all.vars(delta2sort)][,1]
-    Surv.fit2 <- surv_fit(Surv(Time_Tsort, delta2sort) ~ 1, data = C2.sort)
-    surv_plot <- ggsurvplot(Surv.fit2, data = C2.sort, fun = "cumhaz",
-                                       conf.int = TRUE, legend.title = "",
-                                       legend.labs = c("Survival Curve"),
-                                       xlab = "Time", palette = "#B2BABB", ylim = ylim)
-    surv_plot <- surv_plot$plot
-    color_mapping <- c("#B2BABB","#E74C3C")
-    graph.surv.2<-surv_plot +
-      geom_step(aes(timeFormSurv, pred, color = "Nelson-Aalen"),
-                         data = Cum.pred2.sort,
-                         linetype = "3313",
-                         size = 1) +
-      geom_step(aes(timeFormSurv, pred, color = "Prediction"),
-                         data = Cum.pred2.sort,
-                         linetype = "3313",
-                         size = 1)+
-      scale_color_manual(name = "",
-                                  values = setNames(color_mapping, c("Nelson-Aalen", "Prediction"))) +
-      guides(color = guide_legend(title = "", override.aes = list(linetype = "solid", size = 2)))+
-      theme(
-        legend.key.size = unit(3, "lines"),  # Ajuster la taille de la clé dans la légende
-        legend.text = element_text(size = 10)  # Ajuster la taille du texte dans la légende
-      ) +
-      theme(legend.position = c(0.1, 0.8))+
-      ggtitle("2nd event")
-    graph[["graph.sur.2"]] <- graph.surv.2
 
   }
 

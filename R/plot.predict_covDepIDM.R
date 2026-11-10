@@ -9,21 +9,18 @@
 #' @importFrom stats setNames
 #' @importFrom grid unit
 #' @export
-plot.lsjm_covDepIDM <- function(x, which = 'long.fit', Objectpredict, break.times = NULL, ID.ind = NULL, ObjectSmoothHazard  = NULL, xlim = NULL, ylim = NULL, ...){
+plot.predict_covDepIDM <- function(x, which = 'long.fit', break.times = NULL, ID.ind = NULL, ObjectSmoothHazard  = NULL, xlim = NULL, ylim = NULL, ...){
 
 
-  Objectlsjm <- x
+  Objectlsjm <- x$fit
   Objectlsmm <- Objectlsjm$control$Objectlsmm
-  if(is.null(Objectpredict)){
-    stop("Objectpredict is missing.")
-  }
 
   graph <- NULL
 
   oldpar <- par(no.readonly = TRUE) # code line i
   on.exit(par(oldpar)) # code line i + 1
 
-  ObjectpredictY <- Objectpredict$predictY
+  ObjectpredictY <- x$predictY
 
 
   if(which == 'long.fit'){
@@ -123,15 +120,15 @@ plot.lsjm_covDepIDM <- function(x, which = 'long.fit', Objectpredict, break.time
   if(which == 'survival.fit'){
 
     #Objectranef$grid.time.Cum
-    Cum_01Smooth_est <- intensity(times = Objectpredict$grid.time.Cum, knots = ObjectSmoothHazard$knots01,
+    Cum_01Smooth_est <- intensity(times = x$grid.time.Cum, knots = ObjectSmoothHazard$knots01,
                                   number.knots = ObjectSmoothHazard$nknots01,
                                   theta = ObjectSmoothHazard$theta01^2)
 
-    Cum_02Smooth_est <- intensity(times = Objectpredict$grid.time.Cum,knots = ObjectSmoothHazard$knots02,
+    Cum_02Smooth_est <- intensity(times = x$grid.time.Cum,knots = ObjectSmoothHazard$knots02,
                                   number.knots = ObjectSmoothHazard$nknots02,
                                   theta = ObjectSmoothHazard$theta02^2)
 
-    Cum_12Smooth_est <- intensity(times = Objectpredict$grid.time.Cum, knots = ObjectSmoothHazard$knots12,
+    Cum_12Smooth_est <- intensity(times = x$grid.time.Cum, knots = ObjectSmoothHazard$knots12,
                                   number.knots = ObjectSmoothHazard$nknots12,
                                   theta = ObjectSmoothHazard$theta12^2)
     V <- ObjectSmoothHazard$V
@@ -140,13 +137,13 @@ plot.lsjm_covDepIDM <- function(x, which = 'long.fit', Objectpredict, break.time
     Cum_12.cum <- c()
     for(boot in 1:5000){
       tirage <- rmvnorm(1, mean = c(ObjectSmoothHazard$theta01,ObjectSmoothHazard$theta02,ObjectSmoothHazard$theta12), sigma = V)
-      Cum_01Smooth <- intensity(times = Objectpredict$grid.time.Cum, knots = ObjectSmoothHazard$knots01,
+      Cum_01Smooth <- intensity(times = x$grid.time.Cum, knots = ObjectSmoothHazard$knots01,
                                 number.knots = ObjectSmoothHazard$nknots01,
                                 theta = tirage[1:(ObjectSmoothHazard$nknots01+2)]^2)
-      Cum_02Smooth <- intensity(times = Objectpredict$grid.time.Cum, knots = ObjectSmoothHazard$knots02,
+      Cum_02Smooth <- intensity(times = x$grid.time.Cum, knots = ObjectSmoothHazard$knots02,
                                 number.knots = ObjectSmoothHazard$nknots02,
                                 theta = tirage[(ObjectSmoothHazard$nknots02+3):(2*(ObjectSmoothHazard$nknots02+2))]^2)
-      Cum_12Smooth <- intensity(times = Objectpredict$grid.time.Cum, knots = ObjectSmoothHazard$knots12,
+      Cum_12Smooth <- intensity(times = x$grid.time.Cum, knots = ObjectSmoothHazard$knots12,
                                 number.knots = ObjectSmoothHazard$nknots12,
                                 theta = tirage[(2*(ObjectSmoothHazard$nknots12+2)+1):(3*(ObjectSmoothHazard$nknots12+2))]^2)
 
@@ -159,11 +156,11 @@ plot.lsjm_covDepIDM <- function(x, which = 'long.fit', Objectpredict, break.time
     Cum_02.quant <- apply(Cum_02.cum,2,quantile, probs = c(0.025,0.5,0.975))
     Cum_12.quant <- apply(Cum_12.cum,2,quantile, probs = c(0.025,0.5,0.975))
 
-    Cum_01_pred <- apply(Objectpredict$predictCum_01,2,mean)
-    Cum_02_pred <- apply(Objectpredict$predictCum_02,2,mean)
-    Cum_12_pred <- apply(Objectpredict$predictCum_12,2,mean)
+    Cum_01_pred <- apply(x$predictCum_01,2,mean)
+    Cum_02_pred <- apply(x$predictCum_02,2,mean)
+    Cum_12_pred <- apply(x$predictCum_12,2,mean)
 
-    data_tot <- cbind(Objectpredict$grid.time.Cum, Cum_01Smooth_est$cumulative.intensity, Cum_02Smooth_est$cumulative.intensity, Cum_12Smooth_est$cumulative.intensity,
+    data_tot <- cbind(x$grid.time.Cum, Cum_01Smooth_est$cumulative.intensity, Cum_02Smooth_est$cumulative.intensity, Cum_12Smooth_est$cumulative.intensity,
                       Cum_01.quant[1,],Cum_01.quant[2,],Cum_01.quant[3,],
                       Cum_02.quant[1,],Cum_02.quant[2,],Cum_02.quant[3,],
                       Cum_12.quant[1,],Cum_12.quant[2,],Cum_12.quant[3,],

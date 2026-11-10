@@ -99,7 +99,7 @@ ranef.lsjm_classicSingle <- function(object,...){
   # Différencier chaque cas, pour chaque cas créer les matrices puis faire une fonction à maximiser (dedans un appel à C++ très proche des fonctions déjà existantes)
   # => il faut appeler marqlevalg individu par individu !
   #1. On associe chaque individu à un cas
-  data.long <- x$control$data.long
+  data.long <- x$control$Objectlsmm$control$data.long
 
   random.effects.Predictions <- matrix(NA, nrow = length(unique(data.long$id)), ncol = x$control$Objectlsmm$control$nb.e.a+1)
   binit <- matrix(0, nrow = 1, ncol = x$control$Objectlsmm$control$nb.e.a)

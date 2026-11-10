@@ -408,7 +408,7 @@ lsjm_classicSingle <- function(Objectlsmm, Time, deltas, hazard_baseline_01,  nb
                                   epsd = epsd
                  ))
 
-  class(result) <- c("lsjm_classicSingle")
+  class(result) <- c("lsjm_classicSingle", "lsjm", "lsmm")
   return(result)
 
 }

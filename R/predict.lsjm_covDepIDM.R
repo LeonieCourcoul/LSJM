@@ -1953,8 +1953,11 @@ predict.lsjm_covDepIDM <- function(object, which = "RE", Objectranef = NULL, dat
 
 
 
-  resultat <- list(predictRE = random.effects.Predictions, predictY = cv.Pred, predictCum_01 = Cum_risk_01, predictCum_02 = Cum_risk_02, predictCum_12 = Cum_risk_12, grid.time.Cum = grid.time)
-  class(resultat) <- c("predict.lsjm_covDepIDM")
+  resultat <- list(predictRE = random.effects.Predictions,
+                   predictY = cv.Pred, predictCum_01 = Cum_risk_01,
+                   predictCum_02 = Cum_risk_02, predictCum_12 = Cum_risk_12,
+                   grid.time.Cum = grid.time, fit = object)
+  class(resultat) <- c("predict_covDepIDM")
   resultat
 
 

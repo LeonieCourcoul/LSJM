@@ -1,4 +1,4 @@
-#' predict: Prediction of some quantities for each subjects
+#' Prediction of Some Quantities for each Subjects
 #'
 #' This function computes different predicted quantities. For a \code{lsmm} object, it is possible
 #' to compute, for each subject, their random effects, their value of the marker and the residual

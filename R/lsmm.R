@@ -1,5 +1,5 @@
-#' lsmm : Estimation of a linear mixed model for longitudinal data with flexible subject-specific
-#' variability.
+#' Estimation of a Linear Mixed Model for Longitudinal Data with Flexible Subject-Specific
+#' Variability.
 #'
 #' This function fits linear mixed effects models for longitudinal data, allowing
 #' the residual variance to be subject-specific. Three different model types can

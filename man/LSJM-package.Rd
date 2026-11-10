@@ -13,6 +13,7 @@ Estimation of mixed models including a subject-specific variance that can be tim
 
 Authors:
 \itemize{
+  \item Léonie Courcoul \email{courcoul.leonie498@gmail.com}
   \item Antoine Barbieri \email{antoine.barbieri@u-bordeaux.fr}
   \item Hélène Jacqmin-Gadda \email{helene.jacqmin-gadda@u-bordeaux.fr}
 }

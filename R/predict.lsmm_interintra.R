@@ -335,8 +335,8 @@ predict.lsmm_interintra <- function(object, which = "RE", Objectranef = NULL, da
   }
 
 
-  resultat <- list(predictRE = random.effects.Predictions, predictY = cv.Pred)
-  class(resultat) <- c("predict.lsmm_interintra")
+  resultat <- list(predictRE = random.effects.Predictions, predictY = cv.Pred, fit = object)
+  class(resultat) <- c("predict_interintra")
   resultat
 
 

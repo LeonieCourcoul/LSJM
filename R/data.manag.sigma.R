@@ -1,4 +1,4 @@
-#' Management of data for residual part
+#' Management of Data for Residual Part
 #'
 #' @param formGroup A formula which indicates the group variable
 #' @param formFixed A formula which indicates the fixed effects for the longitudinal submodel

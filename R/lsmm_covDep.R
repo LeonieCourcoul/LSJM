@@ -428,6 +428,6 @@ lsmm_covDep <- function(formFixed, formRandom, formGroup,
                                 epsd = epsd
                                 ))
 
-  class(result) <- c("lsmm_covDep")
+  class(result) <- c("lsmm_covDep", "lsmm")
   return(result)
 }

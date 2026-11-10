@@ -1,4 +1,4 @@
-#' Management of longitudinal data
+#' Management of Longitudinal Data
 #'
 #' @param formGroup A formula which indicates the group variable
 #' @param formFixed A formula which indicates the fixed effects for the longitudinal submodel

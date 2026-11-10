@@ -1,4 +1,4 @@
-#' dynpred: compute the dynamic predictions of an event.
+#' Compute the Dynamic Predictions of an Event.
 #'
 #' @description
 #'

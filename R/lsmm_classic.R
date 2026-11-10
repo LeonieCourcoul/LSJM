@@ -214,7 +214,7 @@ lsmm_classic <- function(formFixed, formRandom, formGroup,
                                   epsd = epsd
                  ))
 
-  class(result) <- c("lsmm_classic")
+  class(result) <- c("lsmm_classic", "lsmm")
   return(result)
 
 }

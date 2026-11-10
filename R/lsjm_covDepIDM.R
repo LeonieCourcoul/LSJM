@@ -1906,7 +1906,7 @@ lsjm_covDepIDM <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_
                                   epsd = epsd
                  ))
 
-  class(result) <- c("lsjm_covDepIDM")
+  class(result) <- c("lsjm_covDepIDM", "lsjm", "lsmm")
   return(result)
 
 

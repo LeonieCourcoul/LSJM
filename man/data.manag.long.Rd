@@ -2,7 +2,7 @@
 % Please edit documentation in R/data.manag.long.R
 \name{data.manag.long}
 \alias{data.manag.long}
-\title{Management of longitudinal data}
+\title{Management of Longitudinal Data}
 \usage{
 data.manag.long(formGroup, formFixed, formRandom, data.long1)
 }
@@ -28,5 +28,5 @@ A list with the following components :
 }
 }
 \description{
-Management of longitudinal data
+Management of Longitudinal Data
 }

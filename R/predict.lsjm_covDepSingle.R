@@ -605,7 +605,8 @@ predict.lsjm_covDepSingle <- function(object, which = "RE", Objectranef = NULL, 
 
 
 
-  resultat <- list(predictRE = random.effects.Predictions, predictY = cv.Pred, predictCum_01 = Cum_risk01)
-  class(resultat) <- c("predict.lsjm_covDepSingle")
+  resultat <- list(predictRE = random.effects.Predictions, predictY = cv.Pred,
+                   predictCum_01 = Cum_risk01, fit = object)
+  class(resultat) <- c("predict_covDepSingle")
   resultat
 }

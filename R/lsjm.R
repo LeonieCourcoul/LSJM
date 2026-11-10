@@ -1,5 +1,5 @@
-#' lsjm : Estimation of a location-scale joint model for longitudinal data with flexible
-#' subject-specific variability and complex survival structures
+#' Estimation of a Location-Scale Joint Model for Longitudinal Data with Flexible
+#' Subject-Specific Variability and Complex Survival Structures
 #'
 #' This function fits joint models in which the residual error variance is allowed
 #' to be subject-specific and the survival submodel may include either a single

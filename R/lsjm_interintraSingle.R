@@ -774,7 +774,7 @@ lsjm_interintraSingle <- function(Objectlsmm, Time, deltas, hazard_baseline_01, 
                                   epsd = epsd
                  ))
 
-  class(result) <- c("lsjm_interintraSingle")
+  class(result) <- c("lsjm_interintraSingle", "lsjm", "lsmm")
   return(result)
 
 }

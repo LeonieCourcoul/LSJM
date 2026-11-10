@@ -13,8 +13,6 @@ summary.lsjm_classicCR <- function(object,...)
     if(x$result_step1$istop==2) cat("Maximum number of iteration reached without convergence.")
     if(x$result_step1$istop==4) {cat("The program stopped abnormally. No results can be displayed. \n")}
     cat("\n")
-    cat("We recommend to not interpret the following results and to try to reach convergence for the first step. \n")
-
     cat("--------------------------------------------------------------------------------------------------------- \n")
     stop("\n")
   }

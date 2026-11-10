@@ -15,7 +15,7 @@
 \alias{survmarg.lsjm_interintraCR}
 \alias{survmarg.lsjm_interintraIDM}
 \alias{survmarg.lsjm_interintraSingle}
-\title{The population-average probability of being free of any events at a given time $t$ and covariates}
+\title{The Population-average Probability of being free of any events at a given time $t$ and covariates}
 \usage{
 \method{survmarg}{lsjm_classicCR}(object, individual, time)
 
@@ -46,7 +46,7 @@
 A numeric, the population-average probability of being free of any events at a given time $t$ and chosen covariates
 }
 \description{
-The population-average probability of being free of any events at a given time $t$ and covariates
+The Population-average Probability of being free of any events at a given time $t$ and covariates
 }
 \examples{
 

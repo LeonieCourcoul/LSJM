@@ -117,7 +117,7 @@ ranef.lsjm_covDepSingle <- function(object,...){
   rep_wk = rep(gaussKronrod()$wk, length(gaussKronrod()$wk))
   sk_GK <- gaussKronrod()$sk
 
-  data.long <- x$control$data.long
+  data.long <- x$control$Objectlsmm$control$data.long
 
   random.effects.Predictions <- matrix(NA, nrow = length(unique(data.long$id)), ncol = x$control$Objectlsmm$control$nb.e.a+1)
   binit <- matrix(0, nrow = 1, ncol = x$control$Objectlsmm$control$nb.e.a)

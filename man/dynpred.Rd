@@ -15,7 +15,7 @@
 \alias{dynpred.lsjm_interintraCR}
 \alias{dynpred.lsjm_interintraIDM}
 \alias{dynpred.lsjm_interintraSingle}
-\title{dynpred: compute the dynamic predictions of an event.}
+\title{Compute the Dynamic Predictions of an Event.}
 \usage{
 dynpred(object, newdata, s, horizon, event, CI = 95, nb.draws = 1000)
 

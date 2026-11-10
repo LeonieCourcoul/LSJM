@@ -719,8 +719,9 @@ predict.lsjm_interintraSingle <- function(object, which = "RE", Objectranef = NU
   }
 
 
-  resultat <- list(predictRE = random.effects.Predictions, predictY = cv.Pred, predictCum_01 = Cum_risk01)
-  class(resultat) <- c("predict.lsjm_interintraSingle")
+  resultat <- list(predictRE = random.effects.Predictions, predictY = cv.Pred,
+                   predictCum_01 = Cum_risk01, fit = object)
+  class(resultat) <- c("predict_interintraSingle")
   resultat
 
 

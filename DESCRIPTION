@@ -18,7 +18,6 @@ Description: Estimation of mixed models including a subject-specific variance
 License: GPL (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
 LinkingTo: 
     Rcpp,
     RcppArmadillo
@@ -26,3 +25,4 @@ Imports:
     Rcpp, marqLevAlg, survival, flexsurv, ggplot2, splines, spacefillr, survminer, foreach, doParallel, SmoothHazard, parallel, mvtnorm, dplyr
 Depends: 
     R (>= 3.5.0)
+Config/roxygen2/version: 8.1.1

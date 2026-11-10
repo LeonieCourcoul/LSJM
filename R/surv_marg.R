@@ -1,4 +1,4 @@
-#' The population-average probability of being free of any events at a given time $t$ and covariates
+#' The Population-average Probability of being free of any events at a given time $t$ and covariates
 #'
 #'
 #' @param object A lsjm object

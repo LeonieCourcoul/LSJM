@@ -19,7 +19,7 @@
 \alias{ranef.lsmm_classic}
 \alias{ranef.lsmm_covDep}
 \alias{ranef.lsmm_interintra}
-\title{ranef: the predicted random effects for all subjects}
+\title{Predict Random Effects for all Subjects}
 \usage{
 \method{ranef}{lsjm_classicCR}(object, ...)
 
@@ -54,7 +54,7 @@
 A table with predicted random effects for each subjects.
 }
 \description{
-ranef: the predicted random effects for all subjects
+Predict Random Effects for all Subjects
 }
 \examples{
 

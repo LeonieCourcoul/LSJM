@@ -709,7 +709,7 @@ lsjm_covDepCR <- function(Objectlsmm, Time, deltas, hazard_baseline_01, hazard_b
                                   epsd = epsd
                  ))
 
-  class(result) <- c("lsjm_covDepCR")
+  class(result) <- c("lsjm_covDepCR", "lsjm", "lsmm")
   return(result)
 
 }

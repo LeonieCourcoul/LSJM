@@ -169,7 +169,7 @@ ranef.lsjm_classicIDM <- function(object,...){
   rep_wk = rep(gaussKronrod()$wk, length(gaussKronrod()$wk))
   sk_GK <- gaussKronrod()$sk
 
-  data.long <- x$control$data.long
+  data.long <- x$control$Objectlsmm$control$data.long
   data.long$Case <- ifelse(data.long$delta1 == 1 & data.long$Time_R == data.long$Time_L, "Case1bis",
                            ifelse(data.long$delta1 == 1, "Case1",
                                   ifelse(data.long$Time_L == data.long$Time_T, "Case2", "Case3")))

@@ -1,4 +1,4 @@
-#' plot: Plot methods for \code{lsjm} or \code{lsmm} objects
+#' Plot Methods for \code{lsjm} or \code{lsmm} Objects
 #'
 #' This function produces different plots (longitudinal and survival goodness-of-fit,
 #' individual trajectory) of a fitted object of class \code{lsmm} or \code{lsjm}.
@@ -18,9 +18,8 @@
 #' cumulative hazard function for each transition is compared to an illness-death model estimated by
 #' penalized likelihood accounting for interval censoring with the \code{SmoothHazard} package
 #'
-#' @param x A \code{lsmm} or a \code{lsjm} object
+#' @param x An object of the \code{predict} function
 #' @param which A character indicating which plot must be display,
-#' @param Objectpredict An object of the \code{predict} function
 #' @param break.times A vector of breaking times to create windows if \code{which = 'long.fit'}
 #' @param ID.ind A vector providing the id of subjects for whom we we wish to trace the individual
 #' trajectory.
@@ -68,14 +67,12 @@
 #'
 #' pred.m0 <- predict(m0, which = c("RE","Y"), data.long = data)
 #'
-#' plot(m0,
+#' plot(pred.m0,
 #'      which = "long.fit",
-#'      Objectpredict = pred.m0,
 #'      break.times = c(0,1,2,3))
 #'
-#' plot(m0,
+#' plot(pred.m0,
 #'      which = "traj.ind",
-#'      Objectpredict = pred.m0,
 #'      ID.ind = c(1,2))
 #'
 #'
@@ -124,10 +121,9 @@
 #' pred.m2 <- predict(m2, which = c("RE", "Y"))
 #'
 #' #Plot:
-#' plot(m2, which = "long.fit", Objectpredict = pred.m2,
+#' plot(pred.m2, which = "long.fit",
 #'                            break.times = (seq(65,95,by = 2.5)-65)/10)
-#' plot(m2, which = "traj.ind", Objectpredict = pred.m2,
-#'                                             ID.ind = c(3,120))
+#' plot(pred.m2, which = "traj.ind", ID.ind = c(3,120))
 #'
 #' # Estimation of a lsjm with time-dependent variability model and
 #' # competing events:
@@ -151,11 +147,9 @@
 #' pred.l2 <- predict(l2, which = c("RE", "Y", "Cum"))
 #'
 #' # Plot:
-#' plot(l2, which = "long.fit", Objectpredict = pred.l2,
-#'                          break.times = (seq(65,95,by = 2.5)-65)/10)
-#' plot(l2, which = "traj.ind", Objectpredict = pred.l2,
-#'                           ID.ind = c(3,120))
-#' plot(l2, which = "survival.fit", Objectpredict = pred.l2)
+#' plot(pred.l2, which = "long.fit", break.times = (seq(65,95,by = 2.5)-65)/10)
+#' plot(pred.l2, which = "traj.ind",  ID.ind = c(3,120))
+#' plot(pred.l2, which = "survival.fit")
 #' }
 #'
 #'
